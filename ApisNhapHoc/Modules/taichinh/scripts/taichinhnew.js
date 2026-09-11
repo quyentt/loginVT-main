@@ -996,14 +996,99 @@ ThuTien.prototype = {
             }
         }
     },
+    /*------------------------------------------
+    -- Nối các phần địa chỉ, bỏ phần rỗng. sep mặc định " - ".
+    -------------------------------------------*/
+    _qqGhep: function (arr, sep) {
+        return (arr || []).map(function (x) { return ((x === null || x === undefined) ? '' : x + '').trim(); })
+            .filter(function (x) { return x; })
+            .join(sep || ' - ');
+    },
+
+    /*------------------------------------------
+    -- Địa chỉ in ở dòng "Địa chỉ" của người nộp tiền trên phiếu thu / hoá đơn.
+    -- Đây là giấy tờ đưa cho khách nên không được để trống nếu hệ thống có dữ liệu.
+    -- Lấy theo thứ tự: địa chỉ người dùng khai trên hoá đơn → hộ khẩu đã ghép ở
+    -- trên → tự ghép lại từ cột HOKHAU_* → địa chỉ đọc bù từ PERSON_ADDRESS.
+    -- Không còn thì trả chuỗi rỗng, tuyệt đối không in ra "undefined" hay ", ,".
+    -------------------------------------------*/
+    _diaChiInPhieu: function (d) {
+        var me = main_doc.ThuTien;
+        d = d || {};
+        var lay = function (v) { return ((v === null || v === undefined) ? '' : v + '').trim(); };
+        // Tên cột xã/phường không thống nhất giữa các view: chỗ là HOKHAU_PHUONGXA_TEN,
+        // chỗ là HOKHAU_PHUONGXAKHOIXOM. Lấy cái nào có TRONG CÙNG một lần ghép —
+        // tách thành 2 lần ghép riêng thì lần đầu chỉ có mỗi tỉnh cũng đã trả về
+        // giá trị và nuốt mất tên xã.
+        return lay(d.DIACHINGUOIMUA)
+            || lay(d.HOKHAUTHUONGTRU)
+            || me._qqGhep([d.HOKHAU_PHUONGXA_TEN || d.HOKHAU_PHUONGXAKHOIXOM,
+                d.HOKHAU_QUANHUYEN_TEN, d.HOKHAU_TINHTHANH_TEN], ', ')
+            || lay(me._queQuanBu);
+    },
+
+    /*------------------------------------------
+    -- Hồ sơ khai qua form tuyển sinh ghi hộ khẩu xuống bảng PERSON_ADDRESS, các cột
+    -- HOKHAU_* của view này không có → ô Quê quán trống. Đọc bù từ đúng bảng đó —
+    -- cũng chính là nguồn của ô "Địa chỉ trên hoá đơn" nên 2 nơi hiện giống nhau.
+    -- Nhớ lại vào me._queQuanBu để lúc IN PHIẾU dùng được ngay (in chạy đồng bộ,
+    -- không kịp đợi request).
+    -- Chỉ đọc; lỗi thì im lặng, không phá màn hình thu tiền.
+    -------------------------------------------*/
+    _buQueQuan_TuPersonAddress: function (strPerson_Id) {
+        var me = main_doc.ThuTien;
+        if (!edu.util.checkValue(strPerson_Id)) return;
+        var strAction = 'NS_HoSoNhanSu6_MH/BiQ1HhEkMzIuLx4AJSUzJDIy';
+        edu.system.makeRequest({
+            success: function (data) {
+                if (!data || !data.Success || !edu.util.checkValue(data.Data) || !data.Data.length) return;
+                var rows = data.Data.filter(function (r) {
+                    return r && (r.IS_ACTIVE === undefined || r.IS_ACTIVE == 1);
+                });
+                if (!rows.length) return;
+                // Ưu tiên bản ghi đánh dấu là địa chỉ chính (hộ khẩu thường trú)
+                var r = rows.filter(function (x) { return x.IS_PRIMARY == 1; })[0] || rows[0];
+                var strQQ = ((r.FULL_ADDRESS || '') + '').trim();
+                if (!strQQ) {
+                    var dt = (edu.extend && edu.extend.dtTinhThanh) || [];
+                    var ten = function (id) {
+                        var o = id ? dt.filter(function (e) { return e.ID === id; })[0] : null;
+                        return o ? o.TEN : '';
+                    };
+                    strQQ = me._qqGhep([r.ADDRESS_LINE1, ten(r.WARD_ID), ten(r.DISTRICT_ID), ten(r.PROVINCE_ID)]);
+                }
+                if (!strQQ) return;
+                me._queQuanBu = strQQ;
+                edu.util.viewHTMLById("lblQueQuan_ThuTien", strQQ);
+            },
+            error: function () { },
+            type: 'POST',
+            contentType: true,
+            action: strAction,
+            data: {
+                'action': strAction,
+                'func': 'PKG_CORE_HOSONHANSU_06.Get_Person_Address',
+                'iM': edu.system.iM,
+                'strPerson_Id': strPerson_Id,
+                'strChucNang_Id': edu.system.strChucNang_Id,
+                'strVaiTro_Id': '',
+                'strNguoiThucHien_Id': edu.system.userId
+            },
+            fakedb: []
+        }, false, false, false, null);
+    },
+
     genDetail_NguoiHoc_TTTS: function (data) {
         var me = this;
+        me._queQuanBu = '';     // đổi sinh viên thì bỏ địa chỉ đọc bù của người trước
         //1. id gen place
         var strHoTen            = edu.util.returnEmpty(data.HODEM) + " " + edu.util.returnEmpty(data.TEN);
         var strMaSo             = edu.util.returnEmpty(data.MASO);
         var strNgaySinh         = edu.util.returnEmpty(data.NGAYSINH_NGAY) + "/" + edu.util.returnEmpty(data.NGAYSINH_THANG) + "/" + edu.util.returnEmpty(data.NGAYSINH_NAM);
         var strSoDienThoai      = edu.util.returnEmpty(data.SODIENTHOAICANHAN);
-        var strQueQuan          = edu.util.returnEmpty(data.HOKHAU_PHUONGXAKHOIXOM) + " - " + edu.util.returnEmpty(data.HOKHAU_QUANHUYEN_TEN) + " - " + edu.util.returnEmpty(data.HOKHAU_TINHTHANH_TEN);
+        // Quê quán: bỏ phần rỗng rồi mới nối. Nối cứng 3 phần thì hồ sơ thiếu dữ liệu
+        // hiện trơ " - - ", còn tỉnh 2 cấp (nghị định bỏ cấp huyện) ra "Xã A -  - Tỉnh B".
+        var strQueQuan          = me._qqGhep([data.HOKHAU_PHUONGXAKHOIXOM, data.HOKHAU_QUANHUYEN_TEN, data.HOKHAU_TINHTHANH_TEN]);
         var strNganhNhapHoc     = edu.util.returnEmpty(data.DAOTAO_NGANHNHAPHOC);
         var strSoBaoDanh        = edu.util.returnEmpty(data.SOBAODANH);
         var dTongDiem           = edu.util.returnZero(data.DIEMTS_TONGDIEM).toFixed(2);
@@ -1020,6 +1105,7 @@ ThuTien.prototype = {
         edu.util.viewHTMLById("lblNgaySinh_ThuTien", strNgaySinh);
         edu.util.viewHTMLById("lblSoDienThoai_ThuTien", strSoDienThoai);
         edu.util.viewHTMLById("lblQueQuan_ThuTien", strQueQuan);
+        if (!strQueQuan) me._buQueQuan_TuPersonAddress(data.ID);
         edu.util.viewHTMLById("lblNganhNhapHoc_ThuTien", strNganhNhapHoc);
         edu.util.viewHTMLById("lblNganhLop_ThuTien", strDAOTAO_LOPQUANLY_TEN);
         edu.util.viewHTMLById("lblSoBaoDanh_ThuTien", strSoBaoDanh);
@@ -1209,7 +1295,13 @@ ThuTien.prototype = {
                 return;
             }
             data[0]["SOPHIEUTHU"] = data[0]["SOCHUNGTU"];
-            dataPhieuIn["HOKHAUTHUONGTRU"] = edu.util.returnEmpty(dataPhieuIn.HOKHAU_PHUONGXA_TEN) + ", " + edu.util.returnEmpty(dataPhieuIn.HOKHAU_QUANHUYEN_TEN) + ", " + edu.util.returnEmpty(dataPhieuIn.HOKHAU_TINHTHANH_TEN);
+            // Địa chỉ in trên phiếu: bỏ phần rỗng, nếu không phiếu đưa cho khách sẽ
+            // hiện trơ ra ", ," (hồ sơ thiếu dữ liệu, hoặc tỉnh 2 cấp không có huyện).
+            // Cả 3 cột đều rỗng thì lấy địa chỉ đã đọc bù từ PERSON_ADDRESS lúc chọn
+            // sinh viên — in chạy đồng bộ nên phải dùng giá trị có sẵn, không gọi API.
+            dataPhieuIn["HOKHAUTHUONGTRU"] = me._qqGhep(
+                [dataPhieuIn.HOKHAU_PHUONGXA_TEN, dataPhieuIn.HOKHAU_QUANHUYEN_TEN, dataPhieuIn.HOKHAU_TINHTHANH_TEN], ", ")
+                || (me._queQuanBu || "");
             dataPhieuIn["NGAYSINH"] = edu.util.returnEmpty(dataPhieuIn.NGAYSINH_NGAY) + "/" + edu.util.returnEmpty(dataPhieuIn.NGAYSINH_THANG) + "/" + edu.util.returnEmpty(dataPhieuIn.NGAYSINH_NAM);
             dataPhieuIn["DAOTAO_LOPQUANLY_N1_TEN"] = dataPhieuIn.DAOTAO_LOPQUANLY_TEN;
             dataPhieuIn["NGANHHOC_N1_TEN"] = dataPhieuIn.DAOTAO_NGANHNHAPHOC;
@@ -1221,10 +1313,9 @@ ThuTien.prototype = {
         edu.extend.genData_PhieuThu(data, [dataPhieuIn], "print_hoadon", "", objKhoanThu => {
             var strMauIn_MaSo = data[0].MAUIN_MASO;
             var strIDMoRong = objKhoanThu.CHUNGTU_ID;
-            var strDiaChi = dataPhieuIn.DIACHINGUOIMUA;
-            //var strDiaChi = dataPhieuIn.HOKHAU_TINHTHANH_TEN;
-            //if (dataPhieuIn.HOKHAU_QUANHUYEN_TEN) strDiaChi = dataPhieuIn.HOKHAU_QUANHUYEN_TEN + ", " + strDiaChi;
-            //if (dataPhieuIn.HOKHAU_PHUONGXA_TEN) strDiaChi = dataPhieuIn.HOKHAU_PHUONGXA_TEN + ", " + strDiaChi;
+            // Dòng "Địa chỉ" của người nộp tiền trên phiếu. Trước đây chỉ lấy
+            // DIACHINGUOIMUA, hồ sơ nào chưa khai địa chỉ hoá đơn là in ra TRỐNG.
+            var strDiaChi = me._diaChiInPhieu(dataPhieuIn);
             $(".txtDiaChi_BenB_" + strIDMoRong).html(strDiaChi);
             switch (strMauIn_MaSo) {
                 case "CKVINHPHUC_BIENLAITHU": {
