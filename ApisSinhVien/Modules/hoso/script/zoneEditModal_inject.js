@@ -1826,13 +1826,14 @@ if (typeof DeXuatHoSo === 'function' && DeXuatHoSo.prototype.openEditByPerson
                 return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
             });
         };
-        // Trang tự tạo badge thì chưa chắc có CSS .ze-chip — thêm style inline cho chắc.
-        var styleChip = el.getAttribute('data-ze-tudao')
-            ? ' style="display:inline-flex;align-items:center;padding:3px 10px;'
-            + 'background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.28);'
-            + 'border-radius:20px;color:#fff;font-size:12.5px;font-weight:500;line-height:1.4;'
-            + 'white-space:nowrap;"'
-            : '';
+        // LUÔN kèm style inline, không chỉ khi tự tạo phần tử: trang nào cũng có thể
+        // có CSS riêng nuốt mất chip (ẩn, đè màu, thu về 0). Giá trị đặt đúng bằng
+        // .ze-chip nên trang có CSS chuẩn nhìn vẫn y hệt.
+        var styleChip = ' style="display:inline-flex !important;align-items:center;'
+            + 'padding:3px 10px;background:rgba(255,255,255,.18);'
+            + 'border:1px solid rgba(255,255,255,.28);border-radius:20px;'
+            + 'color:#fff !important;font-size:12.5px;font-weight:500;line-height:1.4;'
+            + 'white-space:nowrap;visibility:visible !important;opacity:1 !important;"';
         var chip = function (nhan, gt) {
             return '<span class="ze-chip"' + styleChip + '><b>' + nhan + '</b>' + esc(gt) + '</span>';
         };
@@ -1847,6 +1848,29 @@ if (typeof DeXuatHoSo === 'function' && DeXuatHoSo.prototype.openEditByPerson
         // Không dựng được gì thì để nguyên, không xoá nội dung bản gốc đã vẽ
         if (!chips.length) return;
         el.innerHTML = chips.join('');
+
+        /*--------------------------------------------------------------
+        -- Ép hiển thị. CSS của file này có luật `#zeHeaderBadge:empty{display:none}`,
+        -- và mỗi trang còn có stylesheet riêng có thể ẩn/thu nhỏ khối này. Đặt
+        -- thẳng vào style của phần tử kèm cờ important thì stylesheet không đè
+        -- được nữa — kể cả luật có !important.
+        -- Bọc try vì vài trình duyệt cũ không cho setProperty với priority.
+        --------------------------------------------------------------*/
+        try {
+            var ep = {
+                'display': 'flex', 'flex-wrap': 'wrap', 'justify-content': 'center',
+                'align-items': 'center', 'gap': '6px 10px', 'margin-top': '6px',
+                'width': '100%', 'visibility': 'visible', 'opacity': '1',
+                'max-height': 'none', 'overflow': 'visible'
+            };
+            for (var k in ep) {
+                if (Object.prototype.hasOwnProperty.call(ep, k)) el.style.setProperty(k, ep[k], 'important');
+            }
+            // Header là flex căn giữa theo chiều dọc — cho phép xuống dòng để badge
+            // không bị đẩy ra ngoài vùng nhìn thấy.
+            var hd = el.parentNode;
+            if (hd && hd.style && hd.style.setProperty) hd.style.setProperty('overflow', 'visible', 'important');
+        } catch (e) { }
     };
 
     var _origOpenBadge = DeXuatHoSo.prototype.openEditByPerson;
