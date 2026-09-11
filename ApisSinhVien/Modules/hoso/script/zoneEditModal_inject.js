@@ -1898,3 +1898,242 @@ if (typeof DeXuatHoSo === 'function' && DeXuatHoSo.prototype.openEditByPerson
         });
     });
 }
+
+/*==============================================================================
+== THANH THÔNG TIN SINH VIÊN TRÊN ĐẦU MODAL  (2026-09-12)
+==
+== Vấn đề: badge chỉ dò tên cột trong chính bản ghi mà trang danh sách truyền
+== sang. Ba trang xem / danh sách / cập nhật hồ sơ lấy dữ liệu từ
+== SV_HoSo/LayDanhSach — bản ghi đó chỉ có MASO / HODEM / TEN / NGAYSINH, KHÔNG
+== có Lớp / Ngành / Khoa / Niên khoá, nên mấy chip đó rỗng vĩnh viễn dù phần vẽ
+== chạy đúng.
+==
+== Thanh sinh viên bên trang Thu tiền (ApisTaiChinh/phieuthu/thutien.js:1628)
+== lấy từ PKG_CORE_NGUOIHOC_01.LayDSNguoiHoc_All — API đó trả sẵn
+== DAOTAO_LOPQUANLY_N1_TEN / NGANHHOC_N1_TEN / KHOAHOC_N1_TEN / NIENKHOA_N1 và
+== trạng thái học. Ở đây gọi đúng API đó theo MÃ SỐ của hồ sơ đang mở rồi vẽ lại
+== thanh cho giống, thay vì đoán tên cột.
+==
+== Dữ liệu về trễ hơn lúc mở form, nên bản vẽ cũ (Mã + Họ tên) vẫn giữ làm nền:
+== có dữ liệu đầy đủ thì _zeVeBadge tự chuyển sang bản đầy đủ, chưa có thì để
+== nguyên chứ không xoá trắng.
+==============================================================================*/
+if (typeof DeXuatHoSo === 'function' && DeXuatHoSo.prototype._zeVeBadge
+    && !DeXuatHoSo.prototype._zeThanhSVHooked) {
+    DeXuatHoSo.prototype._zeThanhSVHooked = true;
+
+    // Lấy nguyên của thutien.js getList_HSSV — action string là khoá để BE giải mã,
+    // sai 1 ký tự là hỏng nên tuyệt đối không sửa/đoán.
+    var _ZE_SV_ACTION = 'SV_NGUOIHOC_01_MH/DSA4BRIPJjQuKAkuIh4ALS0P';
+
+    // Bộ trạng thái lấy nguyên switch của thutien.viewForm_DoiTuong, đổi class
+    // label-* sang mã màu vì header modal nền xanh đậm, không dùng label của theme.
+    var _ZE_TRANGTHAI = {
+        'NORMAL': ['#16a34a', 'fa-users', 'Đang học'],
+        'CHUYENTRUONG': ['#16a34a', 'fa-sign-in', 'Chuyển trường đến'],
+        'GRADUATE': ['#0284c7', 'fa-graduation-cap', 'Tốt nghiệp'],
+        'RESERVE': ['#0284c7', 'fa-user-secret', 'Bảo lưu'],
+        'CANHBAO': ['#d97706', 'fa-exclamation-triangle', 'Cảnh báo'],
+        'REPEATE': ['#d97706', 'fa-exclamation-triangle', 'Học lại'],
+        'DROPOUT': ['#d97706', 'fa-exclamation-triangle', 'Thôi học'],
+        'KHONGXACDINH': ['#d97706', 'fa-exclamation-triangle', 'Không xác định'],
+        'DUNGHOC': ['#d97706', 'fa-ban', 'Đình chỉ'],
+        'FORCEDROPOUT': ['#dc2626', 'fa-exclamation-triangle', 'Buộc thôi học'],
+        'XOATEN': ['#dc2626', 'fa-user-times', 'Xóa tên'],
+        'CHUYENTRUONGDI': ['#dc2626', 'fa-sign-out', 'Chuyển trường đi']
+    };
+
+    var _zeEsc = function (s) {
+        return ((s === null || s === undefined) ? '' : s + '').replace(/[&<>"']/g, function (c) {
+            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        });
+    };
+
+    /*------------------------------------------
+    -- Mã số của hồ sơ đang mở. Mỗi trang đặt tên cột một kiểu, và luồng mở modal
+    -- kiểu cũ không truyền person nên phải lấy thêm từ ô đã điền trên form.
+    -------------------------------------------*/
+    DeXuatHoSo.prototype._zeMaSoDangMo = function (person) {
+        var dx = this;
+        var a = (person && person.aData) || {};
+        var ma = (person && person.ma) || dx._zeLay(a, ['MASO', 'MA', 'MA_NGUOI_HOC', 'MA_SV',
+            'STUDENT_CODE', 'QLSV_NGUOIHOC_MASO', 'QLSV_NGUOIHOC_MA', 'MA_HS']);
+        if (!ma) ma = (($('#txt_MaSoSV').val() || $('#txtMaSoSV').val() || '') + '').trim();
+        return ma;
+    };
+
+    /*------------------------------------------
+    -- Nạp bản ghi đầy đủ theo mã số. Một sinh viên học nhiều ngành sẽ có nhiều
+    -- dòng nên ưu tiên dòng khớp Id hồ sơ đang mở, sau đó mới tới dòng khớp mã.
+    -- dBoQuaPhamVi = 0 y như bên Thu tiền: giữ đúng phạm vi dữ liệu của người dùng,
+    -- không tự ý nới quyền. Phạm vi chặn thì không có dòng nào → thanh giữ nguyên
+    -- phần Mã + Họ tên chứ không trống đi.
+    -------------------------------------------*/
+    DeXuatHoSo.prototype._zeNapTTSinhVien = function (person) {
+        var dx = this;
+        var personId = (person && person.id) || dx.strDeXuatHoSo_Id || dx._lockedPersonId || '';
+        var maSo = dx._zeMaSoDangMo(person);
+        if (!maSo) { zeNoLog('[ZE ThanhSV] chưa có mã số → bỏ qua'); return; }
+        if (dx._zeSVDangTai === maSo) return;          // đang gọi cho đúng hồ sơ này rồi
+        dx._zeSVDangTai = maSo;
+        edu.system.makeRequest({
+            success: function (data) {
+                var rows = (data && data.Success && data.Data) || [];
+                if (!rows.length) { zeNoLog('[ZE ThanhSV] không có dòng nào cho mã ' + maSo); return; }
+                var row = (personId && rows.filter(function (r) { return r.ID == personId; })[0])
+                    || rows.filter(function (r) { return ((r.MASO || '') + '') === maSo; })[0]
+                    || rows[0];
+                if (!row) return;
+                dx._zeTTSinhVien = row;
+                // Vẽ lại ngay + thêm 1 mốc trễ phòng khi bản vẽ cũ chạy sau đè lên
+                try { dx._zeVeBadge(person || {}); } catch (e) { }
+                setTimeout(function () { try { dx._zeVeBadge(person || {}); } catch (e) { } }, 500);
+            },
+            error: function (er) { zeNoLog('[ZE ThanhSV] err: ' + er); },
+            type: 'POST',
+            contentType: true,
+            action: _ZE_SV_ACTION,
+            data: {
+                'action': _ZE_SV_ACTION,
+                'func': 'PKG_CORE_NGUOIHOC_01.LayDSNguoiHoc_All',
+                'iM': edu.system.iM,
+                'strTuKhoa': maSo,
+                'strNguoiThucHien_Id': edu.system.userId,
+                'strVaiTroDangNhap_Id': edu.system.vaiTroDangNhap_Id || '',
+                'strChucNangHeThong_Id': edu.system.chucNangHeThong_Id || edu.system.strChucNang_Id,
+                'strHanhDong_Code': '',
+                'strDaoTao_HeDaoTao_Id': '',
+                'strDaoTao_KhoaDaoTao_Id': '',
+                'strDaoTao_ChuongTrinh_Id': '',
+                'strDaoTao_KhoaQuanLy_Id': '',
+                'strDaoTao_LopQuanLy_Id': '',
+                'strStudyStatus_Ids': '',
+                'dIsPrimary': '',
+                'dBoQuaPhamVi': 0,
+                'pageIndex': 1,
+                'pageSize': 20
+            },
+            fakedb: []
+        }, false, false, false, null);
+    };
+
+    /*------------------------------------------
+    -- Vẽ thanh đầy đủ: dòng 1 trạng thái + HỌ TÊN - Mã - SĐT, dòng 2 Lớp / Ngành /
+    -- Khoa / Niên khoá. Bố cục bám theo #zoneSinhVien của thutien.html.
+    -- Style để inline hết: header modal nằm trong nhiều trang có stylesheet riêng,
+    -- không chắc trang nào cũng có CSS .ze-chip.
+    -------------------------------------------*/
+    DeXuatHoSo.prototype._zeVeThanhSV = function (person) {
+        var dx = this;
+        var row = dx._zeTTSinhVien;
+        var el = dx._zeOBadge();
+        if (!row || !el) return false;
+
+        var hoTen = dx._zeLay(row, ['FULL_NAME', 'HOTEN', 'HO_TEN'])
+            || [dx._zeLay(row, ['HODEM']), dx._zeLay(row, ['TEN'])]
+                .filter(function (x) { return x; }).join(' ');
+        if (!hoTen) hoTen = (($('#txtHoVaTen').val() || '') + '').trim();
+        var maSo = dx._zeLay(row, ['MASO']) || dx._zeMaSoDangMo(person);
+        var sdt = dx._zeLay(row, ['TTLL_DIENTHOAICANHAN', 'DIENTHOAI', 'PHONE']);
+        var lop = dx._zeLay(row, ['DAOTAO_LOPQUANLY_N1_TEN', 'DAOTAO_LOPQUANLY_TEN', 'LOP_TEN', 'LOP']);
+        var nganh = dx._zeLay(row, ['NGANHHOC_N1_TEN', 'DAOTAO_NGANH_TEN', 'NGANH_TEN', 'NGANH']);
+        var khoa = dx._zeLay(row, ['KHOAHOC_N1_TEN', 'DAOTAO_KHOAQUANLY_TEN', 'KHOA_TEN', 'KHOAQUANLY']);
+        var nienKhoa = dx._zeLay(row, ['NIENKHOA_N1', 'NIENKHOA']);
+        if (!hoTen && !maSo) return false;
+
+        // Trạng thái: ưu tiên chữ BE trả về (có trường đặt lại nhãn riêng), mã chỉ
+        // dùng để chọn màu + icon. Mã lạ thì vẫn hiện chữ của BE, không nuốt mất.
+        // Không có cả mã lẫn tên thì KHÔNG vẽ nhãn: thà thiếu còn hơn hiện
+        // "Đang học" mặc định lên một hồ sơ đã thôi học/tốt nghiệp.
+        var ttMa = ((dx._zeLay(row, ['QLSV_TRANGTHAINGUOIHOC_MA']) || '') + '').toUpperCase();
+        var ttTen = dx._zeLay(row, ['QLSV_TRANGTHAINGUOIHOC_TEN']);
+        var tt = null;
+        if (ttMa || (ttTen && ttTen !== '-')) {
+            tt = _ZE_TRANGTHAI[ttMa] || ['#64748b', 'fa-info-circle', ttTen || ttMa];
+            if (ttTen && ttTen !== '-') tt = [tt[0], tt[1], ttTen];
+        }
+
+        var chip = function (icon, nhan, gt) {
+            if (!gt) return '';
+            return '<span style="display:inline-flex;align-items:center;gap:5px;padding:3px 10px;'
+                + 'background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.28);'
+                + 'border-radius:20px;color:#fff;font-size:12.5px;font-weight:500;line-height:1.4;'
+                + 'white-space:nowrap;max-width:340px;overflow:hidden;text-overflow:ellipsis;">'
+                + '<i class="fa ' + icon + '" style="color:#fff;opacity:.85"></i>'
+                + '<span style="opacity:.85">' + nhan + ':</span>'
+                + '<b style="font-weight:600">' + _zeEsc(gt) + '</b></span>';
+        };
+
+        var dong1 = (tt ? ('<span style="display:inline-flex;align-items:center;gap:6px;padding:3px 11px;'
+            + 'background:' + tt[0] + ';border-radius:20px;color:#fff;font-size:12.5px;'
+            + 'font-weight:600;line-height:1.4;white-space:nowrap;">'
+            + '<i class="fa ' + tt[1] + '" style="color:#fff"></i>' + _zeEsc(tt[2]) + '</span>') : '')
+            + '<span style="color:#fff;font-size:14px;font-weight:700;letter-spacing:.2px;">'
+            + _zeEsc((hoTen || '').toUpperCase()) + '</span>';
+        if (maSo) dong1 += '<span style="color:#fff;opacity:.9;font-size:13px;">- ' + _zeEsc(maSo) + '</span>';
+        if (sdt) dong1 += '<span style="color:#fff;opacity:.9;font-size:13px;">- ' + _zeEsc(sdt) + '</span>';
+
+        var dong2 = chip('fa-users', 'Lớp', lop) + chip('fa-book', 'Ngành', nganh)
+            + chip('fa-university', 'Khoa', khoa) + chip('fa-calendar', 'Niên khoá', nienKhoa);
+
+        var hang = 'display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px 10px;';
+        el.innerHTML = '<div style="' + hang + '">' + dong1 + '</div>'
+            + (dong2 ? '<div style="' + hang + 'margin-top:4px;">' + dong2 + '</div>' : '');
+
+        // Ép hiển thị: CSS có luật #zeHeaderBadge:empty{display:none} và mỗi trang
+        // còn stylesheet riêng có thể ẩn/thu khối này.
+        try {
+            var ep = {
+                'display': 'flex', 'flex-direction': 'column', 'align-items': 'center',
+                'justify-content': 'center', 'gap': '2px', 'margin-top': '6px', 'width': '100%',
+                'visibility': 'visible', 'opacity': '1', 'max-height': 'none', 'overflow': 'visible'
+            };
+            for (var k in ep) {
+                if (Object.prototype.hasOwnProperty.call(ep, k)) el.style.setProperty(k, ep[k], 'important');
+            }
+            var hd = el.parentNode;
+            if (hd && hd.style && hd.style.setProperty) hd.style.setProperty('overflow', 'visible', 'important');
+        } catch (e) { }
+        return true;
+    };
+
+    /*------------------------------------------
+    -- Có bản ghi đầy đủ thì vẽ thanh đầy đủ, chưa có thì để bản cũ chạy. Bọc chứ
+    -- không thay hẳn: mọi chỗ đang gọi _zeVeBadge (mốc 0/400/1200ms và cú click
+    -- .btnEdit) tự động hưởng, không phải sửa thêm chỗ nào.
+    -------------------------------------------*/
+    var _origVeBadgeTT = DeXuatHoSo.prototype._zeVeBadge;
+    DeXuatHoSo.prototype._zeVeBadge = function (person) {
+        var dx = this;
+        if (dx._zeTTSinhVien) {
+            try { if (dx._zeVeThanhSV(person)) return; } catch (e) { console.warn('[ZE ThanhSV] vẽ lỗi:', e); }
+        }
+        return _origVeBadgeTT.call(dx, person);
+    };
+
+    /*------------------------------------------
+    -- Mở hồ sơ khác thì phải quên bản ghi của hồ sơ trước, nếu không thanh sẽ
+    -- đứng nguyên thông tin người cũ.
+    -------------------------------------------*/
+    var _origOpenTT = DeXuatHoSo.prototype.openEditByPerson;
+    DeXuatHoSo.prototype.openEditByPerson = function (person) {
+        var dx = this;
+        dx._zeTTSinhVien = null;
+        dx._zeSVDangTai = '';
+        _origOpenTT.call(dx, person);
+        try { dx._zeNapTTSinhVien(person); } catch (e) { console.warn('[ZE ThanhSV] nạp lỗi:', e); }
+    };
+
+    /*------------------------------------------
+    -- Chốt cho luồng mở kiểu cũ (không đi qua openEditByPerson): sau khi form nạp
+    -- xong thì mã số đã nằm trên form, đủ để tự đi lấy bản ghi đầy đủ.
+    -------------------------------------------*/
+    $(document).on('click.zethanhsv', '.btnEdit, .btnSelect_NguoiHoc_ThuHS', function () {
+        var dx = (window.main_doc && window.main_doc.DeXuatHoSo) || null;
+        if (!dx || typeof dx._zeNapTTSinhVien !== 'function') return;
+        setTimeout(function () {
+            if (dx._zeTTSinhVien) return;          // openEditByPerson lo rồi
+            try { dx._zeNapTTSinhVien(null); } catch (e) { }
+        }, 1000);
+    });
+}
