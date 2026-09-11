@@ -4624,7 +4624,7 @@ systemextend.prototype = {
             //Người mua hàng
             $(".txtHoTen_BenB_" + strIDMoRong).html(edu.util.returnEmpty(dataPhieuIn.HODEM) + " " + edu.util.returnEmpty(dataPhieuIn.TEN));
             $(".txtMa_BenB_" + strIDMoRong).html(edu.util.returnEmpty(dataPhieuIn.MASO));
-            $(".txtDiaChi_BenB_" + strIDMoRong).html(edu.util.returnEmpty(dataPhieuIn.DAOTAO_LOPQUANLY_N1_TEN));
+            $(".txtDiaChi_BenB_" + strIDMoRong).html(edu.util.returnEmpty(dataPhieuIn.DIACHINGUOIMUA));
             $(".txtNgaySinh_BenB_" + strIDMoRong).html(edu.util.returnEmpty(dataPhieuIn.NGAYSINH));
             $(".txtLop_BenB_" + strIDMoRong).html(edu.util.returnEmpty(dataPhieuIn.DAOTAO_LOPQUANLY_N1_TEN));
             $(".txtNganh_BenB_" + strIDMoRong).html(edu.util.returnEmpty(dataPhieuIn.NGANHHOC_N1_TEN));
@@ -6648,7 +6648,7 @@ systemextend.prototype = {
             //Người mua hàng
             $(".txtHoTen_BenB_" + strIDMoRong).html(edu.util.returnEmpty(dataPhieuIn.HODEM) + " " + edu.util.returnEmpty(dataPhieuIn.TEN));
             $(".txtMa_BenB_" + strIDMoRong).html(edu.util.returnEmpty(dataPhieuIn.MASO));
-            $(".txtDiaChi_BenB_" + strIDMoRong).html(edu.util.returnEmpty(dataPhieuIn.DAOTAO_LOPQUANLY_N1_TEN));
+            $(".txtDiaChi_BenB_" + strIDMoRong).html(edu.util.returnEmpty(dataPhieuIn.DIACHINGUOIMUA));
             $(".txtNgaySinh_BenB_" + strIDMoRong).html(edu.util.returnEmpty(dataPhieuIn.NGAYSINH));
             $(".txtLop_BenB_" + strIDMoRong).html(edu.util.returnEmpty(dataPhieuIn.DAOTAO_LOPQUANLY_N1_TEN));
             $(".txtNganh_BenB_" + strIDMoRong).html(edu.util.returnEmpty(dataPhieuIn.NGANHHOC_N1_TEN));
