@@ -2018,21 +2018,54 @@ if (typeof DeXuatHoSo === 'function' && DeXuatHoSo.prototype._zeVeBadge
     };
 
     /*------------------------------------------
-    -- Vẽ thanh đầy đủ: dòng 1 trạng thái + HỌ TÊN - Mã - SĐT, dòng 2 Lớp / Ngành /
-    -- Khoa / Niên khoá. Bố cục bám theo #zoneSinhVien của thutien.html.
-    -- Style để inline hết: header modal nằm trong nhiều trang có stylesheet riêng,
-    -- không chắc trang nào cũng có CSS .ze-chip.
+    -- CHỖ ĐẶT THANH: một dải riêng nằm GIỮA header và thanh tab, KHÔNG nhét vào
+    -- trong header nữa.
+    -- Lý do (12/09/2026): header modal cao cố định theo CSS của trang, nhét badge
+    -- vào là nội dung tràn ra khỏi vùng nền xanh — chữ trắng rơi lên nền trắng của
+    -- trang nên nhìn như mất hẳn, chỉ còn mấy khung mờ. Dải riêng tự giãn theo nội
+    -- dung, nền sáng chữ đậm nên không phụ thuộc màu header của từng trang.
+    -- Tự tạo nếu chưa có, nên trang nào cũng chạy kể cả markup modal kiểu cũ.
+    -------------------------------------------*/
+    DeXuatHoSo.prototype._zeOThanhSV = function () {
+        var el = document.getElementById('zeThanhSV');
+        if (el) return el;
+        var modal = document.getElementById('zoneEdit');
+        if (!modal) return null;
+        el = document.createElement('div');
+        el.id = 'zeThanhSV';
+        el.style.cssText = 'display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;'
+            + 'padding:11px 24px;background:#f8fafc;border-bottom:1px solid #e2e8f0;'
+            + 'color:#0f172a;font-size:13px;line-height:1.5;';
+        var tabbar = modal.querySelector('.zoneEdit-tabbar');
+        var header = modal.querySelector('.box-header');
+        if (tabbar && tabbar.parentNode) tabbar.parentNode.insertBefore(el, tabbar);
+        else if (header && header.parentNode) header.parentNode.insertBefore(el, header.nextSibling);
+        else modal.insertBefore(el, modal.firstChild);
+        return el;
+    };
+
+    /*------------------------------------------
+    -- Vẽ thanh: trạng thái + HỌ TÊN - Mã - SĐT, rồi Lớp / Ngành / Khoa / Niên khoá.
+    -- Bố cục bám theo #zoneSinhVien của thutien.html.
+    -- Chưa có bản ghi đầy đủ vẫn vẽ được phần Họ tên + Mã lấy từ chính form, nên
+    -- thanh hiện ngay lúc mở chứ không đợi API.
+    -- Style inline hết: mỗi trang một stylesheet, không chắc trang nào cũng có CSS
+    -- của file này.
     -------------------------------------------*/
     DeXuatHoSo.prototype._zeVeThanhSV = function (person) {
         var dx = this;
-        var row = dx._zeTTSinhVien;
-        var el = dx._zeOBadge();
-        if (!row || !el) return false;
+        var row = dx._zeTTSinhVien || {};
+        var el = dx._zeOThanhSV();
+        if (!el) return false;
 
         var hoTen = dx._zeLay(row, ['FULL_NAME', 'HOTEN', 'HO_TEN'])
             || [dx._zeLay(row, ['HODEM']), dx._zeLay(row, ['TEN'])]
                 .filter(function (x) { return x; }).join(' ');
         if (!hoTen) hoTen = (($('#txtHoVaTen').val() || '') + '').trim();
+        if (!hoTen) {
+            hoTen = [(($('#txtHo').val() || '') + '').trim(), (($('#txtTenDem').val() || '') + '').trim(),
+            (($('#txtTen').val() || '') + '').trim()].filter(function (x) { return x; }).join(' ');
+        }
         var maSo = dx._zeLay(row, ['MASO']) || dx._zeMaSoDangMo(person);
         var sdt = dx._zeLay(row, ['TTLL_DIENTHOAICANHAN', 'DIENTHOAI', 'PHONE']);
         var lop = dx._zeLay(row, ['DAOTAO_LOPQUANLY_N1_TEN', 'DAOTAO_LOPQUANLY_TEN', 'LOP_TEN', 'LOP']);
@@ -2053,46 +2086,52 @@ if (typeof DeXuatHoSo === 'function' && DeXuatHoSo.prototype._zeVeBadge
             if (ttTen && ttTen !== '-') tt = [tt[0], tt[1], ttTen];
         }
 
+        // Nền sáng nên chữ phải đậm: nhãn xám đậm, giá trị gần như đen (đúng mức
+        // tương phản đã chốt cho toàn hệ thống).
         var chip = function (icon, nhan, gt) {
             if (!gt) return '';
-            return '<span style="display:inline-flex;align-items:center;gap:5px;padding:3px 10px;'
-                + 'background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.28);'
-                + 'border-radius:20px;color:#fff;font-size:12.5px;font-weight:500;line-height:1.4;'
-                + 'white-space:nowrap;max-width:340px;overflow:hidden;text-overflow:ellipsis;">'
-                + '<i class="fa ' + icon + '" style="color:#fff;opacity:.85"></i>'
-                + '<span style="opacity:.85">' + nhan + ':</span>'
-                + '<b style="font-weight:600">' + _zeEsc(gt) + '</b></span>';
+            return '<span style="display:inline-flex;align-items:center;gap:6px;padding:4px 11px;'
+                + 'background:#ffffff;border:1px solid #dbe3ec;border-radius:6px;'
+                + 'font-size:12.5px;line-height:1.4;max-width:360px;overflow:hidden;'
+                + 'text-overflow:ellipsis;white-space:nowrap;">'
+                + '<i class="fa ' + icon + '" style="color:#2563eb"></i>'
+                + '<span style="color:#64748b;font-weight:500">' + nhan + ':</span>'
+                + '<b style="color:#0f172a;font-weight:600">' + _zeEsc(gt) + '</b></span>';
         };
 
-        var dong1 = (tt ? ('<span style="display:inline-flex;align-items:center;gap:6px;padding:3px 11px;'
-            + 'background:' + tt[0] + ';border-radius:20px;color:#fff;font-size:12.5px;'
+        var dong1 = (tt ? ('<span style="display:inline-flex;align-items:center;gap:6px;padding:4px 11px;'
+            + 'background:' + tt[0] + ';border-radius:6px;color:#fff;font-size:12.5px;'
             + 'font-weight:600;line-height:1.4;white-space:nowrap;">'
             + '<i class="fa ' + tt[1] + '" style="color:#fff"></i>' + _zeEsc(tt[2]) + '</span>') : '')
-            + '<span style="color:#fff;font-size:14px;font-weight:700;letter-spacing:.2px;">'
+            + '<span style="color:#0f172a;font-size:15px;font-weight:700;letter-spacing:.2px;">'
             + _zeEsc((hoTen || '').toUpperCase()) + '</span>';
-        if (maSo) dong1 += '<span style="color:#fff;opacity:.9;font-size:13px;">- ' + _zeEsc(maSo) + '</span>';
-        if (sdt) dong1 += '<span style="color:#fff;opacity:.9;font-size:13px;">- ' + _zeEsc(sdt) + '</span>';
+        if (maSo) dong1 += '<span style="color:#334155;font-size:13.5px;font-weight:600;">- ' + _zeEsc(maSo) + '</span>';
+        if (sdt) dong1 += '<span style="color:#334155;font-size:13.5px;font-weight:600;">- ' + _zeEsc(sdt) + '</span>';
 
         var dong2 = chip('fa-users', 'Lớp', lop) + chip('fa-book', 'Ngành', nganh)
             + chip('fa-university', 'Khoa', khoa) + chip('fa-calendar', 'Niên khoá', nienKhoa);
 
-        var hang = 'display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px 10px;';
+        var hang = 'display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;';
         el.innerHTML = '<div style="' + hang + '">' + dong1 + '</div>'
-            + (dong2 ? '<div style="' + hang + 'margin-top:4px;">' + dong2 + '</div>' : '');
+            + (dong2 ? '<div style="' + hang + 'width:100%;">' + dong2 + '</div>' : '');
 
-        // Ép hiển thị: CSS có luật #zeHeaderBadge:empty{display:none} và mỗi trang
-        // còn stylesheet riêng có thể ẩn/thu khối này.
+        // Ép hiển thị phòng khi stylesheet của trang ẩn/thu khối này.
         try {
             var ep = {
-                'display': 'flex', 'flex-direction': 'column', 'align-items': 'center',
-                'justify-content': 'center', 'gap': '2px', 'margin-top': '6px', 'width': '100%',
-                'visibility': 'visible', 'opacity': '1', 'max-height': 'none', 'overflow': 'visible'
+                'display': 'flex', 'flex-wrap': 'wrap', 'align-items': 'center',
+                'gap': '8px 16px', 'width': '100%', 'visibility': 'visible', 'opacity': '1',
+                'max-height': 'none', 'overflow': 'visible'
             };
             for (var k in ep) {
                 if (Object.prototype.hasOwnProperty.call(ep, k)) el.style.setProperty(k, ep[k], 'important');
             }
-            var hd = el.parentNode;
-            if (hd && hd.style && hd.style.setProperty) hd.style.setProperty('overflow', 'visible', 'important');
+        } catch (e) { }
+
+        // Dọn chỗ cũ: badge trong header từng vẽ cùng nội dung, để lại thì vừa trùng
+        // vừa tràn ra ngoài nền xanh thành mấy khung mờ.
+        try {
+            var badgeCu = document.getElementById('zeHeaderBadge');
+            if (badgeCu) { badgeCu.innerHTML = ''; badgeCu.style.setProperty('display', 'none', 'important'); }
         } catch (e) { }
         return true;
     };
@@ -2105,9 +2144,10 @@ if (typeof DeXuatHoSo === 'function' && DeXuatHoSo.prototype._zeVeBadge
     var _origVeBadgeTT = DeXuatHoSo.prototype._zeVeBadge;
     DeXuatHoSo.prototype._zeVeBadge = function (person) {
         var dx = this;
-        if (dx._zeTTSinhVien) {
-            try { if (dx._zeVeThanhSV(person)) return; } catch (e) { console.warn('[ZE ThanhSV] vẽ lỗi:', e); }
-        }
+        // Vẽ được dải riêng thì thôi, khỏi đụng badge trong header. Dải vẽ được
+        // ngay cả khi API chưa về (lấy Họ tên + Mã từ form), nên gần như luôn
+        // thắng; chỉ khi form trống trơn mới rơi về bản cũ.
+        try { if (dx._zeVeThanhSV(person)) return; } catch (e) { console.warn('[ZE ThanhSV] vẽ lỗi:', e); }
         return _origVeBadgeTT.call(dx, person);
     };
 
