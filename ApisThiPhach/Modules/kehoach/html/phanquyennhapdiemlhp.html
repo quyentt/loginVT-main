@@ -3,6 +3,26 @@
     .radio-inline + .radio-inline {
         margin-left: 0px;
     }
+
+    .btn-huy-danh-sach {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border-color: #b83245;
+        border-radius: 4px;
+        background: #c94053;
+        box-shadow: 0 2px 5px rgba(185, 50, 69, 0.2);
+        color: #fff;
+        transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-huy-danh-sach:hover,
+    .btn-huy-danh-sach:focus {
+        border-color: #9f2639;
+        background: #ad2d42;
+        box-shadow: 0 3px 8px rgba(159, 38, 57, 0.28);
+        color: #fff;
+    }
 </style>
 <section class="content aps-thiphach">
     <div class="row aps-phanquyennhapdiemlhp">
@@ -103,6 +123,7 @@
                     </h3>
                     <div class="box-tools pull-right pr10">
                         <a id="btnTaoDSNhapDiem" class="btn btn-default"><i class="fa fa-paper-plane"></i> <span class="lang" key="">Tạo danh sách nhập điểm</span></a>
+                        <a id="btnHuyTaoDSNhapDiem" class="btn btn-danger btn-huy-danh-sach" title="Hủy danh sách nhập điểm"><i class="fa fa-ban"></i> <span class="lang" key="">Hủy danh sách nhập điểm</span></a>
                         <a id="btnPhanQuyen" class="btn btn-primary">
                             <i class="far fa-sitemap"></i> <span class="lang"
                                                                  key="">Phân quyền</span>
