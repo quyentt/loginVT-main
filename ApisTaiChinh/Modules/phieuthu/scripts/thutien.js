@@ -6167,6 +6167,7 @@ PhieuThu.prototype = {
             /* Bỏ `width: 100%` cho descendants → nếu template có wrapper width < 200mm, `margin: 0 auto !important` sẽ căn giữa nó trong container.
                `!important` để override inline style `margin-left: XXpx` mà template server có thể set. */
             + '#MauInPhieuThu > div, #MauInPhieuThu > table, #MauInPhieuThu > p, #MauInPhieuThu > center, #MauInPhieuThu > span, #MauInPhieuThu > h1, #MauInPhieuThu > h2, #MauInPhieuThu > h3, #MauInPhieuThu > h4 { max-width: 100%; margin: 0.02cm auto !important; padding: 0; }'
+                + '#MauInPhieuThu > .pr-containt { width: 100% !important; max-width: 100% !important; }'
             + '#MauInPhieuThu table { border-collapse: collapse; width: 100%; margin: 1px auto; border: none; }'
             + '#MauInPhieuThu table td, #MauInPhieuThu table th { border: none; padding: 2px 4px; vertical-align: middle; font-size: 10pt; line-height: 1.5; text-align: left; }'
             + '#MauInPhieuThu table.tblHangHoa { border: 1.2px solid #000; }'
