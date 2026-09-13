@@ -6138,11 +6138,15 @@ PhieuThu.prototype = {
     -------------------------------------------*/
     printPhieu: function () {
         var me = this;
-        var strKhoIn = $("#dropKhoInPhieuThu").val() || "A5 landscape";
         edu.extend.remove_PhoiIn("MauInPhieuThu");
-        me._printPhieuThuCustom('MauInPhieuThu', strKhoIn);
+        edu.util.printHTML('MauInPhieuThu');
         edu.system.switchTab('tab_1');
         me.closePhieu();
+        //var strKhoIn = $("#dropKhoInPhieuThu").val() || "A5 landscape";
+        //edu.extend.remove_PhoiIn("MauInPhieuThu");
+        //me._printPhieuThuCustom('MauInPhieuThu', strKhoIn);
+        //edu.system.switchTab('tab_1');
+        //me.closePhieu();
     },
     // Custom print riêng cho phiếu thu — thay edu.util.printHTML shared vì nó không carry CSS
     // scoped #MauInPhieuThu sang popup window → khung table biến mất + họ tên wrap.

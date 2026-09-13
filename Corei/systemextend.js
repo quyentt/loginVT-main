@@ -3543,6 +3543,9 @@ systemextend.prototype = {
             $("#" + zoneMauIn).append('<div id="' + zoneMauIn + strIDMoRong + '"></div><p style="page-break-before: always;"></p>');
             zoneMauIn = "" + zoneMauIn + strIDMoRong;
         }
+        if (!dtDoiTuong[0].MAUIN_MASO) {
+            dtDoiTuong[0].MAUIN_MASO = "CKVINHPHUC_BIENLAITHU";
+        }
         getTemplatePhieu(dtDoiTuong[0].MAUIN_MASO);
 
         function getTemplatePhieu(strMauInData) {
