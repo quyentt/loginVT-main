@@ -6149,6 +6149,7 @@ PhieuThu.prototype = {
     // Inject đầy đủ CSS cho popup: border table, Times New Roman, nowrap họ tên/mã/ngày sinh.
     _printPhieuThuCustom: function (divId, strKhoIn) {
         strKhoIn = strKhoIn === 'A4 landscape' ? 'A4 landscape' : 'A5 landscape';
+        var strChieuRongTrang = strKhoIn === 'A4 landscape' ? '297mm' : '210mm';
         var strChieuRongNoiDung = strKhoIn === 'A4 landscape' ? '287mm' : '200mm';
         var content = document.getElementById(divId).innerHTML;
         var w = window.open('', 'Print', 'height=800,width=1200');
@@ -6156,9 +6157,9 @@ PhieuThu.prototype = {
         // CSS tập trung vào việc căn giữa và hiển thị đúng
         var css = ''
                 /* Mặc định A5 ngang; người dùng có thể chọn A4 ngang tại dropdown Khổ in. */
-                + '@page { size: ' + strKhoIn + '; margin: ' + (strKhoIn === 'A4 landscape' ? '0.5cm' : '0.3cm') + '; }'
-            + 'html, body { margin: 0; padding: 0; width: 100%; }'
-            + 'body { font-family: "Times New Roman", Cambria, serif; font-size: 10pt; line-height: 1.25; color: #000; padding: 0.15cm 0.5cm; width: 100%; background: #fff; text-align: center; }'
+                + '@page { size: ' + strKhoIn + '; margin: 0; }'
+                + 'html, body { margin: 0; padding: 0; width: ' + strChieuRongTrang + '; }'
+                + 'body { font-family: "Times New Roman", Cambria, serif; font-size: 10pt; line-height: 1.25; color: #000; padding: 5mm; background: #fff; text-align: center; }'
             + '* { font-family: "Times New Roman", Cambria, serif; box-sizing: border-box; }'
                 /* Chiều rộng nội dung thay đổi theo khổ giấy được chọn, vẫn giới hạn bởi max-width.
                page-break-inside: avoid → phòng khi content vẫn hơi tràn, browser vẫn cố nén 1 trang thay vì cắt */
