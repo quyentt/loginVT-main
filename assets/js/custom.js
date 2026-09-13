@@ -629,4 +629,6 @@ setTimeout(() => {
     });
   });
   const chattingContent = document.querySelector(".user-chat-body");
-  chattingContent.scrollTop = chattingContent.scrollHeight;
+  if (chattingContent) {
+    chattingContent.scrollTop = chattingContent.scrollHeight;
+  }

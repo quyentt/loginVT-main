@@ -2909,31 +2909,23 @@ systemextend.prototype = {
             edu.extend.notifyBeginLoading("Dữ liệu không chính xác. Hãy liên hệ với ADMIN!", "w");
             return;
         }
-            function reportPhieuError(message, error) {
-                console.error('[getData_PhieuThu] ' + message, error || '');
-                edu.extend.notifyBeginLoading(message, 'w');
-            }
         var strMauInMain = '';
         var strIDMoRong = dtKhoanThu[0].CHUNGTU_ID;
-                    var detailData = data && data.Data;
-                    var detailRows = detailData && Array.isArray(detailData.rs) ? detailData.rs : [];
-                    var subjectRows = detailData && Array.isArray(detailData.rsThongTinDoiTuong) ? detailData.rsThongTinDoiTuong : [];
-                    if (!data || data.Success !== true) {
-                        reportPhieuError('Không thể tải dữ liệu phiếu ' + strHoaDon_Id + ': ' + ((data && data.Message) || 'API không trả về thành công.'));
-                        return;
-                    }
-                    if (detailRows.length === 0 || subjectRows.length === 0) {
-                        reportPhieuError('Phiếu ' + strHoaDon_Id + ' không đủ dữ liệu để hiển thị (khoản thu hoặc thông tin đối tượng rỗng).');
-                        return;
-                    }
-                    try {
-                        me.genData_PhieuThu(detailRows, subjectRows, zoneMauIn, maumacdinh, callback, bInTheoLo);
-                    } catch (error) {
-                        reportPhieuError('Lỗi dựng phiếu ' + strHoaDon_Id + ': ' + (error && error.message ? error.message : 'lỗi JavaScript không xác định.'), error);
+        if (bInTheoLo === true) {
+            $("#" + zoneMauIn).append('<div id="' + zoneMauIn + strIDMoRong + '"></div><p style="page-break-before: always;"></p>');
+            zoneMauIn = "" + zoneMauIn + strIDMoRong;
+        }
+        getTemplatePhieu(dtDoiTuong[0].MAUIN_MASO);
+
+        function getTemplatePhieu(strMauInData) {
+            var strMauIn = strMauInData;
+            ChuyenMauIn();
+            if (edu.util.checkValue(strMauIn)) {
+                $("#" + zoneMauIn).load(strDuongDan + strMauIn + '.html?v=1.0.1.28', function () {
                     checkTemplatePhieuMain();
                 });
             } else {
-                    reportPhieuError('Lỗi gọi API tải phiếu ' + strHoaDon_Id + ': ' + ((er && er.statusText) || 'Không kết nối được máy chủ.'), er);
+                $("#" + zoneMauIn).load(strDuongDan + maumacdinh + '.html?v=1.0.1.28', function () {
                     checkTemplatePhieuMacDinh();
                 });
             }
@@ -2941,7 +2933,7 @@ systemextend.prototype = {
             function checkTemplatePhieuMain() {
                 if (document.getElementById(zoneMauIn) != undefined && document.getElementById(zoneMauIn).innerHTML !== "" && document.getElementById(zoneMauIn).innerHTML.length > 0) {
                     strMauInMain = strMauIn;
-                    runGenKhoanThu();
+                    genKhoanThu_MoRong();
                 } else {
                     $("#" + zoneMauIn).load(strDuongDan + maumacdinh + '.html?v=1.0.1.4', function () {
                         checkTemplatePhieuMacDinh();
@@ -2952,19 +2944,9 @@ systemextend.prototype = {
             function checkTemplatePhieuMacDinh() {
                 if (document.getElementById(zoneMauIn).innerHTML !== "") {
                     strMauInMain = maumacdinh;
-                    runGenKhoanThu();
+                    genKhoanThu_MoRong();
                 } else {
                     edu.extend.notifyBeginLoading("Không thể load phiếu", "w");
-                }
-            }
-
-            function runGenKhoanThu() {
-                try {
-                    genKhoanThu_MoRong();
-                } catch (error) {
-                    $("#" + zoneMauIn).html("");
-                    edu.extend.notifyBeginLoading('Không thể dựng nội dung phiếu ' + strHoaDon_Id + ': ' + (error && error.message ? error.message : 'lỗi dữ liệu hoặc mẫu in.'), 'w');
-                    console.error('[genData_PhieuThu] render failed for ' + strHoaDon_Id, error);
                 }
             }
 
