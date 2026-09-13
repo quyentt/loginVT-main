@@ -3452,25 +3452,31 @@ systemextend.prototype = {
             'strPhieuThu_Rut_Id': strHoaDon_Id
         };
         $("#" + zoneMauIn).html("");
+        function reportPhieuError(message, error) {
+            console.error('[getData_PhieuThu] ' + message, error || '');
+            edu.extend.notifyBeginLoading(message, 'w');
+        }
         edu.system.makeRequest({
             success: function (data) {
-                if (data.Success) {
-                    if (data.Data.rs.length > 0 && data.Data.rsThongTinDoiTuong.length > 0) {
-                        me.genData_PhieuThu(data.Data.rs, data.Data.rsThongTinDoiTuong, zoneMauIn, maumacdinh, callback, bInTheoLo);
-                    } else {
-                        edu.extend.notifyBeginLoading('Không thể lấy thông tin đối tượng thu!. Vui lòng liên hệ admin', 'w');
-                        if (edu.util.checkValue(callback)) {
-                            callback();
-                        }
-                    }
-                } else {
-                    console.log("Thông báo: có lỗi xảy ra!");
-                    edu.extend.notifyBeginLoading("Lỗi: " + data.Message, "w");
+                var detailData = data && data.Data;
+                var detailRows = detailData && Array.isArray(detailData.rs) ? detailData.rs : [];
+                var subjectRows = detailData && Array.isArray(detailData.rsThongTinDoiTuong) ? detailData.rsThongTinDoiTuong : [];
+                if (!data || data.Success !== true) {
+                    reportPhieuError('Không thể tải dữ liệu phiếu ' + strHoaDon_Id + ': ' + ((data && data.Message) || 'API không trả về thành công.'));
+                    return;
+                }
+                if (detailRows.length === 0 || subjectRows.length === 0) {
+                    reportPhieuError('Phiếu ' + strHoaDon_Id + ' không đủ dữ liệu để hiển thị (khoản thu hoặc thông tin đối tượng rỗng).');
+                    return;
+                }
+                try {
+                    me.genData_PhieuThu(detailRows, subjectRows, zoneMauIn, maumacdinh, callback, bInTheoLo);
+                } catch (error) {
+                    reportPhieuError('Lỗi dựng phiếu ' + strHoaDon_Id + ': ' + (error && error.message ? error.message : 'lỗi JavaScript không xác định.'), error);
                 }
             },
             error: function (er) {
-                console.log("Thông báo: có lỗi xảy ra!");
-                edu.extend.notifyBeginLoading("Lỗi: " + data.Message, "w");
+                reportPhieuError('Lỗi gọi API tải phiếu ' + strHoaDon_Id + ': ' + ((er && er.statusText) || 'Không kết nối được máy chủ.'), er);
             },
             type: "GET",
             versionAPI: "v1.0",
@@ -3546,6 +3552,10 @@ systemextend.prototype = {
                 $("#" + zoneMauIn).load(strDuongDan + strMauIn + '.html?v=' + edu.util.uuid(), function () {
                     checkTemplatePhieuMain();
                 });
+            } else {
+                $("#" + zoneMauIn).load(strDuongDan + maumacdinh + '.html?v=' + edu.util.uuid(), function () {
+                    checkTemplatePhieuMacDinh();
+                });
             }
 
             function checkTemplatePhieuMain() {
@@ -3553,7 +3563,11 @@ systemextend.prototype = {
                 if (document.getElementById(zoneMauIn) != undefined && document.getElementById(zoneMauIn).innerHTML !== "" && document.getElementById(zoneMauIn).innerHTML.length > 0) {
                     strMauInMain = strMauIn;
                     console.log("Đã load mẫu in");
-                    genKhoanThu_MoRong();
+                    runGenKhoanThu();
+                } else {
+                    $("#" + zoneMauIn).load(strDuongDan + maumacdinh + '.html?v=' + edu.util.uuid(), function () {
+                        checkTemplatePhieuMacDinh();
+                    });
                 }
             }
 
@@ -3562,9 +3576,18 @@ systemextend.prototype = {
                 if (document.getElementById(zoneMauIn).innerHTML !== "") {
                     console.log('Đã load mẫu mặc định');
                     strMauInMain = maumacdinh;
-                    genKhoanThu_MoRong();
+                    runGenKhoanThu();
                 } else {
-                    edu.extend.notifyBeginLoading("Không thể load phiếu", "w");
+                    reportPhieuError('Không thể load mẫu phiếu ' + strHoaDon_Id + ' (mẫu riêng và mẫu mặc định đều rỗng).');
+                }
+            }
+
+            function runGenKhoanThu() {
+                try {
+                    genKhoanThu_MoRong();
+                } catch (error) {
+                    $("#" + zoneMauIn).html("");
+                    reportPhieuError('Không thể dựng nội dung phiếu ' + strHoaDon_Id + ': ' + (error && error.message ? error.message : 'lỗi dữ liệu hoặc mẫu in.'), error);
                 }
             }
 

@@ -407,9 +407,12 @@ PhieuThu.prototype = {
             me.strPhieuThu_Id = strPhieuThu_Id;
             me.bActiveRutTien = false;
             $(".beforeActive").hide();
-            $("#zoneBienLaiHoaDon").slideDown();
+            $("#zoneBienLaiHoaDon").stop(true, true).hide();
             $("#zoneTimKiemSinhVien").slideUp();
-            edu.extend.getData_Phieu(strPhieuThu_Id, "BIENLAI", 'MauInPhieuThu', main_doc.PhieuThu.changeWidthPrint);
+            edu.extend.getData_Phieu(strPhieuThu_Id, "BIENLAI", 'MauInPhieuThu', function () {
+                $("#zoneBienLaiHoaDon").stop(true, true).slideDown();
+                main_doc.PhieuThu.changeWidthPrint();
+            });
         });
         $("#zoneThongTinHSSV").delegate('.detail_KhoanRut', 'click', function (e) {
             e.stopImmediatePropagation();
@@ -417,9 +420,12 @@ PhieuThu.prototype = {
             me.strPhieuThu_Id = strPhieuThu_Id;
             me.bActiveRutTien = true;
             $(".beforeActive").hide();
-            $("#zoneBienLaiHoaDon").slideDown();
+            $("#zoneBienLaiHoaDon").stop(true, true).hide();
             $("#zoneTimKiemSinhVien").slideUp();
-            edu.extend.getData_Phieu(strPhieuThu_Id, "BIENLAI", "MauInPhieuThu", main_doc.PhieuThu.genHTML_PhieuRut);
+            edu.extend.getData_Phieu(strPhieuThu_Id, "BIENLAI", "MauInPhieuThu", function () {
+                $("#zoneBienLaiHoaDon").stop(true, true).slideDown();
+                main_doc.PhieuThu.genHTML_PhieuRut();
+            });
         });
         $("#zoneThongTinHSSV").delegate('.detail_PhieuHoaDon', 'click', function (e) {
             e.stopImmediatePropagation();
@@ -427,9 +433,12 @@ PhieuThu.prototype = {
             me.strPhieuThu_Id = strPhieuThu_Id;
             me.bActiveRutTien = true;
             $(".beforeActive").hide();
-            $("#zoneBienLaiHoaDon").slideDown();
+            $("#zoneBienLaiHoaDon").stop(true, true).hide();
             $("#zoneTimKiemSinhVien").slideUp();
-            edu.extend.getData_Phieu(strPhieuThu_Id, "HOADON", "MauInPhieuThu", main_doc.PhieuThu.changeWidthPrint);
+            edu.extend.getData_Phieu(strPhieuThu_Id, "HOADON", "MauInPhieuThu", function () {
+                $("#zoneBienLaiHoaDon").stop(true, true).slideDown();
+                main_doc.PhieuThu.changeWidthPrint();
+            });
         });
 
         /*------------------------------------------
