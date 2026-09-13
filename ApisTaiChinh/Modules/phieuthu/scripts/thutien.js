@@ -6151,6 +6151,11 @@ PhieuThu.prototype = {
         strKhoIn = strKhoIn === 'A4 landscape' ? 'A4 landscape' : 'A5 landscape';
         var strChieuRongTrang = strKhoIn === 'A4 landscape' ? '297mm' : '210mm';
         var strChieuRongNoiDung = strKhoIn === 'A4 landscape' ? '287mm' : '200mm';
+        var strLayoutA4 = strKhoIn === 'A4 landscape'
+            ? '#MauInPhieuThu > .pr-containt { min-height: 200mm !important; padding: 8mm !important; display: flex !important; flex-direction: column !important; }'
+                + '#MauInPhieuThu > .pr-containt > .pr-body { flex: 1 1 auto !important; }'
+                + '#MauInPhieuThu > .pr-containt > .pr-footer { margin-top: auto !important; }'
+            : '';
         var content = document.getElementById(divId).innerHTML;
         var w = window.open('', 'Print', 'height=800,width=1200');
         
@@ -6168,6 +6173,7 @@ PhieuThu.prototype = {
                `!important` để override inline style `margin-left: XXpx` mà template server có thể set. */
             + '#MauInPhieuThu > div, #MauInPhieuThu > table, #MauInPhieuThu > p, #MauInPhieuThu > center, #MauInPhieuThu > span, #MauInPhieuThu > h1, #MauInPhieuThu > h2, #MauInPhieuThu > h3, #MauInPhieuThu > h4 { max-width: 100%; margin: 0.02cm auto !important; padding: 0; }'
                 + '#MauInPhieuThu > .pr-containt { width: 100% !important; max-width: 100% !important; }'
+                + strLayoutA4
             + '#MauInPhieuThu table { border-collapse: collapse; width: 100%; margin: 1px auto; border: none; }'
             + '#MauInPhieuThu table td, #MauInPhieuThu table th { border: none; padding: 2px 4px; vertical-align: middle; font-size: 10pt; line-height: 1.5; text-align: left; }'
             + '#MauInPhieuThu table.tblHangHoa { border: 1.2px solid #000; }'
