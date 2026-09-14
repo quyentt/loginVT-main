@@ -3500,6 +3500,9 @@ KeHoachTuyenSinhNew.prototype = {
                     // Giữ lại data thô của danh mục Trường THPT để dựng chuỗi "Mã | Tên"
                     // (option chỉ render TEN, không có MA trong DOM).
                     if (p[1] === 'ddlKQ_Truong12') me._dtTruong12 = rows || [];
+                    // Đối tượng hóa đơn: giữ data thô để đổi ID → MÃ CHỮ lúc lưu
+                    // (BE chỉ nhận CA_NHAN/TO_CHUC — xem _maDoiTuongHoaDon).
+                    if (p[1] === 'ddlKQ_HD_DoiTuong') me._dtDoiTuongHD = rows || [];
                     onOne();
                 }, p[2]);
             });
@@ -4430,7 +4433,8 @@ KeHoachTuyenSinhNew.prototype = {
             'strIntake_IntakeTypeCode': g('txtKQ_IntakeTypeCode'),
 
             // Hóa đơn
-            'strPersonInvoice_TypeLoai': g('ddlKQ_HD_DoiTuong'),
+            // Mã chữ, không phải ID danh mục — xem _maDoiTuongHoaDon
+            'strPersonInvoice_TypeLoai': me._maDoiTuongHoaDon(),
             'strPersonInvoice_NguoiMua': g('txtKQ_HD_NguoiMua'),
             'strPersonInvoice_TenDonVi': g('txtKQ_HD_TenDonVi'),
             'strPersonInvoice_MST': g('txtKQ_HD_MST'),
@@ -5945,7 +5949,18 @@ KeHoachTuyenSinhNew.prototype = {
                 setVal('txtKQ_HD_Email', inv.BUYER_EMAIL);
                 setVal('txtKQ_HD_SDT', inv.BUYER_PHONE_SDT);
                 // Đối tượng là dropdown, danh mục nạp async → dùng retry của _setSelectByIdOrText
-                if (inv.BUYER_TYPE_LOAI) me._setSelectByIdOrText('#ddlKQ_HD_DoiTuong', inv.BUYER_TYPE_LOAI, '');
+                // DB lưu MÃ CHỮ (CA_NHAN/TO_CHUC) còn option value là ID → tra ngược ra ID
+                // qua data thô của danh mục, kèm text để phòng trường hợp chưa có cache.
+                if (inv.BUYER_TYPE_LOAI) {
+                    var maHD = (inv.BUYER_TYPE_LOAI + '').trim();
+                    var idHD = '', tenHD = maHD;
+                    (me._dtDoiTuongHD || []).forEach(function (r) {
+                        if (((r.MA || r.Ma || '') + '').trim() !== maHD) return;
+                        idHD = ((r.ID || r.Id || r.id || '') + '').trim();
+                        tenHD = ((r.TEN || r.Ten || '') + '').trim() || maHD;
+                    });
+                    me._setSelectByIdOrText('#ddlKQ_HD_DoiTuong', idHD || maHD, tenHD);
+                }
             },
             error: function (er) { kqdkNoLog('[HoaDon] LayDS_PersonInvoiceInfo err:', er); },
             type: 'POST',
@@ -5970,13 +5985,40 @@ KeHoachTuyenSinhNew.prototype = {
     -- Lưu thông tin hóa đơn. Đã có bản ghi → Sua_, chưa có → Them_.
     -- Không nhập gì và cũng chưa có bản ghi → bỏ qua, không tạo dòng rỗng.
     -------------------------------------------*/
+    /*------------------------------------------
+    -- BUYER_TYPE_LOAI: BE chỉ nhận MÃ CHỮ (CA_NHAN / TO_CHUC), KHÔNG nhận ID danh mục.
+    -- Dropdown nạp qua loadToCombo_DanhMucDuLieu nên option value là ID (chuỗi 32 ký tự),
+    -- phần "CA_NHAN" người dùng nhìn thấy chỉ là chữ hiển thị. Gửi thẳng .val() là dính
+    -- "Lưu thông tin hóa đơn lỗi: BUYER_TYPE_LOAI khong hop le" (hồ sơ vẫn lưu, riêng
+    -- hóa đơn bị bỏ).
+    -- Thứ tự lấy: MA của danh mục → chữ đang hiển thị → thà bỏ trống chứ không gửi ID.
+    -------------------------------------------*/
+    _maDoiTuongHoaDon: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var val = ((edu.system.getValById('ddlKQ_HD_DoiTuong') || '') + '').trim();
+        if (!val) return '';
+        var rows = me._dtDoiTuongHD || [];
+        for (var i = 0; i < rows.length; i++) {
+            var r = rows[i] || {};
+            var rid = ((r.ID || r.Id || r.id || '') + '').trim();
+            var rma = ((r.MA || r.Ma || '') + '').trim();
+            if (rid === val || rma === val) {
+                return rma || ((r.TEN || r.Ten || '') + '').trim();
+            }
+        }
+        var txt = ($('#ddlKQ_HD_DoiTuong option:selected').text() || '').trim();
+        if (txt && txt.indexOf('--') !== 0) return txt;
+        return val.length === 32 ? '' : val;   // 32 ký tự = ID, không gửi
+    },
+
     _collectInvoice: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
         var g = function (id) { return ((edu.system.getValById(id) || '') + '').trim(); };
         return {
             tenDonVi: g('txtKQ_HD_TenDonVi'), nguoiMua: g('txtKQ_HD_NguoiMua'),
             diaChi: g('txtKQ_HD_DiaChi'), mst: g('txtKQ_HD_MST'),
             maQHNS: g('txtKQ_HD_MaQHNS'), email: g('txtKQ_HD_Email'),
-            sdt: g('txtKQ_HD_SDT'), doiTuong: g('ddlKQ_HD_DoiTuong')
+            sdt: g('txtKQ_HD_SDT'), doiTuong: me._maDoiTuongHoaDon()
         };
     },
 
