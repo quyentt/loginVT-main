@@ -1554,7 +1554,10 @@
                     <div class="title">
                         <i class="fa-regular fa-file-lines"></i> Kết quả đăng ký
                     </div>
-                    <button type="button" class="btn-close-custom" data-bs-dismiss="modal" aria-label="Đóng">
+                    <!-- KHÔNG dùng data-bs-dismiss: khi đang mở form Sửa hồ sơ thì nút này phải
+                         quay về màn hình danh sách, chỉ đóng hẳn modal khi đang ở danh sách.
+                         Xử lý ở JS (#btnKQDK_Close). -->
+                    <button type="button" id="btnKQDK_Close" class="btn-close-custom" aria-label="Đóng">
                         <i class="fa-light fa-xmark"></i>
                         <span>Đóng</span>
                     </button>
@@ -2848,7 +2851,7 @@
         tryNext();
     })();
 </script>
-<script src="modules/tuyensinh/script/kehoachtuyensinhnew.js?v=1.0.7.2"></script>
+<script src="modules/tuyensinh/script/kehoachtuyensinhnew.js?v=1.0.7.8"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['KeHoachTuyenSinhNew'] = new KeHoachTuyenSinhNew();
