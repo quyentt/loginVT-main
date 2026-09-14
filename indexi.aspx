@@ -364,7 +364,6 @@
              neu dinh phai bien the do thi toan bo shell bi bo lai va con lai la mang trong
              ben phai. Dap ca chuoi tu .wrapper tro xuong cho chac. */
       html body.skin-blue .wrapper,
-      html body.skin-blue .wrapper>div:has(>.content-wrapper),
       html body.skin-blue .content-wrapper,
       html body.skin-blue .content-wrapper>.content-header,
       html body.skin-blue #main-content-wrapper,
@@ -374,6 +373,24 @@
         min-width: 0 !important;
         margin-right: 0 !important;
         float: none !important;
+        box-sizing: border-box !important;
+      }
+
+      /* Do console: .wrapper = 2117, nhung .content-wrapper (block, width:auto, ml:300,
+             mr:0, float:none, maxW:none) chi = 1469 thay vi 1817 => containing block cua no
+             chi rong 1769, tuc DIV BO truc tiep moi la thu bo be ngang (padding-right hoac
+             width %). Reset thang div bo do — dung :has() de bat dung 1 phan tu, khong lam
+             anh huong cac div khac trong .wrapper (#loading, .overlay...). */
+      html body.skin-blue div:has(>.content-wrapper) {
+        width: auto !important;
+        max-width: none !important;
+        min-width: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        float: none !important;
+        flex: 1 1 auto !important;
         box-sizing: border-box !important;
       }
 
