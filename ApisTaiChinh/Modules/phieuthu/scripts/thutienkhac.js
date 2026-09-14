@@ -1523,7 +1523,7 @@ PhieuThuKhac.prototype = {
                     //me.dt_ThuChung = data.Data.rsPhaiNopTongHopChung;
                     //me.dt_DuRieng = data.Data.rsDuThuaRieng;
                     //me.dt_DuChung = data.Data.rsDuThuaChung;
-                    me.dt_DoiTuongThu = data.Data.rsThongTin[0];
+                    //me.dt_DoiTuongThu = data.Data.rsThongTin[0];
 
                     if (data.Data.rsPhaiNopTongHopChung != null && data.Data.rsPhaiNopTongHopChung.length > 0) {
                         edu.system.switchTab("tab_2");
@@ -3609,8 +3609,8 @@ PhieuThuKhac.prototype = {
                 'dKhongSinhChungTu': 0,
                 'strPhieuThuTheoPhoiSan_Id': '',
                 'strTenNguoiThu': $("#strTenNguoiThu").val(),
-                'strNhap_HoTenNguoiMuaHang': $("#strTenNguoiThu").val(),
-                'bTenNguoiThu': true,
+                //'strNhap_HoTenNguoiMuaHang': $("#strTenNguoiThu").val(),
+                //'bTenNguoiThu': true,
                 'strNganHang_SoTaiKhoan': aNguoiHoc.NGANHANG_SOTAIKHOAN,
                 'strNganHang_ThuocNganHang_Id': aNguoiHoc.NGANHANG_THUOCNGANHANG_ID,
                 'strNganHang_ThuocNganHang_Ten': aNguoiHoc.NGANHANG_THUOCNGANHANG_TEN,
@@ -3894,7 +3894,8 @@ PhieuThuKhac.prototype = {
 
             //$(".txtDiaChiPTC_PT_Edit").html(data.aaaa);
             $(".txtMaNCSPTC_PT_Edit").html(data.MASO);
-            $(".txtHoTenPTC_PT_Edit").html('<input style="width: 200px" id="strTenNguoiThu" value="' + edu.util.returnEmpty(data.HODEM) + " " + edu.util.returnEmpty(data.TEN) + '" />');
+            console.log(data);
+            $(".txtHoTenPTC_PT_Edit").html(edu.util.returnEmpty(data.FULL_NAME));
             $(".iNgayPTC_PT_Edit").html(edu.util.thisDay());
             $(".iThangPTC_PT_Edit").html(edu.util.thisMonth());
             $(".iNamPTC_PT_Edit").html(edu.util.thisYear());
@@ -4088,7 +4089,7 @@ PhieuThuKhac.prototype = {
             edu.system.getList_DanhMucDulieu({ strMaBangDanhMuc: "QLTC.LTT" }, me.cbGenCombo_LoaiTienTe);
             var strNgayChungTu = edu.util.getValById("txtNgayChungTu");
             //$(".txtDiaChiPTC_PT_Edit").html(data.aaaa);
-            $(".txtMaNCSPTC_PT_Edit").html(data.MASO); $(".txtHoTenPTC_PT_Edit").html('<input style="width: 200px" id="strTenNguoiThu" value="' + edu.util.returnEmpty(data.HODEM) + " " + edu.util.returnEmpty(data.TEN) + '" />');
+            $(".txtMaNCSPTC_PT_Edit").html(data.MASO); $(".txtHoTenPTC_PT_Edit").html(edu.util.returnEmpty(data.FULL_NAME));
             if (strNgayChungTu) {
                 var arrChungTu = strNgayChungTu.split('/');
                 $(".iNgayPTC_PT_Edit").html(arrChungTu[0]);
