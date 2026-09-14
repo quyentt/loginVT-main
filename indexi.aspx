@@ -103,10 +103,16 @@
              AdminLTE `_all-skins.min.css` (spec 20) và styles.css `.main-sidebar
              { background:#fff !important }` (spec 10). */
 
-      /* Wrapper nền dask-blue để lộ được góc bo top-left của content-wrapper */
+      /* [FIX mang navy ben phai] Truoc day body + .wrapper de nen #223771 (navy) chi de
+             lo goc bo top-left cua .content-wrapper. Nhung .content-wrapper la block, be ngang
+             chi bang viewport - sidebar => bat ky vung nao no khong phu (scroll ngang do bang
+             min-width 2000px, mep phai khi layout co dinh be ngang, vung duoi khi content ngan)
+             deu lo ra mang navy giua trang. Doi canvas ve light cung tone content-wrapper;
+             goc bo duoc ve lai bang pseudo-element ::before nam duoi nen (xem .content-wrapper). */
+      html,
       html body.skin-blue,
       html body.skin-blue .wrapper {
-        background-color: #223771 !important;
+        background-color: #f0f3fd !important;
       }
 
       /* Header top: logo (bên trái, chiếm width sidebar) + navbar (bên phải).
@@ -341,10 +347,31 @@
         line-height: 1 !important;
       }
 
-      /* Content wrapper: nền light-gray + bo góc top-left */
+      /* Content wrapper: nền light-gray, KHONG bo goc + KHONG mieng navy lot duoi nua
+             (goc bo cu de lo mot o navy 24x24 o goc trai tren -> user bao "con ti xanh xanh"). */
       html body.skin-blue .content-wrapper {
         background-color: #f0f3fd !important;
-        border-top-left-radius: 16px;
+        border-top-left-radius: 0 !important;
+        position: relative;
+      }
+
+      /* [FULL WIDTH] Ep vung noi dung trai het be ngang con lai cua trang: dap moi
+             width/max-width/margin-right co dinh tren chuoi container
+             .content-wrapper > .content-header / #main-content-wrapper > .content. */
+      html body.skin-blue .content-wrapper,
+      html body.skin-blue .content-wrapper>.content-header,
+      html body.skin-blue #main-content-wrapper,
+      html body.skin-blue #main-content-wrapper .content {
+        width: auto !important;
+        max-width: none !important;
+        margin-right: 0 !important;
+        float: none !important;
+      }
+
+      /* Padding ngang gon lai de card sat mep phai, khong bo trong mot mang lon */
+      html body.skin-blue #main-content-wrapper .content {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
       }
 
       /* Breadcrumb "Bảng điều khiển / …" */
@@ -450,6 +477,21 @@
         align-items: center !important;
         line-height: 1 !important;
         padding: 4px 10px !important;
+      }
+
+      /* Badge chua co so lieu -> an han, tranh "cuc xanh" trong nam canh tieu de.
+         BS3 co san .badge:empty{display:none} nhung bi display:inline-flex !important
+         o tren de len, nen phai khai bao lai. */
+      html body.skin-blue .box-title .badge:empty,
+      html body.skin-blue .box-title .badge.bg-light-blue:empty {
+        display: none !important;
+      }
+
+      /* Truong hop badge boc 1 span con rong (<span class="badge"><span id="..."></span></span>):
+         badge KHONG match :empty vi con text node xuong dong -> dung :has().
+         Tach rule rieng de browser khong ho tro :has() van giu duoc rule :empty o tren. */
+      html body.skin-blue .box-title .badge:has(> span:only-child:empty) {
+        display: none !important;
       }
 
       /* Chan wrap: simplePagination render <ul><li> mac dinh display:inline-block ->

@@ -518,7 +518,93 @@ KeHoachTuyenSinhNew.prototype = {
         });
         $('#btnKQDK_Reload').click(function () {
             $('#txtKQDK_Search').val('');
+            me._kqFilters = {};
+            me._kqSort = null;
             me.loadKQDK_List();
+        });
+
+        /*---- Bộ lọc kiểu Excel trên tiêu đề cột (chế độ Gọn) ----*/
+        $('#tblKQDK_HoSo').on('click', '.kqdk-th-loc', function (e) {
+            e.stopPropagation();
+            var key = $(this).attr('data-key');
+            // Bấm lại đúng cột đang mở → đóng lại
+            if ($('#kqdk_filter_pop').length && $('#kqdk_filter_pop').data('key') === key) {
+                me._kqDongFilter();
+                return;
+            }
+            me._kqMoFilter(key, this);
+        });
+        // Bấm ra ngoài thì đóng popup; bấm bên trong thì không
+        $(document).on('mousedown.kqfilter', function (e) {
+            if ($(e.target).closest('#kqdk_filter_pop, .kqdk-th-loc').length) return;
+            me._kqDongFilter();
+        });
+        $(document).on('keydown.kqfilter', function (e) {
+            if (e.which === 27) me._kqDongFilter();
+        });
+
+        $(document).on('input', '#kqdk_f_tim', function () {
+            var kw = ($(this).val() || '').toLowerCase().trim();
+            var $pop = $('#kqdk_filter_pop');
+            $pop.find('.kqdk-f-list .kqdk-f-item').each(function () {
+                var v = (($(this).attr('data-v') || '') + '').toLowerCase();
+                $(this).toggle(!kw || v.indexOf(kw) >= 0);
+            });
+            me._kqDongBoTickAll($pop);
+        });
+        $(document).on('change', '#kqdk_f_all', function () {
+            var bat = $(this).is(':checked');
+            // Chỉ tick các dòng đang hiện — đúng kiểu Excel khi đang gõ tìm
+            $('#kqdk_filter_pop .kqdk-f-list .kqdk-f-item:visible .kqdk-f-cb').prop('checked', bat);
+        });
+        $(document).on('change', '#kqdk_filter_pop .kqdk-f-cb', function () {
+            me._kqDongBoTickAll($('#kqdk_filter_pop'));
+        });
+        $(document).on('click', '#kqdk_filter_pop .kqdk-f-sbtn', function () {
+            var $pop = $('#kqdk_filter_pop');
+            me._kqSort = { key: $pop.data('key'), dir: $(this).attr('data-dir') };
+            me._kqDongFilter();
+            me._kqApplyAllFilters();
+        });
+        $(document).on('click', '#kqdk_filter_pop .kqdk-f-clear', function (e) {
+            e.preventDefault();
+            delete me._kqFilters[$('#kqdk_filter_pop').data('key')];
+            me._kqDongFilter();
+            me._kqApplyAllFilters();
+        });
+        $(document).on('click', '#kqdk_filter_pop .kqdk-f-cancel', function () { me._kqDongFilter(); });
+        $(document).on('click', '#kqdk_filter_pop .kqdk-f-ok', function () {
+            var $pop = $('#kqdk_filter_pop');
+            var key = $pop.data('key');
+            var dsGiaTri = $pop.data('giatri') || [];
+            var chon = [];
+            $pop.find('.kqdk-f-list .kqdk-f-cb:checked').each(function () {
+                var idx = parseInt($(this).attr('data-idx'), 10);
+                if (!isNaN(idx)) chon.push(dsGiaTri[idx]);
+            });
+            if (!chon.length) {
+                edu.system.alert('Phải chọn ít nhất 1 giá trị, nếu không bảng sẽ trống trơn.', 'w');
+                return;
+            }
+            // Chọn hết = không lọc gì → bỏ luôn cho thanh chip khỏi rác
+            if (chon.length === dsGiaTri.length) delete me._kqFilters[key];
+            else me._kqFilters[key] = chon;
+            me._kqDongFilter();
+            me._kqApplyAllFilters();
+        });
+        // Thanh chip: bỏ lọc 1 cột / bỏ sắp xếp / xóa hết
+        $(document).on('click', '#kqdk_chip_loc .kqdk-chip-x', function () {
+            var k = $(this).attr('data-key');
+            if (k === '__sort') me._kqSort = null;
+            else delete me._kqFilters[k];
+            me._kqApplyAllFilters();
+        });
+        $(document).on('click', '#btnKQDK_XoaHetLoc', function (e) {
+            e.preventDefault();
+            me._kqFilters = {};
+            me._kqSort = null;
+            $('#txtKQDK_Search').val('');
+            me._kqApplyAllFilters();
         });
         $('#btnKQDK_Export').click(function () { me.exportKQDK_Excel(); });
         $('#btnKQDK_AutoClass').click(function () { me.kqdk_PhanLopTuDong_Selected(); });
@@ -2441,7 +2527,7 @@ KeHoachTuyenSinhNew.prototype = {
             // Re-render sau khi mỗi DM nạp xong để cột lookup theo ID hiện ra tên
             var reRender = function () {
                 if (!$('#kqdk_list').hasClass('d-none') && me.dtKQDK_HoSo && me.dtKQDK_HoSo.length) {
-                    me.renderKQDK_Table(me.dtKQDK_HoSo);
+                    me._kqApplyAllFilters();
                 }
             };
             if (NS.GITI) edu.system.loadToCombo_DanhMucDuLieu(NS.GITI, "ddlKQ_GioiTinh", "", reRender);
@@ -2558,7 +2644,9 @@ KeHoachTuyenSinhNew.prototype = {
                     //   → _nganhMaLookup (DM TUYENSINH.NGANHNGHE) → MA_NGANH
                     var remaining = 3;
                     var afterAll = function () {
-                        if (--remaining === 0) me.renderKQDK_Table(rows);
+                        // Qua _kqApplyAllFilters chứ không render thẳng: tải lại sau khi
+                        // sửa/xóa hồ sơ vẫn giữ nguyên bộ lọc người dùng đang đặt.
+                        if (--remaining === 0) me._kqApplyAllFilters();
                     };
                     me._ensureKQDK_DauRaMap(afterAll);
                     me._ensureNganhMaLookup(afterAll);
@@ -2826,7 +2914,28 @@ KeHoachTuyenSinhNew.prototype = {
         me._kqPageIdx = 1;
         $('#lblKQDK_Total').text(me._kqViewData.length);
         me._kqInitTableMode();      // tự guard; lần đầu sẽ dựng thead theo chế độ đã nhớ
+        me._kqCapNhatIconLoc();     // thead chỉ dựng 1 lần → phải tự tô lại phễu/mũi tên
         me._kqRenderPage();
+    },
+
+    /*------------------------------------------
+    -- Tô đậm phễu của cột đang lọc + gắn mũi tên ở cột đang sắp xếp.
+    -- _kqInitTableMode chỉ dựng thead đúng 1 lần nên mỗi lần đổi bộ lọc phải tự
+    -- cập nhật ở đây, không thì bấm lọc xong nhìn tiêu đề vẫn như chưa lọc gì.
+    -------------------------------------------*/
+    _kqCapNhatIconLoc: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (me._kqTableMode !== 'gon') return;
+        $('#tblKQDK_HoSo thead .kqdk-th-sort').remove();
+        $('#tblKQDK_HoSo thead .kqdk-th-loc').each(function () {
+            var k = $(this).attr('data-key');
+            var co = !!(me._kqFilters && me._kqFilters[k] && me._kqFilters[k].length);
+            $(this).toggleClass('dang-loc', co);
+            if (me._kqSort && me._kqSort.key === k) {
+                $('<i class="fa-solid fa-arrow-' + (me._kqSort.dir === 'asc' ? 'down-a-z' : 'up-z-a')
+                    + ' kqdk-th-sort"></i>').insertBefore(this);
+            }
+        });
     },
 
     /*------------------------------------------
@@ -2881,14 +2990,15 @@ KeHoachTuyenSinhNew.prototype = {
     // get = tự tính giá trị từ bản ghi, dùng khi cột gọn cần dữ liệu khác bảng đầy đủ
     //       (VD hiện TÊN ngành thay vì MÃ ngành) — không đụng vào mảng 51 phần tử,
     //       đổi mảng đó là lệch toàn bộ cột của chế độ Đầy đủ.
+    // key = định danh cột dùng cho bộ lọc kiểu Excel (xem _kqMoFilter)
     _KQ_COT_GON: [
-        { i: 2, ten: 'Họ và tên', css: 'td-left', w: 200 },
-        { i: 3, ten: 'Ngày sinh', css: 'td-center', w: 110 },
-        { i: 4, ten: 'Giới tính', css: 'td-center', w: 90 },
-        { i: 11, ten: 'Số CCCD', css: 'td-center', w: 140 },
-        { i: 8, ten: 'Điện thoại', css: 'td-center', w: 120 },
+        { key: 'hoten', i: 2, ten: 'Họ và tên', css: 'td-left', w: 200 },
+        { key: 'ngaysinh', i: 3, ten: 'Ngày sinh', css: 'td-center', w: 110 },
+        { key: 'gioitinh', i: 4, ten: 'Giới tính', css: 'td-center', w: 90 },
+        { key: 'cccd', i: 11, ten: 'Số CCCD', css: 'td-center', w: 140 },
+        { key: 'dienthoai', i: 8, ten: 'Điện thoại', css: 'td-center', w: 120 },
         {
-            ten: 'Ngành', css: 'td-left', w: 240,
+            key: 'nganh', ten: 'Ngành', css: 'td-left', w: 240,
             get: function (d) {
                 var me = main_doc.KeHoachTuyenSinhNew;
                 // View có cột tên ngành thì lấy thẳng, không thì tra qua Nguyện vọng đầu ra
@@ -2899,8 +3009,8 @@ KeHoachTuyenSinhNew.prototype = {
                 return (dr && dr.nganhTen) || '';
             }
         },
-        { i: 44, ten: 'Mã lớp QL', css: 'td-center', w: 110 },
-        { i: 41, ten: 'Ngày BH QĐ', css: 'td-center', w: 130 }
+        { key: 'lopql', i: 44, ten: 'Mã lớp QL', css: 'td-center', w: 110 },
+        { key: 'ngaybhqd', i: 41, ten: 'Ngày BH QĐ', css: 'td-center', w: 130 }
     ],
 
     _kqTableMode: '',
@@ -2921,8 +3031,18 @@ KeHoachTuyenSinhNew.prototype = {
             $tbl.find('thead').html(me._kqTheadFull);
             $tbl.removeClass('kqdk-clickrow');
         } else {
+            // Mỗi cột kèm nút phễu → bộ lọc kiểu Excel (xem _kqMoFilter).
+            // Phễu tô màu + hiện mũi tên sắp xếp khi cột đó đang có lọc/sort.
             var ths = me._KQ_COT_GON.map(function (c) {
-                return '<th class="' + c.css + '" style="min-width:' + c.w + 'px;">' + c.ten + '</th>';
+                var dangLoc = !!(me._kqFilters && me._kqFilters[c.key]);
+                var sort = (me._kqSort && me._kqSort.key === c.key) ? me._kqSort.dir : '';
+                return '<th class="' + c.css + '" style="min-width:' + c.w + 'px;">'
+                    + '<span class="kqdk-th">'
+                    + '<span class="kqdk-th-ten">' + c.ten + '</span>'
+                    + (sort ? '<i class="fa-solid fa-arrow-' + (sort === 'asc' ? 'down-a-z' : 'up-z-a') + ' kqdk-th-sort"></i>' : '')
+                    + '<i class="fa-solid fa-filter kqdk-th-loc' + (dangLoc ? ' dang-loc' : '')
+                    + '" data-key="' + c.key + '" title="Lọc / sắp xếp"></i>'
+                    + '</span></th>';
             }).join('');
             $tbl.find('thead').html('<tr>'
                 + '<th class="td-fixed td-center kqdk-col1">STT</th>'
@@ -3232,28 +3352,261 @@ KeHoachTuyenSinhNew.prototype = {
     -- Filter local: search trên dtKQDK_HoSo (không call API lại)
     -- Trường tìm: Họ tên, SĐT, Email, CCCD, Mã HS, SBD (chuỗi haystack)
     -------------------------------------------*/
-    filterKQDK_HoSo: function () {
+    /*==========================================================================
+    == BỘ LỌC KIỂU EXCEL CHO BẢNG KẾT QUẢ ĐĂNG KÝ (yêu cầu 14/09/2026)
+    == Bấm phễu ở tiêu đề cột → popup liệt kê các GIÁ TRỊ ĐANG CÓ của cột đó
+    == kèm số dòng, tick chọn cái nào thì bảng còn lại đúng cái đó. Lọc nhiều
+    == cột cùng lúc = giao nhau (AND), và vẫn cộng dồn với ô "Tìm nhanh".
+    == Sắp xếp tăng/giảm nằm luôn trong popup.
+    ==
+    == Toàn bộ chạy trên dữ liệu đã tải sẵn (dtKQDK_HoSo) — KHÔNG gọi lại API.
+    == Chỉ bật ở chế độ "Gọn": chế độ "Đầy đủ" 51 cột mà cắm phễu từng cột thì
+    == tiêu đề vỡ và cũng không ai lọc kiểu đó.
+    ==========================================================================*/
+    _kqFilters: {},    // key cột → mảng giá trị được chọn
+    _kqSort: null,     // { key, dir: 'asc' | 'desc' }
+
+    /*------------------------------------------
+    -- Giá trị HIỂN THỊ của 1 cột cho 1 bản ghi — phải đúng cái người dùng nhìn
+    -- thấy trên bảng, không thì lọc một đằng bảng hiện một nẻo.
+    -------------------------------------------*/
+    _kqGiaTriCot: function (d, cot, arr) {
         var me = main_doc.KeHoachTuyenSinhNew;
-        var kw = ($('#txtKQDK_Search').val() || '').toLowerCase().trim();
-        var src = me.dtKQDK_HoSo || [];
-        if (!kw) {
-            me.renderKQDK_Table(src);
-            return;
-        }
+        var v = cot.get ? cot.get(d) : (arr || me._kqRowToArray(d, 0))[cot.i];
+        return (v == null ? '' : String(v)).trim();
+    },
+
+    _kqTimCot: function (key) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        return me._KQ_COT_GON.filter(function (c) { return c.key === key; })[0] || null;
+    },
+
+    /*------------------------------------------
+    -- Áp TẤT CẢ điều kiện: ô tìm nhanh + lọc từng cột + sắp xếp → _kqViewData.
+    -- Một chỗ duy nhất quyết định bảng hiện gì, để không lệch giữa các đường vào.
+    -------------------------------------------*/
+    _kqApplyAllFilters: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
         var pick = me._kqPick;
-        var filtered = src.filter(function (d) {
-            var hay = [
-                pick(d, ['COREPERSON_HOTEN', 'CorePerson_HoTen', 'HOTEN']),
-                pick(d, ['PERSONCONTACT_DIENTHOAI', 'PersonContact_DienThoai', 'DIENTHOAI']),
-                pick(d, ['PERSONCONTACT_EMAIL', 'EMAIL']),
-                pick(d, ['PERSONIDEN_SOCCCD', 'PersonIden_SoCCCD', 'SOCCCD']),
-                pick(d, ['HOSO_MAHOSO', 'HoSo_MaHoSo', 'MA_HOSO']),
-                pick(d, ['HOSO_SOBAODANH', 'HoSo_SoBaoDanh', 'SBD']),
-                pick(d, ['COREPERSON_MASO', 'MA_SV', 'MASO'])
-            ].join('|').toLowerCase();
-            return hay.indexOf(kw) !== -1;
+        var rows = (me.dtKQDK_HoSo || []).slice();
+
+        // 1) Ô tìm nhanh
+        var kw = ($('#txtKQDK_Search').val() || '').toLowerCase().trim();
+        if (kw) {
+            rows = rows.filter(function (d) {
+                return [
+                    pick(d, ['COREPERSON_HOTEN', 'CorePerson_HoTen', 'HOTEN']),
+                    pick(d, ['PERSONCONTACT_DIENTHOAI', 'PersonContact_DienThoai', 'DIENTHOAI']),
+                    pick(d, ['PERSONCONTACT_EMAIL', 'EMAIL']),
+                    pick(d, ['PERSONIDEN_SOCCCD', 'PersonIden_SoCCCD', 'SOCCCD']),
+                    pick(d, ['HOSO_MAHOSO', 'HoSo_MaHoSo', 'MA_HOSO']),
+                    pick(d, ['HOSO_SOBAODANH', 'HoSo_SoBaoDanh', 'SBD']),
+                    pick(d, ['COREPERSON_MASO', 'MA_SV', 'MASO'])
+                ].join('|').toLowerCase().indexOf(kw) !== -1;
+            });
+        }
+
+        // 2) Lọc theo từng cột (AND). Tính arr 1 lần / bản ghi cho đỡ nặng.
+        var cacKey = Object.keys(me._kqFilters || {});
+        if (cacKey.length) {
+            var cacCot = cacKey.map(function (k) {
+                return { key: k, cot: me._kqTimCot(k), chon: me._kqFilters[k] };
+            }).filter(function (x) { return x.cot && x.chon && x.chon.length; });
+
+            rows = rows.filter(function (d) {
+                var arr = me._kqRowToArray(d, 0);
+                for (var i = 0; i < cacCot.length; i++) {
+                    var v = me._kqGiaTriCot(d, cacCot[i].cot, arr);
+                    if (cacCot[i].chon.indexOf(v) < 0) return false;
+                }
+                return true;
+            });
+        }
+
+        // 3) Sắp xếp
+        if (me._kqSort && me._kqSort.key) {
+            var cotSort = me._kqTimCot(me._kqSort.key);
+            if (cotSort) {
+                var huong = me._kqSort.dir === 'desc' ? -1 : 1;
+                rows.sort(function (a, b) {
+                    var va = me._kqGiaTriCot(a, cotSort);
+                    var vb = me._kqGiaTriCot(b, cotSort);
+                    // Ô trống luôn xuống cuối dù sắp xếp chiều nào
+                    if (!va && !vb) return 0;
+                    if (!va) return 1;
+                    if (!vb) return -1;
+                    // dd/mm/yyyy → so theo mốc thời gian, không so chuỗi
+                    var da = me._kqSoSanhNgay(va), db = me._kqSoSanhNgay(vb);
+                    if (da !== null && db !== null) return (da - db) * huong;
+                    var na = parseFloat(va.replace(/[^\d.-]/g, '')), nb = parseFloat(vb.replace(/[^\d.-]/g, ''));
+                    if (!isNaN(na) && !isNaN(nb) && /^[\d\s.,-]+$/.test(va) && /^[\d\s.,-]+$/.test(vb)) {
+                        return (na - nb) * huong;
+                    }
+                    return va.localeCompare(vb, 'vi') * huong;
+                });
+            }
+        }
+
+        me._kqVeChipLoc();
+        me.renderKQDK_Table(rows);
+    },
+
+    /*------------------------------------------
+    -- "14/09/2026 15:03:22" / "01/08/2007" → số để so sánh. Không phải ngày → null.
+    -------------------------------------------*/
+    _kqSoSanhNgay: function (s) {
+        var m = String(s).match(/^(\d{2})\/(\d{2})\/(\d{4})(?:\s+(\d{2}):(\d{2}):(\d{2}))?/);
+        if (!m) return null;
+        return new Date(+m[3], +m[2] - 1, +m[1], +(m[4] || 0), +(m[5] || 0), +(m[6] || 0)).getTime();
+    },
+
+    /*------------------------------------------
+    -- Thanh chip: đang lọc cột nào, bấm x để bỏ lọc cột đó.
+    -------------------------------------------*/
+    _kqVeChipLoc: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var $wrap = $('#kqdk_chip_loc');
+        if (!$wrap.length) return;
+        var esc = function (s) { return $('<div>').text(s == null ? '' : s).html(); };
+        var html = '';
+        Object.keys(me._kqFilters || {}).forEach(function (k) {
+            var cot = me._kqTimCot(k);
+            var chon = me._kqFilters[k] || [];
+            if (!cot || !chon.length) return;
+            var mo = chon.length <= 2
+                ? chon.map(function (v) { return v || '(trống)'; }).join(', ')
+                : chon.length + ' giá trị';
+            html += '<span class="kqdk-chip">'
+                + '<b>' + esc(cot.ten) + ':</b> ' + esc(mo)
+                + '<i class="fa-solid fa-xmark kqdk-chip-x" data-key="' + k + '" title="Bỏ lọc cột này"></i>'
+                + '</span>';
         });
-        me.renderKQDK_Table(filtered);
+        if (me._kqSort && me._kqSort.key) {
+            var cs = me._kqTimCot(me._kqSort.key);
+            if (cs) {
+                html += '<span class="kqdk-chip kqdk-chip-sort">'
+                    + '<i class="fa-solid fa-arrow-' + (me._kqSort.dir === 'asc' ? 'down-a-z' : 'up-z-a') + '"></i> '
+                    + esc(cs.ten)
+                    + '<i class="fa-solid fa-xmark kqdk-chip-x" data-key="__sort" title="Bỏ sắp xếp"></i>'
+                    + '</span>';
+            }
+        }
+        if (html) {
+            $wrap.html(html + '<a href="#" id="btnKQDK_XoaHetLoc" class="kqdk-chip-clear">'
+                + '<i class="fa-regular fa-trash-can"></i> Xóa hết lọc</a>').removeClass('d-none');
+        } else {
+            $wrap.html('').addClass('d-none');
+        }
+    },
+
+    /*------------------------------------------
+    -- Mở popup lọc của 1 cột. Danh sách giá trị lấy từ dữ liệu ĐÃ lọc bởi các
+    -- cột KHÁC (giống Excel: lọc Ngành rồi mở Lớp thì chỉ còn lớp của ngành đó).
+    -------------------------------------------*/
+    _kqMoFilter: function (key, elAnchor) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var cot = me._kqTimCot(key);
+        if (!cot) return;
+        me._kqDongFilter();
+
+        // Dữ liệu nền: áp ô tìm nhanh + lọc của các cột khác (bỏ qua cột đang mở)
+        var pick = me._kqPick;
+        var rows = (me.dtKQDK_HoSo || []).slice();
+        var kw = ($('#txtKQDK_Search').val() || '').toLowerCase().trim();
+        if (kw) {
+            rows = rows.filter(function (d) {
+                return [
+                    pick(d, ['COREPERSON_HOTEN', 'HOTEN']), pick(d, ['PERSONCONTACT_DIENTHOAI', 'DIENTHOAI']),
+                    pick(d, ['PERSONCONTACT_EMAIL', 'EMAIL']), pick(d, ['PERSONIDEN_SOCCCD', 'SOCCCD']),
+                    pick(d, ['HOSO_MAHOSO']), pick(d, ['HOSO_SOBAODANH']), pick(d, ['COREPERSON_MASO'])
+                ].join('|').toLowerCase().indexOf(kw) !== -1;
+            });
+        }
+        Object.keys(me._kqFilters || {}).forEach(function (k) {
+            if (k === key) return;
+            var c = me._kqTimCot(k), chon = me._kqFilters[k];
+            if (!c || !chon || !chon.length) return;
+            rows = rows.filter(function (d) { return chon.indexOf(me._kqGiaTriCot(d, c)) >= 0; });
+        });
+
+        // Gom giá trị duy nhất + đếm số dòng
+        var dem = {};
+        rows.forEach(function (d) {
+            var v = me._kqGiaTriCot(d, cot);
+            dem[v] = (dem[v] || 0) + 1;
+        });
+        var dsGiaTri = Object.keys(dem).sort(function (a, b) {
+            if (!a) return 1;
+            if (!b) return -1;
+            var da = me._kqSoSanhNgay(a), db = me._kqSoSanhNgay(b);
+            if (da !== null && db !== null) return da - db;
+            return a.localeCompare(b, 'vi');
+        });
+
+        var dangChon = me._kqFilters[key] || null;   // null = chưa lọc = chọn hết
+        var esc = function (s) { return $('<div>').text(s == null ? '' : s).html(); };
+        // .text().html() KHÔNG escape dấu nháy kép → tên chứa " sẽ phá vỡ attribute,
+        // nên giá trị nhét vào data-v phải escape riêng.
+        var escAttr = function (s) { return esc(s).replace(/"/g, '&quot;'); };
+        var items = dsGiaTri.map(function (v, idx) {
+            var tick = (!dangChon || dangChon.indexOf(v) >= 0) ? 'checked' : '';
+            return '<label class="kqdk-f-item" data-v="' + escAttr(v) + '">'
+                + '<input type="checkbox" class="kqdk-f-cb" data-idx="' + idx + '" ' + tick + '>'
+                + '<span class="kqdk-f-txt">' + (v ? esc(v) : '<i style="color:#94a3b8">(trống)</i>') + '</span>'
+                + '<span class="kqdk-f-dem">' + dem[v] + '</span>'
+                + '</label>';
+        }).join('');
+
+        var $pop = $('<div id="kqdk_filter_pop" class="kqdk-fpop">'
+            + '<div class="kqdk-f-head">' + esc(cot.ten) + '</div>'
+            + '<div class="kqdk-f-sort">'
+            + '<button type="button" class="kqdk-f-sbtn" data-dir="asc"><i class="fa-solid fa-arrow-down-a-z"></i> Tăng dần</button>'
+            + '<button type="button" class="kqdk-f-sbtn" data-dir="desc"><i class="fa-solid fa-arrow-up-z-a"></i> Giảm dần</button>'
+            + '</div>'
+            + '<div class="kqdk-f-search"><i class="fa-light fa-magnifying-glass"></i>'
+            + '<input type="text" id="kqdk_f_tim" placeholder="Tìm trong danh sách..."></div>'
+            + '<label class="kqdk-f-item kqdk-f-all"><input type="checkbox" id="kqdk_f_all" checked>'
+            + '<span class="kqdk-f-txt"><b>(Chọn tất cả)</b></span>'
+            + '<span class="kqdk-f-dem">' + dsGiaTri.length + '</span></label>'
+            + '<div class="kqdk-f-list">' + (items || '<div class="kqdk-f-empty">Không có dữ liệu</div>') + '</div>'
+            + '<div class="kqdk-f-foot">'
+            + '<a href="#" class="kqdk-f-clear">Bỏ lọc cột này</a>'
+            + '<div><button type="button" class="kqdk-f-btn kqdk-f-cancel">Hủy</button>'
+            + '<button type="button" class="kqdk-f-btn kqdk-f-ok">Đồng ý</button></div>'
+            + '</div></div>');
+
+        $pop.data('giatri', dsGiaTri).data('key', key);
+        $('body').append($pop);
+
+        // Định vị dưới nút phễu, tự lùi vào trong nếu chạm mép phải/dưới màn hình
+        var r = elAnchor.getBoundingClientRect();
+        var w = $pop.outerWidth(), h = $pop.outerHeight();
+        var left = Math.min(r.left, window.innerWidth - w - 12);
+        var top = r.bottom + 6;
+        if (top + h > window.innerHeight - 8) top = Math.max(8, r.top - h - 6);
+        $pop.css({ left: Math.max(8, left) + 'px', top: top + 'px' });
+
+        me._kqDongBoTickAll($pop);
+        setTimeout(function () { $('#kqdk_f_tim').focus(); }, 0);
+    },
+
+    _kqDongFilter: function () {
+        $('#kqdk_filter_pop').remove();
+    },
+
+    /*------------------------------------------
+    -- Ô "(Chọn tất cả)" phản ánh trạng thái các dòng ĐANG HIỆN (sau khi gõ tìm).
+    -------------------------------------------*/
+    _kqDongBoTickAll: function ($pop) {
+        var $hien = $pop.find('.kqdk-f-list .kqdk-f-item:visible .kqdk-f-cb');
+        var tong = $hien.length, chon = $hien.filter(':checked').length;
+        var $all = $pop.find('#kqdk_f_all');
+        $all.prop('checked', tong > 0 && chon === tong);
+        $all.prop('indeterminate', chon > 0 && chon < tong);
+    },
+
+    filterKQDK_HoSo: function () {
+        main_doc.KeHoachTuyenSinhNew._kqApplyAllFilters();
     },
 
     /*------------------------------------------

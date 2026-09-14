@@ -608,7 +608,8 @@ DonViPhi.prototype = {
             },
             aoColumns: [
                 {
-                    "mDataProp": "DAOTAO_COCAUTOCHUC_TEN "
+                    // FIX 2026-09-14: ten field bi thua dau cach o cuoi -> cot luon rong
+                    "mDataProp": "DAOTAO_COCAUTOCHUC_TEN"
                 },
                 {
                     "mDataProp": "MA"
@@ -629,9 +630,13 @@ DonViPhi.prototype = {
             ]
         };
         edu.system.loadToTable_data(jsonForm);
+        // FIX 2026-09-14: hien so dong da nap de biet danh sach da ra du hay chua
+        var iTong = edu.util.checkValue(data) ? data.length : 0;
+        $("#lblTongNganh_KhaiNhanh").html(iTong > 0 ? ("Tổng: " + iTong + " ngành") : "");
+        $("#zoneEdit .zoneScroll_KhaiNhanh").scrollTop(0);
     },
     /*------------------------------------------
-    --Discription: Danh mục 
+    --Discription: Danh mục
     -------------------------------------------*/
     /*------------------------------------------
 	--Discription: [2] ACCESS DB ==> Systemroot HeDaoTao/KhoaDaoTao/ChuongTrinhDaoTao

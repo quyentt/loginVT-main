@@ -1021,6 +1021,17 @@
         margin: 0 !important;
       }
       #main-content-wrapper .box-title.color-blue { color: #223771 !important; }
+      /* Badge dem so luong khi chua co du lieu -> an han, tranh "cuc xanh" trong
+         nam canh tieu de box (vd "Danh sach [ ]"). */
+      #main-content-wrapper .box-title .badge:empty {
+        display: none !important;
+      }
+      /* Badge boc 1 span con rong (<span class="badge"><span id="..."></span></span>):
+         badge khong match :empty vi con text node xuong dong -> dung :has().
+         Tach rule rieng de browser khong ho tro :has() van giu duoc rule :empty o tren. */
+      #main-content-wrapper .box-title .badge:has(> span:only-child:empty) {
+        display: none !important;
+      }
       /* Padding/margin helpers module AdminLTE */
       #main-content-wrapper .pd0 { padding: 0 !important; }
       #main-content-wrapper .pd10 { padding: 10px !important; }
