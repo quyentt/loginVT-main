@@ -2925,7 +2925,6 @@ KeHoachTuyenSinhNew.prototype = {
     -------------------------------------------*/
     _kqCapNhatIconLoc: function () {
         var me = main_doc.KeHoachTuyenSinhNew;
-        if (me._kqTableMode !== 'gon') return;
         $('#tblKQDK_HoSo thead .kqdk-th-sort').remove();
         $('#tblKQDK_HoSo thead .kqdk-th-loc').each(function () {
             var k = $(this).attr('data-key');
@@ -2990,13 +2989,17 @@ KeHoachTuyenSinhNew.prototype = {
     // get = tự tính giá trị từ bản ghi, dùng khi cột gọn cần dữ liệu khác bảng đầy đủ
     //       (VD hiện TÊN ngành thay vì MÃ ngành) — không đụng vào mảng 51 phần tử,
     //       đổi mảng đó là lệch toàn bộ cột của chế độ Đầy đủ.
-    // key = định danh cột dùng cho bộ lọc kiểu Excel (xem _kqMoFilter)
+    // key = định danh cột cho bộ lọc kiểu Excel (xem _kqMoFilter).
+    // Đặt theo chỉ số trong mảng _kqRowToArray ('i' + index) để KHỚP với key mà
+    // chế độ Đầy đủ tự sinh — lọc ở chế độ này rồi đổi sang chế độ kia vẫn giữ
+    // nguyên bộ lọc và phễu vẫn sáng đúng cột. Cột nào tự tính giá trị (Ngành)
+    // thì mới đặt tên riêng.
     _KQ_COT_GON: [
-        { key: 'hoten', i: 2, ten: 'Họ và tên', css: 'td-left', w: 200 },
-        { key: 'ngaysinh', i: 3, ten: 'Ngày sinh', css: 'td-center', w: 110 },
-        { key: 'gioitinh', i: 4, ten: 'Giới tính', css: 'td-center', w: 90 },
-        { key: 'cccd', i: 11, ten: 'Số CCCD', css: 'td-center', w: 140 },
-        { key: 'dienthoai', i: 8, ten: 'Điện thoại', css: 'td-center', w: 120 },
+        { key: 'i2', i: 2, ten: 'Họ và tên', css: 'td-left', w: 200 },
+        { key: 'i3', i: 3, ten: 'Ngày sinh', css: 'td-center', w: 110 },
+        { key: 'i4', i: 4, ten: 'Giới tính', css: 'td-center', w: 90 },
+        { key: 'i11', i: 11, ten: 'Số CCCD', css: 'td-center', w: 140 },
+        { key: 'i8', i: 8, ten: 'Điện thoại', css: 'td-center', w: 120 },
         {
             key: 'nganh', ten: 'Ngành', css: 'td-left', w: 240,
             get: function (d) {
@@ -3009,8 +3012,9 @@ KeHoachTuyenSinhNew.prototype = {
                 return (dr && dr.nganhTen) || '';
             }
         },
-        { key: 'lopql', i: 44, ten: 'Mã lớp QL', css: 'td-center', w: 110 },
-        { key: 'ngaybhqd', i: 41, ten: 'Ngày BH QĐ', css: 'td-center', w: 130 }
+        { key: 'i44', i: 44, ten: 'Mã lớp QL', css: 'td-center', w: 110 },
+        { key: 'i51', i: 51, ten: 'Nguồn khai thác', css: 'td-left', w: 170 },
+        { key: 'i41', i: 41, ten: 'Ngày BH QĐ', css: 'td-center', w: 130 }
     ],
 
     _kqTableMode: '',
@@ -3030,6 +3034,7 @@ KeHoachTuyenSinhNew.prototype = {
         if (mode === 'full') {
             $tbl.find('thead').html(me._kqTheadFull);
             $tbl.removeClass('kqdk-clickrow');
+            me._kqGanPhezuFull();
         } else {
             // Mỗi cột kèm nút phễu → bộ lọc kiểu Excel (xem _kqMoFilter).
             // Phễu tô màu + hiện mũi tên sắp xếp khi cột đó đang có lọc/sort.
@@ -3053,6 +3058,47 @@ KeHoachTuyenSinhNew.prototype = {
         }
         // Chỉ vẽ lại khi đã có dữ liệu — lần init đầu tiên renderKQDK_Table sẽ tự vẽ
         if (me._kqViewData) me._kqRenderPage();
+    },
+
+    /*------------------------------------------
+    -- Gắn phễu lọc cho chế độ ĐẦY ĐỦ. Thead ở đây 2 tầng nên không map thẳng
+    -- vị trí th sang chỉ số cột được, phải đi theo đúng luật của bảng:
+    --   Tầng 1: th có rowspan=2 là CỘT THẬT (bỏ 3 cột đầu STT/tick/Thao tác),
+    --           th không rowspan là TIÊU ĐỀ NHÓM (Số CCCD, Hộ khẩu...) → bỏ qua
+    --   Tầng 2: mọi th đều là cột thật, nối tiếp chỉ số của tầng 1
+    -- Đi hết 2 tầng là ra đúng chỉ số 2..50 của mảng _kqRowToArray.
+    -- Cách này tự bám theo thead nên sau này thêm/bớt cột không phải sửa lại đây.
+    -------------------------------------------*/
+    _kqGanPhezuFull: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var $tr = $('#tblKQDK_HoSo thead tr');
+        if ($tr.length < 2) return;
+        me._kqCotFull = {};
+        var idx = 2;      // arr[0]=STT, arr[1]=ô tick → cột dữ liệu bắt đầu từ 2
+        $tr.eq(0).find('th').each(function (i) {
+            if (i < 3) return;                        // STT / tick / Thao tác
+            if (!$(this).attr('rowspan')) return;     // tiêu đề nhóm
+            me._kqThemPhezu($(this), idx++);
+        });
+        $tr.eq(1).find('th').each(function () {
+            me._kqThemPhezu($(this), idx++);
+        });
+    },
+
+    _kqThemPhezu: function ($th, i) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var esc = function (s) { return $('<div>').text(s == null ? '' : s).html(); };
+        var ten = ($th.text() || '').replace(/\s+/g, ' ').trim();
+        var key = 'i' + i;
+        me._kqCotFull[key] = { key: key, i: i, ten: ten || ('Cột ' + i) };
+        var dangLoc = !!(me._kqFilters && me._kqFilters[key] && me._kqFilters[key].length);
+        var sort = (me._kqSort && me._kqSort.key === key) ? me._kqSort.dir : '';
+        $th.html('<span class="kqdk-th">'
+            + '<span class="kqdk-th-ten">' + esc(ten) + '</span>'
+            + (sort ? '<i class="fa-solid fa-arrow-' + (sort === 'asc' ? 'down-a-z' : 'up-z-a') + ' kqdk-th-sort"></i>' : '')
+            + '<i class="fa-solid fa-filter kqdk-th-loc' + (dangLoc ? ' dang-loc' : '')
+            + '" data-key="' + key + '" title="Lọc / sắp xếp"></i>'
+            + '</span>');
     },
 
     _kqInitTableMode: function () {
@@ -3145,6 +3191,171 @@ KeHoachTuyenSinhNew.prototype = {
         tiepTuc();
     },
 
+    /*==========================================================================
+    == CỘT "NGUỒN KHAI THÁC" CHO BẢNG DANH SÁCH (yêu cầu 14/09/2026)
+    == Nguồn khai thác không nằm trong hồ sơ TS mà ở bảng ghi-nhận đối tác
+    == (TS_HoSo_DoiTacTS), nên view danh sách không có.
+    == Cách lấy: thử MỘT request cho cả kế hoạch trước (bỏ trống Core_Person_Id).
+    == Được thì cả bảng chỉ tốn 1 lượt gọi. Proc không cho bỏ trống thì mới lùi
+    == về hỏi từng người như cột SĐT/Email đang làm.
+    ==========================================================================*/
+    _nguonMap: {},          // COREPERSON_ID → tên nguồn khai thác ('' = không có)
+    _nguonLoDaThu: false,   // đã thử cách lấy cả lô chưa
+    _ACTION_DM_DoiTacTS: 'SV_Core_TS_HoSo_MH/DSA4BRIeFRIeBS4oFSAiFTQ4JC8SKC8p',
+
+    /*------------------------------------------
+    -- Nạp danh mục đối tác để đổi ID → tên. Tách riêng khỏi _loadNguonKhaiThac
+    -- vì hàm đó còn đổ options + dựng lại select2 — không nên chạy khi đang ở
+    -- màn danh sách, form Khai lúc ấy đang ẩn.
+    -------------------------------------------*/
+    _ensureDMDoiTacTS: function (cb) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var xong = function () { if (typeof cb === 'function') cb(); };
+        if (me._dtNguonKhaiThac && me._dtNguonKhaiThac.length) { xong(); return; }
+        if (me._dmDoiTacDangTai) { setTimeout(function () { me._ensureDMDoiTacTS(cb); }, 300); return; }
+        me._dmDoiTacDangTai = true;
+        edu.system.makeRequest({
+            success: function (data) {
+                me._dtNguonKhaiThac = (data && data.Success && edu.util.checkValue(data.Data)) ? data.Data : [];
+                me._dmDoiTacDangTai = false;
+                xong();
+            },
+            error: function () {
+                me._dtNguonKhaiThac = me._dtNguonKhaiThac || [];
+                me._dmDoiTacDangTai = false;
+                xong();
+            },
+            type: 'POST',
+            contentType: true,
+            action: me._ACTION_DM_DoiTacTS,
+            data: {
+                'action': me._ACTION_DM_DoiTacTS,
+                'func': 'PKG_CORE_TS_HOSO.LayDS_TS_DoiTacTuyenSinh',
+                'iM': edu.system.iM,
+                'strTuKhoa': '',
+                'strNguoiThucHien_Id': edu.system.userId
+            },
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    /*------------------------------------------
+    -- ID đối tác → tên hiển thị. Danh mục để tên riêng ở cột TEN ("Anh", "Hùng")
+    -- nên phải ghép Họ + Đệm + Tên, giống cách dropdown đang dựng.
+    -------------------------------------------*/
+    _tenDoiTacTS: function (id) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (!id) return '';
+        var rows = me._dtNguonKhaiThac || [];
+        for (var i = 0; i < rows.length; i++) {
+            var r = rows[i] || {};
+            if (((r.ID || r.Id || r.id || '') + '') !== (id + '')) continue;
+            var full = me._kqPick(r, ['HOTEN', 'HO_TEN', 'HOVATEN', 'FULL_NAME', 'TENDAYDU', 'TEN_HIENTHI', 'TEN_DONVI']);
+            if (!full) {
+                full = [me._kqPick(r, ['HO', 'LAST_NAME']),
+                    me._kqPick(r, ['HODEM', 'HO_DEM', 'TENDEM', 'MIDDLE_NAME']),
+                    me._kqPick(r, ['TEN', 'FIRST_NAME'])]
+                    .filter(function (x) { return x; }).join(' ').replace(/\s+/g, ' ').trim();
+            }
+            return full || me._kqPick(r, ['MA', 'Ma']) || '';
+        }
+        return '';
+    },
+
+    _ensureNguonForRows: function (rows, cb) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var xong = function (coMoi) { if (typeof cb === 'function') cb(coMoi); };
+        if (!edu.util.checkValue(me._ACTION_LayDS_HoSo_DoiTacTS)) { xong(false); return; }
+
+        var canIds = [];
+        (rows || []).forEach(function (d) {
+            var pid = me._kqPick(d, ['COREPERSON_ID', 'CORE_PERSON_ID', 'PERSON_ID']);
+            if (pid && !(pid in me._nguonMap) && canIds.indexOf(pid) < 0) canIds.push(pid);
+        });
+        if (!canIds.length) { xong(false); return; }
+
+        // Gọi proc ghi-nhận đối tác. personId rỗng = lấy cả kế hoạch.
+        var goi = function (personId, ok) {
+            edu.system.makeRequest({
+                success: function (data) {
+                    ok((data && data.Success && edu.util.checkValue(data.Data)) ? data.Data : []);
+                },
+                error: function () { ok([]); },
+                type: 'POST',
+                contentType: true,
+                action: me._ACTION_LayDS_HoSo_DoiTacTS,
+                data: {
+                    'action': me._ACTION_LayDS_HoSo_DoiTacTS,
+                    'func': 'PKG_CORE_TS_HOSO.LayDS_TS_HoSo_DoiTacTS',
+                    'iM': edu.system.iM,
+                    'strHoSo_KH_TS_Id': me.strKeHoachTuyenSinh_Id || '',
+                    'strHoSo_KH_TS_Dot_Id': me.strDot_Id_ForKQ || '',
+                    'strNguyenVong_DauRa_Id': '',
+                    'strCore_Person_Id': personId || '',
+                    'strTS_DoiTacTuyenSinh_Id': '',
+                    // Prefix 'd' = NUMBER bên Oracle: rỗng phải là null, gửi '' là PLS-00306
+                    'dIs_Primary': null,
+                    'dIs_Current': null,
+                    'dIs_Active': 1,
+                    'strTuKhoa': '',
+                    'strNguoiThucHien_Id': edu.system.userId
+                },
+                fakedb: []
+            }, false, false, false, null);
+        };
+
+        var ghi = function (r) {
+            var pid = me._pickLoose(r, ['CORE_PERSON_ID', 'COREPERSON_ID', 'PERSON_ID']);
+            if (!pid) return;
+            var ten = me._kqPick(r, ['TS_DOITACTUYENSINH_TEN', 'DOITAC_TEN', 'DOITACTUYENSINH_TEN', 'HOTEN'])
+                || me._tenDoiTacTS(me._kqPick(r, ['TS_DOITACTUYENSINH_ID', 'DOITAC_ID']));
+            me._nguonMap[pid] = ten || '';
+        };
+
+        me._ensureDMDoiTacTS(function () {
+            // Lần đầu: thử lấy một lượt cho cả kế hoạch
+            if (!me._nguonLoDaThu) {
+                me._nguonLoDaThu = true;
+                goi('', function (arr) {
+                    if (arr.length) {
+                        arr.forEach(ghi);
+                        // Ai không có bản ghi → ghi rỗng để khỏi hỏi lại vòng sau
+                        canIds.forEach(function (p) { if (!(p in me._nguonMap)) me._nguonMap[p] = ''; });
+                        xong(true);
+                        return;
+                    }
+                    me._nguonLoHong = true;   // proc không cho bỏ trống → hỏi từng người
+                    layTungNguoi();
+                });
+                return;
+            }
+            if (me._nguonLoHong) { layTungNguoi(); return; }
+            // Lô đã chạy được rồi mà vẫn có người chưa biết → chắc chắn là không có nguồn
+            canIds.forEach(function (p) { me._nguonMap[p] = ''; });
+            xong(true);
+        });
+
+        function layTungNguoi() {
+            var i = 0, dangChay = 0, MAX = 6;
+            var tiep = function () {
+                while (dangChay < MAX && i < canIds.length) {
+                    var pid = canIds[i++];
+                    dangChay++;
+                    (function (personId) {
+                        goi(personId, function (arr) {
+                            if (arr.length) arr.forEach(ghi);
+                            if (!(personId in me._nguonMap)) me._nguonMap[personId] = '';
+                            dangChay--;
+                            if (i < canIds.length) { tiep(); return; }
+                            if (dangChay === 0) xong(true);
+                        });
+                    })(pid);
+                }
+            };
+            tiep();
+        }
+    },
+
     _kqRenderPage: function () {
         var me = main_doc.KeHoachTuyenSinhNew;
         var $tbody = $('#tblKQDK_HoSo tbody');
@@ -3156,7 +3367,7 @@ KeHoachTuyenSinhNew.prototype = {
         $('#chkKQDK_All').prop('checked', false);
 
         if (!total) {
-            $tbody.append('<tr><td class="td-center" colspan="52">Không có dữ liệu</td></tr>');
+            $tbody.append('<tr><td class="td-center" colspan="53">Không có dữ liệu</td></tr>');
             $wrap.addClass('d-none');
             return;
         }
@@ -3221,6 +3432,10 @@ KeHoachTuyenSinhNew.prototype = {
         // Lớp quản lý cho đúng các dòng vừa vẽ — cũng chỉ chạy 1 vòng rồi dừng
         // (lượt vẽ lại thấy mọi id đã có cache → coMoi = false).
         me._ensureLopForRows(data.slice(offset, end), function (coMoi) {
+            if (coMoi) me._kqRenderPage();
+        });
+        // Nguồn khai thác — cùng cơ chế cache + vẽ lại đúng 1 lần
+        me._ensureNguonForRows(data.slice(offset, end), function (coMoi) {
             if (coMoi) me._kqRenderPage();
         });
     },
@@ -3344,7 +3559,14 @@ KeHoachTuyenSinhNew.prototype = {
             pick(d, ['PERSONINVOICE_TENDONVI', 'HD_TEN_DONVI']),
             pick(d, ['PERSONINVOICE_MAQHNS', 'HD_MA_QHNS']),
             pick(d, ['PERSONINVOICE_DIACHI', 'HD_DIACHI']),
-            pick(d, ['PERSONINVOICE_MST', 'HD_MST', 'MST'])
+            pick(d, ['PERSONINVOICE_MST', 'HD_MST', 'MST']),
+            // [51] Nguồn khai thác — không có trong view, lấy từ bảng ghi-nhận đối tác
+            // (xem _ensureNguonForRows). PHẢI để CUỐI mảng: chèn vào giữa là lệch hết
+            // chỉ số của _KQ_COT_GON và mã cột bộ lọc.
+            (function () {
+                var pid = pick(d, ['COREPERSON_ID', 'CORE_PERSON_ID', 'PERSON_ID']);
+                return (me._nguonMap || {})[pid] || '';
+            })()
         ];
     },
 
@@ -3376,9 +3598,18 @@ KeHoachTuyenSinhNew.prototype = {
         return (v == null ? '' : String(v)).trim();
     },
 
+    _kqCotFull: {},    // key → { key, i, ten } — dựng khi vào chế độ Đầy đủ
+
     _kqTimCot: function (key) {
         var me = main_doc.KeHoachTuyenSinhNew;
-        return me._KQ_COT_GON.filter(function (c) { return c.key === key; })[0] || null;
+        // Ưu tiên định nghĩa cột Gọn: có cột tự tính giá trị riêng (Ngành)
+        var c = me._KQ_COT_GON.filter(function (x) { return x.key === key; })[0];
+        if (c) return c;
+        c = (me._kqCotFull || {})[key];
+        if (c) return c;
+        // Lọc đặt ở chế độ Đầy đủ, sau đó đổi chế độ nên chưa dựng lại bảng cột
+        var m = /^i(\d+)$/.exec(key || '');
+        return m ? { key: key, i: +m[1], ten: 'Cột ' + m[1] } : null;
     },
 
     /*------------------------------------------
@@ -3634,7 +3865,8 @@ KeHoachTuyenSinhNew.prototype = {
             'Bố - Họ tên', 'Bố - Năm sinh', 'Bố - Nơi ở', 'Bố - SĐT',
             'Mẹ - Họ tên', 'Mẹ - Năm sinh', 'Mẹ - Nơi ở', 'Mẹ - SĐT',
             'Số QĐ TT', 'Ngày ban hành QĐ', 'Khóa ĐT', 'Mã ngành', 'Mã lớp QL', 'Mã SV',
-            'Đối tượng HĐ', 'Tên đơn vị HĐ', 'Mã QHNS', 'Địa chỉ cơ quan HĐ', 'MST'
+            'Đối tượng HĐ', 'Tên đơn vị HĐ', 'Mã QHNS', 'Địa chỉ cơ quan HĐ', 'MST',
+            'Nguồn khai thác'
         ];
         var ws_data = [headerCols];
         for (var i = 0; i < src.length; i++) {

@@ -355,17 +355,32 @@
         position: relative;
       }
 
-      /* [FULL WIDTH] Ep vung noi dung trai het be ngang con lai cua trang: dap moi
-             width/max-width/margin-right co dinh tren chuoi container
-             .content-wrapper > .content-header / #main-content-wrapper > .content. */
+      /* [FULL WIDTH] Ep vung noi dung trai het be ngang con lai cua trang.
+             Audit CSS thuc te duoc nap (AdminLTE.min, _all-skins.min, styles.css,
+             styles-content.css, styles-responsive.css, index.min.css) KHONG co rule nao
+             set width/max-width cho .content-wrapper / #main-content-wrapper / .content /
+             .zone-bus / .box => thu bo be ngang nam o container NGOAI hon la .wrapper.
+             AdminLTE co .wrapper{max-width:1250px} (bien the layout-boxed) + overflow:hidden,
+             neu dinh phai bien the do thi toan bo shell bi bo lai va con lai la mang trong
+             ben phai. Dap ca chuoi tu .wrapper tro xuong cho chac. */
+      html body.skin-blue .wrapper,
+      html body.skin-blue .wrapper>div:has(>.content-wrapper),
       html body.skin-blue .content-wrapper,
       html body.skin-blue .content-wrapper>.content-header,
       html body.skin-blue #main-content-wrapper,
       html body.skin-blue #main-content-wrapper .content {
         width: auto !important;
         max-width: none !important;
+        min-width: 0 !important;
         margin-right: 0 !important;
         float: none !important;
+        box-sizing: border-box !important;
+      }
+
+      /* .wrapper con co margin:0 auto o bien the boxed -> ep sat trai, khong can giua */
+      html body.skin-blue .wrapper {
+        margin-left: 0 !important;
+        box-shadow: none !important;
       }
 
       /* Padding ngang gon lai de card sat mep phai, khong bo trong mot mang lon */
