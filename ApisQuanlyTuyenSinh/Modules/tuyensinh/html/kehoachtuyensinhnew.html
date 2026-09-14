@@ -1643,6 +1643,8 @@
                                 <button type="button" class="kqdk-tbopt" data-tbmode="gon">Gọn</button>
                                 <button type="button" class="kqdk-tbopt" data-tbmode="full">Đầy đủ</button>
                             </div>
+                            <!-- Tiến trình nạp chi tiết cho chế độ Đầy đủ (JS: _ensureChiTietForRows) -->
+                            <span id="lblKQDK_CtTienTrinh" class="d-none fz13" style="color:#b45309;"></span>
                             <div class="ms-auto" style="margin-left:auto;">
                                 <b>Tổng:</b> <span id="lblKQDK_Total" class="badge bg-light-blue" style="background:#0ea5e9;color:#fff;padding:4px 10px;border-radius:12px;font-size:12px;">0</span>
                             </div>
@@ -2049,6 +2051,13 @@
                     <div id="kqdk_khai_edit_banner" class="d-none" style="padding:10px 16px; background:#dbeafe; border-left:4px solid #2563eb; margin:12px 24px 0; border-radius:6px; font-size:13px; color:#1e3a8a;">
                         <i class="fa-regular fa-pen-to-square" style="color:#2563eb;"></i>
                         <b>Đang sửa hồ sơ.</b> Các field bạn thay đổi sẽ được lưu qua API <code>Sua_HoSo_TS</code>.
+                    </div>
+                    <!-- Hiện khi lưu hồ sơ MỚI xong mà không tra được Core_Person_Id → các
+                         bảng phụ chưa ghi được. Ẩn lại khi mở hồ sơ khác / đóng modal. -->
+                    <div id="kqdk_khai_luu_canhbao" class="d-none" style="padding:11px 16px; background:#fef2f2; border-left:4px solid #dc2626; margin:12px 24px 0; border-radius:6px; font-size:13px; color:#7f1d1d;">
+                        <i class="fa-solid fa-triangle-exclamation" style="color:#dc2626;"></i>
+                        <b>Hồ sơ vừa tạo chưa lưu đủ thông tin bổ sung</b> (địa chỉ, hóa đơn, gia đình, ngân hàng, nguồn khai thác).
+                        Mở hồ sơ đó trong danh sách rồi bấm <b>“Cập nhật hồ sơ”</b> một lần là xong.
                     </div>
                     <div class="aps-sv-form">
                         <!-- Chọn cách xem form. Chỉ bật/tắt panel, KHÔNG dời DOM và không
@@ -2961,7 +2970,7 @@
         tryNext();
     })();
 </script>
-<script src="modules/tuyensinh/script/kehoachtuyensinhnew.js?v=1.0.8.4"></script>
+<script src="modules/tuyensinh/script/kehoachtuyensinhnew.js?v=1.0.8.6"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['KeHoachTuyenSinhNew'] = new KeHoachTuyenSinhNew();

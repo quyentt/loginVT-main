@@ -607,6 +607,16 @@ KeHoachTuyenSinhNew.prototype = {
             me._kqApplyAllFilters();
         });
         $('#btnKQDK_Export').click(function () { me.exportKQDK_Excel(); });
+        // Trang quá nhiều dòng thì không tự nạp chi tiết — bấm tay để chạy
+        $(document).on('click', '#btnKQDK_NapChiTiet', function (e) {
+            e.preventDefault();
+            var cu = me._CT_MAX_ROWS;
+            me._CT_MAX_ROWS = 100000;          // cho phép đúng lượt bấm này
+            me._ensureChiTietForRows(me._kqTrangHienTai(), function (coMoi) {
+                me._CT_MAX_ROWS = cu;
+                if (coMoi) me._kqRenderPage();
+            });
+        });
         $('#btnKQDK_AutoClass').click(function () { me.kqdk_PhanLopTuDong_Selected(); });
         $('#chkKQDK_All').click(function () {
             $('#tblKQDK_HoSo tbody .kqdk-sel').prop('checked', $(this).is(':checked'));
@@ -1929,6 +1939,7 @@ KeHoachTuyenSinhNew.prototype = {
         me._suaMode = false;
         me.strSuaHoSo_Id = '';
         $('#kqdk_khai_edit_banner').addClass('d-none');
+        $('#kqdk_khai_luu_canhbao').addClass('d-none');
         $('#btnKhaiSave').html('<i class="fa-solid fa-floppy-disk"></i><span> Lưu hồ sơ</span>');
         $('#btnKhaiDoiNVDauVao').addClass('d-none');
     },
@@ -2535,6 +2546,13 @@ KeHoachTuyenSinhNew.prototype = {
             // (_ensureProfileMapForList) rồi tra tên qua 2 DM này.
             if (NS.DATO) edu.system.loadToCombo_DanhMucDuLieu(NS.DATO, "ddlKQ_DanToc", "", reRender);
             if (NS.TOGI) edu.system.loadToCombo_DanhMucDuLieu(NS.TOGI, "ddlKQ_TonGiao", "", reRender);
+            // 4 danh mục dưới đây phục vụ chế độ Đầy đủ: LayTT_HoSo_TS chỉ trả ID,
+            // phải có danh mục mới đổi ra tên hiển thị được (xem _ensureChiTietForRows).
+            var CH = C.CHUN || {};
+            if (CH.CHLU) edu.system.loadToCombo_DanhMucDuLieu(CH.CHLU, "ddlKQ_QuocTich", "", reRender);
+            edu.system.loadToCombo_DanhMucDuLieu("TS.DOITUONGDUTUYEN", "ddlKQ_DoiTuongTS", "", reRender);
+            edu.system.loadToCombo_DanhMucDuLieu("QLSV.DOITUONG", "ddlKQ_DoiTuongUT", "", reRender);
+            edu.system.loadToCombo_DanhMucDuLieu("QLSV.KHUVUC", "ddlKQ_KhuVucUT", "", reRender);
         } catch (ex) { }
     },
 
@@ -3356,6 +3374,171 @@ KeHoachTuyenSinhNew.prototype = {
         }
     },
 
+    /*==========================================================================
+    == NẠP CHI TIẾT CHO CHẾ ĐỘ "ĐẦY ĐỦ"
+    == Bảng Đầy đủ có 50 cột nhưng view danh sách chỉ trả 20 → hơn nửa bảng trống.
+    == Phần thiếu nằm ở các bảng khác, mỗi bảng một API riêng THEO TỪNG NGƯỜI:
+    ==   LayTT_HoSo_TS            → ngày/nơi cấp CCCD, dân tộc, tôn giáo, quốc tịch,
+    ==                              đối tượng TS/UT, khu vực UT, tổ hợp, điểm
+    ==   Get_Person_Family        → 8 cột bố / mẹ
+    ==   LayDS_PersonInvoiceInfo  → 5 cột xuất hóa đơn
+    == → 3 request / dòng. Vì vậy:
+    ==   - CHỈ chạy ở chế độ Đầy đủ, CHỈ cho các dòng đang hiển thị
+    ==   - tối đa 6 request song song, cache theo người (lật trang lại không gọi lại)
+    ==   - quá _CT_MAX_ROWS dòng/trang thì KHÔNG tự chạy, tránh bắn cả nghìn request
+    == Muốn bỏ hẳn cách chữa cháy này thì BE phải mở rộng view LayDS_HoSo_TS.
+    ==========================================================================*/
+    _ctMap: {},            // COREPERSON_ID → gộp dữ liệu 3 API
+    _CT_MAX_ROWS: 60,      // quá số này thì bắt bấm tay, không tự nạp
+
+    /*------------------------------------------
+    -- "id1,id2" → "Tên 1, Tên 2" theo danh mục đã nạp vào 1 dropdown.
+    -------------------------------------------*/
+    /*------------------------------------------
+    -- Lát dữ liệu của đúng trang đang hiển thị.
+    -------------------------------------------*/
+    _kqTrangHienTai: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var data = me._kqViewData || [];
+        var size = me._kqPageSize || 50;
+        var offset = (Math.max(1, me._kqPageIdx || 1) - 1) * size;
+        return data.slice(offset, Math.min(offset + size, data.length));
+    },
+
+    _kqLookupNhieuId: function (ids, selectId) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (!ids) return '';
+        return String(ids).split(/[,;]/).map(function (x) {
+            x = x.trim();
+            return x ? (me._kqLookupById(x, selectId) || '') : '';
+        }).filter(function (x) { return x; }).join(', ');
+    },
+
+    _ensureChiTietForRows: function (rows, cb) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var xong = function (coMoi) { if (typeof cb === 'function') cb(coMoi); };
+
+        var viec = [];
+        (rows || []).forEach(function (d) {
+            var pid = me._kqPick(d, ['COREPERSON_ID', 'CORE_PERSON_ID', 'PERSON_ID']);
+            var hid = me._kqPick(d, ['HOSO_ID', 'ID']);
+            if (!pid || (pid in me._ctMap)) return;
+            if (viec.some(function (x) { return x.pid === pid; })) return;
+            viec.push({ pid: pid, hid: hid });
+        });
+        if (!viec.length) { xong(false); return; }
+        if (viec.length > me._CT_MAX_ROWS) {
+            $('#lblKQDK_CtTienTrinh').removeClass('d-none').html(
+                '<a href="#" id="btnKQDK_NapChiTiet" style="color:#b45309;font-weight:600;">'
+                + '<i class="fa-regular fa-cloud-arrow-down"></i> Nạp chi tiết ' + viec.length + ' dòng</a>');
+            xong(false);
+            return;
+        }
+
+        var tong = viec.length, doneNguoi = 0;
+        var $tt = $('#lblKQDK_CtTienTrinh').removeClass('d-none');
+        var veTienTrinh = function () {
+            $tt.html('<i class="fa-solid fa-spinner fa-spin"></i> Đang nạp chi tiết ' + doneNguoi + '/' + tong);
+        };
+        veTienTrinh();
+
+        // 1 người = 3 request; gom hết vào 1 hàng đợi chung, chạy 6 luồng
+        var hangDoi = [];
+        viec.forEach(function (v) {
+            me._ctMap[v.pid] = {};   // đặt sớm để lượt vẽ sau không xếp hàng lại
+            var oc = { con: 3 };
+            var xongMot = function () {
+                if (--oc.con === 0) { doneNguoi++; veTienTrinh(); }
+            };
+            hangDoi.push(function (tiep) { me._ctLayHoSo(v, function () { xongMot(); tiep(); }); });
+            hangDoi.push(function (tiep) { me._ctLayGiaDinh(v, function () { xongMot(); tiep(); }); });
+            hangDoi.push(function (tiep) { me._ctLayHoaDon(v, function () { xongMot(); tiep(); }); });
+        });
+
+        var i = 0, dangChay = 0, MAX = 6;
+        var chay = function () {
+            while (dangChay < MAX && i < hangDoi.length) {
+                var f = hangDoi[i++];
+                dangChay++;
+                f(function () {
+                    dangChay--;
+                    if (i < hangDoi.length) { chay(); return; }
+                    if (dangChay === 0) { $tt.addClass('d-none').html(''); xong(true); }
+                });
+            }
+        };
+        chay();
+    },
+
+    _ctLayHoSo: function (v, done) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (!v.hid) { done(); return; }
+        edu.system.makeRequest({
+            success: function (r) {
+                var d = (r && r.Success && r.Data) || null;
+                var row = (d && d.length !== undefined) ? d[0] : d;
+                if (row) me._ctMap[v.pid].hs = row;
+                done();
+            },
+            error: function () { done(); },
+            type: 'POST', contentType: true,
+            action: me._ACTION_LayTT_HoSo,
+            data: {
+                'action': me._ACTION_LayTT_HoSo,
+                'func': 'PKG_CORE_TS_HOSO.LayTT_HoSo_TS',
+                'iM': edu.system.iM,
+                'strHoSo_Id': v.hid,
+                'strNguoiThucHien_Id': edu.system.userId,
+                'strVaiTroDangNhap_Id': edu.system.strVaiTro_Id || '',
+                'strChucNangHeThong_Id': edu.system.strChucNang_Id || '',
+                'strHanhDong_Code': 'XEM'
+            },
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    _ctLayGiaDinh: function (v, done) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        // Phải có danh mục Quan hệ gia đình trước: _findFamRow khớp Bố/Mẹ theo Id
+        // danh mục, thiếu nó thì chỉ còn cách đoán theo tên quan hệ.
+        me._ensureFamTypeDM(function () {
+            me._getFamilyList(v.pid, function (rows) {
+                if (rows && rows.length) {
+                    me._ctMap[v.pid].bo = me._findFamRow(rows, 'BO');
+                    me._ctMap[v.pid].me = me._findFamRow(rows, 'ME');
+                }
+                done();
+            });
+        });
+    },
+
+    _ctLayHoaDon: function (v, done) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (!edu.util.checkValue(me._ACTION_Inv_LayDS)) { done(); return; }
+        edu.system.makeRequest({
+            success: function (data) {
+                var arr = (data && data.Success && edu.util.checkValue(data.Data)) ? data.Data : [];
+                if (arr.length) me._ctMap[v.pid].hd = arr[0];
+                done();
+            },
+            error: function () { done(); },
+            type: 'POST', contentType: true,
+            action: me._ACTION_Inv_LayDS,
+            data: {
+                'action': me._ACTION_Inv_LayDS,
+                'func': 'PKG_CORE_NGUOIHOC_01.LayDS_PersonInvoiceInfo',
+                'iM': edu.system.iM,
+                'strPerson_Id': v.pid,
+                'dChiHienHanh': 1,
+                'strNguoiThucHien_Id': edu.system.userId,
+                'strVaiTroDangNhap_Id': edu.system.vaiTroDangNhap_Id || '',
+                'strChucNangHeThong_Id': edu.system.chucNangHeThong_Id || edu.system.strChucNang_Id,
+                'strHanhDong_Code': ''
+            },
+            fakedb: []
+        }, false, false, false, null);
+    },
+
     _kqRenderPage: function () {
         var me = main_doc.KeHoachTuyenSinhNew;
         var $tbody = $('#tblKQDK_HoSo tbody');
@@ -3438,6 +3621,12 @@ KeHoachTuyenSinhNew.prototype = {
         me._ensureNguonForRows(data.slice(offset, end), function (coMoi) {
             if (coMoi) me._kqRenderPage();
         });
+        // Chi tiết cho chế độ Đầy đủ (3 request/dòng) — chế độ Gọn không cần nên không gọi
+        if (me._kqTableMode === 'full') {
+            me._ensureChiTietForRows(data.slice(offset, end), function (coMoi) {
+                if (coMoi) me._kqRenderPage();
+            });
+        }
     },
 
     /*------------------------------------------
@@ -3449,6 +3638,14 @@ KeHoachTuyenSinhNew.prototype = {
     _kqRowToArray: function (d, stt) {
         var me = main_doc.KeHoachTuyenSinhNew;
         var pick = me._kqPick;
+        // Dữ liệu nạp bổ sung cho chế độ Đầy đủ (xem _ensureChiTietForRows).
+        // ct.hs = LayTT_HoSo_TS | ct.bo / ct.me = Get_Person_Family | ct.hd = hóa đơn
+        var ct = (me._ctMap || {})[pick(d, ['COREPERSON_ID', 'CORE_PERSON_ID', 'PERSON_ID'])] || {};
+        var hs = ct.hs || {};
+        var hd = ct.hd || {};
+        // Lấy từ view danh sách trước, không có mới lấy từ bản chi tiết
+        var bu = function (v, k) { return v || (hs[k] == null ? '' : hs[k]); };
+        var fam = function (r, names) { return r ? (me._pickLoose(r, names) || '') : ''; };
         // Format ngày sinh ISO "2026-07-08" → "08/07/2026"
         var ngaySinh = pick(d, ['COREPERSON_NGAYSINH', 'CorePerson_NgaySinh', 'NGAY_SINH', 'NGAYSINH']);
         if (ngaySinh && /^\d{4}-\d{2}-\d{2}/.test(ngaySinh)) {
@@ -3474,15 +3671,18 @@ KeHoachTuyenSinhNew.prototype = {
                 var t = pick(d, ['PERSONPROFILE_DANTOC_TEN', 'DANTOC_TEN', 'PersonProfile_DanToc_Ten']);
                 if (t) return t;
                 var pf = (me._kqProfileMap || {})[pick(d, ['COREPERSON_ID', 'CORE_PERSON_ID', 'PERSON_ID'])];
-                return pf ? me._kqLookupById(pf.ETHNICITY_ID, 'ddlKQ_DanToc') : '';
+                return (pf ? me._kqLookupById(pf.ETHNICITY_ID, 'ddlKQ_DanToc') : '')
+                    || me._kqLookupById(hs.PERSONPROFILE_DANTOC_ID, 'ddlKQ_DanToc');
             })(),
             (function () {
                 var t = pick(d, ['PERSONPROFILE_TONGIAO_TEN', 'TONGIAO_TEN', 'PersonProfile_TonGiao_Ten']);
                 if (t) return t;
                 var pf = (me._kqProfileMap || {})[pick(d, ['COREPERSON_ID', 'CORE_PERSON_ID', 'PERSON_ID'])];
-                return pf ? me._kqLookupById(pf.RELIGION_ID, 'ddlKQ_TonGiao') : '';
+                return (pf ? me._kqLookupById(pf.RELIGION_ID, 'ddlKQ_TonGiao') : '')
+                    || me._kqLookupById(hs.PERSONPROFILE_TONGIAO_ID, 'ddlKQ_TonGiao');
             })(),
-            pick(d, ['PERSONPROFILE_QUOCTICH_TEN', 'QUOCTICH_TEN', 'PersonProfile_QuocTich_Ten']),
+            pick(d, ['PERSONPROFILE_QUOCTICH_TEN', 'QUOCTICH_TEN', 'PersonProfile_QuocTich_Ten'])
+                || me._kqLookupById(hs.PERSONPROFILE_QUOCTICH_ID, 'ddlKQ_QuocTich'),
             // Điện thoại / Email: view thường không trả, bản FULL có thể đặt tên khác →
             // thử alias rồi mới quét mờ. Quét mờ phải LOẠI TRỪ BO_/ME_/BUYER_ để không
             // lấy nhầm SĐT của bố mẹ hay số trên hóa đơn vào cột của thí sinh.
@@ -3498,40 +3698,43 @@ KeHoachTuyenSinhNew.prototype = {
             // CCCD — thử alias biết trước, fallback fuzzy quét mọi key chứa "CCCD"/"CMND"
             (pick(d, ['PERSONIDEN_SOCCCD', 'PersonIden_SoCCCD', 'SOCCCD', 'SO_CCCD', 'CCCD', 'CCCD_SO', 'SoCCCD', 'strPersonIden_SoCCCD', 'SOCMND', 'SO_CMND', 'CMND'])
                 || me._kqPickFuzzy(d, /^(?!.*NGAY)(?!.*NOI)(?!.*NGAY_CAP)(?!.*NOI_CAP).*(CCCD|CMND).*$/i)),
-            (pick(d, ['PERSONIDEN_NGAYCAP', 'PersonIden_NgayCap', 'NGAYCAPCCCD', 'NGAY_CAP', 'NGAYCAP', 'NgayCap', 'NgayCapCCCD', 'strPersonIden_NgayCap'])
-                || me._kqPickFuzzy(d, /(NGAY_?CAP|NGAYCAP)/i)),
-            (pick(d, ['PERSONIDEN_NOICAP', 'PersonIden_NoiCap', 'NOICAPCCCD', 'NOI_CAP', 'NOICAP', 'NoiCap', 'NoiCapCCCD', 'strPersonIden_NoiCap'])
-                || me._kqPickFuzzy(d, /(NOI_?CAP|NOICAP)/i)),
+            bu(pick(d, ['PERSONIDEN_NGAYCAP', 'PersonIden_NgayCap', 'NGAYCAPCCCD', 'NGAY_CAP', 'NGAYCAP', 'NgayCap', 'NgayCapCCCD', 'strPersonIden_NgayCap'])
+                || me._kqPickFuzzy(d, /(NGAY_?CAP|NGAYCAP)/i), 'PERSONIDEN_NGAYCAP'),
+            bu(pick(d, ['PERSONIDEN_NOICAP', 'PersonIden_NoiCap', 'NOICAPCCCD', 'NOI_CAP', 'NOICAP', 'NoiCap', 'NoiCapCCCD', 'strPersonIden_NoiCap'])
+                || me._kqPickFuzzy(d, /(NOI_?CAP|NOICAP)/i), 'PERSONIDEN_NOICAP'),
             // Hộ khẩu
             pick(d, ['PERSONADDR_HK_TINH_TEN', 'HK_TINH_TEN', 'PersonAddr_HK_Tinh_Ten']),
             pick(d, ['PERSONADDR_HK_XA_TEN', 'HK_XA_TEN', 'PersonAddr_HK_Xa_Ten']),
             pick(d, ['PERSONADDR_HK_SONHA', 'HK_SONHA', 'PersonAddr_HK_SoNha']),
             // Xét tuyển
             pick(d, ['HOSO_KH_DOT_PT_TEN', 'PHUONGTHUC_TEN', 'HoSo_KH_Dot_PT_Ten']),
-            pick(d, ['HOSO_DOITUONG_TS_TEN', 'DOITUONG_TS_TEN']),
-            pick(d, ['HOSO_DOITUONG_UT_TEN', 'DOITUONG_UT_TEN']),
-            pick(d, ['HOSO_KHUVUC_UT_TEN', 'KHUVUC_UT_TEN']),
+            pick(d, ['HOSO_DOITUONG_TS_TEN', 'DOITUONG_TS_TEN'])
+                || me._kqLookupById(hs.HOSO_DOITUONG_TS_ID, 'ddlKQ_DoiTuongTS'),
+            pick(d, ['HOSO_DOITUONG_UT_TEN', 'DOITUONG_UT_TEN'])
+                || me._kqLookupNhieuId(hs.HOSO_DOITUONG_UT_IDS, 'ddlKQ_DoiTuongUT'),
+            pick(d, ['HOSO_KHUVUC_UT_TEN', 'KHUVUC_UT_TEN'])
+                || me._kqLookupById(hs.HOSO_KHUVUC_UT_ID, 'ddlKQ_KhuVucUT'),
             pick(d, ['PERSONEDU_TINH_ID', 'MATINH12']),
             pick(d, ['PERSONEDU_MATRUONG', 'MATRUONG12']),
             pick(d, ['PERSONEDU_TRUONGMATEN', 'TENTRUONG12']),
             pick(d, ['PERSONEDU_HOCLUC', 'HOCLUC12', 'HOC_LUC']),
             pick(d, ['PERSONEDU_HANHKIEM', 'HANHKIEM12', 'HANH_KIEM']),
-            pick(d, ['XETTUYEN_TOHOPMON_CODE', 'XetTuyen_TohopMon_Code', 'TOHOP_MA']),
+            bu(pick(d, ['XETTUYEN_TOHOPMON_CODE', 'XetTuyen_TohopMon_Code', 'TOHOP_MA']), 'XETTUYEN_TOHOPMON_CODE'),
             pick(d, ['XETTUYEN_DIEM_MON1', 'DIEM_MON1']),
             pick(d, ['XETTUYEN_DIEM_MON2', 'DIEM_MON2']),
             pick(d, ['XETTUYEN_DIEM_MON3', 'DIEM_MON3']),
-            pick(d, ['XETTUYEN_DIEMUUTIEN', 'DIEM_UT', 'XetTuyen_DiemUuTien']),
-            pick(d, ['XETTUYEN_DIEMTONGXT', 'XetTuyen_DiemTongXT', 'TONG_DIEM_XT']),
-            // Bố
-            pick(d, ['PERSONFAM_BO_HOTEN', 'BO_HOTEN', 'PersonFam_Bo_HoTen']),
-            pick(d, ['PERSONFAM_BO_NAMSINH', 'BO_NAMSINH', 'PersonFam_Bo_NamSinh']),
-            pick(d, ['PERSONFAM_BO_NOIO', 'BO_NOIO', 'PersonFam_Bo_NoiO']),
-            pick(d, ['PERSONFAM_BO_SDT', 'BO_SDT', 'PersonFam_Bo_SDT']),
+            bu(pick(d, ['XETTUYEN_DIEMUUTIEN', 'DIEM_UT', 'XetTuyen_DiemUuTien']), 'XETTUYEN_DIEMUUTIEN'),
+            bu(pick(d, ['XETTUYEN_DIEMTONGXT', 'XetTuyen_DiemTongXT', 'TONG_DIEM_XT']), 'XETTUYEN_DIEMTONGXT'),
+            // Bố — view danh sách không có, lấy từ PERSON_FAMILY (ct.bo)
+            pick(d, ['PERSONFAM_BO_HOTEN', 'BO_HOTEN']) || fam(ct.bo, ['FULL_NAME', 'HOTEN']),
+            pick(d, ['PERSONFAM_BO_NAMSINH', 'BO_NAMSINH']) || fam(ct.bo, ['BIRTH_YEAR', 'NAMSINH']),
+            pick(d, ['PERSONFAM_BO_NOIO', 'BO_NOIO']) || fam(ct.bo, ['ADDRESS_TEXT', 'DIACHI', 'NOIO']),
+            pick(d, ['PERSONFAM_BO_SDT', 'BO_SDT']) || fam(ct.bo, ['PHONE_NUMBER', 'SODIENTHOAI', 'SDT']),
             // Mẹ
-            pick(d, ['PERSONFAM_ME_HOTEN', 'ME_HOTEN', 'PersonFam_Me_HoTen']),
-            pick(d, ['PERSONFAM_ME_NAMSINH', 'ME_NAMSINH', 'PersonFam_Me_NamSinh']),
-            pick(d, ['PERSONFAM_ME_NOIO', 'ME_NOIO', 'PersonFam_Me_NoiO']),
-            pick(d, ['PERSONFAM_ME_SDT', 'ME_SDT', 'PersonFam_Me_SDT']),
+            pick(d, ['PERSONFAM_ME_HOTEN', 'ME_HOTEN']) || fam(ct.me, ['FULL_NAME', 'HOTEN']),
+            pick(d, ['PERSONFAM_ME_NAMSINH', 'ME_NAMSINH']) || fam(ct.me, ['BIRTH_YEAR', 'NAMSINH']),
+            pick(d, ['PERSONFAM_ME_NOIO', 'ME_NOIO']) || fam(ct.me, ['ADDRESS_TEXT', 'DIACHI', 'NOIO']),
+            pick(d, ['PERSONFAM_ME_SDT', 'ME_SDT']) || fam(ct.me, ['PHONE_NUMBER', 'SODIENTHOAI', 'SDT']),
             // Trúng tuyển
             pick(d, ['KETQUA_QUYETDINH_MA', 'SO_QD_TT', 'SoQuyetDinh']),
             pick(d, ['KETQUA_NGAYBANHANH', 'NGAY_QD_TT', 'HOSO_NGAYKETQUA']),
@@ -3554,12 +3757,12 @@ KeHoachTuyenSinhNew.prototype = {
             // Mã lớp QL — view không có cột mã, phải dò + tra map ID (xem _kqLopQL)
             me._kqLopQL(d),
             pick(d, ['COREPERSON_MASO', 'MA_SV', 'MASV', 'MASO']),
-            // Hóa đơn
-            pick(d, ['PERSONINVOICE_TYPELOAI_TEN', 'HD_DOITUONG_TEN']),
-            pick(d, ['PERSONINVOICE_TENDONVI', 'HD_TEN_DONVI']),
-            pick(d, ['PERSONINVOICE_MAQHNS', 'HD_MA_QHNS']),
-            pick(d, ['PERSONINVOICE_DIACHI', 'HD_DIACHI']),
-            pick(d, ['PERSONINVOICE_MST', 'HD_MST', 'MST']),
+            // Hóa đơn — view danh sách không có, lấy từ PERSON_INVOICE_INFO (ct.hd)
+            pick(d, ['PERSONINVOICE_TYPELOAI_TEN', 'HD_DOITUONG_TEN']) || (hd.BUYER_TYPE_LOAI || ''),
+            pick(d, ['PERSONINVOICE_TENDONVI', 'HD_TEN_DONVI']) || (hd.BUYER_NAME || ''),
+            pick(d, ['PERSONINVOICE_MAQHNS', 'HD_MA_QHNS']) || (hd.BUYER_BUDGET_MAQHNS || ''),
+            pick(d, ['PERSONINVOICE_DIACHI', 'HD_DIACHI']) || (hd.BUYER_ADDR_DIACHI || ''),
+            pick(d, ['PERSONINVOICE_MST', 'HD_MST', 'MST']) || (hd.BUYER_TAX_MST || ''),
             // [51] Nguồn khai thác — không có trong view, lấy từ bảng ghi-nhận đối tác
             // (xem _ensureNguonForRows). PHẢI để CUỐI mảng: chèn vào giữa là lệch hết
             // chỉ số của _KQ_COT_GON và mã cột bộ lọc.
@@ -5097,19 +5300,30 @@ KeHoachTuyenSinhNew.prototype = {
                     // ⚠ Controller Them_HoSo_TS KHÔNG gán 3 out param vào response
                     // (không có this.response.Id = strCorePerson_Id_Out) → FE luôn nhận Id null.
                     // Thử đọc trước, không có thì tra ngược từ danh sách theo CCCD.
-                    var newPersonId = me._pickCorePersonIdFromResp(data);
-                    if (newPersonId) {
-                        me._saveKhai_PhuThuoc(newPersonId, snap);
-                    } else {
-                        me._findNewPersonId(snap.cccd, snap.hoTen, function (pid) {
+                    // Soát cảnh báo hóa đơn NGAY BÂY GIỜ: mọi nhánh dưới đây đều chạy
+                    // async, tới lúc callback về thì form có thể đã bị dọn trắng.
+                    var canhBaoHD = me._hoaDonWarnText();
+                    var xuLy = function (pid) {
+                        if (pid) {
                             me._saveKhai_PhuThuoc(pid, snap);
-                        });
-                    }
-                    // Gọi _hoaDonWarnText TRƯỚC resetKhai_HoSo — reset xoá trắng form thì
-                    // không còn gì để soát nữa.
-                    edu.system.alert("Đã lưu hồ sơ thành công"
-                        + me._addrWarnText(snap.addr) + me._hoaDonWarnText(), "s");
-                    me.resetKhai_HoSo();
+                            edu.system.alert("Đã lưu hồ sơ thành công"
+                                + me._addrWarnText(snap.addr) + canhBaoHD, "s");
+                            me.resetKhai_HoSo();
+                            return;
+                        }
+                        // Không tra được Core_Person_Id → 7 bảng phụ CHƯA được ghi.
+                        // Trước đây chỗ này im lặng nên người dùng tưởng đã lưu đủ,
+                        // mãi tới khi kế toán báo thiếu địa chỉ mới biết.
+                        me.resetKhai_HoSo();
+                        $('#kqdk_khai_luu_canhbao').removeClass('d-none');
+                        edu.system.alert('Đã lưu hồ sơ chính, NHƯNG chưa gắn được các thông tin '
+                            + 'bổ sung (địa chỉ, hóa đơn, gia đình, ngân hàng, nguồn khai thác).'
+                            + '<br/>Vui lòng mở hồ sơ vừa tạo trong danh sách và bấm '
+                            + '<b>"Cập nhật hồ sơ"</b> một lần để lưu nốt.', 'w');
+                    };
+                    var newPersonId = me._pickCorePersonIdFromResp(data);
+                    if (newPersonId) xuLy(newPersonId);
+                    else me._findNewPersonId(snap.cccd, snap.hoTen, xuLy);
                 } else {
                     edu.system.alert("Them_HoSo_TS: " + ((data && data.Message) || 'Lỗi không xác định'), "w");
                 }
@@ -7143,52 +7357,87 @@ KeHoachTuyenSinhNew.prototype = {
     -- out param strCorePerson_Id_Out (so sánh: Them_Person_Profile có this.response.Id).
     -- Cách tra: nạp lại danh sách hồ sơ của KH + Đợt vừa khai rồi khớp theo CCCD.
     -------------------------------------------*/
+    /*------------------------------------------
+    -- ⚠ Đây là mắt xích quyết định việc lưu hồ sơ MỚI có đủ hay không.
+    -- Tra không ra Id là 7 bảng phụ (hóa đơn, địa chỉ, gia đình, ngân hàng, CCCD
+    -- ngày/nơi cấp, dân tộc/tôn giáo, nguồn khai thác) ĐỀU KHÔNG ĐƯỢC LƯU, mà
+    -- trước đây lại im lặng — đúng hiện tượng khách báo 14/09/2026: "lưu lần đầu
+    -- không được, vào Cập nhật lại mới được", gặp 3 lần liền.
+    -- Bản cũ chỉ hỏi ĐÚNG MỘT LẦN với strTuKhoa = CCCD, hỏng ở 2 điểm:
+    --   1) không chắc proc có tìm theo CCCD hay không
+    --   2) hỏi ngay lập tức, BE có thể chưa commit xong bản ghi vừa thêm
+    -- Nay: hỏi theo từ khóa → không ra thì quét cả danh sách của KH+Đợt rồi lọc
+    -- tại chỗ → vẫn không ra thì chờ rồi thử lại, tối đa 3 nhịp (0.9s/1.8s/2.7s).
+    -------------------------------------------*/
     _findNewPersonId: function (cccd, hoTen, cb) {
         var me = main_doc.KeHoachTuyenSinhNew;
         var xong = function (id) { if (typeof cb === 'function') cb(id || ''); };
         if (!edu.util.checkValue(cccd) && !edu.util.checkValue(hoTen)) { xong(''); return; }
-        edu.system.makeRequest({
-            success: function (data) {
-                var rows = (data && data.Success && data.Data) || [];
-                if (rows && rows.length === undefined) rows = [rows];
-                var chuan = function (s) { return ((s || '') + '').trim().toLowerCase(); };
-                var hit = null;
-                if (edu.util.checkValue(cccd)) {
-                    hit = (rows || []).filter(function (r) {
-                        return chuan(me._pickLoose(r, ['PERSONIDEN_SOCCCD', 'SOCCCD', 'CCCD'])) === chuan(cccd);
-                    })[0];
-                }
-                // CCCD trùng là chắc chắn; khớp theo họ tên chỉ dùng khi không có CCCD
-                if (!hit && edu.util.checkValue(hoTen)) {
-                    hit = (rows || []).filter(function (r) {
-                        return chuan(me._pickLoose(r, ['COREPERSON_HOTEN', 'HOTEN'])) === chuan(hoTen);
-                    })[0];
-                }
-                xong(hit ? me._pickLoose(hit, ['COREPERSON_ID', 'CORE_PERSON_ID', 'PERSON_ID']) : '');
-            },
-            error: function () { xong(''); },
-            type: 'POST',
-            contentType: true,
-            action: 'SV_Core_TS_HoSo_MH/DSA4BRIeCS4SLh4VEgPP',
-            data: {
-                'action': 'SV_Core_TS_HoSo_MH/DSA4BRIeCS4SLh4VEgPP',
-                'func': 'PKG_CORE_TS_HOSO.LayDS_HoSo_TS',
-                'iM': edu.system.iM,
-                'strTuKhoa': edu.util.checkValue(cccd) ? cccd : (hoTen || ''),
-                'strHoSo_KH_TS_Id': me.strKeHoachTuyenSinh_Id || '',
-                'strHoSo_KH_TS_Dot_Id': me.strDot_Id_ForKQ || '',
-                'strHoSo_KH_Dot_PT_Id': '',
-                'strNguyenVong_DauRa_Id': '',
-                'strHoSo_KetQuaCode': '',
-                'strHoSo_TuNgay': '',
-                'strHoSo_DenNgay': '',
-                'strNguoiThucHien_Id': edu.system.userId,
-                'strVaiTroDangNhap_Id': edu.system.strVaiTro_Id || '',
-                'strChucNangHeThong_Id': edu.system.strChucNang_Id || '',
-                'strHanhDong_Code': 'XEM'
-            },
-            fakedb: []
-        }, false, false, false, null);
+        var chuan = function (s) { return ((s || '') + '').trim().toLowerCase(); };
+        // So CCCD theo chữ số thôi — file/BE hay dính khoảng trắng, dấu gạch
+        var soCC = function (s) { return ((s || '') + '').replace(/\D/g, ''); };
+
+        var doTim = function (kw, ok) {
+            edu.system.makeRequest({
+                success: function (data) {
+                    var rows = (data && data.Success && data.Data) || [];
+                    if (rows && rows.length === undefined) rows = [rows];
+                    var hit = null;
+                    if (edu.util.checkValue(cccd)) {
+                        hit = (rows || []).filter(function (r) {
+                            return soCC(me._pickLoose(r, ['PERSONIDEN_SOCCCD', 'SOCCCD', 'CCCD'])) === soCC(cccd);
+                        })[0];
+                    }
+                    // CCCD trùng là chắc chắn; khớp theo họ tên chỉ dùng khi không có CCCD
+                    if (!hit && edu.util.checkValue(hoTen)) {
+                        hit = (rows || []).filter(function (r) {
+                            return chuan(me._pickLoose(r, ['COREPERSON_HOTEN', 'HOTEN'])) === chuan(hoTen);
+                        })[0];
+                    }
+                    ok(hit ? me._pickLoose(hit, ['COREPERSON_ID', 'CORE_PERSON_ID', 'PERSON_ID']) : '');
+                },
+                error: function () { ok(''); },
+                type: 'POST',
+                contentType: true,
+                action: 'SV_Core_TS_HoSo_MH/DSA4BRIeCS4SLh4VEgPP',
+                data: {
+                    'action': 'SV_Core_TS_HoSo_MH/DSA4BRIeCS4SLh4VEgPP',
+                    'func': 'PKG_CORE_TS_HOSO.LayDS_HoSo_TS',
+                    'iM': edu.system.iM,
+                    'strTuKhoa': kw || '',
+                    'strHoSo_KH_TS_Id': me.strKeHoachTuyenSinh_Id || '',
+                    'strHoSo_KH_TS_Dot_Id': me.strDot_Id_ForKQ || '',
+                    'strHoSo_KH_Dot_PT_Id': '',
+                    'strNguyenVong_DauRa_Id': '',
+                    'strHoSo_KetQuaCode': '',
+                    'strHoSo_TuNgay': '',
+                    'strHoSo_DenNgay': '',
+                    'strNguoiThucHien_Id': edu.system.userId,
+                    'strVaiTroDangNhap_Id': edu.system.strVaiTro_Id || '',
+                    'strChucNangHeThong_Id': edu.system.strChucNang_Id || '',
+                    'strHanhDong_Code': 'XEM'
+                },
+                fakedb: []
+            }, false, false, false, null);
+        };
+
+        var nhip = 0;
+        var vong = function () {
+            doTim(edu.util.checkValue(cccd) ? cccd : (hoTen || ''), function (id) {
+                if (id) { xong(id); return; }
+                // Proc có thể không tìm theo CCCD → quét cả danh sách rồi lọc tại chỗ
+                doTim('', function (id2) {
+                    if (id2) { xong(id2); return; }
+                    if (++nhip > 3) {
+                        kqdkNoLog('[LuuHoSo] không tra được Core_Person_Id sau ' + nhip + ' nhịp');
+                        xong('');
+                        return;
+                    }
+                    setTimeout(vong, 900 * nhip);   // chờ BE commit xong rồi hỏi lại
+                });
+            });
+        };
+        vong();
     },
 
     _pickCorePersonIdFromResp: function (data) {

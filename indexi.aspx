@@ -353,6 +353,17 @@
         background-color: #f0f3fd !important;
         border-top-left-radius: 0 !important;
         position: relative;
+        /* ROOT CAUSE be ngang thieu 348px: styles.css:3092 .skin-blue .content-wrapper
+               { overflow:hidden } -> element tao BFC (block formatting context), ma box tao BFC
+               thi TU CO LAI de ne float nam canh no. Do console: div bo rong 2116.67,
+               margin-left 300 => dang le width = 1816.67, nhung thuc te 1468.87
+               (= 2116.67 - 300 - 347.8 be ngang cua float). Moi rule width/max-width/margin
+               deu vo nghia vi day la co che layout chu khong phai thuoc tinh width.
+               Fix: bo BFC. Dung `clip` (KHONG tao BFC nhung van cat tran nhu hidden) de giu
+               nguyen hanh vi chong tran ngang cua cac module khac; `visible` la fallback cho
+               browser khong ho tro overflow:clip. */
+        overflow: visible !important;
+        overflow: clip !important;
       }
 
       /* [FULL WIDTH] Ep vung noi dung trai het be ngang con lai cua trang.
@@ -376,23 +387,9 @@
         box-sizing: border-box !important;
       }
 
-      /* Do console: .wrapper = 2117, nhung .content-wrapper (block, width:auto, ml:300,
-             mr:0, float:none, maxW:none) chi = 1469 thay vi 1817 => containing block cua no
-             chi rong 1769, tuc DIV BO truc tiep moi la thu bo be ngang (padding-right hoac
-             width %). Reset thang div bo do — dung :has() de bat dung 1 phan tu, khong lam
-             anh huong cac div khac trong .wrapper (#loading, .overlay...). */
-      html body.skin-blue div:has(>.content-wrapper) {
-        width: auto !important;
-        max-width: none !important;
-        min-width: 0 !important;
-        padding-left: 0 !important;
-        padding-right: 0 !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
-        float: none !important;
-        flex: 1 1 auto !important;
-        box-sizing: border-box !important;
-      }
+      /* Div bo truc tiep cua .content-wrapper: console xac nhan da rong dung 2117 (= .wrapper),
+             nen KHONG phai thu bo be ngang — giu nguyen, khong reset gi them. Nguyen nhan that
+             su nam o overflow:hidden cua chinh .content-wrapper (xem rule ben tren). */
 
       /* .wrapper con co margin:0 auto o bien the boxed -> ep sat trai, khong can giua */
       html body.skin-blue .wrapper {
