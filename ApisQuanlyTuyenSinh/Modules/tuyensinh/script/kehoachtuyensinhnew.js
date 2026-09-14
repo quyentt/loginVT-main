@@ -4433,8 +4433,7 @@ KeHoachTuyenSinhNew.prototype = {
             'strIntake_IntakeTypeCode': g('txtKQ_IntakeTypeCode'),
 
             // Hóa đơn
-            // Mã chữ, không phải ID danh mục — xem _maDoiTuongHoaDon
-            'strPersonInvoice_TypeLoai': me._maDoiTuongHoaDon(),
+            'strPersonInvoice_TypeLoai': g('ddlKQ_HD_DoiTuong'),
             'strPersonInvoice_NguoiMua': g('txtKQ_HD_NguoiMua'),
             'strPersonInvoice_TenDonVi': g('txtKQ_HD_TenDonVi'),
             'strPersonInvoice_MST': g('txtKQ_HD_MST'),
@@ -5986,39 +5985,53 @@ KeHoachTuyenSinhNew.prototype = {
     -- Không nhập gì và cũng chưa có bản ghi → bỏ qua, không tạo dòng rỗng.
     -------------------------------------------*/
     /*------------------------------------------
-    -- BUYER_TYPE_LOAI: BE chỉ nhận MÃ CHỮ (CA_NHAN / TO_CHUC), KHÔNG nhận ID danh mục.
-    -- Dropdown nạp qua loadToCombo_DanhMucDuLieu nên option value là ID (chuỗi 32 ký tự),
-    -- phần "CA_NHAN" người dùng nhìn thấy chỉ là chữ hiển thị. Gửi thẳng .val() là dính
-    -- "Lưu thông tin hóa đơn lỗi: BUYER_TYPE_LOAI khong hop le" (hồ sơ vẫn lưu, riêng
-    -- hóa đơn bị bỏ).
-    -- Thứ tự lấy: MA của danh mục → chữ đang hiển thị → thà bỏ trống chứ không gửi ID.
+    -- BUYER_TYPE_LOAI nhận gì thì HAI ghi chú trong cùng trang hồ sơ lại nói ngược nhau:
+    --   zoneEditModal_inject.js:1215 — "kiểm tra thẳng DB: phải là ID DANH MỤC (GUID)"
+    --   zoneEditModal_inject.js:1242 — "giá trị lưu xuống chính là chữ hiển thị CA_NHAN"
+    -- Thực tế bảng đang có CẢ HAI KIỂU dữ liệu (ghi chú 11/09 có nhắc "một dòng rác
+    -- mang CA_NHAN"), nên không suy luận được BE đời nào đang chạy trên máy khách nào.
+    -- → Trả về DANH SÁCH ứng viên, save_PersonInvoice gửi lần lượt: ID trước (theo kết
+    --   luận kiểm tra DB), BE chê đúng field này thì gửi lại bằng mã chữ.
+    -- Chỉ tốn thêm 1 request trong trường hợp đoán trượt, và tự đúng ở mọi trường.
     -------------------------------------------*/
-    _maDoiTuongHoaDon: function () {
+    _doiTuongHoaDon_UngVien: function () {
         var me = main_doc.KeHoachTuyenSinhNew;
         var val = ((edu.system.getValById('ddlKQ_HD_DoiTuong') || '') + '').trim();
-        if (!val) return '';
+        if (!val) return [];
+        var maChu = '';
         var rows = me._dtDoiTuongHD || [];
         for (var i = 0; i < rows.length; i++) {
             var r = rows[i] || {};
             var rid = ((r.ID || r.Id || r.id || '') + '').trim();
             var rma = ((r.MA || r.Ma || '') + '').trim();
             if (rid === val || rma === val) {
-                return rma || ((r.TEN || r.Ten || '') + '').trim();
+                maChu = rma || ((r.TEN || r.Ten || '') + '').trim();
+                break;
             }
         }
-        var txt = ($('#ddlKQ_HD_DoiTuong option:selected').text() || '').trim();
-        if (txt && txt.indexOf('--') !== 0) return txt;
-        return val.length === 32 ? '' : val;   // 32 ký tự = ID, không gửi
+        // Danh mục không khai MA riêng → mã chữ chính là chữ đang hiển thị
+        if (!maChu) {
+            var txt = ($('#ddlKQ_HD_DoiTuong option:selected').text() || '').trim();
+            if (txt && txt.indexOf('--') !== 0) maChu = txt;
+        }
+        var out = [];
+        [val, maChu].forEach(function (v) {
+            if (v && out.indexOf(v) < 0) out.push(v);
+        });
+        return out;
     },
 
     _collectInvoice: function () {
         var me = main_doc.KeHoachTuyenSinhNew;
         var g = function (id) { return ((edu.system.getValById(id) || '') + '').trim(); };
+        var ungVien = me._doiTuongHoaDon_UngVien();
         return {
             tenDonVi: g('txtKQ_HD_TenDonVi'), nguoiMua: g('txtKQ_HD_NguoiMua'),
             diaChi: g('txtKQ_HD_DiaChi'), mst: g('txtKQ_HD_MST'),
             maQHNS: g('txtKQ_HD_MaQHNS'), email: g('txtKQ_HD_Email'),
-            sdt: g('txtKQ_HD_SDT'), doiTuong: me._maDoiTuongHoaDon()
+            sdt: g('txtKQ_HD_SDT'),
+            doiTuong: ungVien[0] || '',
+            doiTuongUngVien: ungVien
         };
     },
 
@@ -6063,23 +6076,43 @@ KeHoachTuyenSinhNew.prototype = {
         };
         if (isUpdate) obj_save.strId = invoiceId;
         else obj_save.strPerson_Id = personId;
-        edu.system.makeRequest({
-            success: function (data) {
-                if (data && data.Success) {
-                    if (!isUpdate && data.Id) me._currentInvoiceId = data.Id;
-                } else {
-                    edu.system.alert('Lưu thông tin hóa đơn lỗi: ' + ((data && data.Message) || ''), 'w');
-                }
-            },
-            error: function (er) {
-                edu.system.alert('Lưu thông tin hóa đơn lỗi (er): ' + JSON.stringify(er), 'w');
-            },
-            type: 'POST',
-            contentType: true,
-            action: obj_save.action,
-            data: obj_save,
-            fakedb: []
-        }, false, false, false, null);
+
+        // Gửi lần lượt các kiểu giá trị của Đối tượng xuất hóa đơn cho tới khi BE nhận.
+        // Chỉ thử tiếp khi lỗi ĐÚNG là về BUYER_TYPE_LOAI — lỗi khác (thiếu BUYER_NAME,
+        // sai quyền...) thì báo ngay, không gửi mò thêm request.
+        var ungVien = (s.doiTuongUngVien && s.doiTuongUngVien.length)
+            ? s.doiTuongUngVien.slice()
+            : [doiTuong];
+        if (!ungVien.length) ungVien = [''];
+        var lan = 0;
+        var gui = function () {
+            obj_save.strBuyer_Type_Loai = ungVien[lan];
+            edu.system.makeRequest({
+                success: function (data) {
+                    if (data && data.Success) {
+                        if (!isUpdate && data.Id) me._currentInvoiceId = data.Id;
+                        return;
+                    }
+                    var msg = (data && data.Message) || '';
+                    if (/BUYER_TYPE_LOAI/i.test(msg) && lan + 1 < ungVien.length) {
+                        kqdkNoLog('[HoaDon] BE chê "' + ungVien[lan] + '" → thử "' + ungVien[lan + 1] + '"');
+                        lan++;
+                        gui();
+                        return;
+                    }
+                    edu.system.alert('Lưu thông tin hóa đơn lỗi: ' + msg, 'w');
+                },
+                error: function (er) {
+                    edu.system.alert('Lưu thông tin hóa đơn lỗi (er): ' + JSON.stringify(er), 'w');
+                },
+                type: 'POST',
+                contentType: true,
+                action: obj_save.action,
+                data: obj_save,
+                fakedb: []
+            }, false, false, false, null);
+        };
+        gui();
     },
 
     /*==========================================================================
