@@ -3446,13 +3446,14 @@ KeHoachTuyenSinhNew.prototype = {
         var hangDoi = [];
         viec.forEach(function (v) {
             me._ctMap[v.pid] = {};   // đặt sớm để lượt vẽ sau không xếp hàng lại
-            var oc = { con: 3 };
+            var oc = { con: 4 };
             var xongMot = function () {
                 if (--oc.con === 0) { doneNguoi++; veTienTrinh(); }
             };
             hangDoi.push(function (tiep) { me._ctLayHoSo(v, function () { xongMot(); tiep(); }); });
             hangDoi.push(function (tiep) { me._ctLayGiaDinh(v, function () { xongMot(); tiep(); }); });
             hangDoi.push(function (tiep) { me._ctLayHoaDon(v, function () { xongMot(); tiep(); }); });
+            hangDoi.push(function (tiep) { me._ctLayDiaChi(v, function () { xongMot(); tiep(); }); });
         });
 
         var i = 0, dangChay = 0, MAX = 6;
@@ -3468,6 +3469,78 @@ KeHoachTuyenSinhNew.prototype = {
             }
         };
         chay();
+    },
+
+    /*------------------------------------------
+    -- Bảng tra ID → tên đơn vị hành chính. Dùng chung cache mà genDropTinhThanh
+    -- đã dựng sẵn ở localStorage.strTinhThanh6 — mảng phẳng {ID, TEN, QUANHECHA_ID}
+    -- gồm cả 3 cấp, nên tra tên KHÔNG tốn request nào. Cache trống thì mới gọi DM.
+    -------------------------------------------*/
+    _ensureTinhThanhMap: function (cb) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var xong = function () { if (typeof cb === 'function') cb(); };
+        if (me._ttMap) { xong(); return; }
+        var dung = function (arr) {
+            me._ttMap = {};
+            (arr || []).forEach(function (e) {
+                if (e && e.ID) me._ttMap[e.ID] = e.TEN || '';
+            });
+            xong();
+        };
+        try {
+            var s = localStorage.getItem('strTinhThanh6');
+            if (s) { dung(JSON.parse(s)); return; }
+        } catch (ex) { }
+        edu.system.makeRequest({
+            success: function (data) { dung((data && data.Success && data.Data) || []); },
+            error: function () { dung([]); },
+            type: 'GET',
+            contentType: true,
+            action: 'CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM',
+            data: { 'strMaBangDanhMuc': 'CHUN.DMTT', 'strTieuChiSapXep': '', 'dTrangThai': 1 },
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    _tenDiaDanh: function (id) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (!id) return '';
+        return (me._ttMap || {})[id] || '';
+    },
+
+    /*------------------------------------------
+    -- Chọn đúng dòng địa chỉ theo loại. Khớp Id danh mục trước (ADDRESS_TYPE_CODE
+    -- lưu ID chứ không phải mã chữ), không trúng thì đoán theo tên loại kèm theo.
+    -------------------------------------------*/
+    _ctTimAddr: function (rows, kind) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (!rows || !rows.length) return null;
+        var typeId = me._addrTypeId(kind);
+        var found = typeId && rows.filter(function (it) { return it.ADDRESS_TYPE_CODE === typeId; })[0];
+        if (found) return found;
+        var strip = function (s) {
+            return ((s || '') + '').normalize('NFD').replace(/[̀-ͯ]/g, '')
+                .replace(/đ/g, 'd').replace(/Đ/g, 'D').toUpperCase();
+        };
+        var rx = (kind === 'NS') ? /NOI SINH|BIRTH/ : /HO KHAU|THUONG TRU|PERMANENT/;
+        return rows.filter(function (it) {
+            return rx.test(strip(it.ADDRESS_TYPE_CODE_NAME || it.ADDRESS_TYPE_NAME || ''));
+        })[0] || null;
+    },
+
+    _ctLayDiaChi: function (v, done) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        me._ensureAddrTypeDM(function () {
+            me._ensureTinhThanhMap(function () {
+                me._getPersonAddressList(v.pid, function (rows) {
+                    if (rows && rows.length) {
+                        me._ctMap[v.pid].hk = me._ctTimAddr(rows, 'HK');
+                        me._ctMap[v.pid].ns = me._ctTimAddr(rows, 'NS');
+                    }
+                    done();
+                });
+            });
+        });
     },
 
     _ctLayHoSo: function (v, done) {
@@ -3646,6 +3719,15 @@ KeHoachTuyenSinhNew.prototype = {
         // Lấy từ view danh sách trước, không có mới lấy từ bản chi tiết
         var bu = function (v, k) { return v || (hs[k] == null ? '' : hs[k]); };
         var fam = function (r, names) { return r ? (me._pickLoose(r, names) || '') : ''; };
+        // Địa chỉ: bảng PERSON_ADDRESS chỉ lưu ID đơn vị hành chính → đổi ra tên.
+        // Hệ 2 cấp bỏ quận/huyện nên tên xã có thể đang nằm ở DISTRICT_ID
+        // (ví dụ "Xã Khánh Yên" hiện ở ô Quận/Huyện) → thiếu WARD thì lấy DISTRICT.
+        var dcTinh = function (r) { return r ? me._tenDiaDanh(r.PROVINCE_ID) : ''; };
+        var dcXa = function (r) {
+            if (!r) return '';
+            return me._tenDiaDanh(r.WARD_ID) || me._tenDiaDanh(r.DISTRICT_ID) || '';
+        };
+        var dcSoNha = function (r) { return r ? (r.ADDRESS_LINE1 || '') : ''; };
         // Format ngày sinh ISO "2026-07-08" → "08/07/2026"
         var ngaySinh = pick(d, ['COREPERSON_NGAYSINH', 'CorePerson_NgaySinh', 'NGAY_SINH', 'NGAYSINH']);
         if (ngaySinh && /^\d{4}-\d{2}-\d{2}/.test(ngaySinh)) {
@@ -3694,7 +3776,10 @@ KeHoachTuyenSinhNew.prototype = {
                 'CONTACT_EMAIL', 'EMAIL_LIENHE', 'MAIL'])
                 || me._kqPickFuzzy(d, /^(?!.*(BO_|ME_|FAM|PARENT|INVOICE|BUYER)).*(EMAIL|MAIL).*$/i)
                 || (me._contactMap[pick(d, ['COREPERSON_ID', 'CORE_PERSON_ID', 'PERSON_ID'])] || {}).email || ''),
-            pick(d, ['PERSONADDR_NOISINH', 'PersonAddr_NoiSinh', 'NOISINH']),
+            // Nơi sinh — view không có; ghép từ PERSON_ADDRESS loại "Nơi sinh" (ct.ns)
+            pick(d, ['PERSONADDR_NOISINH', 'PersonAddr_NoiSinh', 'NOISINH'])
+                || [dcSoNha(ct.ns), dcXa(ct.ns), dcTinh(ct.ns)]
+                    .filter(function (x) { return x; }).join(', '),
             // CCCD — thử alias biết trước, fallback fuzzy quét mọi key chứa "CCCD"/"CMND"
             (pick(d, ['PERSONIDEN_SOCCCD', 'PersonIden_SoCCCD', 'SOCCCD', 'SO_CCCD', 'CCCD', 'CCCD_SO', 'SoCCCD', 'strPersonIden_SoCCCD', 'SOCMND', 'SO_CMND', 'CMND'])
                 || me._kqPickFuzzy(d, /^(?!.*NGAY)(?!.*NOI)(?!.*NGAY_CAP)(?!.*NOI_CAP).*(CCCD|CMND).*$/i)),
@@ -3702,10 +3787,10 @@ KeHoachTuyenSinhNew.prototype = {
                 || me._kqPickFuzzy(d, /(NGAY_?CAP|NGAYCAP)/i), 'PERSONIDEN_NGAYCAP'),
             bu(pick(d, ['PERSONIDEN_NOICAP', 'PersonIden_NoiCap', 'NOICAPCCCD', 'NOI_CAP', 'NOICAP', 'NoiCap', 'NoiCapCCCD', 'strPersonIden_NoiCap'])
                 || me._kqPickFuzzy(d, /(NOI_?CAP|NOICAP)/i), 'PERSONIDEN_NOICAP'),
-            // Hộ khẩu
-            pick(d, ['PERSONADDR_HK_TINH_TEN', 'HK_TINH_TEN', 'PersonAddr_HK_Tinh_Ten']),
-            pick(d, ['PERSONADDR_HK_XA_TEN', 'HK_XA_TEN', 'PersonAddr_HK_Xa_Ten']),
-            pick(d, ['PERSONADDR_HK_SONHA', 'HK_SONHA', 'PersonAddr_HK_SoNha']),
+            // Hộ khẩu — view danh sách không có, lấy từ PERSON_ADDRESS (ct.hk)
+            pick(d, ['PERSONADDR_HK_TINH_TEN', 'HK_TINH_TEN', 'PersonAddr_HK_Tinh_Ten']) || dcTinh(ct.hk),
+            pick(d, ['PERSONADDR_HK_XA_TEN', 'HK_XA_TEN', 'PersonAddr_HK_Xa_Ten']) || dcXa(ct.hk),
+            pick(d, ['PERSONADDR_HK_SONHA', 'HK_SONHA', 'PersonAddr_HK_SoNha']) || dcSoNha(ct.hk),
             // Xét tuyển
             pick(d, ['HOSO_KH_DOT_PT_TEN', 'PHUONGTHUC_TEN', 'HoSo_KH_Dot_PT_Ten']),
             pick(d, ['HOSO_DOITUONG_TS_TEN', 'DOITUONG_TS_TEN'])
