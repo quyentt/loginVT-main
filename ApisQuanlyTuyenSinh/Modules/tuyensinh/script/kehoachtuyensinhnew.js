@@ -445,6 +445,9 @@ KeHoachTuyenSinhNew.prototype = {
         $("#ket-qua-dk").on('show.bs.modal', function (event) {
             var $btn = $(event.relatedTarget);
             me.resetKQDK_View();
+            // Mở modal từ ngoài vào → chưa có danh sách nào để lùi về.
+            // Chỉ openSuaHoSo (bấm nút Sửa trên dòng) mới bật cờ này lên.
+            me._kqdkVaoTuList = false;
 
             // 1) Context KH/Đợt — chỉ set khi nút mang data-id (nút Xem trong row).
             //    Nút footer modal Đợt KHÔNG có data-id → giữ nguyên context KH đã có,
@@ -624,9 +627,27 @@ KeHoachTuyenSinhNew.prototype = {
             me._loadLopDuKien($(this).val());
         });
 
+        // Nút Đóng ở header modal Kết quả đăng ký.
+        // Luồng người dùng: DS kế hoạch → Kết quả đăng ký (danh sách) → bấm Sửa → form hồ sơ.
+        // Ở form hồ sơ bấm Đóng thì phải lùi 1 bước về DANH SÁCH, không nhảy thẳng ra
+        // ngoài danh sách kế hoạch. Chỉ đóng hẳn modal khi đang đứng ở danh sách
+        // (hoặc khi vào thẳng form Khai/Import từ modal Đợt — lúc đó không có DS để lùi).
+        $("#btnKQDK_Close").click(function () {
+            var dangOFormKhai = !$('#kqdk_khai').hasClass('d-none');
+            if (dangOFormKhai && me._kqdkVaoTuList) {
+                me._exitSuaMode();
+                me._kqdkVaoTuList = false;
+                $('#kqdk_khai, #kqdk_import').addClass('d-none');
+                $('#kqdk_list').removeClass('d-none');
+                return;
+            }
+            $('#ket-qua-dk').modal('hide');
+        });
+
         // Reset chế độ Sửa mỗi khi đóng modal Kết quả đăng ký (banner ẩn, nút Save về nhãn gốc)
         $("#ket-qua-dk").on('hidden.bs.modal', function () {
             me._exitSuaMode();
+            me._kqdkVaoTuList = false;
         });
 
         // Tự tính tổng điểm khi user nhập điểm môn/UT
@@ -1720,6 +1741,9 @@ KeHoachTuyenSinhNew.prototype = {
 
         me.strSuaHoSo_Id = strId;
         me._suaMode = true;
+        // Vào form Sửa TỪ danh sách → nút Đóng ở header phải quay về danh sách,
+        // không đóng hẳn modal (xem binding #btnKQDK_Close).
+        me._kqdkVaoTuList = true;
         // Core_Person_Id — dùng cho tab 7 (ghi nhận nguồn khai thác) lúc bấm Cập nhật
         me.strSuaHoSo_CorePersonId = pick(d, ['COREPERSON_ID', 'CorePerson_Id', 'CORE_PERSON_ID', 'Core_Person_Id', 'PERSON_ID', 'Person_Id']);
 
@@ -2590,6 +2614,195 @@ KeHoachTuyenSinhNew.prototype = {
         return '';
     },
 
+    /*==========================================================================
+    == CỘT "MÃ LỚP QL"
+    == Đã soi bằng _dumpLop() trên dữ liệu thật (14/09/2026):
+    ==   LayDS_HoSo_TS  (20 cột) — KHÔNG có cột lớp
+    ==   LayTT_HoSo_TS  (42 cột) — KHÔNG có cột lớp
+    == Lý do: hồ sơ tuyển sinh chỉ đi tới bước TIẾP NHẬN. Lớp quản lý chỉ tồn tại
+    == sau khi tạo hồ sơ học tập (nút "Phân lớp tự động" làm việc này), lúc đó dữ
+    == liệu nằm bên QLSV người học chứ không nằm trong hồ sơ TS.
+    == Danh sách có sẵn cờ INTAKE_ISSTUDYCREATED nên phân biệt được 2 tình huống:
+    ==   = 0 → chưa tạo hồ sơ học tập → CHẮC CHẮN chưa có lớp, khỏi gọi API
+    ==   = 1 → tra lớp qua PKG_CORE_NGUOIHOC_01.LayDSNguoiHoc_All (trả
+    ==         DAOTAO_LOPQUANLY_MA / _TEN — xem zoneEditModal_inject.js:1817)
+    == Chỉ gọi cho dòng ĐANG HIỂN THỊ, tối đa 6 request song song, có cache nên
+    == lật trang qua lại không gọi lại. Cùng cách chữa cháy của cột SĐT/Email.
+    ==========================================================================*/
+    _lopSVMap: {},        // COREPERSON_ID → { ma, ten, id }
+    _lopQLMap: null,      // ID lớp → { ma, ten } — chỉ nạp khi người học trả về mỗi ID
+
+    _ACTION_LayDSNguoiHoc_All: 'SV_NGUOIHOC_01_MH/DSA4BRIPJjQuKAkuIh4ALS0P',
+
+    _ensureLopForRows: function (rows, cb) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var xong = function (coMoi) { if (typeof cb === 'function') cb(coMoi); };
+        var pick = me._kqPick;
+
+        // Chỉ hỏi cho hồ sơ ĐÃ tạo hồ sơ học tập — còn lại chắc chắn chưa có lớp
+        var caans = [];
+        (rows || []).forEach(function (d) {
+            if (String(pick(d, ['INTAKE_ISSTUDYCREATED'])) !== '1') return;
+            var pid = pick(d, ['COREPERSON_ID', 'CorePerson_Id', 'CORE_PERSON_ID', 'PERSON_ID']);
+            if (!pid || (pid in me._lopSVMap)) return;
+            if (caans.some(function (x) { return x.pid === pid; })) return;
+            caans.push({
+                pid: pid,
+                tuKhoa: pick(d, ['PERSONIDEN_SOCCCD', 'SOCCCD', 'CCCD'])
+                    || pick(d, ['COREPERSON_HOTEN', 'HOTEN'])
+            });
+        });
+        if (!caans.length) { xong(false); return; }
+
+        var canMapId = false;
+        var i = 0, dangChay = 0, MAX = 6;
+        var tiepTuc = function () {
+            while (dangChay < MAX && i < caans.length) {
+                var item = caans[i++];
+                dangChay++;
+                (function (it) {
+                    var ketThuc = function () {
+                        dangChay--;
+                        if (i < caans.length) { tiepTuc(); return; }
+                        if (dangChay > 0) return;
+                        // Người học chỉ trả ID lớp → nạp thêm bảng lớp rồi mới vẽ
+                        if (canMapId) { me._ensureLopQLLookup(function () { xong(true); }); }
+                        else { xong(true); }
+                    };
+                    edu.system.makeRequest({
+                        success: function (data) {
+                            var rs = (data && data.Success && data.Data) || [];
+                            if (rs.length === undefined) rs = [rs];
+                            // Một người có thể học nhiều ngành → nhiều dòng. Ưu tiên dòng
+                            // đúng Core_Person_Id, sau đó mới tới dòng duy nhất trả về.
+                            var row = rs.filter(function (r) {
+                                return me._kqPick(r, ['CORE_PERSON_ID', 'COREPERSON_ID', 'PERSON_ID']) === it.pid;
+                            })[0] || rs[0];
+                            if (row) {
+                                var o = {
+                                    ma: me._kqPick(row, ['DAOTAO_LOPQUANLY_MA', 'LOPQUANLY_MA', 'LOP_MA']),
+                                    ten: me._kqPick(row, ['DAOTAO_LOPQUANLY_TEN', 'QLSV_NGUOIHOC_LOPQUANLY_TEN', 'LOP_TEN', 'LOP']),
+                                    id: me._kqPick(row, ['DAOTAO_LOPQUANLY_ID', 'LOPQUANLY_ID'])
+                                };
+                                if (!o.ma && !o.ten && o.id) canMapId = true;
+                                me._lopSVMap[it.pid] = o;
+                            } else {
+                                me._lopSVMap[it.pid] = { ma: '', ten: '', id: '' };
+                            }
+                            ketThuc();
+                        },
+                        // Lỗi cũng ghi cache, không thì mỗi lần vẽ lại là gọi lại
+                        error: function () { me._lopSVMap[it.pid] = { ma: '', ten: '', id: '' }; ketThuc(); },
+                        type: 'POST',
+                        contentType: true,
+                        action: me._ACTION_LayDSNguoiHoc_All,
+                        data: {
+                            'action': me._ACTION_LayDSNguoiHoc_All,
+                            'func': 'PKG_CORE_NGUOIHOC_01.LayDSNguoiHoc_All',
+                            'iM': edu.system.iM,
+                            'strTuKhoa': it.tuKhoa || '',
+                            'strNguoiThucHien_Id': edu.system.userId,
+                            'strVaiTroDangNhap_Id': edu.system.vaiTroDangNhap_Id || edu.system.strVaiTro_Id || '',
+                            'strChucNangHeThong_Id': edu.system.chucNangHeThong_Id || edu.system.strChucNang_Id || '',
+                            'strHanhDong_Code': '',
+                            'strDaoTao_HeDaoTao_Id': '',
+                            'strDaoTao_KhoaDaoTao_Id': '',
+                            'strDaoTao_ChuongTrinh_Id': '',
+                            'strDaoTao_KhoaQuanLy_Id': '',
+                            'strDaoTao_LopQuanLy_Id': '',
+                            'strStudyStatus_Ids': '',
+                            'dIsPrimary': '',
+                            'dBoQuaPhamVi': 0,
+                            'pageIndex': 1,
+                            'pageSize': 20
+                        },
+                        fakedb: []
+                    }, false, false, false, null);
+                })(item);
+            }
+        };
+        tiepTuc();
+    },
+
+    _ensureLopQLLookup: function (cb) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var xong = function () { if (typeof cb === 'function') cb(); };
+        if (me._lopQLMap) { xong(); return; }
+        me._lopQLMap = {};   // set sớm để lần gọi sau không bắn thêm request khi đang bay
+        edu.system.makeRequest({
+            success: function (data) {
+                var rows = (data && data.Success && edu.util.checkValue(data.Data)) ? data.Data : [];
+                rows.forEach(function (r) {
+                    var id = r.ID || r.Id || r.id || '';
+                    if (!id) return;
+                    me._lopQLMap[String(id).trim()] = {
+                        ma: r.MA || r.Ma || '',
+                        ten: r.TEN || r.Ten || ''
+                    };
+                });
+                xong();
+            },
+            error: function (er) {
+                kqdkNoLog('[KQDK] LayDSKS_DaoTao_LopQuanLy err:', er);
+                xong();
+            },
+            type: 'POST',
+            contentType: true,
+            action: 'KHCT_ThongTin_MH/DSA4BRIKEh4FIC4VIC4eDS4xEDQgLw04',
+            data: {
+                'action': 'KHCT_ThongTin_MH/DSA4BRIKEh4FIC4VIC4eDS4xEDQgLw04',
+                'func': 'pkg_kehoach_thongtin.LayDSKS_DaoTao_LopQuanLy',
+                'iM': edu.system.iM,
+                'strTuKhoa': '',
+                'strDaoTao_CoSoDaoTao_Id': '',
+                'strDaoTao_KhoaDaoTao_Id': '',
+                'strDaoTao_Nganh_Id': '',
+                'strDaoTao_KhoaQuanLy_Id': '',
+                'strDaoTao_LoaiLop_Id': '',
+                'strDaoTao_ToChucCT_Id': '',
+                'dLopMoNganh2': '',
+                'strNhomlop_Id': '',
+                'strNguoiThucHien_Id': edu.system.userId,
+                'pageIndex': 1,
+                'pageSize': 100000
+            },
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    _kqLopQL: function (d) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var laId = function (v) { return String(v == null ? '' : v).trim().length === 32; };
+        var traMap = function (id) {
+            var o = (me._lopQLMap || {})[String(id).trim()];
+            return o ? (o.ma || o.ten || '') : '';
+        };
+
+        // 1) Hồ sơ TS tự trả mã/tên lớp — hiện chưa có, nhưng để sẵn cho ngày
+        //    BE bổ sung cột thì không phải sửa lại chỗ này nữa.
+        var v = me._kqPick(d, [
+            'INTAKE_LOP_MA', 'DAOTAO_LOPQUANLY_MA', 'LOPQUANLY_MA', 'LOP_QUANLY_MA',
+            'MA_LOP', 'MaLop', 'DAOTAO_LOPQUANLY_DUKIEN_MA', 'LOPQUANLY_DUKIEN_MA',
+            'DAOTAO_LOPQUANLY_TEN', 'LOPQUANLY_TEN', 'TEN_LOP'
+        ]);
+        if (v) return laId(v) ? traMap(v) : v;
+
+        // 2) Lớp lấy được từ hồ sơ người học (chỉ có khi đã tạo hồ sơ học tập)
+        var pid = me._kqPick(d, ['COREPERSON_ID', 'CorePerson_Id', 'CORE_PERSON_ID', 'PERSON_ID']);
+        var o = (me._lopSVMap || {})[pid];
+        if (o) {
+            var got = o.ma || o.ten || (o.id ? traMap(o.id) : '');
+            if (got) return got;
+        }
+
+        // 3) Chưa tạo hồ sơ học tập → nói rõ lý do thay vì để ô trắng, tránh bị
+        //    hiểu nhầm là bảng lỗi không hiện được dữ liệu.
+        if (String(me._kqPick(d, ['INTAKE_ISSTUDYCREATED'])) === '0') return 'Chưa phân lớp';
+
+        // Đã tạo hồ sơ học tập nhưng chưa tra xong → để trống, vẽ lại sau khi có
+        return '';
+    },
+
     /*------------------------------------------
     -- Entry point: cache toàn bộ data đang view + reset về trang 1 + render.
     -- Không render trực tiếp — delegate cho _kqRenderPage() để chỉ vẽ slice (tránh đơ 11K row).
@@ -2872,6 +3085,11 @@ KeHoachTuyenSinhNew.prototype = {
         me._ensureContactForRows(data.slice(offset, end), function (coMoi) {
             if (coMoi) me._kqRenderPage();
         });
+        // Lớp quản lý cho đúng các dòng vừa vẽ — cũng chỉ chạy 1 vòng rồi dừng
+        // (lượt vẽ lại thấy mọi id đã có cache → coMoi = false).
+        me._ensureLopForRows(data.slice(offset, end), function (coMoi) {
+            if (coMoi) me._kqRenderPage();
+        });
     },
 
     /*------------------------------------------
@@ -2985,7 +3203,8 @@ KeHoachTuyenSinhNew.prototype = {
                     || dr.nganhTen
                     || '';
             })(),
-            pick(d, ['INTAKE_LOP_MA', 'MA_LOP', 'MaLop']),
+            // Mã lớp QL — view không có cột mã, phải dò + tra map ID (xem _kqLopQL)
+            me._kqLopQL(d),
             pick(d, ['COREPERSON_MASO', 'MA_SV', 'MASV', 'MASO']),
             // Hóa đơn
             pick(d, ['PERSONINVOICE_TYPELOAI_TEN', 'HD_DOITUONG_TEN']),
@@ -5431,10 +5650,74 @@ KeHoachTuyenSinhNew.prototype = {
         });
         console.log('Cột liên quan Điện thoại/Email:', lienQuan.length ? lienQuan : '(KHÔNG CÓ CỘT NÀO)');
         lienQuan.forEach(function (k) { console.log('   ' + k + ' =', rows[0][k]); });
+        // Lớp quản lý — soi riêng để biết view trả mã, trả ID, hay không trả gì
+        var cotLop = keys.filter(function (k) { return /LOP/i.test(k); });
+        console.log('Cột liên quan Lớp:', cotLop.length ? cotLop : '(KHÔNG CÓ CỘT NÀO)');
+        cotLop.forEach(function (k) { console.log('   ' + k + ' =', rows[0][k]); });
+        console.log('   → _kqLopQL(dòng 1) =', me._kqLopQL(rows[0]) || '(rỗng)',
+            '| số lớp trong map =', Object.keys(me._lopQLMap || {}).length);
         console.log('--- toàn bộ tên cột ---');
         console.log(keys);
         console.log('--- dòng đầu tiên ---');
         console.log(rows[0]);
+    },
+
+    /*------------------------------------------
+    -- CHẨN ĐOÁN CỘT "MÃ LỚP QL". Mở modal Kết quả đăng ký rồi gõ ở Console:
+    --     main_doc.KeHoachTuyenSinhNew._dumpLop()
+    -- In 3 thứ để chốt vì sao cột trống:
+    --   1) Danh sách (LayDS_HoSo_TS) có cột nào dính chữ LOP không, giá trị ra sao
+    --   2) Chi tiết 1 hồ sơ (LayTT_HoSo_TS) có cột lớp không — nếu DS thiếu mà chi tiết
+    --      có thì chuyển sang lấy theo từng dòng như đang làm với SĐT/Email
+    --   3) Map ID→Mã lớp nạp được bao nhiêu dòng (0 = proc lớp quản lý gọi hỏng)
+    -------------------------------------------*/
+    _dumpLop: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var rows = me.dtKQDK_HoSo || [];
+        console.log('=== CHẨN ĐOÁN CỘT MÃ LỚP QL ===');
+        console.log('Số dòng danh sách đang có:', rows.length);
+        console.log('Map lớp quản lý (ID → Mã):', Object.keys(me._lopQLMap || {}).length, 'lớp');
+        if (!rows.length) { console.log('(chưa nạp danh sách — mở modal Kết quả đăng ký trước)'); return; }
+
+        var soi = function (nhan, row) {
+            if (!row) { console.log('[' + nhan + '] (không có dữ liệu)'); return; }
+            var keys = Object.keys(row);
+            var cot = keys.filter(function (k) { return /LOP/i.test(k); });
+            console.log('[' + nhan + '] tổng ' + keys.length + ' cột, cột dính chữ LOP:',
+                cot.length ? cot : '(KHÔNG CÓ CỘT NÀO)');
+            cot.forEach(function (k) { console.log('     ' + k + ' =', row[k]); });
+        };
+
+        var d0 = rows[0];
+        soi('LayDS_HoSo_TS — dòng 1', d0);
+        console.log('   → _kqLopQL(dòng 1) =', me._kqLopQL(d0) || '(rỗng)');
+
+        var hoSoId = me._kqPick(d0, ['HOSO_ID', 'ID', 'HoSo_Id', 'Id']);
+        console.log('   HoSo_Id dòng 1 =', hoSoId || '(không lấy được)');
+        if (!hoSoId) return;
+        edu.system.makeRequest({
+            success: function (r) {
+                var d = (r && r.Data) || null;
+                var row = (d && d.length !== undefined) ? d[0] : d;
+                console.log('LayTT_HoSo_TS: Success=' + (r && r.Success), (r && r.Message) || '');
+                soi('LayTT_HoSo_TS — hồ sơ dòng 1', row);
+                if (row) console.log('   (toàn bộ dòng chi tiết)', row);
+            },
+            error: function (e) { console.log('LayTT_HoSo_TS LỖI', e); },
+            type: 'POST', contentType: true,
+            action: me._ACTION_LayTT_HoSo,
+            data: {
+                'action': me._ACTION_LayTT_HoSo,
+                'func': 'PKG_CORE_TS_HOSO.LayTT_HoSo_TS',
+                'iM': edu.system.iM,
+                'strHoSo_Id': hoSoId,
+                'strNguoiThucHien_Id': edu.system.userId,
+                'strVaiTroDangNhap_Id': edu.system.strVaiTro_Id || '',
+                'strChucNangHeThong_Id': edu.system.strChucNang_Id || '',
+                'strHanhDong_Code': 'XEM'
+            },
+            fakedb: []
+        }, false, false, false, null);
     },
 
     _dumpEdit: function () {

@@ -1806,10 +1806,8 @@
     <!-- <script type="text/javascript" src="Scripts/MathJax/MathJax.js"></script> -->
     <!--  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML" -->
 
-    <script src="<%= Apis.CommonV1.Base.AppSetting.GetString(" RootPathUpload")
-      %>/Core/uploadfile.js ? v = 1.0.0.12"></script><!--CORE JS-->
-    <script src="<%= Apis.CommonV1.Base.AppSetting.GetString(" RootPathUpload")
-      %>/ Core / uploadavatar.js ? v = 1.0.0.12"></script><!--CORE JS-->
+    <script src="<%= Apis.CommonV1.Base.AppSetting.GetString("RootPathUpload")%>/Core/uploadfile.js?v=1.0.0.12"></script><!--CORE JS-->
+    <script src="<%= Apis.CommonV1.Base.AppSetting.GetString("RootPathUpload")%>/Core/uploadavatar.js?v=1.0.0.12"></script><!--CORE JS-->
 
     <script type="text/javascript" src="Corei/constant.js?v=<%= Guid.NewGuid().ToString() %>"></script> <!--CORE JS-->
     <script type="text/javascript" src="Corei/systemroot.js?v=<%= Guid.NewGuid().ToString() %>"></script> <!--CORE JS-->
