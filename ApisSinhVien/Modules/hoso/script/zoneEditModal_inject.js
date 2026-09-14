@@ -110,6 +110,9 @@ function _zeDoInject(forceOverlay) {
         + '#zoneEdit .ze-form .aps-sv-input-icon > i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:14px;}'
         + '#zoneEdit .ze-form .aps-sv-input-icon .aps-sv-input{padding-left:40px;}'
         + '#zoneEdit .ze-form .aps-sv-input.ze-readonly,#zoneEdit .ze-form .aps-sv-input[readonly]{background:#f1f5f9 !important;color:#475569 !important;}'
+        /* Ô gộp ngày sinh — cho nổi hơn 3 ô rời vì đây là ô người dùng copy */
+        + '#zoneEdit .ze-form .ze-dob-full .aps-sv-input{font-weight:600 !important;color:#0f172a !important;letter-spacing:.4px;}'
+        + '#zoneEdit .ze-form .ze-dob-full .aps-sv-input::selection{background:#bfdbfe;}'
         + '#zoneEdit .ze-canhan-layout{display:grid;grid-template-columns:1fr 220px;gap:24px;align-items:start;}'
         + '@media (max-width:900px){#zoneEdit .ze-canhan-layout{grid-template-columns:1fr;}}'
         + '#zoneEdit .ze-canhan-avatar{align-self:start;}'
@@ -155,6 +158,7 @@ function _zeDoInject(forceOverlay) {
                             '<div class="aps-sv-field"><label class="aps-sv-label">Ngày sinh</label><input class="aps-sv-input" id="txtNgaySinh" placeholder="dd"></div>' +
                             '<div class="aps-sv-field"><label class="aps-sv-label">Tháng sinh</label><input class="aps-sv-input" id="txtThangSinh" placeholder="mm"></div>' +
                             '<div class="aps-sv-field"><label class="aps-sv-label">Năm sinh</label><input class="aps-sv-input" id="txtNamSinh" placeholder="yyyy"></div>' +
+                            '<div class="aps-sv-field ze-dob-full"><label class="aps-sv-label">Ngày sinh (đầy đủ)</label><div class="aps-sv-input-icon"><i class="fa-light fa-calendar-days"></i><input class="aps-sv-input" id="txtNgaySinhDayDu" placeholder="dd/mm/yyyy" title="Gộp Ngày/Tháng/Năm sinh — click là bôi đen sẵn, Ctrl+C để copy; dán ngược vào đây cũng tự tách ra 3 ô."></div></div>' +
                             '<div class="aps-sv-field"><label class="aps-sv-label">Quốc tịch</label><div class="aps-sv-select"><i class="fa-light fa-chevron-down"></i><select class="aps-sv-input" id="dropQuocTich"><option value="">-- Chọn quốc tịch --</option></select></div></div>' +
                             '<div class="aps-sv-field"><label class="aps-sv-label">Dân tộc</label><div class="aps-sv-select"><i class="fa-light fa-chevron-down"></i><select class="aps-sv-input" id="dropDanToc"><option value="">-- Chọn dân tộc --</option></select></div></div>' +
                             '<div class="aps-sv-field"><label class="aps-sv-label">Tôn giáo</label><div class="aps-sv-select"><i class="fa-light fa-chevron-down"></i><select class="aps-sv-input" id="dropTonGiao"><option value="">-- Chọn tôn giáo --</option></select></div></div>' +
@@ -2177,3 +2181,90 @@ if (typeof DeXuatHoSo === 'function' && DeXuatHoSo.prototype._zeVeBadge
         }, 1000);
     });
 }
+
+/*==========================================================================
+-- 2026-09-14: Ô "Ngày sinh (đầy đủ)" — gộp Ngày/Tháng/Năm thành một chuỗi
+-- dd/mm/yyyy để copy một phát là xong, khỏi phải ghép tay từ 3 ô.
+-- Ô này KHÔNG gửi lên BE (payload vẫn đọc txtNgaySinh/txtThangSinh/txtNamSinh);
+-- nó chỉ đồng bộ 2 chiều với 3 ô gốc, nên dán ngược vào cũng tách ra được.
+==========================================================================*/
+(function () {
+    var ID_FULL = 'txtNgaySinhDayDu';
+
+    function el(id) { return document.getElementById(id); }
+    function raw(id) { var e = el(id); return ((e && e.value) || '') + ''; }
+    function pad2(v) {
+        v = (v + '').trim().replace(/\D/g, '');
+        return !v ? '' : (v.length === 1 ? '0' + v : v);
+    }
+
+    /*------------------------------------------
+    -- 3 ô gốc -> ô gộp. Mức độ ngày sinh có thể là MONTH_ONLY/YEAR_ONLY nên
+    -- thiếu ngày/tháng thì rút gọn chứ không đẻ ra "00/00/1997".
+    -------------------------------------------*/
+    function zeGopNgaySinh() {
+        var full = el(ID_FULL);
+        if (!full) return;
+        var d = pad2(raw('txtNgaySinh'));
+        var m = pad2(raw('txtThangSinh'));
+        var y = raw('txtNamSinh').trim().replace(/\D/g, '');
+        var out = '';
+        if (y) out = (d && m) ? (d + '/' + m + '/' + y) : (m ? (m + '/' + y) : y);
+        else if (d && m) out = d + '/' + m;
+        full.value = out;
+    }
+
+    /*------------------------------------------
+    -- Ô gộp -> 3 ô gốc. Chỉ tách khi chuỗi khớp hẳn một dạng hợp lệ; gõ dở dang
+    -- thì để nguyên, không được phép xoá trắng dữ liệu 3 ô kia.
+    -------------------------------------------*/
+    function zeTachNgaySinh() {
+        var full = el(ID_FULL);
+        if (!full) return;
+        var s = (full.value || '').trim();
+        if (!s) return;
+        var d = '', m = '', y = '', mt;
+        if ((mt = s.match(/^(\d{1,2})\s*[\/\-.]\s*(\d{1,2})\s*[\/\-.]\s*(\d{4})$/))) { d = mt[1]; m = mt[2]; y = mt[3]; }
+        else if ((mt = s.match(/^(\d{4})\s*[\/\-.]\s*(\d{1,2})\s*[\/\-.]\s*(\d{1,2})$/))) { y = mt[1]; m = mt[2]; d = mt[3]; }
+        else if ((mt = s.match(/^(\d{1,2})\s*[\/\-.]\s*(\d{4})$/))) { m = mt[1]; y = mt[2]; }
+        else if ((mt = s.match(/^(\d{2})(\d{2})(\d{4})$/))) { d = mt[1]; m = mt[2]; y = mt[3]; }
+        else if ((mt = s.match(/^(\d{4})$/))) { y = mt[1]; }
+        else { zeGopNgaySinh(); return; }               // không nhận dạng được -> trả về giá trị cũ
+        if (d && (+d < 1 || +d > 31)) { zeGopNgaySinh(); return; }
+        if (m && (+m < 1 || +m > 12)) { zeGopNgaySinh(); return; }
+        if (el('txtNgaySinh')) el('txtNgaySinh').value = pad2(d);
+        if (el('txtThangSinh')) el('txtThangSinh').value = pad2(m);
+        if (el('txtNamSinh')) el('txtNamSinh').value = y;
+        zeGopNgaySinh();                               // chuẩn hoá lại hiển thị
+    }
+
+    $(document).on('input.zedob change.zedob', '#txtNgaySinh, #txtThangSinh, #txtNamSinh', zeGopNgaySinh);
+    $(document).on('change.zedob blur.zedob', '#' + ID_FULL, zeTachNgaySinh);
+
+    /*-- Click phát là bôi đen sẵn, Ctrl+C được luôn. --*/
+    $(document).on('focus.zedob', '#' + ID_FULL, function () {
+        var t = this;
+        setTimeout(function () { try { t.select(); } catch (e) { } }, 0);
+    });
+
+    /*------------------------------------------
+    -- viewValById() nạp bằng .val() nên không bắn event 'input' -> phải tự gọi
+    -- lại sau khi form nạp xong. openEditByPerson thật nằm ở dexuathoso.js nên
+    -- WRAP chứ không định nghĩa mới.
+    -------------------------------------------*/
+    if (typeof DeXuatHoSo === 'function' && DeXuatHoSo.prototype.openEditByPerson) {
+        var _origOpenDOB = DeXuatHoSo.prototype.openEditByPerson;
+        DeXuatHoSo.prototype.openEditByPerson = function (person) {
+            var r = _origOpenDOB.apply(this, arguments);
+            setTimeout(zeGopNgaySinh, 0);
+            setTimeout(zeGopNgaySinh, 400);
+            return r;
+        };
+    }
+
+    /*-- Luồng mở kiểu cũ (.btnEdit) không đi qua openEditByPerson. --*/
+    $(document).on('click.zedob', '.btnEdit, .btnSelect_NguoiHoc_ThuHS', function () {
+        setTimeout(zeGopNgaySinh, 600);
+        setTimeout(zeGopNgaySinh, 1200);
+    });
+})();
