@@ -2369,6 +2369,15 @@
 
                             <!-- ============ TAB 6: XUẤT HÓA ĐƠN (bỏ CCCD — đã có ở tab 2) ============ -->
                             <div class="aps-sv-panel" id="kqdk_tab_hoadon">
+                                <!-- Nhắc khai thiếu/khai lệch — CHỈ NHẮC, không chặn lưu.
+                                     Nội dung do _veCanhBaoHoaDon() dựng, cập nhật khi gõ/chọn. -->
+                                <div id="kqdk_hd_canhbao" class="d-none" style="margin:0 0 18px; padding:11px 15px; background:#fffbeb; border:1px solid #fde68a; border-left:4px solid #f59e0b; border-radius:6px;">
+                                    <div style="display:flex; align-items:center; gap:8px; font-size:13.5px; font-weight:700; color:#92400e; margin-bottom:6px;">
+                                        <i class="fa-solid fa-triangle-exclamation"></i>
+                                        <span>Nhắc kiểm tra lại — vẫn lưu được bình thường</span>
+                                    </div>
+                                    <ul id="kqdk_hd_canhbao_ds" style="margin:0; padding-left:22px; font-size:13px; color:#78350f; line-height:1.75;"></ul>
+                                </div>
                                 <div class="aps-sv-section">
                                     <div class="aps-sv-section-title"><i class="fa-light fa-file-invoice-dollar"></i> Người mua / xuất hóa đơn</div>
                                     <div class="aps-sv-grid">
@@ -2851,7 +2860,7 @@
         tryNext();
     })();
 </script>
-<script src="modules/tuyensinh/script/kehoachtuyensinhnew.js?v=1.0.7.8"></script>
+<script src="modules/tuyensinh/script/kehoachtuyensinhnew.js?v=1.0.7.9"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['KeHoachTuyenSinhNew'] = new KeHoachTuyenSinhNew();

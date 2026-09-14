@@ -655,6 +655,18 @@ KeHoachTuyenSinhNew.prototype = {
             me.tinhTongDiem_Khai();
         });
 
+        // Nhắc khai thiếu/lệch ở tab Xuất hóa đơn — vẽ lại mỗi khi user gõ/chọn.
+        // Bind ở #kqdk_khai (không phải #kqdk_tab_hoadon) để chế độ "Một trang" /
+        // "Gộp nhóm" dời panel đi đâu thì handler vẫn bắt được.
+        $("#kqdk_khai").on('input change',
+            '#ddlKQ_HD_DoiTuong, #txtKQ_HD_NguoiMua, #txtKQ_HD_TenDonVi, #txtKQ_HD_MST,'
+            + ' #txtKQ_HD_MaQHNS, #txtKQ_HD_SDT, #txtKQ_HD_DiaChi, #txtKQ_HD_Email',
+            function () { me._veCanhBaoHoaDon(); });
+        // Bấm sang tab nào cũng soát lại — người dùng hay khai tab khác rồi mới quay về
+        $("#kqdkKhaiTabs").on('click', '.aps-sv-tab', function () {
+            setTimeout(function () { me._veCanhBaoHoaDon(); }, 0);
+        });
+
         $("#fileImportTT").on('change', function () {
             var f = this.files && this.files[0];
             if (!f) {
@@ -2357,7 +2369,8 @@ KeHoachTuyenSinhNew.prototype = {
                     // Core_Person_Id của hồ sơ đang mở (lưu ở openSuaHoSo).
                     me.save_HoSoDoiTacTS(me.strSuaHoSo_CorePersonId || '');
                     edu.system.alert("Cập nhật hồ sơ thành công"
-                        + me._addrWarnText(addrBlocks) + me._nguonWarnText(), "s");
+                        + me._addrWarnText(addrBlocks) + me._nguonWarnText()
+                        + me._hoaDonWarnText(), "s");
                     me._exitSuaMode();
                     // Về lại screen list và refresh
                     $('#kqdk_khai').addClass('d-none');
@@ -4221,6 +4234,8 @@ KeHoachTuyenSinhNew.prototype = {
         $('#ddlKQ_NS_Tinh, #ddlKQ_HK_Tinh').val('').trigger('change');   // trigger change để cascade fire
         // Về tab 1
         $('#kqdkKhaiTabs .aps-sv-tab').first().trigger('click');
+        // Form vừa trắng → dọn luôn banner nhắc của hồ sơ trước
+        main_doc.KeHoachTuyenSinhNew._veCanhBaoHoaDon();
     },
 
     /*------------------------------------------
@@ -4505,7 +4520,10 @@ KeHoachTuyenSinhNew.prototype = {
                             me._saveKhai_PhuThuoc(pid, snap);
                         });
                     }
-                    edu.system.alert("Đã lưu hồ sơ thành công" + me._addrWarnText(snap.addr), "s");
+                    // Gọi _hoaDonWarnText TRƯỚC resetKhai_HoSo — reset xoá trắng form thì
+                    // không còn gì để soát nữa.
+                    edu.system.alert("Đã lưu hồ sơ thành công"
+                        + me._addrWarnText(snap.addr) + me._hoaDonWarnText(), "s");
                     me.resetKhai_HoSo();
                 } else {
                     edu.system.alert("Them_HoSo_TS: " + ((data && data.Message) || 'Lỗi không xác định'), "w");
@@ -5960,6 +5978,10 @@ KeHoachTuyenSinhNew.prototype = {
                     });
                     me._setSelectByIdOrText('#ddlKQ_HD_DoiTuong', idHD || maHD, tenHD);
                 }
+                // Đã đổ xong dữ liệu cũ → soát lại để banner nhắc đúng hồ sơ này.
+                // Chờ một nhịp cho _setSelectByIdOrText retry chọn xong dropdown.
+                me._veCanhBaoHoaDon();
+                setTimeout(function () { me._veCanhBaoHoaDon(); }, 800);
             },
             error: function (er) { kqdkNoLog('[HoaDon] LayDS_PersonInvoiceInfo err:', er); },
             type: 'POST',
@@ -6019,6 +6041,132 @@ KeHoachTuyenSinhNew.prototype = {
             if (v && out.indexOf(v) < 0) out.push(v);
         });
         return out;
+    },
+
+    /*==========================================================================
+    == NHẮC KHAI THIẾU / KHAI LỆCH Ở TAB XUẤT HÓA ĐƠN
+    == Yêu cầu (14/09/2026): CHỈ NHẮC, KHÔNG CHẶN. Người dùng khai xong các tab
+    == khác hay quên tab này, hoặc gõ tạm một ký tự cho qua — lưu thì vẫn lưu
+    == được nên không ai biết là dữ liệu hỏng. Nhắc ở 2 chỗ:
+    ==   1) Banner vàng ngay trong tab + dấu ⚠ trên nút tab → thấy ngay lúc khai
+    ==   2) Nối vào thông báo sau khi Lưu/Cập nhật → bắt cả người không mở tab
+    == KHÔNG được biến thành validate chặn lưu: nhiều hồ sơ vốn không cần hóa đơn.
+    ==========================================================================*/
+
+    /*------------------------------------------
+    -- Đối tượng đang chọn là cá nhân hay tổ chức. Danh mục TS.DOITUONGHOADON mỗi
+    -- trường khai một kiểu (có nơi MA rỗng, TEN chính là "CA_NHAN") nên dò trên cả
+    -- mã lẫn chữ hiển thị, bỏ dấu để "Cá nhân" / "CA_NHAN" / "Tổ chức" đều nhận ra.
+    -------------------------------------------*/
+    _loaiDoiTuongHD: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var raw = me._doiTuongHoaDon_UngVien().join(' ') + ' '
+            + ($('#ddlKQ_HD_DoiTuong option:selected').text() || '');
+        var s = raw.normalize ? raw.normalize('NFD').replace(/[̀-ͯ]/g, '') : raw;
+        s = s.toUpperCase().replace(/[^A-Z]/g, '');
+        if (/CANHAN|CANHN/.test(s)) return 'CN';
+        if (/TOCHUC|DONVI|DOANHNGHIEP|CONGTY/.test(s)) return 'TC';
+        return '';
+    },
+
+    /*------------------------------------------
+    -- Trả về mảng câu nhắc. Rỗng = không có gì phải nhắc.
+    -------------------------------------------*/
+    _kiemTraHoaDon: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var g = function (id) { return ((edu.system.getValById(id) || '') + '').trim(); };
+        var doiTuong = g('ddlKQ_HD_DoiTuong');
+        var nguoiMua = g('txtKQ_HD_NguoiMua');
+        var tenDonVi = g('txtKQ_HD_TenDonVi');
+        var mst = g('txtKQ_HD_MST');
+        var diaChi = g('txtKQ_HD_DiaChi');
+        var email = g('txtKQ_HD_Email');
+        var sdt = g('txtKQ_HD_SDT');
+        var maQHNS = g('txtKQ_HD_MaQHNS');
+        var loai = me._loaiDoiTuongHD();
+        var ds = [];
+
+        var coGiDo = !!(doiTuong || nguoiMua || tenDonVi || mst || diaChi || email || sdt || maQHNS);
+        if (!coGiDo) {
+            return ['Chưa khai thông tin xuất hóa đơn — bỏ qua nếu hồ sơ này không cần xuất hóa đơn.'];
+        }
+
+        // Ô "gõ tạm cho qua": 1 ký tự, hoặc toàn dấu câu. Lưu được nhưng là dữ liệu rác.
+        var goTam = function (v) {
+            if (!v) return false;
+            return v.length < 2 || !/[0-9A-Za-zÀ-ỹ]/.test(v);
+        };
+        if (goTam(nguoiMua)) ds.push('Ô "Họ tên người mua hàng" đang là "' + nguoiMua + '" — trông như gõ tạm cho qua, nên sửa lại thành tên thật.');
+        if (goTam(tenDonVi)) ds.push('Ô "Tên đơn vị / Công ty" đang là "' + tenDonVi + '" — trông như gõ tạm cho qua, nên xóa đi hoặc điền tên đơn vị thật.');
+
+        if (!doiTuong) {
+            ds.push('Đã khai thông tin hóa đơn nhưng chưa chọn "Đối tượng xuất hóa đơn".');
+        } else if (loai === 'CN') {
+            if (!nguoiMua) ds.push('Xuất hóa đơn cho cá nhân nhưng chưa điền "Họ tên người mua hàng".');
+            if (tenDonVi && !goTam(tenDonVi)) {
+                ds.push('Xuất cho cá nhân nhưng vẫn có "Tên đơn vị / Công ty" — tên trên hóa đơn sẽ lấy theo tên đơn vị này.');
+            }
+        } else if (loai === 'TC') {
+            if (!tenDonVi) ds.push('Xuất hóa đơn cho tổ chức nhưng chưa điền "Tên đơn vị / Công ty".');
+            if (!mst && !maQHNS) ds.push('Xuất hóa đơn cho tổ chức nhưng chưa có "Mã số thuế" lẫn "Mã quan hệ ngân sách".');
+        }
+
+        if (mst && !/^\d{10}$|^\d{13}$/.test(mst.replace(/[\s-]/g, ''))) {
+            ds.push('"Mã số thuế" phải là 10 hoặc 13 chữ số (đang có ' + mst.replace(/[\s-]/g, '').length + ' ký tự).');
+        }
+        if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            ds.push('"Email nhận hóa đơn điện tử" chưa đúng định dạng.');
+        }
+        if (sdt && !/^0\d{8,10}$/.test(sdt.replace(/[\s.\-()]/g, ''))) {
+            ds.push('"Số điện thoại nhận" chưa đúng định dạng (bắt đầu bằng 0, 9–11 chữ số).');
+        }
+        if (!diaChi) ds.push('Chưa có "Địa chỉ trên hóa đơn".');
+
+        return ds;
+    },
+
+    /*------------------------------------------
+    -- Vẽ banner trong tab + dấu ⚠ trên nút tab. Gọi lại thoải mái, tự dọn trạng thái cũ.
+    -------------------------------------------*/
+    _veCanhBaoHoaDon: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var $box = $('#kqdk_hd_canhbao');
+        if (!$box.length) return;
+        var ds = me._kiemTraHoaDon();
+        var esc = function (s) { return $('<div>').text(s == null ? '' : s).html(); };
+        if (!ds.length) {
+            $box.addClass('d-none');
+            $('#kqdk_hd_canhbao_ds').html('');
+        } else {
+            $('#kqdk_hd_canhbao_ds').html(ds.map(function (m) {
+                return '<li>' + esc(m) + '</li>';
+            }).join(''));
+            $box.removeClass('d-none');
+        }
+        // Dấu nhắc trên nút tab — chế độ Gộp nhóm / Một trang dựng lại thanh tab nên
+        // phải dò cả data-panels chứ không chỉ data-target.
+        var $tab = $('#kqdkKhaiTabs .aps-sv-tab').filter(function () {
+            var a = ($(this).attr('data-target') || '') + ',' + ($(this).attr('data-panels') || '');
+            return a.indexOf('kqdk_tab_hoadon') >= 0;
+        });
+        $tab.find('.kqdk-hd-warn').remove();
+        if (ds.length) {
+            $tab.append('<i class="fa-solid fa-triangle-exclamation kqdk-hd-warn" title="Có mục cần kiểm tra lại" style="color:#f59e0b; margin-left:6px;"></i>');
+        }
+    },
+
+    /*------------------------------------------
+    -- Câu nhắc nối vào thông báo sau khi Lưu/Cập nhật — cùng kiểu _addrWarnText /
+    -- _nguonWarnText. Dành cho người khai xong các tab khác mà không mở tab hóa đơn.
+    -------------------------------------------*/
+    _hoaDonWarnText: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var ds = me._kiemTraHoaDon();
+        if (!ds.length) return '';
+        var esc = function (s) { return $('<div>').text(s == null ? '' : s).html(); };
+        return '<br/><br/><span style="color:#b45309;"><b>Nhắc — tab "Xuất hóa đơn" còn mục nên xem lại:</b><br/>'
+            + ds.map(function (m) { return '• ' + esc(m); }).join('<br/>')
+            + '<br/><i>(hồ sơ đã lưu, vào tab Xuất hóa đơn sửa bổ sung rồi lưu lại là được)</i></span>';
     },
 
     _collectInvoice: function () {
