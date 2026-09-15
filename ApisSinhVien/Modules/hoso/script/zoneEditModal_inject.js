@@ -1632,8 +1632,12 @@ if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype._zeLuuDocLapHooked
 if (typeof edu !== 'undefined' && edu.system && edu.system.makeRequest && !edu.system._zeBaoLoiHooked) {
     edu.system._zeBaoLoiHooked = true;
 
-    var _zeHienLoi = function (msg) {
-        var host = document.getElementById('zoneXHD') || document.getElementById('zoneCaNhan');
+    // hostId: tab nào chứa ô gây lỗi thì báo ngay trong tab đó. Lỗi liên hệ /
+    // định danh thuộc tab Thông tin cơ bản, báo bên tab Xuất hoá đơn thì người
+    // dùng không nhìn thấy vì tab đó đang đóng.
+    var _zeHienLoi = function (msg, hostId) {
+        var host = (hostId && document.getElementById(hostId))
+            || document.getElementById('zoneXHD') || document.getElementById('zoneCaNhan');
         if (!host) return;
         var el = document.getElementById('zeLoiLuu');
         if (!el) {
@@ -1651,11 +1655,24 @@ if (typeof edu !== 'undefined' && edu.system && edu.system.makeRequest && !edu.s
         if (el) el.style.display = 'none';
     };
 
-    var _TEN_LUU = /Them_PersonInvoiceInfo|Sua_PersonInvoiceInfo|Ins_Person_Bank_Account|Upd_Person_Bank_Account|Ins_Person_Address|Upd_Person_Address/;
+    /*--------------------------------------------------------------
+    -- Thêm 2 proc liên hệ vào danh sách bắt lỗi (12/09/2026).
+    -- Lý do: save_LienHe nuốt lỗi 2 tầng — nhánh thất bại chỉ báo khi cờ icheck
+    -- còn true (call lỗi trước đó đã hạ cờ thì im), còn câu "Lưu thành công" lại
+    -- nằm trong complete: nên chạy cả khi máy chủ từ chối. Sửa số điện thoại
+    -- không ăn mà vẫn báo thành công là vì vậy.
+    --------------------------------------------------------------*/
+    var _TEN_LUU = /Them_PersonInvoiceInfo|Sua_PersonInvoiceInfo|Ins_Person_Bank_Account|Upd_Person_Bank_Account|Ins_Person_Address|Upd_Person_Address|InsertPersonContact|UpdatePersonContact|InsertPersonIdentifier|UpdatePersonIdentifier/;
     var _NHAN = {
         PersonInvoiceInfo: 'Thông tin hoá đơn',
         Person_Bank_Account: 'Thông tin thanh toán',
-        Person_Address: 'Địa chỉ'
+        Person_Address: 'Địa chỉ',
+        PersonContact: 'Thông tin liên hệ (email / điện thoại)',
+        PersonIdentifier: 'Thông tin định danh'
+    };
+    // Lỗi của 2 cụm này thuộc tab Thông tin cơ bản
+    var _HOST_THEO_FUNC = function (f) {
+        return /PersonContact|PersonIdentifier/.test(f) ? 'zoneCaNhan' : null;
     };
     var _mrGoc = edu.system.makeRequest;
     edu.system.makeRequest = function (o) {
@@ -1678,16 +1695,31 @@ if (typeof edu !== 'undefined' && edu.system && edu.system.makeRequest && !edu.s
                     if (!((o.data.strBuyer_Ref_Id || '') + '').trim()) o.data.strBuyer_Ref_Id = pid;
                 }
             }
+            // Log lại đúng thứ cần để đối chiếu khi "báo thành công mà không đổi":
+            // gửi đi là Insert hay Update, strId nào, giá trị nào — rồi máy chủ trả gì.
+            if (/PersonContact|PersonIdentifier/.test(f) && o.data) {
+                console.log('%c[ZE Lưu ' + f.split('.').pop() + '] gửi đi', 'color:#2563eb;font-weight:bold', {
+                    strId: o.data.strId || '(rỗng → INSERT)',
+                    strPersonId: o.data.strPersonId,
+                    strContactTypeCode: o.data.strContactTypeCode || o.data.strIdentifierTypeCode,
+                    giaTri: o.data.strContactValue || o.data.strIdentifierNo
+                });
+            }
             if (_TEN_LUU.test(f) && typeof o.success === 'function') {
                 var sGoc = o.success;
                 o.success = function (data) {
                     try {
+                        if (/PersonContact|PersonIdentifier/.test(f)) {
+                            console.log('%c[ZE Lưu ' + f.split('.').pop() + '] máy chủ trả',
+                                (data && data.Success) ? 'color:#16a34a' : 'color:#dc2626;font-weight:bold',
+                                { Success: data && data.Success, Message: data && data.Message, Id: data && data.Id });
+                        }
                         if (data && data.Success === false) {
                             var nhan = 'Lưu';
                             for (var k in _NHAN) { if (f.indexOf(k) > -1) { nhan = _NHAN[k]; break; } }
                             _zeHienLoi('Chưa lưu được ' + nhan + ': '
                                 + ((data.Message || '').trim() || 'máy chủ từ chối, không kèm lý do')
-                                + '  [' + f.split('.').pop() + ']');
+                                + '  [' + f.split('.').pop() + ']', _HOST_THEO_FUNC(f));
                         }
                     } catch (e) { }
                     return sGoc.apply(this, arguments);
@@ -1696,6 +1728,104 @@ if (typeof edu !== 'undefined' && edu.system && edu.system.makeRequest && !edu.s
         } catch (e) { }
         return _mrGoc.apply(this, arguments);
     };
+}
+
+/*==============================================================================
+== SỬA ĐIỆN THOẠI / EMAIL / CCCD KHÔNG ĂN — Id bản ghi bị dính của hồ sơ trước
+== (12/09/2026)
+==
+== Cách luồng gốc quyết định Thêm hay Sửa: mỗi loại liên hệ có một ô ẩn
+== #txtLienHe<IdLoai>, thuộc tính name của ô đó = Id bản ghi PERSON_CONTACT.
+== save_LienHe đọc name: có thì UpdatePersonContact, rỗng thì InsertPersonContact.
+==
+== Vấn đề: KHÔNG chỗ nào xoá name.
+==   - genTable_LienHe chỉ gán name cho loại CÓ bản ghi, loại không có thì bỏ qua;
+==   - _bridgeOneLienHe cũng chỉ gán khi tìm thấy, không có thì để nguyên.
+== Ô ẩn lại sống suốt phiên làm việc (nằm trong bảng của modal, không dựng lại).
+== Nên mở hồ sơ A (có điện thoại) rồi mở hồ sơ B, name của A vẫn còn:
+== bấm Lưu ở B là chạy Update Id của A — số của A bị ghi đè, còn B thì không có
+== gì thay đổi. Nhìn từ màn hình đúng như "sửa không được mà vẫn báo thành công".
+== Thêm mới chạy đúng vì lúc đó ô chưa từng mang name.
+==
+== Ở đây đặt lại name cho TẤT CẢ ô ngay trước khi lưu, lấy đúng theo danh sách
+== bản ghi của hồ sơ đang mở: có thì gán, không có thì XOÁ. Định danh (CCCD) dùng
+== chung đúng cơ chế đó nên vá luôn, nếu không thì vẫn còn đường ghi đè hồ sơ khác.
+==============================================================================*/
+if (typeof DeXuatHoSo === 'function' && DeXuatHoSo.prototype._bridgeLienHeToShadow
+    && !DeXuatHoSo.prototype._zeNameHooked) {
+    DeXuatHoSo.prototype._zeNameHooked = true;
+
+    /*------------------------------------------
+    -- Tìm bản ghi của đúng loại + đúng người. PERSON_ID chỉ so khi API có trả,
+    -- không có thì đành tin theo loại (dữ liệu đã lấy theo từng hồ sơ).
+    -------------------------------------------*/
+    var _zeTimBanGhi = function (ds, pid, khopLoai) {
+        return (ds || []).filter(function (x) {
+            if (!khopLoai(x)) return false;
+            return !pid || !x.PERSON_ID || ((x.PERSON_ID + '') === (pid + ''));
+        })[0];
+    };
+
+    DeXuatHoSo.prototype._zeDatLaiNameLienHe = function () {
+        var dx = this;
+        var pid = dx.strDeXuatHoSo_Id || dx._lockedPersonId || '';
+        (dx.dtLoaiLienHe || []).forEach(function (loai) {
+            var $o = $('#txtLienHe' + loai.ID);
+            if (!$o.length) return;
+            var ban = _zeTimBanGhi(dx.dtLienHe, pid, function (x) {
+                return (x.CONTACT_TYPE_CODE_ID === loai.ID) || (x.CONTACT_TYPE_CODE === loai.ID);
+            });
+            if (ban && ban.ID) $o.attr('name', ban.ID);
+            else $o.removeAttr('name');          // loại này chưa có bản ghi → phải Thêm mới
+        });
+    };
+
+    DeXuatHoSo.prototype._zeDatLaiNameDinhDanh = function () {
+        var dx = this;
+        var pid = dx.strDeXuatHoSo_Id || dx._lockedPersonId || '';
+        (dx.dtLoaiDinhDanh || []).forEach(function (loai) {
+            var $o = $('#txtSoDinhDinh' + loai.ID);
+            if (!$o.length) return;
+            var ban = _zeTimBanGhi(dx.dtDinhDanh, pid, function (x) {
+                return (x.IDENTIFIER_TYPE_CODE === loai.ID) || (x.IDENTIFIER_TYPE_CODE_ID === loai.ID);
+            });
+            if (ban && ban.ID) $o.attr('name', ban.ID);
+            else $o.removeAttr('name');
+        });
+    };
+
+    /*------------------------------------------
+    -- Móc vào đúng 2 hàm cầu nối đang chạy ngay trước khi lưu. Đặt lại name TRƯỚC
+    -- rồi mới để bản gốc chạy: bản gốc chỉ gán thêm chứ không xoá nên không đụng
+    -- độ, mà mọi đường vào lưu (click, mousedown, watchdog) đều đi qua đây.
+    -------------------------------------------*/
+    var _origBridgeLH = DeXuatHoSo.prototype._bridgeLienHeToShadow;
+    DeXuatHoSo.prototype._bridgeLienHeToShadow = function () {
+        try { this._zeDatLaiNameLienHe(); } catch (e) { console.warn('[ZE Name LH]', e); }
+        return _origBridgeLH.apply(this, arguments);
+    };
+
+    if (DeXuatHoSo.prototype._bridgeCccdToShadow) {
+        var _origBridgeDD = DeXuatHoSo.prototype._bridgeCccdToShadow;
+        DeXuatHoSo.prototype._bridgeCccdToShadow = function () {
+            try { this._zeDatLaiNameDinhDanh(); } catch (e) { console.warn('[ZE Name DD]', e); }
+            return _origBridgeDD.apply(this, arguments);
+        };
+    }
+
+    /*------------------------------------------
+    -- Mở hồ sơ khác thì xoá sạch name ngay, không đợi tới lúc bấm Lưu: danh sách
+    -- liên hệ của hồ sơ mới nạp bất đồng bộ, lỡ bấm Lưu sớm là dính Id người cũ.
+    -------------------------------------------*/
+    if (DeXuatHoSo.prototype.openEditByPerson) {
+        var _origOpenName = DeXuatHoSo.prototype.openEditByPerson;
+        DeXuatHoSo.prototype.openEditByPerson = function (person) {
+            try {
+                $('[id^="txtLienHe"], [id^="txtSoDinhDinh"]').removeAttr('name');
+            } catch (e) { }
+            return _origOpenName.apply(this, arguments);
+        };
+    }
 }
 
 /*------------------------------------------
