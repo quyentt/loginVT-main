@@ -2,6 +2,14 @@
 function zeNoLog() { }
 
 /*----------------------------------------------
+-- Log chẩn đoán luồng lưu (gửi Insert hay Update, giá trị gì, máy chủ trả gì,
+-- ô Email/Điện thoại đang gắn vào loại liên hệ nào).
+-- Đang TẮT. Cần soi lại thì bỏ comment đúng 1 dòng bên dưới, không phải đi sửa
+-- từng chỗ gọi. Cảnh báo lỗi thật (console.warn) vẫn giữ nguyên.
+----------------------------------------------*/
+function zeDebug() { /* console.log.apply(console, arguments); */ }
+
+/*----------------------------------------------
 -- zoneEditModal_inject.js (2026-08-21)
 -- Tự động inject modal #zoneEdit (Chỉnh sửa - Hồ sơ đề xuất, 3 tabs) + CSS vào page.
 -- Idempotent: nếu #zoneEdit đã có trong DOM thì bỏ qua (case: hoso_taomoi.html có sẵn inline).
@@ -1698,7 +1706,7 @@ if (typeof edu !== 'undefined' && edu.system && edu.system.makeRequest && !edu.s
             // Log lại đúng thứ cần để đối chiếu khi "báo thành công mà không đổi":
             // gửi đi là Insert hay Update, strId nào, giá trị nào — rồi máy chủ trả gì.
             if (/PersonContact|PersonIdentifier/.test(f) && o.data) {
-                console.log('%c[ZE Lưu ' + f.split('.').pop() + '] gửi đi', 'color:#2563eb;font-weight:bold', {
+                zeDebug('[ZE Lưu ' + f.split('.').pop() + '] gửi đi', {
                     strId: o.data.strId || '(rỗng → INSERT)',
                     strPersonId: o.data.strPersonId,
                     strContactTypeCode: o.data.strContactTypeCode || o.data.strIdentifierTypeCode,
@@ -1710,8 +1718,7 @@ if (typeof edu !== 'undefined' && edu.system && edu.system.makeRequest && !edu.s
                 o.success = function (data) {
                     try {
                         if (/PersonContact|PersonIdentifier/.test(f)) {
-                            console.log('%c[ZE Lưu ' + f.split('.').pop() + '] máy chủ trả',
-                                (data && data.Success) ? 'color:#16a34a' : 'color:#dc2626;font-weight:bold',
+                            zeDebug('[ZE Lưu ' + f.split('.').pop() + '] máy chủ trả',
                                 { Success: data && data.Success, Message: data && data.Message, Id: data && data.Id });
                         }
                         if (data && data.Success === false) {
@@ -1827,6 +1834,152 @@ if (typeof DeXuatHoSo === 'function' && DeXuatHoSo.prototype._bridgeLienHeToShad
         };
     }
 }
+
+/*==============================================================================
+== SỐ ĐIỆN THOẠI NHẬP VÀO KHÔNG ĐƯỢC GỬI ĐI  (16/09/2026)
+==
+== Bằng chứng từ log: bấm Lưu chỉ thấy UpdatePersonContact cho EMAIL, còn loại
+== liên hệ kia đi qua KiemTraThongTinLienHe với strContactValue = undefined, và
+== tuyệt nhiên không có Insert/UpdatePersonContact nào mang số điện thoại.
+== Tức ô ẩn #txtLienHe<IdLoại> rỗng ngay lúc lưu → save_LienHe thấy rỗng là bỏ
+== qua (dexuathoso.js:1426), nên số gõ vào bay mất mà vẫn báo thành công.
+==
+== Nguyên nhân: _bridgeLienHeToShadow nhận diện loại bằng cách dò chữ trong
+== MA/TEN với danh sách cứng (DIEN THOAI, SDT, PHONE...). Danh mục của trường đặt
+== tên khác (ví dụ "Di động", "Số máy", "Liên lạc") là trượt hết, và fallback
+== đoán theo bản ghi cũ cũng vô dụng khi hồ sơ CHƯA có số nào — đúng tình huống
+== đang gặp. Email sống sót chỉ vì chữ "mail" khó trượt, mà thật ra giá trị của
+== nó là do bảng đổ từ DB chứ không phải do cầu nối.
+==
+== Cách xử lý: chuẩn hoá tên loại (bỏ dấu, bỏ mọi ký tự không phải chữ số) rồi
+== chấm điểm để chọn ĐÚNG MỘT loại cho ô Email và MỘT loại cho ô Điện thoại,
+== có đường lui cuối cùng khi danh mục đặt tên lạ hoàn toàn. Bản gốc vẫn chạy
+== trước, phần này chỉ bù vào chỗ nó bỏ sót nên không phá trang nào đang chạy đúng.
+==============================================================================*/
+if (typeof DeXuatHoSo === 'function' && DeXuatHoSo.prototype._bridgeLienHeToShadow
+    && !DeXuatHoSo.prototype._zeBuLienHeHooked) {
+    DeXuatHoSo.prototype._zeBuLienHeHooked = true;
+
+    // "Số Điện Thoại" → "SODIENTHOAI": bỏ dấu, bỏ luôn khoảng trắng/gạch/chấm để
+    // không phụ thuộc cách viết của từng trường.
+    var _zeKey = function (s) {
+        return ((s || '') + '').normalize('NFD').replace(/[̀-ͯ]/g, '')
+            .replace(/đ/g, 'd').replace(/Đ/g, 'D')
+            .toUpperCase().replace(/[^A-Z0-9]/g, '');
+    };
+
+    var _ZE_TU_PHONE = ['DIENTHOAI', 'SDT', 'DTDD', 'DIDONG', 'MOBILE', 'PHONE', 'TEL',
+        'SOMAY', 'LIENLAC', 'CELL', 'HOTLINE'];
+    var _ZE_TU_EMAIL = ['EMAIL', 'MAIL', 'THUDIENTU', 'HOMTHU'];
+
+    /*------------------------------------------
+    -- Chọn đúng một loại cho mỗi ô. Điểm: khớp chữ trong danh mục (2) cộng thêm
+    -- nếu hồ sơ đã có sẵn bản ghi ở loại đó (3) — bản ghi cũ là bằng chứng chắc
+    -- nhất về việc trường đang dùng loại nào để lưu số/hòm thư.
+    -------------------------------------------*/
+    DeXuatHoSo.prototype._zeChonLoaiLienHe = function () {
+        var dx = this;
+        var ds = dx.dtLoaiLienHe || [];
+        var daCo = dx.dtLienHe || [];
+        var banGhiCua = function (id) {
+            return daCo.filter(function (x) {
+                return (x.CONTACT_TYPE_CODE_ID === id) || (x.CONTACT_TYPE_CODE === id);
+            })[0];
+        };
+        var cham = function (loai, tuKhoa) {
+            var k = _zeKey(loai.MA) + '|' + _zeKey(loai.TEN);
+            var diem = tuKhoa.some(function (t) { return k.indexOf(t) > -1; }) ? 2 : 0;
+            var b = banGhiCua(loai.ID);
+            var v = (b && (b.CONTACT_VALUE || b.VALUE) || '') + '';
+            // Bản ghi sẵn có: giá trị chứa @ thì chắc chắn là hòm thư, toàn số thì là số máy
+            if (v) {
+                var laMail = v.indexOf('@') > -1;
+                var laSo = /^[\d\s+\-().]+$/.test(v) && v.replace(/\D/g, '').length >= 6;
+                if ((tuKhoa === _ZE_TU_EMAIL && laMail) || (tuKhoa === _ZE_TU_PHONE && laSo)) diem += 3;
+            }
+            return diem;
+        };
+        var tot = function (tuKhoa) {
+            var xep = ds.map(function (l) { return { id: l.ID, diem: cham(l, tuKhoa) }; })
+                .filter(function (x) { return x.diem > 0; })
+                .sort(function (a, b) { return b.diem - a.diem; });
+            return xep.length ? xep[0].id : '';
+        };
+        var email = tot(_ZE_TU_EMAIL);
+        var phone = tot(_ZE_TU_PHONE);
+        // Đường lui: danh mục đặt tên không giống bất kỳ từ nào ở trên. Chỉ dùng khi
+        // còn đúng MỘT loại chưa ai nhận — đoán bừa giữa nhiều loại thì thà bỏ trống
+        // còn hơn ghi số điện thoại vào nhầm chỗ.
+        if (!phone) {
+            var khongPhaiSo = /DIACHI|ADDRESS|FACEBOOK|ZALO|WEBSITE|SKYPE|GHICHU/;
+            var conLai = ds.filter(function (l) {
+                return l.ID !== email && !khongPhaiSo.test(_zeKey(l.MA) + _zeKey(l.TEN));
+            });
+            if (conLai.length === 1) phone = conLai[0].ID;
+        }
+        if (!email) {
+            var conLai2 = ds.filter(function (l) { return l.ID !== phone; });
+            if (conLai2.length === 1) email = conLai2[0].ID;
+        }
+        return { email: email, phone: phone };
+    };
+
+    /*------------------------------------------
+    -- Bù giá trị vào ô ẩn của loại đã chọn. Chỉ ghi khi người dùng có nhập: ô để
+    -- trống mà ghi đè xuống là xoá mất số cũ, trong khi BE chưa có đường xoá.
+    -------------------------------------------*/
+    DeXuatHoSo.prototype._zeBuLienHe = function () {
+        var dx = this;
+        var chon = dx._zeChonLoaiLienHe();
+        var bang = [];
+        [['email', 'txtEmailCaNhan'], ['phone', 'txtDienThoai']].forEach(function (c) {
+            var typeId = chon[c[0]];
+            var giaTri = (($('#' + c[1]).val() || '') + '').trim();
+            bang.push({ 'Ô': c[1], 'IdLoại': typeId || '(KHÔNG XÁC ĐỊNH ĐƯỢC)', 'Giá trị': giaTri });
+            if (!typeId || !giaTri) return;
+            if (!$('#txtLienHe' + typeId).length) {
+                $('body').append('<input type="hidden" id="txtLienHe' + typeId + '" />');
+            }
+            if (!$('#checkX' + typeId).length) {
+                $('body').append('<input type="checkbox" id="checkX' + typeId + '" style="display:none" checked />');
+            }
+            $('#txtLienHe' + typeId).val(giaTri);
+        });
+        // Muốn xem ô nào đang gắn vào loại nào thì gõ _zeXemLoaiLienHe() trong Console
+        zeDebug('[ZE Liên hệ] map ô → loại', bang);
+    };
+
+    var _origBridgeBu = DeXuatHoSo.prototype._bridgeLienHeToShadow;
+    DeXuatHoSo.prototype._bridgeLienHeToShadow = function () {
+        var dx = this;
+        try { _origBridgeBu.apply(dx, arguments); } catch (e) { console.warn('[ZE Liên hệ] bản gốc lỗi:', e); }
+        try { dx._zeBuLienHe(); } catch (e) { console.warn('[ZE Liên hệ] bù lỗi:', e); }
+    };
+}
+
+/*------------------------------------------
+-- Tiện ích xem danh mục Loại liên hệ và ô nào đang gắn vào loại nào.
+-- Gõ trong Console:  _zeXemLoaiLienHe()
+-------------------------------------------*/
+window._zeXemLoaiLienHe = function () {
+    var dx = (window.main_doc && window.main_doc.DeXuatHoSo) || null;
+    if (!dx) { console.warn('Chưa có main_doc.DeXuatHoSo'); return []; }
+    var chon = (typeof dx._zeChonLoaiLienHe === 'function') ? dx._zeChonLoaiLienHe() : {};
+    var ds = (dx.dtLoaiLienHe || []).map(function (l) {
+        var b = (dx.dtLienHe || []).filter(function (x) {
+            return (x.CONTACT_TYPE_CODE_ID === l.ID) || (x.CONTACT_TYPE_CODE === l.ID);
+        })[0];
+        return {
+            'Id': l.ID, 'Mã': l.MA, 'Tên': l.TEN,
+            'Đang gắn ô': (l.ID === chon.email) ? 'txtEmailCaNhan'
+                : ((l.ID === chon.phone) ? 'txtDienThoai' : ''),
+            'Giá trị đang có': (b && (b.CONTACT_VALUE || b.VALUE)) || '',
+            'Id bản ghi': (b && b.ID) || ''
+        };
+    });
+    if (console.table) console.table(ds); else console.log(ds);
+    return ds;
+};
 
 /*------------------------------------------
 -- Tiện ích xem nhanh danh mục "Đối tượng xuất hoá đơn" đang có những mã nào.
