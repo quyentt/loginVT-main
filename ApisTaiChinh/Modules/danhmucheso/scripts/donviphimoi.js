@@ -761,7 +761,10 @@ DonViPhi.prototype = {
                     else {
                         dtResult = [];
                     }
-                    me.genTable_ChuongTrinhDaoTao(dtResult);
+                    // FIX 2026-09-16: nap map ID -> MA nganh truoc khi dung bang (cot "Ma nganh")
+                    me.loadMap_MaNganh(function () {
+                        me.genTable_ChuongTrinhDaoTao(dtResult);
+                    });
                 }
                 else {
                     edu.system.alert("CM_ThoiGianDaoTao.LayDanhSach_ThoiGianDaoTao: " + data.Message, "w");
@@ -886,6 +889,12 @@ DonViPhi.prototype = {
                     "mDataProp": "DAOTAO_COCAUTOCHUC_TEN"
                 },
                 {
+                    // FIX 2026-09-16: bo sung cot "Ma nganh"
+                    "mRender": function (nRow, aData) {
+                        return main_doc.DonViPhi.getMaNganh_ByRow(aData);
+                    }
+                },
+                {
                     "mDataProp": "DAOTAO_TOCHUCCHUONGTRINH_TEN"
                 }
             ]
@@ -894,6 +903,7 @@ DonViPhi.prototype = {
         var rowth = "";
         rowth += '<th class="td-fixed td-center">Stt</th>';
         rowth += '<th class="td-center">Khoa quản lý</th >';
+        rowth += '<th class="td-center">Mã ngành</th >';
         rowth += '<th class="td-center">Chương trình</th >';
         for (var i = 0; i < me.dtCot.length; i++) {
             rowth += '<th class="td-center">' + me.dtCot[i].THOIGIAN + '</th>';
@@ -919,6 +929,81 @@ DonViPhi.prototype = {
         //me.move_ThroughInTable("tblQuyDinhHeSoLuong");
         me.getList_DonViPhiSoTien();
         edu.system.move_ThroughInTable("tblDonViPhi");
+    },
+    /*------------------------------------------
+    --Discription: FIX 2026-09-16 - Ma nganh cho bang tblDonViPhi
+    -- API LayDSTaiChinh_CT_DonViPhi khong phai luc nao cung tra ve _MA,
+    -- nen nap them KHCT_ThongTin/LayDSNganhTheoKhoa (dung bo loc Khoa/Khoa quan ly
+    -- dang chon) de map ID nganh -> MA. Cache theo cap khoa + khoa quan ly.
+    -------------------------------------------*/
+    dtMapMaNganh: null,
+    strMapMaNganh_Key: "",
+    loadMap_MaNganh: function (fnDone) {
+        var me = main_doc.DonViPhi;
+        var strKhoaDaoTao_Id = edu.util.getValById('dropKhoaDaoTao_DVP');
+        var strKhoaQuanLy_Id = edu.util.getValById('dropKhoaQuanLy_DVP');
+        var strKey = strKhoaDaoTao_Id + "|" + strKhoaQuanLy_Id;
+
+        if (me.dtMapMaNganh != null && me.strMapMaNganh_Key == strKey) {
+            fnDone();
+            return;
+        }
+
+        var obj_list = {
+            'action': 'KHCT_ThongTin/LayDSNganhTheoKhoa',
+            'type': 'GET',
+            'strDaoTao_KhoaDaoTao_Id': strKhoaDaoTao_Id,
+            'strDaoTao_CoCauToChuc_Id': strKhoaQuanLy_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+
+        edu.system.makeRequest({
+            success: function (data) {
+                var map = {};
+                if (data.Success && edu.util.checkValue(data.Data)) {
+                    for (var i = 0; i < data.Data.length; i++) {
+                        var row = data.Data[i];
+                        if (row.ID) map[String(row.ID).toUpperCase()] = edu.util.returnEmpty(row.MA);
+                    }
+                }
+                me.dtMapMaNganh = map;
+                me.strMapMaNganh_Key = strKey;
+                fnDone();
+            },
+            error: function (er) {
+                //khong chan viec dung bang neu lookup that bai
+                me.dtMapMaNganh = {};
+                me.strMapMaNganh_Key = strKey;
+                fnDone();
+            },
+            type: "GET",
+            action: obj_list.action,
+            contentType: true,
+            data: obj_list,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
+    getMaNganh_ByRow: function (aData) {
+        var me = main_doc.DonViPhi;
+
+        //[1] uu tien ma co san trong chinh response
+        var strMa = aData.DAOTAO_TOCHUCCHUONGTRINH_MA || aData.NGANHDAOTAO_MA || aData.MA || "";
+
+        //[2] lookup tu danh sach nganh theo khoa
+        if (!strMa && me.dtMapMaNganh) {
+            var strId = aData.PHAMVIAPDUNG_ID || aData.ID || "";
+            strMa = me.dtMapMaNganh[String(strId).toUpperCase()] || "";
+        }
+
+        //[3] BE dang tra ten dang "TEN(MA)" -> tach phan trong ngoac cuoi cung,
+        //    bo qua truong hop ma trung het voi ten (khong co ma that)
+        if (!strMa) {
+            var arr = edu.util.returnEmpty(aData.DAOTAO_TOCHUCCHUONGTRINH_TEN).match(/^(.*)\(([^()]*)\)\s*$/);
+            if (arr && arr[2] && arr[1].trim() != arr[2].trim()) strMa = arr[2].trim();
+        }
+
+        return edu.util.returnEmpty(strMa);
     },
     cbGenCombo_ChuongTrinhDaoTao: function (data) {
         var obj = {
