@@ -2284,7 +2284,7 @@
 }
 
 .aps-taichinh-r .aps-form .aps-form-lable .group-title-name {
-    font-size: 16px !important;
+    font-size: 14px !important;
     color: #666 !important;
     font-weight: 400 !important;
     border-bottom: 0px solid #e1e1e1;
@@ -2436,7 +2436,9 @@
     padding: 0 !important;
     background: #fff;
 }
-
+html body.skin-blue  .aps-modal-nhansu.modal .modal-body {
+    padding: 0px !important;
+}
 .aps-modal-nhansu .modal-body>.row {
     padding-left: 0 !important;
     padding-right: 0 !important;
@@ -5812,8 +5814,8 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 }
 
 .aps-taichinh-r .form-container.zone-bus .box-header .btn-default.btnClose {
-    top: 12px;
-    right: 8px;
+    top: 15px;
+    right: 3px;
     border: 0 !important;
     background: transparent !important;
     color: #fff;
@@ -9002,7 +9004,7 @@ input#tblInput_DTSV_SinhVien_input {
 }
 
 .content .col-sm-3 .box.box-solid.box-search {
-    padding: 15px !important;
+    padding: 15px 15px 5px 15px !important;
 }
 
 .light-paginationtblHoaDon.simple-pagination,
@@ -9028,7 +9030,7 @@ input#tblInput_DTSV_SinhVien_input {
 .zone-pag-footertblBienLai {
     margin-top: 2px !important;
     border-top: 1px solid #e1e1e1;
-    padding-top: 12px;
+    padding-top: 10px;
 }
 
 .box-list .zone-pag-footertblPhieuThu .info-tblPhieuThu,
@@ -10368,7 +10370,7 @@ table#clone {
     height: 38px !important;
     line-height: 44px !important;
     padding: 10px !important;
-    border-radius: 5px !important;
+    border-radius: 4px !important;
 }
 
 .aps-form-item .select2-container--default .select2-selection--single .select2-selection__rendered,
@@ -18140,7 +18142,10 @@ html body.skin-blue .modal.myModalLabel .modal-footer,
 /* -----fix-t9-2026--------- */
 html body.skin-blue .modal .modal-header button {
     font-size: 16px !important;
-    display: contents;
+    display: flex !important;
+}
+html body.skin-blue .modal .modal-header button  i {
+    padding-right: 5px !important;
 }
 html body.skin-blue #main-content-wrapper .box-view.aps-add-new .aps-form-input .select2-container--default .select2-selection--single .select2-selection__rendered,
 html body.skin-blue #main-content-wrapper .modal_add_loaikhoan_donGia .box-view.aps-add-new .aps-form-input .select2-container--default .select2-selection--single .select2-selection__rendered,
@@ -18193,4 +18198,65 @@ html body.skin-blue #main-content-wrapper .modal_ketQua_dangKy_mua .aps-add-new 
 }
 .btnThemMoi_PhamVi_DoiTuong{
     gap: 4px !important;
+}
+.sidebar-menu:hover{
+    overflow: hidden !important;
+}
+/* Fix 14-t9 */
+.aps-kehoach-thuchi-l .box-list.box.box-solid {
+    padding: 0px 15px 15px 15px !important;
+}
+.aps-kehoach-thuchi-l .box-list .box-body{
+    margin-top: 10px !important;
+}
+.aps-kehoach-thuchi-l  .box-body .zone-pag-headertblKeHoach{    
+    justify-content: space-between !important;
+    margin-bottom: 5px;
+}
+.zone-pag-headertblKeHoach .select2-container .select2-selection--single {
+    height: 28px !important;
+    min-height: 28px !important;
+    border-radius: 4px !important;
+}
+.zone-pag-headertblKeHoach .simple-pagination li {
+    margin-left: -1px !important;
+    height: 28px !important;
+    max-height: 28px !important;
+    line-height: 28px !important;
+}
+.zone-pag-headertblKeHoach .simple-pagination li span{
+    line-height: 28px !important;
+}
+.zone-pag-headertblKeHoach .compact-theme ul {
+    overflow: hidden !important;
+}
+.zone-pag-headertblKeHoach .clear{
+    display: none !important;
+}
+.zone-pag-headertblKeHoach .simple-pagination li span,
+html body.skin-blue .aps-kehoach-thuchi-l .zone-pag-footertblKeHoach .simple-pagination li {
+    height: 28px !important;
+    line-height: 28px !important;
+}
+.aps-kehoach-thuchi-r{
+
+}
+.pull-left{
+    float: left !important;
+}
+.pull-right{
+    float: right !important;
+}
+/* ------------ */
+html body.skin-blue .aps-kehoach-thuchi-l .compact-theme span{
+    line-height: 28px !important;
+    height: 28px !important;
+}
+
+.zone-bus .myModalLabel {
+    padding-right: 5px !important; 
+}
+html body.skin-blue .modal .modal-body  .select2-container .select2-selection--single {
+    height: 34px !important;
+    min-height: 34px !important;
 }

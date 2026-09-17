@@ -3694,7 +3694,7 @@ input:active,
 .modal-title i {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
   color: var(--color-blue);
-  padding-right: 8px !important;
+  padding-right: 5px !important;
 }
 
 .modal-title i:before {
@@ -3780,7 +3780,7 @@ input:active,
 .modal-title i,
 .modal-header .box-title i {
   color: #fff !important;
-  padding-right: 8px !important;
+  padding-right: 5px !important;
   margin-right: 0 !important;
 }
 
