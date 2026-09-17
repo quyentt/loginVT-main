@@ -205,6 +205,48 @@
     .empty-data-placeholder.is-error i { color: #f59e0b; }
     .empty-data-placeholder.is-error .empty-text { color: #d97706; }
     .empty-data-placeholder.is-loading i { color: #3b82f6; }
+
+    /* ===== Fix contrast cột "Mã số" trong bảng điểm danh =====
+       Nguyên nhân: styles.css (.table .btn:hover { color:#fff !important })
+       + calendar.css (.tblNhapChuyenCan tr:hover td { background: var(--color-blue) })
+       => khi rê chuột vào dòng, chữ mã SV chuyển trắng/xanh trùng nền nên mất chữ.
+       Dưới đây ép badge mã SV luôn có nền sáng + chữ xanh đậm ở mọi trạng thái. */
+    #my_calendar .tblNhapChuyenCan td .btnView_HocTap {
+        background: #e8f0fe !important;
+        border: 1px solid #c3d9f7 !important;
+        color: #0b4ea2 !important;
+        font-weight: 600 !important;
+        white-space: nowrap;
+    }
+
+    #my_calendar .tblNhapChuyenCan td .btnView_HocTap u {
+        color: inherit !important;
+    }
+
+    /* Hover cả dòng (nền xanh) hoặc hover trực tiếp vào badge */
+    #my_calendar .tblNhapChuyenCan tr:hover td .btnView_HocTap,
+    #my_calendar .tblNhapChuyenCan td .btnView_HocTap:hover,
+    #my_calendar .tblNhapChuyenCan tr:hover td .btnView_HocTap:hover,
+    #my_calendar .tblNhapChuyenCan tr.selected td .btnView_HocTap,
+    #my_calendar .tblNhapChuyenCan tr:focus-within td .btnView_HocTap {
+        background: #ffffff !important;
+        border-color: #ffffff !important;
+        color: #0b4ea2 !important;
+    }
+
+    #my_calendar .tblNhapChuyenCan tr:hover td .btnView_HocTap u,
+    #my_calendar .tblNhapChuyenCan td .btnView_HocTap:hover u,
+    #my_calendar .tblNhapChuyenCan tr:hover td .btnView_HocTap:hover u,
+    #my_calendar .tblNhapChuyenCan tr.selected td .btnView_HocTap u,
+    #my_calendar .tblNhapChuyenCan tr:focus-within td .btnView_HocTap u {
+        color: #0b4ea2 !important;
+    }
+
+    /* Hover vào badge thì nổi bật thêm chút cho biết click được */
+    #my_calendar .tblNhapChuyenCan td .btnView_HocTap:hover {
+        box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.6);
+        text-decoration: none;
+    }
 </style>
 <div class="one-door study-space">
     <div class="overlay"></div>
