@@ -1478,9 +1478,13 @@ NguoiDung.prototype = {
             edu.system.alert(edu.constant.getting("NOTIFY", "SELECT_F"));
             return;
         }
-        //--Cac tham so d* la NUMBER ben Oracle: rong phai gui null, khong duoc gui ""
-        var strTrangThai = edu.util.getValById("dropEditND_TrangThai");
-        var strThoiHan = edu.util.getValById("txtEditND_ThoiHanDoiMatKhau");
+        //--QuanLyNguoiDung_MHEntity khai bao dTrangThai/dThoiHanDoiMatKhau la System.Double
+        //  KHONG nullable => gui null se loi "Error converting value {null} to type 'System.Double'"
+        //  ngay o buoc deserialize (HTTP 500). Rong thi phai gui so 0.
+        var iTrangThai = parseInt(edu.util.getValById("dropEditND_TrangThai"), 10);
+        var iThoiHan = parseInt(edu.util.getValById("txtEditND_ThoiHanDoiMatKhau"), 10);
+        if (isNaN(iTrangThai)) iTrangThai = 1;
+        if (isNaN(iThoiHan)) iThoiHan = 0;
         //--Edit
         var obj_save = {
             'action': 'CMS_QuanLyNguoiDung_MH/AiAxDykgNRUpLi8mFSgvFSAoCikuIC8P',
@@ -1491,9 +1495,9 @@ NguoiDung.prototype = {
             'strTaiKhoan': edu.util.getValById("txtEditND_TaiKhoan"),
             'strTenDayDu': edu.util.getValById("txtEditND_TenDayDu"),
             'strDonViId': edu.util.getValById("dropEditND_DonVi"),
-            'dTrangThai': edu.util.checkValue(strTrangThai) ? parseInt(strTrangThai, 10) : null,
+            'dTrangThai': iTrangThai,
             'strEmail': edu.util.getValById("txtEditND_Email"),
-            'dThoiHanDoiMatKhau': edu.util.checkValue(strThoiHan) ? parseInt(strThoiHan, 10) : null,
+            'dThoiHanDoiMatKhau': iThoiHan,
             'strQuyDinhDoiMatKhauId': edu.util.getValById("hidEditND_QuyDinhDoiMatKhauId"),
             'strDiaChi': edu.util.getValById("txtEditND_DiaChi"),
             'strSoDienThoai': edu.util.getValById("txtEditND_DienThoai"),
