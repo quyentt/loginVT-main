@@ -479,6 +479,7 @@
         margin: 0 !important;
         overflow-x: hidden !important;
         max-width: 100% !important;
+        overflow: hidden;
       }
 
       html body.skin-blue .simple-pagination li,
@@ -499,7 +500,7 @@
         background-image: none !important;
         color: #223771 !important;
         border: 1px solid #e2e8f0 !important;
-        border-radius: 6px !important;
+        border-radius: 4px !important;
         box-shadow: none !important;
         font-weight: 600 !important;
         min-width: 32px !important;
@@ -520,11 +521,12 @@
       html body.skin-blue .simple-pagination .current,
       html body.skin-blue .light-theme .current,
       html body.skin-blue .compact-theme .current {
-        background: #223771 !important;
+        background: #f1f5f9 !important;
         background-image: none !important;
-        color: #ffffff !important;
-        border-color: #223771 !important;
+        color: #222 !important;
+        border-color: #f1f5f9 !important;
         cursor: default !important;
+        border-radius: 4px ! IMPORTANT;
       }
 
       html body.skin-blue .simple-pagination .ellipse,
@@ -609,7 +611,7 @@
       /* Form inputs — vien nhat khop tone, focus dask-blue subtle (khong cam gao) */
       html body.skin-blue #main-content-wrapper .form-control {
         border: 1px solid #d1d1d1 !important;
-        border-radius: 8px !important;
+        border-radius: 6px !important;
         box-shadow: none !important;
         color: #888 !important;
         font-size: 14px !important;
@@ -641,16 +643,16 @@
 
       /* ═══ Select2 xin: flex center + border-radius + focus ring ═══ */
       .select2-container .select2-selection--single {
-        height: 38px !important;
-        min-height: 38px !important;
-        border: 1px solid #c1c1c1 !important;
-        border-radius: 8px !important;
-        background: #ffffff !important;
-        display: flex !important;
-        align-items: center !important;
-        padding: 0 !important;
-        transition: border-color .15s ease, box-shadow .15s ease !important;
-        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+        height: 38px;
+        min-height: 38px;
+        border: 1px solid #c1c1c1;
+        border-radius: 8px;
+        background: #ffffff;
+        display: flex;
+        align-items: center;
+        padding: 0;
+        transition: border-color .15s ease, box-shadow .15s ease;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
       }
 
       html body.skin-blue #main-content-wrapper .select2-container--focus .select2-selection--single,
@@ -664,8 +666,8 @@
       }
 
       html body.skin-blue #main-content-wrapper .select2-container--default .select2-selection--single .select2-selection__rendered {
-        line-height: 1 !important;
-        padding: 0 32px 0 12px !important;
+        line-height: 26px !important;
+        padding: 8px 15px 8px 6px !important;
         color: #0f172a !important;
         font-size: 14px !important;
         font-weight: 400;
@@ -1334,7 +1336,7 @@
       }
 
       html body.skin-blue #main-content-wrapper .box-header .btnClose::after {
-        content: "Đóng";
+        content: "";
         color: #ffffff !important;
         font-size: 13px;
         font-weight: 600;
@@ -1952,8 +1954,8 @@
           // - ep transparent trong scope sidebar de khong bi nen trang chen ngang.
           'html body.skin-blue .main-sidebar .menu-open, html body.skin-blue #menu_vertical .menu-open, html body.skin-blue #menu_vertical li { background: transparent !important; background-color: transparent !important; }',
           'html body.skin-blue #menu_vertical .treeview-menu, html body.skin-blue .sidebar-menu .treeview-menu { background:#1a2b5c !important; background-color:#1a2b5c !important; border-radius: 0 !important; margin: 2px 0 4px 0px !important; padding: 2px 0 2px 6px !important; border-left: 1px solid rgba(210,221,253,0.18) !important; box-shadow: none !important; }',
-          'html body.skin-blue #menu_vertical .treeview-menu > li > a, html body.skin-blue .sidebar-menu .treeview-menu > li > a { color: #ffffff !important; font-weight: 500 !important; background: transparent !important; background-image: none !important; border-left: 0 !important; }',
-          'html body.skin-blue #menu_vertical .treeview-menu > li.active > a, html body.skin-blue #menu_vertical .treeview-menu > li.menu-open > a, html body.skin-blue #menu_vertical .treeview-menu > li > a:hover, html body.skin-blue .sidebar-menu .treeview-menu > li.active > a, html body.skin-blue .sidebar-menu .treeview-menu > li.menu-open > a, html body.skin-blue .sidebar-menu .treeview-menu > li > a:hover, html body.skin-blue .sidebar-menu .treeview-menu > li.active, html body.skin-blue .sidebar-menu .treeview-menu > li.menu-open, html body.skin-blue #menu_vertical .treeview-menu > li.active, html body.skin-blue #menu_vertical .treeview-menu > li.menu-open { color: #f8843d !important; background: transparent !important; background-color: transparent !important; border-color: transparent !important; outline: none !important; box-shadow: none !important; border-radius: 0 !important; }',
+          'html body.skin-blue #menu_vertical .treeview-menu > li > a, html body.skin-blue .sidebar-menu .treeview-menu > li > a { color: #ffffff; font-weight: 500 !important; background: transparent !important; background-image: none !important; border-left: 1px solid rgba(210, 221, 253, 0.4) !important; }',
+          'html body.skin-blue #menu_vertical .treeview-menu > li.active > a, html body.skin-blue #menu_vertical .treeview-menu > li.menu-open > a, html body.skin-blue #menu_vertical .treeview-menu > li > a:hover, html body.skin-blue .sidebar-menu .treeview-menu > li.active > a, html body.skin-blue .sidebar-menu .treeview-menu > li.menu-open > a, html body.skin-blue .sidebar-menu .treeview-menu > li > a:hover, html body.skin-blue .sidebar-menu .treeview-menu > li.active, html body.skin-blue .sidebar-menu .treeview-menu > li.menu-open, html body.skin-blue #menu_vertical .treeview-menu > li.active, html body.skin-blue #menu_vertical .treeview-menu > li.menu-open { color: #f8843d !important; background: transparent !important; background-color: transparent !important; border-left: 1px solid rgba(210, 221, 253, 0.4) !important; outline: none !important; box-shadow: none !important; border-radius: 0 !important; }',
           'html body.skin-blue #menu_vertical .treeview-menu > li > a::before, html body.skin-blue #menu_vertical .treeview-menu > li > a::after { background-color: rgba(210,221,253,0.4) !important; }',
           'html body.skin-blue #menu_vertical .treeview-menu > li.active > a::before, html body.skin-blue #menu_vertical .treeview-menu > li.active > a::after, html body.skin-blue #menu_vertical .treeview-menu > li.menu-open > a::before, html body.skin-blue #menu_vertical .treeview-menu > li.menu-open > a::after, html body.skin-blue #menu_vertical .treeview-menu > li > a:hover::before, html body.skin-blue #menu_vertical .treeview-menu > li > a:hover::after { background-color: #f8843d !important; }'
         ].join('\n');
@@ -1994,7 +1996,7 @@
         var SUB_DEFAULT = {
           'background': 'transparent',
           'background-image': 'none',
-          'color': '#ffffff',
+          // 'color': '#ffffff',
           'font-weight': '500'
         };
         // Container submenu: trong suốt, phân cấp bằng border-left mỏng
@@ -2004,9 +2006,13 @@
           'background-color': '#1a2b5c !important',
           'background-image': 'none',
           'border-radius': '0',
-          'border-left': '1px solid rgba(210, 221, 253, 0.18)',
-          'margin': '2px 0 4px 0px',
-          'padding': '2px 0 2px 6px'
+          // 'border-left': '1px solid rgba(210, 221, 253, 0.18)',
+          'border-left': '0',
+          // 'margin': '2px 0 4px 0px',
+          'margin': ' 0px',
+          // 'padding': '2px 0 2px 6px',
+          'padding': '0',
+
         };
 
         function setStyle(el, obj) {
