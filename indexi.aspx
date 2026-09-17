@@ -352,7 +352,15 @@
       html body.skin-blue .content-wrapper {
         background-color: #f0f3fd !important;
         border-top-left-radius: 0 !important;
-        position: relative;
+        /* KHONG duoc dat position:relative o day! AdminLTE.min.css set z-index:800/820/840
+               cho .content-wrapper. Khi position:static thi z-index bi bo qua (inert), nhung
+               chi can them position:relative la z-index kich hoat => .content-wrapper tao
+               STACKING CONTEXT o muc 820. Moi .modal khai bao trong module (nam trong
+               #main-content-wrapper) bi nhot trong stacking context do, trong khi
+               .modal-backdrop duoc BS3 append thang vao <body> o z-index 1040 => backdrop
+               phu LEN modal: man hinh toi den, bam gi cung khong an. Ep z-index:auto de
+               khoa vinh vien loi nay ke ca khi rule khac set position. */
+        z-index: auto !important;
         /* ROOT CAUSE be ngang thieu 348px: styles.css:3092 .skin-blue .content-wrapper
                { overflow:hidden } -> element tao BFC (block formatting context), ma box tao BFC
                thi TU CO LAI de ne float nam canh no. Do console: div bo rong 2116.67,

@@ -6838,7 +6838,16 @@ KeHoachTuyenSinhNew.prototype = {
                 var inv = data.Data[0];
                 me._currentInvoiceId = inv.ID || '';
                 var setVal = function (id, v) { if (v) edu.util.viewValById(id, v); };
-                setVal('txtKQ_HD_TenDonVi', inv.BUYER_NAME_TENNM);
+                // ⚠ PERSON_INVOICE_INFO chỉ có MỘT cột tên (BUYER_NAME) trong khi form
+                // có HAI ô. Trước đây luôn đổ vào "Tên đơn vị" → hồ sơ xuất cho cá nhân
+                // thì tên nhảy sang ô đơn vị, ô "Họ tên người mua" trống trơn, kéo theo
+                // banner nhắc kêu oan (khách báo 15/09/2026).
+                // Nay đổ theo đúng đối tượng của chính bản ghi đó.
+                if (me._loaiHD_TuGiaTri(inv.BUYER_TYPE_LOAI) === 'CN') {
+                    setVal('txtKQ_HD_NguoiMua', inv.BUYER_NAME_TENNM);
+                } else {
+                    setVal('txtKQ_HD_TenDonVi', inv.BUYER_NAME_TENNM);
+                }
                 setVal('txtKQ_HD_DiaChi', inv.BUYER_ADDR_DIACHI);
                 // Đã có địa chỉ lưu sẵn → khoá tự-điền, không để chọn lại Nơi sinh
                 // là ghi đè mất địa chỉ xuất hóa đơn cũ.
@@ -6944,9 +6953,28 @@ KeHoachTuyenSinhNew.prototype = {
     -------------------------------------------*/
     _loaiDoiTuongHD: function () {
         var me = main_doc.KeHoachTuyenSinhNew;
-        var raw = me._doiTuongHoaDon_UngVien().join(' ') + ' '
-            + ($('#ddlKQ_HD_DoiTuong option:selected').text() || '');
-        var s = raw.normalize ? raw.normalize('NFD').replace(/[̀-ͯ]/g, '') : raw;
+        return me._loaiHD_TuGiaTri(me._doiTuongHoaDon_UngVien().join(' ') + ' '
+            + ($('#ddlKQ_HD_DoiTuong option:selected').text() || ''));
+    },
+
+    /*------------------------------------------
+    -- Cùng việc trên nhưng nhận giá trị thô (ID hoặc mã chữ) — dùng khi đọc bản ghi
+    -- từ DB lên, lúc đó dropdown chưa kịp được chọn nên không soi dropdown được.
+    -------------------------------------------*/
+    _loaiHD_TuGiaTri: function (v) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (!v) return '';
+        var raw = String(v).trim();
+        var text = raw;
+        // Giá trị là ID danh mục → gom thêm MA/TEN của dòng đó để còn nhận ra
+        (me._dtDoiTuongHD || []).forEach(function (r) {
+            var id = ((r.ID || r.Id || r.id || '') + '').trim();
+            var ma = ((r.MA || r.Ma || '') + '').trim();
+            if (id === raw || ma === raw) {
+                text += ' ' + ma + ' ' + ((r.TEN || r.Ten || '') + '');
+            }
+        });
+        var s = text.normalize ? text.normalize('NFD').replace(/[̀-ͯ]/g, '') : text;
         s = s.toUpperCase().replace(/[^A-Z]/g, '');
         if (/CANHAN|CANHN/.test(s)) return 'CN';
         if (/TOCHUC|DONVI|DOANHNGHIEP|CONGTY/.test(s)) return 'TC';
@@ -6986,9 +7014,16 @@ KeHoachTuyenSinhNew.prototype = {
         if (!doiTuong) {
             ds.push('Đã khai thông tin hóa đơn nhưng chưa chọn "Đối tượng xuất hóa đơn".');
         } else if (loai === 'CN') {
-            if (!nguoiMua) ds.push('Xuất hóa đơn cho cá nhân nhưng chưa điền "Họ tên người mua hàng".');
-            if (tenDonVi && !goTam(tenDonVi)) {
-                ds.push('Xuất cho cá nhân nhưng vẫn có "Tên đơn vị / Công ty" — tên trên hóa đơn sẽ lấy theo tên đơn vị này.');
+            // Hệ thống chỉ lưu được MỘT tên cho hóa đơn, nên có ô nào trong hai ô là đủ.
+            // Trước đây kêu "chưa điền Họ tên người mua" kể cả khi tên đã nằm ở ô đơn vị
+            // → nhắc oan, đúng chỗ khách phàn nàn 15/09/2026.
+            if (!nguoiMua && !tenDonVi) {
+                ds.push('Xuất hóa đơn cho cá nhân nhưng chưa điền "Họ tên người mua hàng".');
+            } else if (nguoiMua && tenDonVi && !goTam(tenDonVi)
+                && nguoiMua.trim().toLowerCase() !== tenDonVi.trim().toLowerCase()) {
+                // Chỉ nhắc khi hai ô ghi HAI tên khác nhau — lúc đó mới thật sự mơ hồ
+                ds.push('Hai ô "Họ tên người mua hàng" và "Tên đơn vị / Công ty" đang ghi hai tên khác nhau; '
+                    + 'hóa đơn chỉ lưu được một tên và sẽ lấy theo "Họ tên người mua hàng".');
             }
         } else if (loai === 'TC') {
             if (!tenDonVi) ds.push('Xuất hóa đơn cho tổ chức nhưng chưa điền "Tên đơn vị / Công ty".');
@@ -7071,20 +7106,80 @@ KeHoachTuyenSinhNew.prototype = {
     -- snap: ảnh chụp form. Luồng Thêm mới bắt buộc truyền vào, vì lúc callback về
     -- thì resetKhai_HoSo() đã xoá trắng form (xem saveKhai_HoSo).
     -------------------------------------------*/
+    /*------------------------------------------
+    -- ⚠ PHẢI hỏi DB xem người này đã có bản ghi hóa đơn chưa rồi mới ghi.
+    -- Bug khách báo 14-15/09/2026: "thêm mới xong địa chỉ không lên, vào Cập nhật
+    -- lại mới lên", lặp nhiều lần.
+    -- Nguyên nhân: Them_HoSo_TS ĐÃ gửi kèm 8 param strPersonInvoice_* nên BE tự tạo
+    -- sẵn 1 bản ghi PERSON_INVOICE_INFO. Trong khi đó _saveKhai_PhuThuoc lại ép
+    -- _currentInvoiceId = '' với giả định "hồ sơ mới thì chưa có bản ghi nào" →
+    -- hàm này đi đường Them_ và tạo BẢN GHI THỨ HAI cho cùng một người. Đọc lên
+    -- bằng LayDS_PersonInvoiceInfo (dChiHienHanh = 1) chỉ ra một bản → hiện đúng
+    -- bản thiếu địa chỉ. Vào Sửa thì _loadPersonInvoice nạp được Id nên gọi Sua_
+    -- trên đúng bản đang hiện hành → địa chỉ mới lên. Khớp y hệt hiện tượng.
+    -- Nay: luôn tra trước, có sẵn thì Sua_, chưa có mới Them_ (upsert thật).
+    -------------------------------------------*/
     save_PersonInvoice: function (personId, snap) {
         var me = main_doc.KeHoachTuyenSinhNew;
         var s = snap || me._collectInvoice();
-        var tenDonVi = s.tenDonVi, nguoiMua = s.nguoiMua, diaChi = s.diaChi;
-        var mst = s.mst, maQHNS = s.maQHNS, email = s.email, sdt = s.sdt;
-        var doiTuong = s.doiTuong;
-        // Chỉ dùng lại invoiceId khi nó ĐÚNG của người đang lưu. Khác người → coi như
-        // chưa có, đi đường Them_. Đây là chỗ đã làm hồ sơ khai mới gọi nhầm Sua_.
-        var invoiceId = (me._currentInvoicePersonId === personId) ? (me._currentInvoiceId || '') : '';
-        if (!(tenDonVi || nguoiMua || diaChi || mst || maQHNS || email || sdt || doiTuong) && !invoiceId) return;
         if (!edu.util.checkValue(personId)) {
             kqdkNoLog('[HoaDon] thiếu Person_Id → không lưu được thông tin hóa đơn');
             return;
         }
+        // Đã biết chắc Id của ĐÚNG người này (luồng Sửa) thì ghi thẳng.
+        // Chưa biết → hỏi DB một nhịp rồi mới ghi.
+        if (me._currentInvoicePersonId === personId && me._currentInvoiceId) {
+            me._ghi_PersonInvoice(personId, s, me._currentInvoiceId);
+            return;
+        }
+        me._timInvoiceId(personId, function (id) {
+            if (id) {
+                me._currentInvoicePersonId = personId;
+                me._currentInvoiceId = id;
+            }
+            me._ghi_PersonInvoice(personId, s, id);
+        });
+    },
+
+    /*------------------------------------------
+    -- Tra Id bản ghi hóa đơn hiện hành của 1 người. Không có → trả ''.
+    -------------------------------------------*/
+    _timInvoiceId: function (personId, cb) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var xong = function (id) { if (typeof cb === 'function') cb(id || ''); };
+        if (!edu.util.checkValue(me._ACTION_Inv_LayDS)) { xong(''); return; }
+        edu.system.makeRequest({
+            success: function (data) {
+                var arr = (data && data.Success && edu.util.checkValue(data.Data)) ? data.Data : [];
+                if (arr.length && arr.length === undefined) arr = [arr];
+                var r = arr[0];
+                xong(r ? (me._pickLoose(r, ['ID', 'PERSON_INVOICE_INFO_ID', 'INVOICE_ID']) || '') : '');
+            },
+            error: function () { xong(''); },
+            type: 'POST',
+            contentType: true,
+            action: me._ACTION_Inv_LayDS,
+            data: {
+                'action': me._ACTION_Inv_LayDS,
+                'func': 'PKG_CORE_NGUOIHOC_01.LayDS_PersonInvoiceInfo',
+                'iM': edu.system.iM,
+                'strPerson_Id': personId,
+                'dChiHienHanh': 1,
+                'strNguoiThucHien_Id': edu.system.userId,
+                'strVaiTroDangNhap_Id': edu.system.vaiTroDangNhap_Id || '',
+                'strChucNangHeThong_Id': edu.system.chucNangHeThong_Id || edu.system.strChucNang_Id,
+                'strHanhDong_Code': ''
+            },
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    _ghi_PersonInvoice: function (personId, s, invoiceId) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var tenDonVi = s.tenDonVi, nguoiMua = s.nguoiMua, diaChi = s.diaChi;
+        var mst = s.mst, maQHNS = s.maQHNS, email = s.email, sdt = s.sdt;
+        var doiTuong = s.doiTuong;
+        if (!(tenDonVi || nguoiMua || diaChi || mst || maQHNS || email || sdt || doiTuong) && !invoiceId) return;
         var isUpdate = !!(invoiceId && invoiceId.length === 32);
         var obj_save = {
             'action': isUpdate ? me._ACTION_Inv_Sua : me._ACTION_Inv_Them,
@@ -7094,8 +7189,12 @@ KeHoachTuyenSinhNew.prototype = {
             'strBuyer_Type_Loai': doiTuong,
             'strBuyer_Ref_Type': '',
             'strBuyer_Ref_Id': '',
-            // BUYER_NAME dùng cho tên đơn vị; nếu xuất cho cá nhân thì lấy họ tên người mua
-            'strBuyer_Name': tenDonVi || nguoiMua,
+            // Chỉ có MỘT cột tên cho cả 2 ô của form → chọn theo đối tượng cho khớp
+            // với chiều đọc lên ở _loadPersonInvoice: cá nhân lấy họ tên người mua,
+            // tổ chức lấy tên đơn vị; thiếu cái nào thì lấy cái còn lại.
+            'strBuyer_Name': (me._loaiHD_TuGiaTri(doiTuong) === 'CN')
+                ? (nguoiMua || tenDonVi)
+                : (tenDonVi || nguoiMua),
             'strBuyer_Addr': diaChi,
             'strBuyer_Tax_Mst': mst,
             'strBuyer_Budget_Qhns': maQHNS,
@@ -7420,10 +7519,12 @@ KeHoachTuyenSinhNew.prototype = {
     _saveKhai_PhuThuoc: function (personId, snap) {
         var me = main_doc.KeHoachTuyenSinhNew;
         if (!edu.util.checkValue(personId) || !snap) return;
-        // Hồ sơ mới → chắc chắn chưa có bản ghi hóa đơn/nguồn nào của người này.
-        // Gán luôn chủ sở hữu để guard "đúng người" ở save_* hiểu là đã biết trạng thái.
+        // ⚠ KHÔNG được coi "hồ sơ mới = chưa có bản ghi hóa đơn". Them_HoSo_TS đã gửi
+        // kèm 8 param strPersonInvoice_* nên BE tạo sẵn một bản rồi — ép rỗng ở đây
+        // chính là thứ đẻ ra bản ghi thứ hai và làm địa chỉ không lên (xem chú thích
+        // dài ở save_PersonInvoice). Để trống cả 2 biến → save_PersonInvoice tự tra DB.
         me._currentInvoiceId = '';
-        me._currentInvoicePersonId = personId;
+        me._currentInvoicePersonId = '';
         me._currentDoiTacRowId = '';
         me._currentDoiTacPersonId = personId;
         me._currentDoiTacPartnerId = '';

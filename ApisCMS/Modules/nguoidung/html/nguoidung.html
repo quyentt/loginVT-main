@@ -456,8 +456,10 @@
                                 <i class="fa fa-key"></i> Reset mật khẩu</a>
                             <a id="btnKeThua" class="btn btn-success">
                                 <i class="fa-light fa-user-gear"></i> Kế thừa phân quyền chức năng</a>
-                            <a id="btnKeThuaToanBo" class="btn btn-primary">
+                            <a id="btnKeThuaToanBo" class="btn btn-success">
                                 <i class="fa-light fa-circle-check"></i> Xác nhận kế thừa</a>
+                            <a id="btnEdit_NguoiDung" class="btn btn-primary">
+                                <i class="fa-light fa-pen-to-square"></i> Sửa thông tin</a>
                         </div>
                     </div>
                     <div class="col-sm-12 box-view" style="display: none" id="dsNguoiDung2">
@@ -573,6 +575,109 @@
                             <!--<a class="btn btn-default" id="btnRewrite_NguoiDung"><i class="fa fa-refresh"></i> <span class="lang" key="">Viết lại</span></a>-->
                             <a class="btn btn-primary" id="btnSave_NguoiDung"><i class="fal fa-save"></i><span
                                     class="lang" key="">Lưu</span></a>
+                        </div>
+                    </div>
+                </div>
+                <!-- 5. Cap nhat thong tin tai khoan -->
+                <div class="box box-solid form-container zone-bus-nd aps-add-user" id="zone_bus_edit">
+                    <div class="box-header with-border bg-blue">
+                        <h3 class="box-title"><i class="fa-light fa-pen-to-square"></i> Cập nhật tài khoản
+                            <span class="badge bg-light-blue" id="lblEditND_TieuDe"></span>
+                        </h3>
+                        <div class="pull-right pull-right-absolute">
+                            <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa-light fa-xmark"></i></a>
+                        </div>
+                    </div>
+                    <div class="box-body zone-box">
+                        <div class="col-sm-12 box-view">
+                            <input type="hidden" id="hidEditND_Id"/>
+                            <input type="hidden" id="hidEditND_HinhDaiDien"/>
+                            <input type="hidden" id="hidEditND_QuyDinhDoiMatKhauId"/>
+                            <div class="row">
+                                <div class="col-sm-2 aps-user-avata">
+                                    <img id="imgEditND_Avatar" src="../../../Upload/Avatar/no-avatar.png"
+                                         style="width:100%; height:100%"/>
+                                </div>
+                                <div class="col-sm-10 aps-form">
+                                    <div class="row sub-row aps-form-item">
+                                        <div class="col-sm-2">
+                                            <div class="title-name">Tài khoản:</div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <input id="txtEditND_TaiKhoan" class="form-control form-border-none"/>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <div class="title-name">Họ và tên:</div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <input id="txtEditND_TenDayDu" class="form-control form-border-none"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="row sub-row aps-form-item">
+                                        <div class="col-sm-2">
+                                            <div class="title-name">Email:</div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <input id="txtEditND_Email" class="form-control form-border-none"/>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <div class="title-name">Điện thoại:</div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <input id="txtEditND_DienThoai" class="form-control form-border-none"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="row sub-row aps-form-item">
+                                        <div class="col-sm-2">
+                                            <div class="title-name">Đơn vị:</div>
+                                        </div>
+                                        <div class="col-sm-10">
+                                            <select id="dropEditND_DonVi" class="select-opt">
+                                                <option value="">--Chọn đơn vị--</option>
+                                                <!-- Load from js -->
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="row sub-row aps-form-item">
+                                        <div class="col-sm-2">
+                                            <div class="title-name">Địa chỉ:</div>
+                                        </div>
+                                        <div class="col-sm-10">
+                                            <input id="txtEditND_DiaChi" class="form-control form-border-none"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="row sub-row aps-form-item">
+                                        <div class="col-sm-2">
+                                            <div class="title-name">Trạng thái:</div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <select id="dropEditND_TrangThai" class="select-opt">
+                                                <option value="1">Đang hoạt động</option>
+                                                <option value="0">Ngừng hoạt động</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <div class="title-name">Hạn đổi mật khẩu:</div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <input id="txtEditND_ThoiHanDoiMatKhau" type="number" min="0"
+                                                   class="form-control form-border-none"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <div class="pull-right">
+                            <a class="btn btn-default btnClose">
+                                <i class="fa fa-times-circle"></i> <span class="lang" key="">Đóng</span></a>
+                            <a class="btn btn-primary" id="btnUpdate_NguoiDung"><i class="fal fa-save"></i>
+                                <span class="lang" key="">Lưu</span></a>
                         </div>
                     </div>
                 </div>
