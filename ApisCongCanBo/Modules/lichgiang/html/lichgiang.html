@@ -276,7 +276,8 @@
                 </div>
                 <div class="lich-canhan">
                     <div class="calendar-week-table">
-                        <div class="mb-15" id="zoneLopKhongCoLichChiTiet" style="display:none">
+                        <!-- Bỏ display:none (2026-09-17): bảng luôn hiện, rỗng thì báo "chưa có dữ liệu" -->
+                        <div class="mb-15" id="zoneLopKhongCoLichChiTiet">
                             <p class="me-auto color-dask-blue fz20 pl10" style="margin-bottom: 12px !important;">
                                 <i class="fas fa-calendar-alt pr5 fw-bold"></i>Lớp học phần (không có lịch chi tiết)
                             </p>
@@ -930,7 +931,7 @@
     </div>
 </div>
 
-<script src="modules/lichgiang/script/lichgiang.js?v=1.0.0.2"></script>
+<script src="modules/lichgiang/script/lichgiang.js?v=1.0.0.3"></script>
 <script src="modules/lichgiang/script/jquery-searchbox.js"></script>
 <script type="text/javascript">
     var main_doc = {};

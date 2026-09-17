@@ -46,6 +46,8 @@ LichGiang.prototype = {
         $("#thang").attr("title", nMonth);
         $("#thang").html("Tháng " + nMonth);
         me.genHtml_Month(0);
+        // Vẽ bảng ngay khi vào trang để luôn thấy bảng + thông báo (2026-09-17)
+        me.getList_LopKhongCoLichChiTiet("");
 
         $(".days").delegate(".poiter", "click", function () {
             $(".days .active").removeClass("active");
@@ -473,11 +475,26 @@ LichGiang.prototype = {
         });
     },
 
+    /*------------------------------------------
+    --2026-09-17: bảng luôn hiển thị kèm thông báo thay vì ẩn cả khối.
+    --Trước đây chưa chọn ngày là hide() → người dùng tưởng chức năng bị mất.
+    -------------------------------------------*/
+    showHint_LopKhongCoLichChiTiet: function (strNoiDung, strLoai) {
+        $("#zoneLopKhongCoLichChiTiet").show();
+        $("#tblLopKhongCoLichChiTiet tbody").html(
+            '<tr><td colspan="6" style="padding:0">'
+            + '<div class="empty-data-placeholder' + (strLoai ? ' ' + strLoai : '') + '">'
+            + '<i class="fas ' + (strLoai === 'is-loading' ? 'fa-spinner fa-spin'
+                : (strLoai === 'is-error' ? 'fa-exclamation-triangle' : 'fa-inbox')) + '"></i>'
+            + '<span class="empty-text">' + strNoiDung + '</span>'
+            + '</div></td></tr>'
+        );
+    },
+
     getList_LopKhongCoLichChiTiet: function (strNgay) {
         var me = this;
         if (!strNgay) {
-            $("#zoneLopKhongCoLichChiTiet").hide();
-            $("#tblLopKhongCoLichChiTiet tbody").html("");
+            me.showHint_LopKhongCoLichChiTiet("Chọn một ngày trên lịch để xem lớp học phần không có lịch chi tiết");
             return;
         }
 
