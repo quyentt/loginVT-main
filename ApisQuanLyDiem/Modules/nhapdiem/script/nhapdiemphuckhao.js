@@ -111,6 +111,16 @@ NhapDiemPK.prototype = {
         $("#chkSelectAll").on("click", function () {
             edu.util.checkedAll_BgRow(this, { table_id: "tblNhapDiem" });
         });
+        edu.system.getList_MauImport("zonebtnBaoCao_DPK", function (addKeyValue) {
+            var obj_list = {
+                'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_ThoiGian'),
+                'strDaoTao_HocPhan_Id': edu.util.getValById('dropSearch_HocPhan'),
+            };
+
+            for (var x in obj_list) {
+                addKeyValue(x, obj_list[x]);
+            }
+        });
     },
     
     /*------------------------------------------
