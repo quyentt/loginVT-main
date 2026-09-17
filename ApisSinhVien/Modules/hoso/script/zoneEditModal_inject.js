@@ -2,6 +2,14 @@
 function zeNoLog() { }
 
 /*----------------------------------------------
+-- Log chẩn đoán luồng lưu (gửi Insert hay Update, giá trị gì, máy chủ trả gì,
+-- ô Email/Điện thoại đang gắn vào loại liên hệ nào).
+-- Đang TẮT. Cần soi lại thì bỏ comment đúng 1 dòng bên dưới, không phải đi sửa
+-- từng chỗ gọi. Cảnh báo lỗi thật (console.warn) vẫn giữ nguyên.
+----------------------------------------------*/
+function zeDebug() { /* console.log.apply(console, arguments); */ }
+
+/*----------------------------------------------
 -- zoneEditModal_inject.js (2026-08-21)
 -- Tự động inject modal #zoneEdit (Chỉnh sửa - Hồ sơ đề xuất, 3 tabs) + CSS vào page.
 -- Idempotent: nếu #zoneEdit đã có trong DOM thì bỏ qua (case: hoso_taomoi.html có sẵn inline).
@@ -110,6 +118,9 @@ function _zeDoInject(forceOverlay) {
         + '#zoneEdit .ze-form .aps-sv-input-icon > i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:14px;}'
         + '#zoneEdit .ze-form .aps-sv-input-icon .aps-sv-input{padding-left:40px;}'
         + '#zoneEdit .ze-form .aps-sv-input.ze-readonly,#zoneEdit .ze-form .aps-sv-input[readonly]{background:#f1f5f9 !important;color:#475569 !important;}'
+        /* Ô gộp ngày sinh — cho nổi hơn 3 ô rời vì đây là ô người dùng copy */
+        + '#zoneEdit .ze-form .ze-dob-full .aps-sv-input{font-weight:600 !important;color:#0f172a !important;letter-spacing:.4px;}'
+        + '#zoneEdit .ze-form .ze-dob-full .aps-sv-input::selection{background:#bfdbfe;}'
         + '#zoneEdit .ze-canhan-layout{display:grid;grid-template-columns:1fr 220px;gap:24px;align-items:start;}'
         + '@media (max-width:900px){#zoneEdit .ze-canhan-layout{grid-template-columns:1fr;}}'
         + '#zoneEdit .ze-canhan-avatar{align-self:start;}'
@@ -155,6 +166,7 @@ function _zeDoInject(forceOverlay) {
                             '<div class="aps-sv-field"><label class="aps-sv-label">Ngày sinh</label><input class="aps-sv-input" id="txtNgaySinh" placeholder="dd"></div>' +
                             '<div class="aps-sv-field"><label class="aps-sv-label">Tháng sinh</label><input class="aps-sv-input" id="txtThangSinh" placeholder="mm"></div>' +
                             '<div class="aps-sv-field"><label class="aps-sv-label">Năm sinh</label><input class="aps-sv-input" id="txtNamSinh" placeholder="yyyy"></div>' +
+                            '<div class="aps-sv-field ze-dob-full"><label class="aps-sv-label">Ngày sinh (đầy đủ)</label><div class="aps-sv-input-icon"><i class="fa-light fa-calendar-days"></i><input class="aps-sv-input" id="txtNgaySinhDayDu" placeholder="dd/mm/yyyy" title="Gộp Ngày/Tháng/Năm sinh — click là bôi đen sẵn, Ctrl+C để copy; dán ngược vào đây cũng tự tách ra 3 ô."></div></div>' +
                             '<div class="aps-sv-field"><label class="aps-sv-label">Quốc tịch</label><div class="aps-sv-select"><i class="fa-light fa-chevron-down"></i><select class="aps-sv-input" id="dropQuocTich"><option value="">-- Chọn quốc tịch --</option></select></div></div>' +
                             '<div class="aps-sv-field"><label class="aps-sv-label">Dân tộc</label><div class="aps-sv-select"><i class="fa-light fa-chevron-down"></i><select class="aps-sv-input" id="dropDanToc"><option value="">-- Chọn dân tộc --</option></select></div></div>' +
                             '<div class="aps-sv-field"><label class="aps-sv-label">Tôn giáo</label><div class="aps-sv-select"><i class="fa-light fa-chevron-down"></i><select class="aps-sv-input" id="dropTonGiao"><option value="">-- Chọn tôn giáo --</option></select></div></div>' +
@@ -1628,8 +1640,12 @@ if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype._zeLuuDocLapHooked
 if (typeof edu !== 'undefined' && edu.system && edu.system.makeRequest && !edu.system._zeBaoLoiHooked) {
     edu.system._zeBaoLoiHooked = true;
 
-    var _zeHienLoi = function (msg) {
-        var host = document.getElementById('zoneXHD') || document.getElementById('zoneCaNhan');
+    // hostId: tab nào chứa ô gây lỗi thì báo ngay trong tab đó. Lỗi liên hệ /
+    // định danh thuộc tab Thông tin cơ bản, báo bên tab Xuất hoá đơn thì người
+    // dùng không nhìn thấy vì tab đó đang đóng.
+    var _zeHienLoi = function (msg, hostId) {
+        var host = (hostId && document.getElementById(hostId))
+            || document.getElementById('zoneXHD') || document.getElementById('zoneCaNhan');
         if (!host) return;
         var el = document.getElementById('zeLoiLuu');
         if (!el) {
@@ -1646,12 +1662,66 @@ if (typeof edu !== 'undefined' && edu.system && edu.system.makeRequest && !edu.s
         var el = document.getElementById('zeLoiLuu');
         if (el) el.style.display = 'none';
     };
+    // Mở ra cho các khối khác trong file dùng chung một chỗ báo lỗi
+    window._zeHienLoi = _zeHienLoi;
 
-    var _TEN_LUU = /Them_PersonInvoiceInfo|Sua_PersonInvoiceInfo|Ins_Person_Bank_Account|Upd_Person_Bank_Account|Ins_Person_Address|Upd_Person_Address/;
+    /*--------------------------------------------------------------
+    -- Thêm 2 proc liên hệ vào danh sách bắt lỗi (12/09/2026).
+    -- Lý do: save_LienHe nuốt lỗi 2 tầng — nhánh thất bại chỉ báo khi cờ icheck
+    -- còn true (call lỗi trước đó đã hạ cờ thì im), còn câu "Lưu thành công" lại
+    -- nằm trong complete: nên chạy cả khi máy chủ từ chối. Sửa số điện thoại
+    -- không ăn mà vẫn báo thành công là vì vậy.
+    --------------------------------------------------------------*/
+    var _TEN_LUU = /Them_PersonInvoiceInfo|Sua_PersonInvoiceInfo|Ins_Person_Bank_Account|Upd_Person_Bank_Account|Ins_Person_Address|Upd_Person_Address|InsertPersonContact|UpdatePersonContact|InsertPersonIdentifier|UpdatePersonIdentifier/;
     var _NHAN = {
         PersonInvoiceInfo: 'Thông tin hoá đơn',
         Person_Bank_Account: 'Thông tin thanh toán',
-        Person_Address: 'Địa chỉ'
+        Person_Address: 'Địa chỉ',
+        PersonContact: 'Thông tin liên hệ (email / điện thoại)',
+        PersonIdentifier: 'Thông tin định danh'
+    };
+    // Lỗi của 2 cụm này thuộc tab Thông tin cơ bản
+    var _HOST_THEO_FUNC = function (f) {
+        return /PersonContact|PersonIdentifier/.test(f) ? 'zoneCaNhan' : null;
+    };
+
+    /*--------------------------------------------------------------
+    -- BUYER_TYPE_LOAI: hai proc kiểm tra khác nhau (16/09/2026)
+    --
+    -- Ô "Đối tượng xuất hoá đơn" nạp từ danh mục TS.DOITUONGHOADON: value của
+    -- option là ID danh mục (GUID), còn chữ hiển thị chính là mã ("CA_NHAN").
+    -- FE gửi GUID. Thực tế quan sát được:
+    --   Sua_PersonInvoiceInfo   + GUID → Success = true
+    --   Them_PersonInvoiceInfo  + GUID → "BUYER_TYPE_LOAI khong hop le"
+    -- Tức proc Thêm đòi mã chữ còn proc Sửa thì không kiểm tra gì. Bảng
+    -- PERSON_INVOICE_INFO vì vậy đang lẫn cả hai kiểu giá trị.
+    --
+    -- Chưa chốt được với BE nên KHÔNG đổi cứng sang mã chữ (làm thế là bẻ luôn
+    -- nhánh Sửa đang chạy tốt, và đẻ thêm một kiểu dữ liệu nữa). Cách ở đây:
+    -- gửi như cũ, chỉ khi máy chủ từ chối ĐÚNG vì cột này mới gửi lại một lần
+    -- bằng kiểu còn lại, rồi ghi nhớ kiểu nào máy chủ chịu để các lần sau gửi
+    -- thẳng, khỏi tốn một request hỏng.
+    --------------------------------------------------------------*/
+    var _zeKieuDoiTuongOK = '';          // '' chưa biết | 'guid' | 'ma'
+
+    var _zeDoiTuongTheoKieu = function (kieu) {
+        var sel = document.getElementById('ddlKQ_HD_DoiTuong');
+        var opt = sel && sel.options[sel.selectedIndex];
+        if (!opt) return '';
+        if (kieu === 'guid') return opt.value || '';
+        return ((opt.getAttribute('name') || opt.getAttribute('data-ma')
+            || opt.textContent || '') + '').trim();
+    };
+
+    // Giá trị đang gửi thuộc kiểu nào → trả về giá trị của kiểu còn lại
+    var _zeDoiKieuDoiTuong = function (dangGui) {
+        var guid = _zeDoiTuongTheoKieu('guid');
+        var ma = _zeDoiTuongTheoKieu('ma');
+        dangGui = ((dangGui || '') + '').trim();
+        if (!guid && !ma) return '';
+        if (dangGui && dangGui === guid) return (ma && ma !== guid) ? ma : '';
+        if (dangGui && dangGui === ma) return (guid && guid !== ma) ? guid : '';
+        return ma || guid || '';         // không khớp cái nào → cứ thử mã chữ
     };
     var _mrGoc = edu.system.makeRequest;
     edu.system.makeRequest = function (o) {
@@ -1673,17 +1743,75 @@ if (typeof edu !== 'undefined' && edu.system && edu.system.makeRequest && !edu.s
                     if (!((o.data.strBuyer_Ref_Type || '') + '').trim()) o.data.strBuyer_Ref_Type = 'CORE_PERSON';
                     if (!((o.data.strBuyer_Ref_Id || '') + '').trim()) o.data.strBuyer_Ref_Id = pid;
                 }
+                // Đã biết máy chủ chịu kiểu nào thì gửi thẳng kiểu đó
+                if (_zeKieuDoiTuongOK && ((o.data.strBuyer_Type_Loai || '') + '').trim()) {
+                    var dung = _zeDoiTuongTheoKieu(_zeKieuDoiTuongOK);
+                    if (dung) o.data.strBuyer_Type_Loai = dung;
+                }
+            }
+            // Log lại đúng thứ cần để đối chiếu khi "báo thành công mà không đổi":
+            // gửi đi là Insert hay Update, strId nào, giá trị nào — rồi máy chủ trả gì.
+            if (/PersonContact|PersonIdentifier/.test(f) && o.data) {
+                zeDebug('[ZE Lưu ' + f.split('.').pop() + '] gửi đi', {
+                    strId: o.data.strId || '(rỗng → INSERT)',
+                    strPersonId: o.data.strPersonId,
+                    strContactTypeCode: o.data.strContactTypeCode || o.data.strIdentifierTypeCode,
+                    giaTri: o.data.strContactValue || o.data.strIdentifierNo
+                });
             }
             if (_TEN_LUU.test(f) && typeof o.success === 'function') {
                 var sGoc = o.success;
                 o.success = function (data) {
                     try {
+                        if (/PersonContact|PersonIdentifier/.test(f)) {
+                            zeDebug('[ZE Lưu ' + f.split('.').pop() + '] máy chủ trả',
+                                { Success: data && data.Success, Message: data && data.Message, Id: data && data.Id });
+                        }
                         if (data && data.Success === false) {
+                            /*----------------------------------------------
+                            -- Bị chê đúng cột BUYER_TYPE_LOAI → gửi lại một lần bằng
+                            -- kiểu giá trị còn lại. Gọi thẳng hàm gốc nên request thử
+                            -- lại KHÔNG đi qua chỗ này nữa, không có chuyện lặp vô hạn.
+                            -----------------------------------------------*/
+                            if (/PersonInvoiceInfo/.test(f) && /BUYER_TYPE_LOAI/i.test(data.Message || '')) {
+                                var dangGui = (o.data && o.data.strBuyer_Type_Loai) || '';
+                                var thayThe = _zeDoiKieuDoiTuong(dangGui);
+                                if (thayThe && thayThe !== dangGui) {
+                                    var lai = {};
+                                    for (var k2 in o.data) {
+                                        if (Object.prototype.hasOwnProperty.call(o.data, k2)) lai[k2] = o.data[k2];
+                                    }
+                                    lai.strBuyer_Type_Loai = thayThe;
+                                    _mrGoc.call(edu.system, {
+                                        success: function (d2) {
+                                            if (d2 && d2.Success) {
+                                                // Ghi nhớ kiểu máy chủ chịu, lần sau gửi thẳng
+                                                _zeKieuDoiTuongOK =
+                                                    (thayThe === _zeDoiTuongTheoKieu('guid')) ? 'guid' : 'ma';
+                                                console.warn('[ZE Hoá đơn] BUYER_TYPE_LOAI: máy chủ KHÔNG nhận "'
+                                                    + dangGui + '" nhưng nhận "' + thayThe + '" → dùng kiểu "'
+                                                    + _zeKieuDoiTuongOK + '" từ giờ.');
+                                                var dx2 = (window.main_doc && window.main_doc.DeXuatHoSo) || null;
+                                                if (dx2 && d2.Id && /Them_/.test(f)) dx2._currentInvoiceId = d2.Id;
+                                                if (typeof window._zeXoaLoiLuu === 'function') window._zeXoaLoiLuu();
+                                            } else {
+                                                _zeHienLoi('Chưa lưu được Thông tin hoá đơn: '
+                                                    + (((d2 && d2.Message) || '').trim() || 'máy chủ từ chối, không kèm lý do')
+                                                    + '  (đã thử cả hai kiểu giá trị cho Đối tượng xuất hoá đơn)', null);
+                                            }
+                                        },
+                                        error: function (er) { console.warn('[ZE Hoá đơn] thử lại lỗi:', er); },
+                                        type: 'POST', contentType: true,
+                                        action: lai.action, data: lai, fakedb: []
+                                    }, false, false, false, null);
+                                    return sGoc.apply(this, arguments);   // đang thử lại, chưa báo lỗi vội
+                                }
+                            }
                             var nhan = 'Lưu';
                             for (var k in _NHAN) { if (f.indexOf(k) > -1) { nhan = _NHAN[k]; break; } }
                             _zeHienLoi('Chưa lưu được ' + nhan + ': '
                                 + ((data.Message || '').trim() || 'máy chủ từ chối, không kèm lý do')
-                                + '  [' + f.split('.').pop() + ']');
+                                + '  [' + f.split('.').pop() + ']', _HOST_THEO_FUNC(f));
                         }
                     } catch (e) { }
                     return sGoc.apply(this, arguments);
@@ -1693,6 +1821,414 @@ if (typeof edu !== 'undefined' && edu.system && edu.system.makeRequest && !edu.s
         return _mrGoc.apply(this, arguments);
     };
 }
+
+/*==============================================================================
+== SỬA ĐIỆN THOẠI / EMAIL / CCCD KHÔNG ĂN — Id bản ghi bị dính của hồ sơ trước
+== (12/09/2026)
+==
+== Cách luồng gốc quyết định Thêm hay Sửa: mỗi loại liên hệ có một ô ẩn
+== #txtLienHe<IdLoai>, thuộc tính name của ô đó = Id bản ghi PERSON_CONTACT.
+== save_LienHe đọc name: có thì UpdatePersonContact, rỗng thì InsertPersonContact.
+==
+== Vấn đề: KHÔNG chỗ nào xoá name.
+==   - genTable_LienHe chỉ gán name cho loại CÓ bản ghi, loại không có thì bỏ qua;
+==   - _bridgeOneLienHe cũng chỉ gán khi tìm thấy, không có thì để nguyên.
+== Ô ẩn lại sống suốt phiên làm việc (nằm trong bảng của modal, không dựng lại).
+== Nên mở hồ sơ A (có điện thoại) rồi mở hồ sơ B, name của A vẫn còn:
+== bấm Lưu ở B là chạy Update Id của A — số của A bị ghi đè, còn B thì không có
+== gì thay đổi. Nhìn từ màn hình đúng như "sửa không được mà vẫn báo thành công".
+== Thêm mới chạy đúng vì lúc đó ô chưa từng mang name.
+==
+== Ở đây đặt lại name cho TẤT CẢ ô ngay trước khi lưu, lấy đúng theo danh sách
+== bản ghi của hồ sơ đang mở: có thì gán, không có thì XOÁ. Định danh (CCCD) dùng
+== chung đúng cơ chế đó nên vá luôn, nếu không thì vẫn còn đường ghi đè hồ sơ khác.
+==============================================================================*/
+if (typeof DeXuatHoSo === 'function' && DeXuatHoSo.prototype._bridgeLienHeToShadow
+    && !DeXuatHoSo.prototype._zeNameHooked) {
+    DeXuatHoSo.prototype._zeNameHooked = true;
+
+    /*------------------------------------------
+    -- Tìm bản ghi của đúng loại + đúng người. PERSON_ID chỉ so khi API có trả,
+    -- không có thì đành tin theo loại (dữ liệu đã lấy theo từng hồ sơ).
+    -------------------------------------------*/
+    var _zeTimBanGhi = function (ds, pid, khopLoai) {
+        return (ds || []).filter(function (x) {
+            if (!khopLoai(x)) return false;
+            return !pid || !x.PERSON_ID || ((x.PERSON_ID + '') === (pid + ''));
+        })[0];
+    };
+
+    DeXuatHoSo.prototype._zeDatLaiNameLienHe = function () {
+        var dx = this;
+        var pid = dx.strDeXuatHoSo_Id || dx._lockedPersonId || '';
+        (dx.dtLoaiLienHe || []).forEach(function (loai) {
+            var $o = $('#txtLienHe' + loai.ID);
+            if (!$o.length) return;
+            var ban = _zeTimBanGhi(dx.dtLienHe, pid, function (x) {
+                return (x.CONTACT_TYPE_CODE_ID === loai.ID) || (x.CONTACT_TYPE_CODE === loai.ID);
+            });
+            if (ban && ban.ID) $o.attr('name', ban.ID);
+            else $o.removeAttr('name');          // loại này chưa có bản ghi → phải Thêm mới
+        });
+    };
+
+    DeXuatHoSo.prototype._zeDatLaiNameDinhDanh = function () {
+        var dx = this;
+        var pid = dx.strDeXuatHoSo_Id || dx._lockedPersonId || '';
+        (dx.dtLoaiDinhDanh || []).forEach(function (loai) {
+            var $o = $('#txtSoDinhDinh' + loai.ID);
+            if (!$o.length) return;
+            var ban = _zeTimBanGhi(dx.dtDinhDanh, pid, function (x) {
+                return (x.IDENTIFIER_TYPE_CODE === loai.ID) || (x.IDENTIFIER_TYPE_CODE_ID === loai.ID);
+            });
+            if (ban && ban.ID) $o.attr('name', ban.ID);
+            else $o.removeAttr('name');
+        });
+    };
+
+    /*------------------------------------------
+    -- Móc vào đúng 2 hàm cầu nối đang chạy ngay trước khi lưu. Đặt lại name TRƯỚC
+    -- rồi mới để bản gốc chạy: bản gốc chỉ gán thêm chứ không xoá nên không đụng
+    -- độ, mà mọi đường vào lưu (click, mousedown, watchdog) đều đi qua đây.
+    -------------------------------------------*/
+    var _origBridgeLH = DeXuatHoSo.prototype._bridgeLienHeToShadow;
+    DeXuatHoSo.prototype._bridgeLienHeToShadow = function () {
+        try { this._zeDatLaiNameLienHe(); } catch (e) { console.warn('[ZE Name LH]', e); }
+        return _origBridgeLH.apply(this, arguments);
+    };
+
+    if (DeXuatHoSo.prototype._bridgeCccdToShadow) {
+        var _origBridgeDD = DeXuatHoSo.prototype._bridgeCccdToShadow;
+        DeXuatHoSo.prototype._bridgeCccdToShadow = function () {
+            try { this._zeDatLaiNameDinhDanh(); } catch (e) { console.warn('[ZE Name DD]', e); }
+            return _origBridgeDD.apply(this, arguments);
+        };
+    }
+
+    /*------------------------------------------
+    -- Mở hồ sơ khác thì xoá sạch name ngay, không đợi tới lúc bấm Lưu: danh sách
+    -- liên hệ của hồ sơ mới nạp bất đồng bộ, lỡ bấm Lưu sớm là dính Id người cũ.
+    -------------------------------------------*/
+    if (DeXuatHoSo.prototype.openEditByPerson) {
+        var _origOpenName = DeXuatHoSo.prototype.openEditByPerson;
+        DeXuatHoSo.prototype.openEditByPerson = function (person) {
+            try {
+                $('[id^="txtLienHe"], [id^="txtSoDinhDinh"]').removeAttr('name');
+            } catch (e) { }
+            return _origOpenName.apply(this, arguments);
+        };
+    }
+}
+
+/*==============================================================================
+== SỐ ĐIỆN THOẠI NHẬP VÀO KHÔNG ĐƯỢC GỬI ĐI  (16/09/2026)
+==
+== Bằng chứng từ log: bấm Lưu chỉ thấy UpdatePersonContact cho EMAIL, còn loại
+== liên hệ kia đi qua KiemTraThongTinLienHe với strContactValue = undefined, và
+== tuyệt nhiên không có Insert/UpdatePersonContact nào mang số điện thoại.
+== Tức ô ẩn #txtLienHe<IdLoại> rỗng ngay lúc lưu → save_LienHe thấy rỗng là bỏ
+== qua (dexuathoso.js:1426), nên số gõ vào bay mất mà vẫn báo thành công.
+==
+== Nguyên nhân: _bridgeLienHeToShadow nhận diện loại bằng cách dò chữ trong
+== MA/TEN với danh sách cứng (DIEN THOAI, SDT, PHONE...). Danh mục của trường đặt
+== tên khác (ví dụ "Di động", "Số máy", "Liên lạc") là trượt hết, và fallback
+== đoán theo bản ghi cũ cũng vô dụng khi hồ sơ CHƯA có số nào — đúng tình huống
+== đang gặp. Email sống sót chỉ vì chữ "mail" khó trượt, mà thật ra giá trị của
+== nó là do bảng đổ từ DB chứ không phải do cầu nối.
+==
+== Cách xử lý: chuẩn hoá tên loại (bỏ dấu, bỏ mọi ký tự không phải chữ số) rồi
+== chấm điểm để chọn ĐÚNG MỘT loại cho ô Email và MỘT loại cho ô Điện thoại,
+== có đường lui cuối cùng khi danh mục đặt tên lạ hoàn toàn. Bản gốc vẫn chạy
+== trước, phần này chỉ bù vào chỗ nó bỏ sót nên không phá trang nào đang chạy đúng.
+==============================================================================*/
+if (typeof DeXuatHoSo === 'function' && DeXuatHoSo.prototype._bridgeLienHeToShadow
+    && !DeXuatHoSo.prototype._zeBuLienHeHooked) {
+    DeXuatHoSo.prototype._zeBuLienHeHooked = true;
+
+    // "Số Điện Thoại" → "SODIENTHOAI": bỏ dấu, bỏ luôn khoảng trắng/gạch/chấm để
+    // không phụ thuộc cách viết của từng trường.
+    var _zeKey = function (s) {
+        return ((s || '') + '').normalize('NFD').replace(/[̀-ͯ]/g, '')
+            .replace(/đ/g, 'd').replace(/Đ/g, 'D')
+            .toUpperCase().replace(/[^A-Z0-9]/g, '');
+    };
+
+    var _ZE_TU_PHONE = ['DIENTHOAI', 'SDT', 'DTDD', 'DIDONG', 'MOBILE', 'PHONE', 'TEL',
+        'SOMAY', 'LIENLAC', 'CELL', 'HOTLINE'];
+    var _ZE_TU_EMAIL = ['EMAIL', 'MAIL', 'THUDIENTU', 'HOMTHU'];
+
+    /*------------------------------------------
+    -- Chọn đúng một loại cho mỗi ô. Điểm: khớp chữ trong danh mục (2) cộng thêm
+    -- nếu hồ sơ đã có sẵn bản ghi ở loại đó (3) — bản ghi cũ là bằng chứng chắc
+    -- nhất về việc trường đang dùng loại nào để lưu số/hòm thư.
+    -------------------------------------------*/
+    DeXuatHoSo.prototype._zeChonLoaiLienHe = function () {
+        var dx = this;
+        var ds = dx.dtLoaiLienHe || [];
+        var daCo = dx.dtLienHe || [];
+        var banGhiCua = function (id) {
+            return daCo.filter(function (x) {
+                return (x.CONTACT_TYPE_CODE_ID === id) || (x.CONTACT_TYPE_CODE === id);
+            })[0];
+        };
+        var cham = function (loai, tuKhoa) {
+            var k = _zeKey(loai.MA) + '|' + _zeKey(loai.TEN);
+            var diem = tuKhoa.some(function (t) { return k.indexOf(t) > -1; }) ? 2 : 0;
+            var b = banGhiCua(loai.ID);
+            var v = (b && (b.CONTACT_VALUE || b.VALUE) || '') + '';
+            // Bản ghi sẵn có: giá trị chứa @ thì chắc chắn là hòm thư, toàn số thì là số máy
+            if (v) {
+                var laMail = v.indexOf('@') > -1;
+                var laSo = /^[\d\s+\-().]+$/.test(v) && v.replace(/\D/g, '').length >= 6;
+                if ((tuKhoa === _ZE_TU_EMAIL && laMail) || (tuKhoa === _ZE_TU_PHONE && laSo)) diem += 3;
+            }
+            return diem;
+        };
+        var tot = function (tuKhoa) {
+            var xep = ds.map(function (l) { return { id: l.ID, diem: cham(l, tuKhoa) }; })
+                .filter(function (x) { return x.diem > 0; })
+                .sort(function (a, b) { return b.diem - a.diem; });
+            return xep.length ? xep[0].id : '';
+        };
+        var email = tot(_ZE_TU_EMAIL);
+        var phone = tot(_ZE_TU_PHONE);
+        // Đường lui: danh mục đặt tên không giống bất kỳ từ nào ở trên. Chỉ dùng khi
+        // còn đúng MỘT loại chưa ai nhận — đoán bừa giữa nhiều loại thì thà bỏ trống
+        // còn hơn ghi số điện thoại vào nhầm chỗ.
+        if (!phone) {
+            var khongPhaiSo = /DIACHI|ADDRESS|FACEBOOK|ZALO|WEBSITE|SKYPE|GHICHU/;
+            var conLai = ds.filter(function (l) {
+                return l.ID !== email && !khongPhaiSo.test(_zeKey(l.MA) + _zeKey(l.TEN));
+            });
+            if (conLai.length === 1) phone = conLai[0].ID;
+        }
+        if (!email) {
+            var conLai2 = ds.filter(function (l) { return l.ID !== phone; });
+            if (conLai2.length === 1) email = conLai2[0].ID;
+        }
+        return { email: email, phone: phone };
+    };
+
+    /*------------------------------------------
+    -- Bù giá trị vào ô ẩn của loại đã chọn. Chỉ ghi khi người dùng có nhập: ô để
+    -- trống mà ghi đè xuống là xoá mất số cũ, trong khi BE chưa có đường xoá.
+    -------------------------------------------*/
+    DeXuatHoSo.prototype._zeBuLienHe = function () {
+        var dx = this;
+        var chon = dx._zeChonLoaiLienHe();
+        var bang = [];
+        var khongXoaDuoc = [];
+        [['email', 'txtEmailCaNhan', 'Email'], ['phone', 'txtDienThoai', 'Điện thoại']].forEach(function (c) {
+            var typeId = chon[c[0]];
+            var giaTri = (($('#' + c[1]).val() || '') + '').trim();
+            bang.push({ 'Ô': c[1], 'IdLoại': typeId || '(KHÔNG XÁC ĐỊNH ĐƯỢC)', 'Giá trị': giaTri });
+            if (!typeId) return;
+            if (!giaTri) {
+                /*------------------------------------------
+                -- Ô bị xoá trắng nhưng hồ sơ đang có bản ghi: KHÔNG ghi rỗng xuống.
+                -- Cột CONTACT_VALUE là NOT NULL nên UpdatePersonContact với chuỗi
+                -- rỗng sẽ ném ORA-01407, mà PKG_CORE_HOSONHANSU_05 lại không có proc
+                -- xoá liên hệ nào (chỉ Insert/Update/Get + DeleteCorePerson xoá cả
+                -- hồ sơ). Tức hiện chưa có đường xoá thật.
+                -- Vậy thì phải nói thẳng cho người dùng biết, thay vì lặng lẽ bỏ qua
+                -- rồi vẫn báo "Lưu thành công" như trước.
+                -------------------------------------------*/
+                var cu = (dx.dtLienHe || []).filter(function (x) {
+                    return (x.CONTACT_TYPE_CODE_ID === typeId) || (x.CONTACT_TYPE_CODE === typeId);
+                })[0];
+                var giaTriCu = cu && (cu.CONTACT_VALUE || cu.VALUE) || '';
+                if (cu && cu.ID && giaTriCu) {
+                    khongXoaDuoc.push({ id: cu.ID, typeId: typeId, giaTriCu: giaTriCu, nhan: c[2] });
+                }
+                return;
+            }
+            if (!$('#txtLienHe' + typeId).length) {
+                $('body').append('<input type="hidden" id="txtLienHe' + typeId + '" />');
+            }
+            if (!$('#checkX' + typeId).length) {
+                $('body').append('<input type="checkbox" id="checkX' + typeId + '" style="display:none" checked />');
+            }
+            $('#txtLienHe' + typeId).val(giaTri);
+        });
+        // Ghi nhận để lát nữa gửi lệnh xoá mềm (xem khối XOÁ TRẮNG Ô LIÊN HỆ bên dưới)
+        dx._zeCanXoaLienHe = khongXoaDuoc;
+        // Muốn xem ô nào đang gắn vào loại nào thì gõ _zeXemLoaiLienHe() trong Console
+        zeDebug('[ZE Liên hệ] map ô → loại', bang);
+    };
+
+    var _origBridgeBu = DeXuatHoSo.prototype._bridgeLienHeToShadow;
+    DeXuatHoSo.prototype._bridgeLienHeToShadow = function () {
+        var dx = this;
+        try { _origBridgeBu.apply(dx, arguments); } catch (e) { console.warn('[ZE Liên hệ] bản gốc lỗi:', e); }
+        try { dx._zeBuLienHe(); } catch (e) { console.warn('[ZE Liên hệ] bù lỗi:', e); }
+    };
+}
+
+/*==============================================================================
+== XOÁ TRẮNG Ô EMAIL / ĐIỆN THOẠI  (16/09/2026)
+==
+== Yêu cầu: người dùng xoá trắng ô rồi Lưu thì số phải mất hẳn.
+==
+== Vì sao luồng gốc không làm được:
+==   - save_LienHe thấy ô rỗng là bỏ qua, không gửi gì (dexuathoso.js:1426);
+==   - cột CONTACT_VALUE là NOT NULL nên Update với chuỗi rỗng ném ORA-01407;
+==   - PKG_CORE_HOSONHANSU_05 không có proc xoá liên hệ nào (chỉ Insert/Update/
+==     Get, còn DeleteCorePerson là xoá cả hồ sơ).
+==
+== Cách làm: xoá MỀM — gọi chính UpdatePersonContact, GIỮ NGUYÊN giá trị cũ để
+== không phạm ràng buộc NOT NULL, và hạ cờ hoạt động về 0. Gửi kèm cả hai cách
+== đặt tên (dIsActive / dIs_Active) vì hai package trong hệ đặt khác nhau; máy
+== chủ bỏ qua tham số thừa — thấy rõ qua việc mọi request đều kèm
+== strVaiTroDangNhap_Id / strChucNangHeThong_Id mà proc cũ vẫn chạy bình thường.
+==
+== Kèm theo: khi nạp danh sách liên hệ thì bỏ các bản ghi đã tắt cờ, nếu không
+== xoá xong mở lại vẫn thấy số cũ.
+==
+== Nếu máy chủ KHÔNG nhận cờ này: bản ghi vẫn còn, mở lại vẫn thấy số cũ và có
+== banner đỏ báo lý do — lúc đó bắt buộc phải nhờ BE mở proc xoá thật.
+==============================================================================*/
+if (typeof DeXuatHoSo === 'function' && DeXuatHoSo.prototype._zeBuLienHe
+    && !DeXuatHoSo.prototype._zeXoaLienHeHooked) {
+    DeXuatHoSo.prototype._zeXoaLienHeHooked = true;
+
+    // Lấy nguyên action string của save_LienHe nhánh Update — không tự bịa
+    var _ZE_LH_UPD = 'NS_HoSoNhanSu5_MH/FDElIDUkESQzMi4vAi4vNSAiNQPP';
+
+    DeXuatHoSo.prototype._zeXoaMemLienHe = function () {
+        var dx = this;
+        var ds = dx._zeCanXoaLienHe || [];
+        dx._zeCanXoaLienHe = [];
+        if (!ds.length) return;
+        var pid = dx.strDeXuatHoSo_Id || dx._lockedPersonId || '';
+        if (!pid) return;
+        // Success = true CHƯA chắc đã xoá: máy chủ có thể nhận request rồi bỏ qua
+        // tham số lạ. Giữ danh sách này lại để đối chiếu với dữ liệu nạp về sau đó.
+        dx._zeChoXacNhanXoa = ds.slice();
+        var conLai = ds.length;
+        ds.forEach(function (m) {
+            edu.system.makeRequest({
+                success: function (data) {
+                    if (data && data.Success) return;
+                    if (typeof window._zeHienLoi === 'function') {
+                        window._zeHienLoi('Chưa xoá được ' + m.nhan + ' (' + m.giaTriCu + '): '
+                            + (((data && data.Message) || '').trim()
+                                || 'máy chủ chưa mở chức năng xoá thông tin liên hệ')
+                            + '. Giá trị cũ được giữ nguyên, muốn đổi thì nhập giá trị mới đè lên.',
+                            'zoneCaNhan');
+                    }
+                },
+                error: function (er) { console.warn('[ZE Xoá liên hệ] err:', er); },
+                complete: function () {
+                    // Nạp lại để form phản ánh đúng những gì máy chủ thực sự nhận
+                    if (--conLai === 0 && typeof dx.getList_LienHe === 'function') {
+                        setTimeout(function () { try { dx.getList_LienHe(); } catch (e) { } }, 200);
+                    }
+                },
+                type: 'POST',
+                contentType: true,
+                action: _ZE_LH_UPD,
+                data: {
+                    'action': _ZE_LH_UPD,
+                    'func': 'PKG_CORE_HOSONHANSU_05.UpdatePersonContact',
+                    'iM': edu.system.iM,
+                    'strId': m.id,
+                    'strChucNang_Id': edu.system.strChucNang_Id,
+                    'strPersonId': pid,
+                    'strContactTypeCode': m.typeId,
+                    'strContactValue': m.giaTriCu,   // NOT NULL → buộc phải giữ giá trị cũ
+                    'dIsPrimary': 0,
+                    'dIsActive': 0,
+                    'dIs_Active': 0,
+                    'strNguoiThucHien_Id': edu.system.userId
+                },
+                fakedb: []
+            }, false, false, false, null);
+        });
+    };
+
+    /*------------------------------------------
+    -- Bấm Lưu: chờ cầu nối chạy xong (nó mới là chỗ phát hiện ô bị xoá trắng)
+    -- rồi mới gửi lệnh xoá. 600ms để đứng sau cả chuỗi lưu chính.
+    -------------------------------------------*/
+    $(document).on('mousedown.zexoalh', '#btnSave_DeXuatHoSo', function () {
+        var dx = (window.main_doc && window.main_doc.DeXuatHoSo) || null;
+        if (!dx || typeof dx._zeXoaMemLienHe !== 'function') return;
+        clearTimeout(dx._zeXoaLHTimer);
+        dx._zeXoaLHTimer = setTimeout(function () {
+            try { dx._zeXoaMemLienHe(); } catch (e) { console.warn('[ZE Xoá liên hệ]', e); }
+        }, 600);
+    });
+
+    /*------------------------------------------
+    -- Bản ghi đã tắt cờ thì coi như không còn: lọc ngay tại chỗ nhận dữ liệu để
+    -- cả bảng ở tab 2 lẫn ô Email/Điện thoại ở tab 1 đều không thấy nó nữa.
+    -- Chỉ lọc khi máy chủ có trả cột IS_ACTIVE — không trả thì giữ nguyên hết,
+    -- không tự suy diễn.
+    -------------------------------------------*/
+    if (DeXuatHoSo.prototype.genTable_LienHe) {
+        var _origGenLH = DeXuatHoSo.prototype.genTable_LienHe;
+        DeXuatHoSo.prototype.genTable_LienHe = function (data, iPager) {
+            var dx = this;
+            var loc = (data || []).filter(function (x) {
+                return !x || x.IS_ACTIVE === undefined || x.IS_ACTIVE === null || x.IS_ACTIVE == 1;
+            });
+            dx.dtLienHe = loc;
+            // Ô ẩn của bản ghi vừa bị tắt cờ phải trả về rỗng, nếu không lần lưu
+            // sau lại lấy đúng số cũ đó gửi đi.
+            (data || []).forEach(function (x) {
+                if (!x || x.IS_ACTIVE === undefined || x.IS_ACTIVE == 1) return;
+                var tid = x.CONTACT_TYPE_CODE_ID || x.CONTACT_TYPE_CODE;
+                if (tid) $('#txtLienHe' + tid).val('').removeAttr('name');
+            });
+            /*------------------------------------------
+            -- Đối chiếu: vừa yêu cầu xoá xong mà bản ghi vẫn còn nguyên trong danh
+            -- sách nạp về = máy chủ không xoá. Phải nói cho người dùng biết, chứ
+            -- lặng im thì họ tưởng xong rồi lần sau mở lại mới ngã ngửa.
+            -------------------------------------------*/
+            var cho = dx._zeChoXacNhanXoa || [];
+            if (cho.length) {
+                var conNguyen = cho.filter(function (m) {
+                    return loc.some(function (x) { return x.ID === m.id; });
+                });
+                dx._zeChoXacNhanXoa = [];
+                if (conNguyen.length && typeof window._zeHienLoi === 'function') {
+                    window._zeHienLoi('Chưa xoá được '
+                        + conNguyen.map(function (m) { return m.nhan + ' (' + m.giaTriCu + ')'; }).join(' và ')
+                        + '. Máy chủ hiện chưa có chức năng xoá thông tin liên hệ nên giá trị cũ được giữ nguyên'
+                        + ' — muốn đổi thì nhập giá trị mới đè lên. (Cần bổ sung Xoa_PersonContact ở phía máy chủ.)',
+                        'zoneCaNhan');
+                } else if (typeof window._zeXoaLoiLuu === 'function') {
+                    window._zeXoaLoiLuu();
+                }
+            }
+            return _origGenLH.call(dx, loc, iPager);
+        };
+    }
+}
+
+/*------------------------------------------
+-- Tiện ích xem danh mục Loại liên hệ và ô nào đang gắn vào loại nào.
+-- Gõ trong Console:  _zeXemLoaiLienHe()
+-------------------------------------------*/
+window._zeXemLoaiLienHe = function () {
+    var dx = (window.main_doc && window.main_doc.DeXuatHoSo) || null;
+    if (!dx) { console.warn('Chưa có main_doc.DeXuatHoSo'); return []; }
+    var chon = (typeof dx._zeChonLoaiLienHe === 'function') ? dx._zeChonLoaiLienHe() : {};
+    var ds = (dx.dtLoaiLienHe || []).map(function (l) {
+        var b = (dx.dtLienHe || []).filter(function (x) {
+            return (x.CONTACT_TYPE_CODE_ID === l.ID) || (x.CONTACT_TYPE_CODE === l.ID);
+        })[0];
+        return {
+            'Id': l.ID, 'Mã': l.MA, 'Tên': l.TEN,
+            'Đang gắn ô': (l.ID === chon.email) ? 'txtEmailCaNhan'
+                : ((l.ID === chon.phone) ? 'txtDienThoai' : ''),
+            'Giá trị đang có': (b && (b.CONTACT_VALUE || b.VALUE)) || '',
+            'Id bản ghi': (b && b.ID) || ''
+        };
+    });
+    if (console.table) console.table(ds); else console.log(ds);
+    return ds;
+};
 
 /*------------------------------------------
 -- Tiện ích xem nhanh danh mục "Đối tượng xuất hoá đơn" đang có những mã nào.
@@ -2177,3 +2713,90 @@ if (typeof DeXuatHoSo === 'function' && DeXuatHoSo.prototype._zeVeBadge
         }, 1000);
     });
 }
+
+/*==========================================================================
+-- 2026-09-14: Ô "Ngày sinh (đầy đủ)" — gộp Ngày/Tháng/Năm thành một chuỗi
+-- dd/mm/yyyy để copy một phát là xong, khỏi phải ghép tay từ 3 ô.
+-- Ô này KHÔNG gửi lên BE (payload vẫn đọc txtNgaySinh/txtThangSinh/txtNamSinh);
+-- nó chỉ đồng bộ 2 chiều với 3 ô gốc, nên dán ngược vào cũng tách ra được.
+==========================================================================*/
+(function () {
+    var ID_FULL = 'txtNgaySinhDayDu';
+
+    function el(id) { return document.getElementById(id); }
+    function raw(id) { var e = el(id); return ((e && e.value) || '') + ''; }
+    function pad2(v) {
+        v = (v + '').trim().replace(/\D/g, '');
+        return !v ? '' : (v.length === 1 ? '0' + v : v);
+    }
+
+    /*------------------------------------------
+    -- 3 ô gốc -> ô gộp. Mức độ ngày sinh có thể là MONTH_ONLY/YEAR_ONLY nên
+    -- thiếu ngày/tháng thì rút gọn chứ không đẻ ra "00/00/1997".
+    -------------------------------------------*/
+    function zeGopNgaySinh() {
+        var full = el(ID_FULL);
+        if (!full) return;
+        var d = pad2(raw('txtNgaySinh'));
+        var m = pad2(raw('txtThangSinh'));
+        var y = raw('txtNamSinh').trim().replace(/\D/g, '');
+        var out = '';
+        if (y) out = (d && m) ? (d + '/' + m + '/' + y) : (m ? (m + '/' + y) : y);
+        else if (d && m) out = d + '/' + m;
+        full.value = out;
+    }
+
+    /*------------------------------------------
+    -- Ô gộp -> 3 ô gốc. Chỉ tách khi chuỗi khớp hẳn một dạng hợp lệ; gõ dở dang
+    -- thì để nguyên, không được phép xoá trắng dữ liệu 3 ô kia.
+    -------------------------------------------*/
+    function zeTachNgaySinh() {
+        var full = el(ID_FULL);
+        if (!full) return;
+        var s = (full.value || '').trim();
+        if (!s) return;
+        var d = '', m = '', y = '', mt;
+        if ((mt = s.match(/^(\d{1,2})\s*[\/\-.]\s*(\d{1,2})\s*[\/\-.]\s*(\d{4})$/))) { d = mt[1]; m = mt[2]; y = mt[3]; }
+        else if ((mt = s.match(/^(\d{4})\s*[\/\-.]\s*(\d{1,2})\s*[\/\-.]\s*(\d{1,2})$/))) { y = mt[1]; m = mt[2]; d = mt[3]; }
+        else if ((mt = s.match(/^(\d{1,2})\s*[\/\-.]\s*(\d{4})$/))) { m = mt[1]; y = mt[2]; }
+        else if ((mt = s.match(/^(\d{2})(\d{2})(\d{4})$/))) { d = mt[1]; m = mt[2]; y = mt[3]; }
+        else if ((mt = s.match(/^(\d{4})$/))) { y = mt[1]; }
+        else { zeGopNgaySinh(); return; }               // không nhận dạng được -> trả về giá trị cũ
+        if (d && (+d < 1 || +d > 31)) { zeGopNgaySinh(); return; }
+        if (m && (+m < 1 || +m > 12)) { zeGopNgaySinh(); return; }
+        if (el('txtNgaySinh')) el('txtNgaySinh').value = pad2(d);
+        if (el('txtThangSinh')) el('txtThangSinh').value = pad2(m);
+        if (el('txtNamSinh')) el('txtNamSinh').value = y;
+        zeGopNgaySinh();                               // chuẩn hoá lại hiển thị
+    }
+
+    $(document).on('input.zedob change.zedob', '#txtNgaySinh, #txtThangSinh, #txtNamSinh', zeGopNgaySinh);
+    $(document).on('change.zedob blur.zedob', '#' + ID_FULL, zeTachNgaySinh);
+
+    /*-- Click phát là bôi đen sẵn, Ctrl+C được luôn. --*/
+    $(document).on('focus.zedob', '#' + ID_FULL, function () {
+        var t = this;
+        setTimeout(function () { try { t.select(); } catch (e) { } }, 0);
+    });
+
+    /*------------------------------------------
+    -- viewValById() nạp bằng .val() nên không bắn event 'input' -> phải tự gọi
+    -- lại sau khi form nạp xong. openEditByPerson thật nằm ở dexuathoso.js nên
+    -- WRAP chứ không định nghĩa mới.
+    -------------------------------------------*/
+    if (typeof DeXuatHoSo === 'function' && DeXuatHoSo.prototype.openEditByPerson) {
+        var _origOpenDOB = DeXuatHoSo.prototype.openEditByPerson;
+        DeXuatHoSo.prototype.openEditByPerson = function (person) {
+            var r = _origOpenDOB.apply(this, arguments);
+            setTimeout(zeGopNgaySinh, 0);
+            setTimeout(zeGopNgaySinh, 400);
+            return r;
+        };
+    }
+
+    /*-- Luồng mở kiểu cũ (.btnEdit) không đi qua openEditByPerson. --*/
+    $(document).on('click.zedob', '.btnEdit, .btnSelect_NguoiHoc_ThuHS', function () {
+        setTimeout(zeGopNgaySinh, 600);
+        setTimeout(zeGopNgaySinh, 1200);
+    });
+})();

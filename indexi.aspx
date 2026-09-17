@@ -103,10 +103,16 @@
              AdminLTE `_all-skins.min.css` (spec 20) và styles.css `.main-sidebar
              { background:#fff !important }` (spec 10). */
 
-      /* Wrapper nền dask-blue để lộ được góc bo top-left của content-wrapper */
+      /* [FIX mang navy ben phai] Truoc day body + .wrapper de nen #223771 (navy) chi de
+             lo goc bo top-left cua .content-wrapper. Nhung .content-wrapper la block, be ngang
+             chi bang viewport - sidebar => bat ky vung nao no khong phu (scroll ngang do bang
+             min-width 2000px, mep phai khi layout co dinh be ngang, vung duoi khi content ngan)
+             deu lo ra mang navy giua trang. Doi canvas ve light cung tone content-wrapper;
+             goc bo duoc ve lai bang pseudo-element ::before nam duoi nen (xem .content-wrapper). */
+      html,
       html body.skin-blue,
       html body.skin-blue .wrapper {
-        background-color: #223771 !important;
+        background-color: #f0f3fd !important;
       }
 
       /* Header top: logo (bên trái, chiếm width sidebar) + navbar (bên phải).
@@ -341,10 +347,68 @@
         line-height: 1 !important;
       }
 
-      /* Content wrapper: nền light-gray + bo góc top-left */
+      /* Content wrapper: nền light-gray, KHONG bo goc + KHONG mieng navy lot duoi nua
+             (goc bo cu de lo mot o navy 24x24 o goc trai tren -> user bao "con ti xanh xanh"). */
       html body.skin-blue .content-wrapper {
         background-color: #f0f3fd !important;
-        border-top-left-radius: 16px;
+        border-top-left-radius: 0 !important;
+        /* KHONG duoc dat position:relative o day! AdminLTE.min.css set z-index:800/820/840
+               cho .content-wrapper. Khi position:static thi z-index bi bo qua (inert), nhung
+               chi can them position:relative la z-index kich hoat => .content-wrapper tao
+               STACKING CONTEXT o muc 820. Moi .modal khai bao trong module (nam trong
+               #main-content-wrapper) bi nhot trong stacking context do, trong khi
+               .modal-backdrop duoc BS3 append thang vao <body> o z-index 1040 => backdrop
+               phu LEN modal: man hinh toi den, bam gi cung khong an. Ep z-index:auto de
+               khoa vinh vien loi nay ke ca khi rule khac set position. */
+        z-index: auto !important;
+        /* ROOT CAUSE be ngang thieu 348px: styles.css:3092 .skin-blue .content-wrapper
+               { overflow:hidden } -> element tao BFC (block formatting context), ma box tao BFC
+               thi TU CO LAI de ne float nam canh no. Do console: div bo rong 2116.67,
+               margin-left 300 => dang le width = 1816.67, nhung thuc te 1468.87
+               (= 2116.67 - 300 - 347.8 be ngang cua float). Moi rule width/max-width/margin
+               deu vo nghia vi day la co che layout chu khong phai thuoc tinh width.
+               Fix: bo BFC. Dung `clip` (KHONG tao BFC nhung van cat tran nhu hidden) de giu
+               nguyen hanh vi chong tran ngang cua cac module khac; `visible` la fallback cho
+               browser khong ho tro overflow:clip. */
+        overflow: visible !important;
+        overflow: clip !important;
+      }
+
+      /* [FULL WIDTH] Ep vung noi dung trai het be ngang con lai cua trang.
+             Audit CSS thuc te duoc nap (AdminLTE.min, _all-skins.min, styles.css,
+             styles-content.css, styles-responsive.css, index.min.css) KHONG co rule nao
+             set width/max-width cho .content-wrapper / #main-content-wrapper / .content /
+             .zone-bus / .box => thu bo be ngang nam o container NGOAI hon la .wrapper.
+             AdminLTE co .wrapper{max-width:1250px} (bien the layout-boxed) + overflow:hidden,
+             neu dinh phai bien the do thi toan bo shell bi bo lai va con lai la mang trong
+             ben phai. Dap ca chuoi tu .wrapper tro xuong cho chac. */
+      html body.skin-blue .wrapper,
+      html body.skin-blue .content-wrapper,
+      html body.skin-blue .content-wrapper>.content-header,
+      html body.skin-blue #main-content-wrapper,
+      html body.skin-blue #main-content-wrapper .content {
+        width: auto !important;
+        max-width: none !important;
+        min-width: 0 !important;
+        margin-right: 0 !important;
+        float: none !important;
+        box-sizing: border-box !important;
+      }
+
+      /* Div bo truc tiep cua .content-wrapper: console xac nhan da rong dung 2117 (= .wrapper),
+             nen KHONG phai thu bo be ngang — giu nguyen, khong reset gi them. Nguyen nhan that
+             su nam o overflow:hidden cua chinh .content-wrapper (xem rule ben tren). */
+
+      /* .wrapper con co margin:0 auto o bien the boxed -> ep sat trai, khong can giua */
+      html body.skin-blue .wrapper {
+        margin-left: 0 !important;
+        box-shadow: none !important;
+      }
+
+      /* Padding ngang gon lai de card sat mep phai, khong bo trong mot mang lon */
+      html body.skin-blue #main-content-wrapper .content {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
       }
 
       /* Breadcrumb "Bảng điều khiển / …" */
@@ -450,6 +514,21 @@
         align-items: center !important;
         line-height: 1 !important;
         padding: 4px 10px !important;
+      }
+
+      /* Badge chua co so lieu -> an han, tranh "cuc xanh" trong nam canh tieu de.
+         BS3 co san .badge:empty{display:none} nhung bi display:inline-flex !important
+         o tren de len, nen phai khai bao lai. */
+      html body.skin-blue .box-title .badge:empty,
+      html body.skin-blue .box-title .badge.bg-light-blue:empty {
+        display: none !important;
+      }
+
+      /* Truong hop badge boc 1 span con rong (<span class="badge"><span id="..."></span></span>):
+         badge KHONG match :empty vi con text node xuong dong -> dung :has().
+         Tach rule rieng de browser khong ho tro :has() van giu duoc rule :empty o tren. */
+      html body.skin-blue .box-title .badge:has(> span:only-child:empty) {
+        display: none !important;
       }
 
       /* Chan wrap: simplePagination render <ul><li> mac dinh display:inline-block ->
@@ -1808,10 +1887,8 @@
     <!-- <script type="text/javascript" src="Scripts/MathJax/MathJax.js"></script> -->
     <!--  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML" -->
 
-    <script src="<%= Apis.CommonV1.Base.AppSetting.GetString(" RootPathUpload")
-      %>/Core/uploadfile.js ? v = 1.0.0.12"></script><!--CORE JS-->
-    <script src="<%= Apis.CommonV1.Base.AppSetting.GetString(" RootPathUpload")
-      %>/ Core / uploadavatar.js ? v = 1.0.0.12"></script><!--CORE JS-->
+    <script src="<%= Apis.CommonV1.Base.AppSetting.GetString("RootPathUpload")%>/Core/uploadfile.js?v=1.0.0.12"></script><!--CORE JS-->
+    <script src="<%= Apis.CommonV1.Base.AppSetting.GetString("RootPathUpload")%>/Core/uploadavatar.js?v=1.0.0.12"></script><!--CORE JS-->
 
     <script type="text/javascript" src="Corei/constant.js?v=<%= Guid.NewGuid().ToString() %>"></script> <!--CORE JS-->
     <script type="text/javascript" src="Corei/systemroot.js?v=<%= Guid.NewGuid().ToString() %>"></script> <!--CORE JS-->

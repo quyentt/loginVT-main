@@ -10,6 +10,7 @@
 /Scripts
 /ServicesConfig
 /css-old
+/Upload/Core/File
 Global.asax
 Config.js
 Web.config

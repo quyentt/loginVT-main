@@ -407,9 +407,12 @@ PhieuThu.prototype = {
             me.strPhieuThu_Id = strPhieuThu_Id;
             me.bActiveRutTien = false;
             $(".beforeActive").hide();
-            $("#zoneBienLaiHoaDon").slideDown();
+            $("#zoneBienLaiHoaDon").stop(true, true).hide();
             $("#zoneTimKiemSinhVien").slideUp();
-            edu.extend.getData_Phieu(strPhieuThu_Id, "BIENLAI", 'MauInPhieuThu', main_doc.PhieuThu.changeWidthPrint);
+            edu.extend.getData_Phieu(strPhieuThu_Id, "BIENLAI", 'MauInPhieuThu', function () {
+                $("#zoneBienLaiHoaDon").stop(true, true).slideDown();
+                main_doc.PhieuThu.changeWidthPrint();
+            });
         });
         $("#zoneThongTinHSSV").delegate('.detail_KhoanRut', 'click', function (e) {
             e.stopImmediatePropagation();
@@ -417,9 +420,12 @@ PhieuThu.prototype = {
             me.strPhieuThu_Id = strPhieuThu_Id;
             me.bActiveRutTien = true;
             $(".beforeActive").hide();
-            $("#zoneBienLaiHoaDon").slideDown();
+            $("#zoneBienLaiHoaDon").stop(true, true).hide();
             $("#zoneTimKiemSinhVien").slideUp();
-            edu.extend.getData_Phieu(strPhieuThu_Id, "BIENLAI", "MauInPhieuThu", main_doc.PhieuThu.genHTML_PhieuRut);
+            edu.extend.getData_Phieu(strPhieuThu_Id, "BIENLAI", "MauInPhieuThu", function () {
+                $("#zoneBienLaiHoaDon").stop(true, true).slideDown();
+                main_doc.PhieuThu.genHTML_PhieuRut();
+            });
         });
         $("#zoneThongTinHSSV").delegate('.detail_PhieuHoaDon', 'click', function (e) {
             e.stopImmediatePropagation();
@@ -427,9 +433,12 @@ PhieuThu.prototype = {
             me.strPhieuThu_Id = strPhieuThu_Id;
             me.bActiveRutTien = true;
             $(".beforeActive").hide();
-            $("#zoneBienLaiHoaDon").slideDown();
+            $("#zoneBienLaiHoaDon").stop(true, true).hide();
             $("#zoneTimKiemSinhVien").slideUp();
-            edu.extend.getData_Phieu(strPhieuThu_Id, "HOADON", "MauInPhieuThu", main_doc.PhieuThu.changeWidthPrint);
+            edu.extend.getData_Phieu(strPhieuThu_Id, "HOADON", "MauInPhieuThu", function () {
+                $("#zoneBienLaiHoaDon").stop(true, true).slideDown();
+                main_doc.PhieuThu.changeWidthPrint();
+            });
         });
 
         /*------------------------------------------
@@ -6130,34 +6139,45 @@ PhieuThu.prototype = {
     printPhieu: function () {
         var me = this;
         edu.extend.remove_PhoiIn("MauInPhieuThu");
-        me._printPhieuThuCustom('MauInPhieuThu');
+        edu.util.printHTML('MauInPhieuThu');
         edu.system.switchTab('tab_1');
         me.closePhieu();
+        //var strKhoIn = $("#dropKhoInPhieuThu").val() || "A5 landscape";
+        //edu.extend.remove_PhoiIn("MauInPhieuThu");
+        //me._printPhieuThuCustom('MauInPhieuThu', strKhoIn);
+        //edu.system.switchTab('tab_1');
+        //me.closePhieu();
     },
     // Custom print riêng cho phiếu thu — thay edu.util.printHTML shared vì nó không carry CSS
     // scoped #MauInPhieuThu sang popup window → khung table biến mất + họ tên wrap.
     // Inject đầy đủ CSS cho popup: border table, Times New Roman, nowrap họ tên/mã/ngày sinh.
-    _printPhieuThuCustom: function (divId) {
+    _printPhieuThuCustom: function (divId, strKhoIn) {
+        strKhoIn = strKhoIn === 'A4 landscape' ? 'A4 landscape' : 'A5 landscape';
+        var strChieuRongTrang = strKhoIn === 'A4 landscape' ? '297mm' : '210mm';
+        var strChieuRongNoiDung = strKhoIn === 'A4 landscape' ? '287mm' : '200mm';
+        var strLayoutA4 = strKhoIn === 'A4 landscape'
+            ? '#MauInPhieuThu > .pr-containt { min-height: 200mm !important; padding: 8mm !important; display: flex !important; flex-direction: column !important; }'
+                + '#MauInPhieuThu > .pr-containt > .pr-body { flex: 1 1 auto !important; }'
+                + '#MauInPhieuThu > .pr-containt > .pr-footer { margin-top: auto !important; }'
+            : '';
         var content = document.getElementById(divId).innerHTML;
         var w = window.open('', 'Print', 'height=800,width=1200');
         
         // CSS tập trung vào việc căn giữa và hiển thị đúng
         var css = ''
-            /* User yêu cầu mẫu phải đúng định dạng A5 landscape (mẫu 02GTTT2/001 Bộ Tài chính chuẩn A5).
-               margin 0.3cm nhỏ để container 200mm căn giữa được trong A5 landscape 210mm (dư 10mm chia đều 2 bên).
-               Note: khách in trên A4 sẽ thấy phiếu chiếm 1 phần giấy — đây là trade-off vì user chọn A5.
-               Nếu cần in A4 flexibly, đổi lại `@page { margin: 0.5cm }` không set size. */
-            + '@page { size: A5 landscape; margin: 0.3cm; }'
-            + 'html, body { margin: 0; padding: 0; width: 100%; }'
-            + 'body { font-family: "Times New Roman", Cambria, serif; font-size: 10pt; line-height: 1.25; color: #000; padding: 0.15cm 0.5cm; width: 100%; background: #fff; text-align: center; }'
+                /* Mặc định A5 ngang; người dùng có thể chọn A4 ngang tại dropdown Khổ in. */
+                + '@page { size: ' + strKhoIn + '; margin: 0; }'
+                + 'html, body { margin: 0; padding: 0; width: ' + strChieuRongTrang + '; }'
+                + 'body { font-family: "Times New Roman", Cambria, serif; font-size: 10pt; line-height: 1.25; color: #000; padding: 5mm; background: #fff; text-align: center; }'
             + '* { font-family: "Times New Roman", Cambria, serif; box-sizing: border-box; }'
-            /* Container width cố định 200mm để: (a) `margin: 0 auto` căn giữa được trên mọi khổ giấy;
-               (b) fit trong A5 landscape 210mm, A4 portrait 210mm và A4 landscape 297mm.
+                /* Chiều rộng nội dung thay đổi theo khổ giấy được chọn, vẫn giới hạn bởi max-width.
                page-break-inside: avoid → phòng khi content vẫn hơi tràn, browser vẫn cố nén 1 trang thay vì cắt */
-            + '#MauInPhieuThu { width: 200mm; max-width: 100%; margin: 0 auto; padding: 0; text-align: left; page-break-inside: avoid; break-inside: avoid; }'
+                + '#MauInPhieuThu { width: ' + strChieuRongNoiDung + '; max-width: 100%; margin: 0 auto; padding: 0; text-align: left; page-break-inside: avoid; break-inside: avoid; }'
             /* Bỏ `width: 100%` cho descendants → nếu template có wrapper width < 200mm, `margin: 0 auto !important` sẽ căn giữa nó trong container.
                `!important` để override inline style `margin-left: XXpx` mà template server có thể set. */
             + '#MauInPhieuThu > div, #MauInPhieuThu > table, #MauInPhieuThu > p, #MauInPhieuThu > center, #MauInPhieuThu > span, #MauInPhieuThu > h1, #MauInPhieuThu > h2, #MauInPhieuThu > h3, #MauInPhieuThu > h4 { max-width: 100%; margin: 0.02cm auto !important; padding: 0; }'
+                + '#MauInPhieuThu > .pr-containt { width: 100% !important; max-width: 100% !important; }'
+                + strLayoutA4
             + '#MauInPhieuThu table { border-collapse: collapse; width: 100%; margin: 1px auto; border: none; }'
             + '#MauInPhieuThu table td, #MauInPhieuThu table th { border: none; padding: 2px 4px; vertical-align: middle; font-size: 10pt; line-height: 1.5; text-align: left; }'
             + '#MauInPhieuThu table.tblHangHoa { border: 1.2px solid #000; }'

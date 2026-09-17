@@ -187,6 +187,9 @@
             </div>
             <div class="row">
                 <div class="col-lg-12 pd20">
+                    <!-- FIX 2026-09-14: danh sach nganh rat dai -> cuon trong khung rieng,
+                         thead dinh tren, nut Luu o box-footer luon nam trong tam nhin. -->
+                    <div class="zoneScroll_KhaiNhanh">
                     <table id="tblKhaiNhanh" class="table table-hover table-bordered mb-0">
                         <thead>
                             <tr>
@@ -202,14 +205,19 @@
                         </thead>
                         <tbody></tbody>
                     </table>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="box-footer">
+            <div class="pull-left">
+                <span id="lblTongNganh_KhaiNhanh" class="text-muted"></span>
+            </div>
             <div class="pull-right">
                 <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times-circle"></i> Đóng</a>
                 <a id="btnSave_KhaiNhanh" class="btn btn-primary"><i class="fa-light fa-floppy-disk"></i> Lưu</a>
             </div>
+            <div class="clear"></div>
         </div>
     </div>
 </section>
@@ -414,7 +422,7 @@
     </div>
 </div>
 <!-- page script -->
-<script src="modules/danhmucheso/scripts/donviphimoi.js?v=1.0.5.5"></script>
+<script src="modules/danhmucheso/scripts/donviphimoi.js?v=1.0.5.7"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['DonViPhi'] = new DonViPhi();
@@ -449,5 +457,47 @@
     .modal .select2-results__options {
         max-height: 220px !important;
         overflow-y: auto !important;
+    }
+
+    /* FIX 2026-09-14: panel "Khai nhanh" — bang nhieu tram dong day nut Luu
+       xuong duoi tam nhin. Cho bang cuon trong khung rieng + ghim thead,
+       va ghim luon box-footer de nut Luu khong bao gio bi che. */
+    #zoneEdit .zoneScroll_KhaiNhanh {
+        max-height: calc(100vh - 330px);
+        min-height: 220px;
+        overflow-y: auto;
+        overflow-x: auto;
+        border: 1px solid #e5e7eb;
+        border-radius: 4px;
+    }
+
+    #zoneEdit .zoneScroll_KhaiNhanh > table {
+        margin-bottom: 0;
+    }
+
+    #zoneEdit .zoneScroll_KhaiNhanh thead th {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        background: #f1f5f9;
+        color: #0f172a;
+        font-weight: 600;
+        box-shadow: inset 0 -1px 0 #cbd5e1;
+    }
+
+    #zoneEdit .box-footer {
+        position: sticky;
+        bottom: 0;
+        z-index: 20;
+        background: #ffffff;
+        border-top: 1px solid #e5e7eb;
+        box-shadow: 0 -2px 6px rgba(0, 0, 0, .06);
+    }
+
+    #lblTongNganh_KhaiNhanh {
+        display: inline-block;
+        line-height: 34px;
+        color: #475569;
+        font-weight: 600;
     }
 </style>
