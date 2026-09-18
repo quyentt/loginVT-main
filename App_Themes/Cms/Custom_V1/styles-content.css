@@ -2285,7 +2285,7 @@
 }
 
 .aps-taichinh-r .aps-form .aps-form-lable .group-title-name {
-    font-size: 16px !important;
+    font-size: 14px !important;
     color: #666 !important;
     font-weight: 400 !important;
     border-bottom: 0px solid #e1e1e1;
@@ -2437,7 +2437,9 @@
     padding: 0 !important;
     background: #fff;
 }
-
+html body.skin-blue  .aps-modal-nhansu.modal .modal-body {
+    padding: 0px !important;
+}
 .aps-modal-nhansu .modal-body>.row {
     padding-left: 0 !important;
     padding-right: 0 !important;
@@ -5813,8 +5815,8 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 }
 
 .aps-taichinh-r .form-container.zone-bus .box-header .btn-default.btnClose {
-    top: 12px;
-    right: 8px;
+    top: 15px;
+    right: 3px;
     border: 0 !important;
     background: transparent !important;
     color: #fff;
@@ -7812,8 +7814,8 @@ input#tblInput_DTSV_SinhVien_input {
 
 .pull-right-absolute {
     position: absolute;
-    top: 0;
-    right: 5px;
+    top: 2px;
+    right: 2px;
 }
 
 .pull-right-absolute .btnCloseToggle,
@@ -9003,7 +9005,7 @@ input#tblInput_DTSV_SinhVien_input {
 }
 
 .content .col-sm-3 .box.box-solid.box-search {
-    padding: 15px !important;
+    padding: 15px 15px 5px 15px !important;
 }
 
 .light-paginationtblHoaDon.simple-pagination,
@@ -9029,7 +9031,7 @@ input#tblInput_DTSV_SinhVien_input {
 .zone-pag-footertblBienLai {
     margin-top: 2px !important;
     border-top: 1px solid #e1e1e1;
-    padding-top: 12px;
+    padding-top: 10px;
 }
 
 .box-list .zone-pag-footertblPhieuThu .info-tblPhieuThu,
@@ -10369,7 +10371,7 @@ table#clone {
     height: 38px !important;
     line-height: 44px !important;
     padding: 10px !important;
-    border-radius: 5px !important;
+    border-radius: 4px !important;
 }
 
 .aps-form-item .select2-container--default .select2-selection--single .select2-selection__rendered,
@@ -17997,7 +17999,11 @@ html body.skin-blue .aps-list-hocphan.sidebar-menu>li:hover>a {
 .zoneViewHocPhan .box-footer .btn i,
 .zone_inputhocphan_khoituchondon .box-footer .btn i,
 .modal-footer .btn i {
+<<<<<<< HEAD
     padding-right: 6px !important;
+=======
+    padding-right: 0 !important;
+>>>>>>> b828fef936d226132dcf0c300846a72c61462fb0
 }
 
 .zone_ketquahocphan .box-footer .btn i {
@@ -18136,4 +18142,126 @@ html body.skin-blue .modal.myModalLabel .modal-footer,
 
 .box-solid.add-quyetdinh .box-header.with-border .btn.btn-default.btnClose {
     padding: 12px 14px !important;
+}
+
+/* -----fix-t9-2026--------- */
+html body.skin-blue .modal .modal-header button {
+    font-size: 16px !important;
+    display: flex !important;
+}
+html body.skin-blue .modal .modal-header button  i {
+    padding-right: 5px !important;
+}
+html body.skin-blue #main-content-wrapper .box-view.aps-add-new .aps-form-input .select2-container--default .select2-selection--single .select2-selection__rendered,
+html body.skin-blue #main-content-wrapper .modal_add_loaikhoan_donGia .box-view.aps-add-new .aps-form-input .select2-container--default .select2-selection--single .select2-selection__rendered,
+html body.skin-blue #main-content-wrapper .modal_add_phamVi_doiTuong .select2-container--default .select2-selection--single .select2-selection__rendered {
+    padding: 0 32px 0 0px !important;
+}
+html body.skin-blue #main-content-wrapper .modal_add_phamVi_doiTuong .select2-container--default .select2-selection--single .select2-selection__arrow {
+    top: 0px !important;
+}
+
+html body.skin-blue .aps-list-dangky-dongphuc .box-title .badge,
+html body.skin-blue .aps-list-dangky-dongphuc .box-title .badge.bg-light-blue {
+    margin-top: 7px !important;
+}
+
+html body.skin-blue .aps-list-dangky-dongphuc .box-header.pt20 {
+    padding-top: 10px !important;
+}
+
+#zoneEdit_KeHoach .form-container .radio-inline, html body.skin-blue #main-content-wrapper .modal_add_loaikhoan_donGia .radio-inline,
+html body.skin-blue #main-content-wrapper .modal_add_loaikhoan_donGia .select2-container--default .select2-selection--single .select2-selection__rendered {
+    padding-left: 0px !important;
+}
+
+#zoneEdit_KeHoach .form-container .radio-inline input[type="radio"],
+html body.skin-blue #main-content-wrapper .modal_add_loaikhoan_donGia .radio-inline input[type="radio"] {
+    margin: 4px 0 0 !important;
+}
+
+#zoneEdit_KeHoach .form-container .radio-inline span,.modal_add_loaikhoan_donGia .radio-inline span {
+    margin-left: 20px !important;
+}
+.modal_add_loaikhoan_donGia .aps-add-new .radio-inline {
+    margin-top: 8px !important;
+}
+html body .select2-container--default.select2-container--open .select2-dropdown {
+    border-radius: 5px !important;
+}
+#zoneEdit_KeHoach .myModalLabel{
+    padding-right: 5px;
+}
+
+html body.skin-blue #main-content-wrapper .modal_Loaikhoan_donGia .btn {
+    gap: 5px !important;
+}
+
+html body.skin-blue #main-content-wrapper .modal_ketQua_dangKy_mua .aps-add-new .box-solid.box-search{
+    margin-bottom: 0 !important;
+    padding: 0 !important;
+}
+.btnThemMoi_PhamVi_DoiTuong{
+    gap: 4px !important;
+}
+.sidebar-menu:hover{
+    overflow: hidden !important;
+}
+/* Fix 14-t9 */
+.aps-kehoach-thuchi-l .box-list.box.box-solid {
+    padding: 0px 15px 15px 15px !important;
+}
+.aps-kehoach-thuchi-l .box-list .box-body{
+    margin-top: 10px !important;
+}
+.aps-kehoach-thuchi-l  .box-body .zone-pag-headertblKeHoach{    
+    justify-content: space-between !important;
+    margin-bottom: 5px;
+}
+.zone-pag-headertblKeHoach .select2-container .select2-selection--single {
+    height: 28px !important;
+    min-height: 28px !important;
+    border-radius: 4px !important;
+}
+.zone-pag-headertblKeHoach .simple-pagination li {
+    margin-left: -1px !important;
+    height: 28px !important;
+    max-height: 28px !important;
+    line-height: 28px !important;
+}
+.zone-pag-headertblKeHoach .simple-pagination li span{
+    line-height: 28px !important;
+}
+.zone-pag-headertblKeHoach .compact-theme ul {
+    overflow: hidden !important;
+}
+.zone-pag-headertblKeHoach .clear{
+    display: none !important;
+}
+.zone-pag-headertblKeHoach .simple-pagination li span,
+html body.skin-blue .aps-kehoach-thuchi-l .zone-pag-footertblKeHoach .simple-pagination li {
+    height: 28px !important;
+    line-height: 28px !important;
+}
+.aps-kehoach-thuchi-r{
+
+}
+.pull-left{
+    float: left !important;
+}
+.pull-right{
+    float: right !important;
+}
+/* ------------ */
+html body.skin-blue .aps-kehoach-thuchi-l .compact-theme span{
+    line-height: 28px !important;
+    height: 28px !important;
+}
+
+.zone-bus .myModalLabel {
+    padding-right: 5px !important; 
+}
+html body.skin-blue .modal .modal-body  .select2-container .select2-selection--single {
+    height: 34px !important;
+    min-height: 34px !important;
 }

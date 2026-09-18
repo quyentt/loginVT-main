@@ -223,7 +223,8 @@ BaoCao.prototype = {
             }
             addKeyValue("strTrangThaiNguoiHoc_Id", strTrangThaiNguoiHoc_Id);
             addKeyValue("strNganhHoc_Id", edu.util.getValCombo("dropSearch_NganhHoc"));
-            addKeyValue("strDaoTao_CoSoDaoTao_Id", edu.util.getValCombo("dropSearch_CoSoDaoTao_IHD"));
+            //strDaoTao_CoSoDaoTao_Id đã addKeyValue ở trên (cạnh strMaTruong) — không lặp lại,
+            //vì addKeyValue chỉ push vào arrTuKhoa/arrDuLieu nên gọi 2 lần = 2 dòng thông số trùng.
         });
 
 

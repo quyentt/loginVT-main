@@ -20,6 +20,7 @@ LichGiang.prototype = {
     strNgayBatDau: '',
     strNgayKetThuc: '',
     strlblHocPhan: '',
+    dtTKBKhongLichChiTiet: [],
     init: function () {
         var me = this;
         /*------------------------------------------
@@ -40,6 +41,8 @@ LichGiang.prototype = {
         $("#thang").attr("title", nMonth);
         $("#thang").html("Tháng " + nMonth);
         me.genHtml_Month(0);
+        // Vẽ bảng ngay khi mở panel để luôn thấy bảng + thông báo (2026-09-17)
+        me.renderTable_TKBLopKhongCoLichChiTiet(null, "init");
 
         $(".days").delegate(".poiter", "click", function () {
             $(".days .active").removeClass("active");
@@ -51,6 +54,7 @@ LichGiang.prototype = {
             me.strNgayBatDau = strNgayBatDau;
             me.strNgayKetThuc = strNgayKetThuc;
             me.getList_TuanHienTai(strNgayBatDau, strNgayKetThuc, strNgayDangChon);
+            me.getList_TKBLopKhongCoLichChiTiet(strNgayDangChon);
             var strClass = $(this).attr('name');
             strClass = $("." + strClass);
             var html = '';
@@ -266,6 +270,116 @@ LichGiang.prototype = {
             }
         });
     },
+    /*------------------------------------------
+    --Discription: Lớp học phần không có lịch chi tiết (2026-09-17)
+    --Origin: PKG_CONGTHONGTIN_HSSV_THONGTIN.LayTKBLopKhongCoLichChiTiet
+    --Note: strGiangVien_Id ở panel này là strSinhVien_Id của InBangDiem (xem init), nên
+            dùng API phía sinh viên giống cổng SV.
+    -------------------------------------------*/
+    getList_TKBLopKhongCoLichChiTiet: function (strNgay) {
+        var me = this;
+        if (!strNgay) {
+            me.dtTKBKhongLichChiTiet = [];
+            me.renderTable_TKBLopKhongCoLichChiTiet([]);
+            return;
+        }
+
+        me.renderTable_TKBLopKhongCoLichChiTiet(null, "loading");
+
+        var obj_save = {
+            'action': 'SV_ThongTin_MH/DSA4FQoDDS4xCikuLyYCLg0oIikCKSgVKCQ1',
+            'func': 'PKG_CONGTHONGTIN_HSSV_THONGTIN.LayTKBLopKhongCoLichChiTiet',
+            'iM': edu.system.iM,
+            'strQLSV_NguoiHoc_Id': me.strGiangVien_Id,
+            'strNgay': strNgay,
+            'strChucNang_Id': edu.system.strChucNang_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    me.dtTKBKhongLichChiTiet = data.Data || [];
+                    me.renderTable_TKBLopKhongCoLichChiTiet(me.dtTKBKhongLichChiTiet);
+                }
+                else {
+                    me.dtTKBKhongLichChiTiet = [];
+                    me.renderTable_TKBLopKhongCoLichChiTiet(null, "error", data.Message);
+                }
+            },
+            error: function (er) {
+                me.dtTKBKhongLichChiTiet = [];
+                me.renderTable_TKBLopKhongCoLichChiTiet(null, "error", "Lỗi tải dữ liệu");
+            },
+            type: 'POST',
+            action: obj_save.action,
+            contentType: true,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    renderTable_TKBLopKhongCoLichChiTiet: function (data, strTrangThai, strThongBao) {
+        var me = this;
+        var $tbody = $("#tblTKBKhongLichChiTiet tbody");
+        if ($tbody.length === 0) return;
+        $("#zoneTKBKhongLichChiTiet").show();
+
+        var fnEmpty = function (strIcon, strMau, strNoiDung) {
+            return ''
+                + '<tr class="empty-state-row">'
+                + '<td colspan="6" style="text-align:center; padding:36px 16px; border:none;">'
+                + '<div style="display:inline-block; padding:18px 28px; background:#fafbff; border:1px dashed #d9deeb; border-radius:14px; color:#7a8499;">'
+                + '<i class="' + strIcon + '" style="font-size:42px; color:' + strMau + '; display:block; margin-bottom:8px;"></i>'
+                + '<div style="font-size:14px;">' + strNoiDung + '</div>'
+                + '</div>'
+                + '</td>'
+                + '</tr>';
+        };
+
+        if (strTrangThai === "init") {
+            $tbody.html(fnEmpty("fal fa-calendar-day", "#b8c0d4",
+                "Chọn một ngày trên lịch để xem lớp học phần không có lịch chi tiết"));
+            return;
+        }
+        if (strTrangThai === "loading") {
+            $tbody.html(fnEmpty("fas fa-spinner fa-spin", "#3b82f6", "Đang tải dữ liệu..."));
+            return;
+        }
+        if (strTrangThai === "error") {
+            $tbody.html(fnEmpty("fas fa-exclamation-triangle", "#f59e0b",
+                edu.util.returnEmpty(strThongBao) || "Lỗi tải dữ liệu"));
+            return;
+        }
+
+        if (!data || data.length === 0) {
+            $tbody.html(fnEmpty("fal fa-users-class", "#b8c0d4",
+                "Hiện tại chưa có lớp học phần (không có lịch chi tiết) nào"));
+            return;
+        }
+
+        var html = '';
+        for (var i = 0; i < data.length; i++) {
+            var a = data[i] || {};
+            var maLop = a.MA_LOP || a.MALOP || a.MA || a.MA_LOPHOCPHAN || a.LOP_MA || '';
+            var tenLop = a.TEN_LOP || a.TENLOP || a.TEN || a.TENLOPHOCPHAN || a.LOP_TEN || '';
+            var hinhThuc = a.HINHTHUC_HOC || a.HINHTHUC || a.HINHTHUCHOC || a.HINH_THUC_HOC || '';
+            var ngayBatDau = a.NGAYBATDAU || a.TU_NGAY || a.TUNGAY || a.NGAY_BAT_DAU || '';
+            var ngayKetThuc = a.NGAYKETTHUC || a.DEN_NGAY || a.DENNGAY || a.NGAY_KET_THUC || '';
+            var ghiChu = a.GHICHU || a.GHI_CHU || a.NOTE || a.GHICHU_TEN || '';
+
+            html += '<tr>';
+            html += '<td>' + edu.util.returnEmpty(maLop) + '</td>';
+            html += '<td>' + edu.util.returnEmpty(tenLop) + '</td>';
+            html += '<td>' + edu.util.returnEmpty(hinhThuc) + '</td>';
+            html += '<td>' + edu.util.returnEmpty(ngayBatDau) + '</td>';
+            html += '<td>' + edu.util.returnEmpty(ngayKetThuc) + '</td>';
+            html += '<td>' + edu.util.returnEmpty(ghiChu) + '</td>';
+            html += '</tr>';
+        }
+        $tbody.html(html);
+    },
+
     /*------------------------------------------
     --Discription: [3] AccessDB HOC
     --ULR:  Modules

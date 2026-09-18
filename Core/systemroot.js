@@ -7612,6 +7612,22 @@ systemroot.prototype = {
             body += '<div class="col-sm-9"><a id="btnHSLL_Import" href="' + url_report + '"><i class="fa-solid fa-file-import"></i></a></div>';
         }
         body += '</div>';
+        // Panel tiến trình import (2026-09-17): bản này import tự chạy ngay sau khi upload xong,
+        // trước đó không có phản hồi nào nên người dùng tưởng máy treo rồi bất chợt thấy bảng lỗi.
+        body += '<div id="zoneImportProgress" style="display:none;margin:12px 0;padding:14px 16px;border:1px solid #dbe4f3;border-radius:8px;background:#f8fbff">';
+        body += '<div style="display:flex;align-items:center;margin-bottom:10px">';
+        body += '<i class="fa fa-spinner fa-spin" style="color:#2563eb;font-size:16px;margin-right:10px"></i>';
+        body += '<b id="lblImportProgress" style="color:#1e40af">Đang import...</b>';
+        body += '</div>';
+        body += '<div class="progress" style="height:18px;margin:0;background:#e8eefb;border-radius:9px;overflow:hidden">';
+        body += '<div class="progress-bar progress-bar-striped progress-bar-animated" id="barImportProgress" role="progressbar" style="width:100%;background-color:#2563eb"></div>';
+        body += '</div>';
+        body += '<div style="margin-top:8px;font-size:12.5px;color:#64748b">Máy chủ đang xử lý toàn bộ file. Vui lòng không đóng cửa sổ này.</div>';
+        body += '<div id="lblImportNote" style="margin-top:6px;font-size:12.5px;color:#b45309"></div>';
+        body += '</div>';
+        // Banner inline thay cho edu.system.alert: alert chồng lên modal import đang mở, tắt alert
+        // là gỡ luôn trạng thái modal-open làm modal import tự đóng theo.
+        body += '<div id="zoneImportMsg" style="display:none;margin:10px 0;padding:11px 14px;border-radius:6px;font-size:13.5px"></div>';
         body += '<div id="zoneImportChung_Result" class="mt-3"></div>';
 
         var modal = '';
@@ -7639,7 +7655,57 @@ systemroot.prototype = {
 
         edu.system.uploadImport(["zoneImportChung"], GetDuLieuDanhMuc);
 
+        // Biến điều khiển tiến trình + giới hạn retry (2026-09-17)
+        var _iImportRetry = 0;
+        var _timerImport = null;
+        var _bImportRunning = false;
+
+        function _showImportMsg(strNoiDung) {
+            $("#zoneImportMsg")
+                .attr("style", "display:block;margin:10px 0;padding:11px 14px;border-radius:6px;font-size:13.5px;background:#fef2f2;border:1px solid #fecaca;color:#991b1b")
+                .html('<i class="fa-solid fa-triangle-exclamation" style="margin-right:8px"></i>' + strNoiDung);
+        }
+
+        function _hideImportMsg() {
+            $("#zoneImportMsg").hide().html("");
+        }
+
+        function _startImportProgress() {
+            var dStart = new Date().getTime();
+            _bImportRunning = true;
+            $("#lblImportNote").html("");
+            $("#zoneImportChung_Result").html("");
+            $("#zoneImportProgress").show();
+            var fnTick = function () {
+                var iGiay = Math.floor((new Date().getTime() - dStart) / 1000);
+                var strPhut = ("0" + Math.floor(iGiay / 60)).slice(-2);
+                var strGiay = ("0" + (iGiay % 60)).slice(-2);
+                $("#lblImportProgress").html("Đang import — đã chạy " + strPhut + ":" + strGiay);
+            };
+            fnTick();
+            if (_timerImport) clearInterval(_timerImport);
+            _timerImport = setInterval(fnTick, 1000);
+        }
+
+        function _stopImportProgress() {
+            _bImportRunning = false;
+            if (_timerImport) { clearInterval(_timerImport); _timerImport = null; }
+            $("#lblImportNote").html("");
+            $("#zoneImportProgress").hide();
+        }
+
         function GetDuLieuDanhMuc(a, strPath) {
+            if (_bImportRunning) return;
+            // Callback của uploadImport chạy cả khi người dùng GỠ file (strPath rỗng) — khi đó
+            // chỉ dọn màn hình, không import và cũng không báo lỗi — 2026-09-17
+            if (strPath === undefined || strPath === null || strPath === "") {
+                _hideImportMsg();
+                $("#zoneImportChung_Result").html("");
+                return;
+            }
+            _hideImportMsg();
+            _iImportRetry = 0;
+            _startImportProgress();
             var obj_list = {
                 'action': 'SYS_Import/SImport',
                 'strPath': strPath,
@@ -7650,12 +7716,17 @@ systemroot.prototype = {
                 'lKeyVal': []
             };
             if (strMaDanhMuc === undefined || strMaDanhMuc === "") {
+                // Thiếu return ở đây khiến import bị gọi 2 lần (một lần tại đây, một lần trong
+                // success của request lấy danh mục bên dưới) — 2026-09-17
                 ImportData(obj_list);
+                return;
             }
             me.makeRequest({
                 success: function (data) {
+                    // lKeyVal khai báo ngoài if: nếu request danh mục trả Success=false thì trước đây
+                    // obj_list.lKeyVal = undefined — 2026-09-17
+                    var lKeyVal = [];
                     if (data.Success) {
-                        var lKeyVal = [];
                         for (var i = 0; i < data.Data.length; i++) {
                             if (edu.util.checkValue(data.Data[i].THONGTIN5)) {
                                 //obj_list[data.Data[i].MA] = eval(data.Data[i].THONGTIN5);
@@ -7668,6 +7739,9 @@ systemroot.prototype = {
 
                 },
                 error: function (er) {
+                    // Không tắt tiến trình ở đây thì thanh quay mãi khi bước lấy danh mục lỗi — 2026-09-17
+                    _stopImportProgress();
+                    _showImportMsg("Không lấy được cấu hình danh mục import. Vui lòng thử lại.");
                 },
                 type: 'GET',
                 action: 'CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM',
@@ -7689,6 +7763,7 @@ systemroot.prototype = {
 
             edu.system.makeRequest({
                 success: function (data) {
+                    _stopImportProgress();
                     if (data.Success) {
                         data = data.Data;
                         $("#myModalImportChung .tableError").remove();
@@ -7723,9 +7798,24 @@ systemroot.prototype = {
                             eval(sCallback);
                         }
                     }
+                    else {
+                        // Trước đây Success=false là im lặng hoàn toàn — 2026-09-17
+                        _showImportMsg("Import không thực hiện được: " + edu.util.returnEmpty(data.Message));
+                    }
                 },
                 error: function (er) {
-                    edu.system.alert(JSON.stringify(er), "w");
+                    // Trước đây đổ thẳng JSON.stringify(er) ra alert: người dùng không đọc được gì.
+                    // Nay thử lại tối đa 2 lần rồi báo bằng banner inline — 2026-09-17
+                    _iImportRetry++;
+                    if (_iImportRetry <= 2) {
+                        $("#lblImportNote").html('<i class="fa-solid fa-rotate-right" style="margin-right:6px"></i>Kết nối lỗi, đang thử lại lần ' + _iImportRetry + "/2...");
+                        setTimeout(function () {
+                            ImportData(obj_list);
+                        }, 1000);
+                        return;
+                    }
+                    _stopImportProgress();
+                    _showImportMsg("Import thất bại: không gọi được máy chủ sau 3 lần thử. Vui lòng kiểm tra lại file rồi thực hiện lại.");
                 },
                 type: 'POST',
                 action: obj_list.action,

@@ -103,10 +103,16 @@
              AdminLTE `_all-skins.min.css` (spec 20) và styles.css `.main-sidebar
              { background:#fff !important }` (spec 10). */
 
-      /* Wrapper nền dask-blue để lộ được góc bo top-left của content-wrapper */
+      /* [FIX mang navy ben phai] Truoc day body + .wrapper de nen #223771 (navy) chi de
+             lo goc bo top-left cua .content-wrapper. Nhung .content-wrapper la block, be ngang
+             chi bang viewport - sidebar => bat ky vung nao no khong phu (scroll ngang do bang
+             min-width 2000px, mep phai khi layout co dinh be ngang, vung duoi khi content ngan)
+             deu lo ra mang navy giua trang. Doi canvas ve light cung tone content-wrapper;
+             goc bo duoc ve lai bang pseudo-element ::before nam duoi nen (xem .content-wrapper). */
+      html,
       html body.skin-blue,
       html body.skin-blue .wrapper {
-        background-color: #223771 !important;
+        background-color: #f0f3fd !important;
       }
 
       /* Header top: logo (bên trái, chiếm width sidebar) + navbar (bên phải).
@@ -130,17 +136,19 @@
       html body.skin-blue .main-header .logo:hover {
         /* background-color: #1c2e5f !important; */
       }
+
       html body.skin-blue .main-header .logo:hover .logo-mini span,
       html body.skin-blue .main-header .logo:hover span {
         /* background-color: #1c2e5f !important; */
         color: #ffc107 !important;
       }
+
       html body.skin-blue .main-header .navbar .sidebar-toggle,
       html body.skin-blue .main-header .navbar .nav>li>a {
         color: #ffffff !important;
       }
 
-      
+
       html body.skin-blue .main-header .navbar .nav>li>a:hover,
       html body.skin-blue .main-header .navbar .nav>li>a:active,
       html body.skin-blue .main-header .navbar .nav>li>a:focus,
@@ -148,11 +156,13 @@
       html body.skin-blue .main-header .navbar .nav .open>a:hover,
       html body.skin-blue .main-header .navbar .nav .open>a:focus {
         background-color: rgba(255, 255, 255, 0.08) !important;
-        color: #ffc107  !important;
+        color: #ffc107 !important;
       }
-      html body.skin-blue .main-header .navbar .sidebar-toggle:hover{
-        color: #ffc107  !important;
+
+      html body.skin-blue .main-header .navbar .sidebar-toggle:hover {
+        color: #ffc107 !important;
       }
+
       html body.skin-blue .main-header li.user-header {
         background-color: #223771 !important;
       }
@@ -337,10 +347,68 @@
         line-height: 1 !important;
       }
 
-      /* Content wrapper: nền light-gray + bo góc top-left */
+      /* Content wrapper: nền light-gray, KHONG bo goc + KHONG mieng navy lot duoi nua
+             (goc bo cu de lo mot o navy 24x24 o goc trai tren -> user bao "con ti xanh xanh"). */
       html body.skin-blue .content-wrapper {
         background-color: #f0f3fd !important;
-        border-top-left-radius: 16px;
+        border-top-left-radius: 0 !important;
+        /* KHONG duoc dat position:relative o day! AdminLTE.min.css set z-index:800/820/840
+               cho .content-wrapper. Khi position:static thi z-index bi bo qua (inert), nhung
+               chi can them position:relative la z-index kich hoat => .content-wrapper tao
+               STACKING CONTEXT o muc 820. Moi .modal khai bao trong module (nam trong
+               #main-content-wrapper) bi nhot trong stacking context do, trong khi
+               .modal-backdrop duoc BS3 append thang vao <body> o z-index 1040 => backdrop
+               phu LEN modal: man hinh toi den, bam gi cung khong an. Ep z-index:auto de
+               khoa vinh vien loi nay ke ca khi rule khac set position. */
+        z-index: auto !important;
+        /* ROOT CAUSE be ngang thieu 348px: styles.css:3092 .skin-blue .content-wrapper
+               { overflow:hidden } -> element tao BFC (block formatting context), ma box tao BFC
+               thi TU CO LAI de ne float nam canh no. Do console: div bo rong 2116.67,
+               margin-left 300 => dang le width = 1816.67, nhung thuc te 1468.87
+               (= 2116.67 - 300 - 347.8 be ngang cua float). Moi rule width/max-width/margin
+               deu vo nghia vi day la co che layout chu khong phai thuoc tinh width.
+               Fix: bo BFC. Dung `clip` (KHONG tao BFC nhung van cat tran nhu hidden) de giu
+               nguyen hanh vi chong tran ngang cua cac module khac; `visible` la fallback cho
+               browser khong ho tro overflow:clip. */
+        overflow: visible !important;
+        overflow: clip !important;
+      }
+
+      /* [FULL WIDTH] Ep vung noi dung trai het be ngang con lai cua trang.
+             Audit CSS thuc te duoc nap (AdminLTE.min, _all-skins.min, styles.css,
+             styles-content.css, styles-responsive.css, index.min.css) KHONG co rule nao
+             set width/max-width cho .content-wrapper / #main-content-wrapper / .content /
+             .zone-bus / .box => thu bo be ngang nam o container NGOAI hon la .wrapper.
+             AdminLTE co .wrapper{max-width:1250px} (bien the layout-boxed) + overflow:hidden,
+             neu dinh phai bien the do thi toan bo shell bi bo lai va con lai la mang trong
+             ben phai. Dap ca chuoi tu .wrapper tro xuong cho chac. */
+      html body.skin-blue .wrapper,
+      html body.skin-blue .content-wrapper,
+      html body.skin-blue .content-wrapper>.content-header,
+      html body.skin-blue #main-content-wrapper,
+      html body.skin-blue #main-content-wrapper .content {
+        width: auto !important;
+        max-width: none !important;
+        min-width: 0 !important;
+        margin-right: 0 !important;
+        float: none !important;
+        box-sizing: border-box !important;
+      }
+
+      /* Div bo truc tiep cua .content-wrapper: console xac nhan da rong dung 2117 (= .wrapper),
+             nen KHONG phai thu bo be ngang — giu nguyen, khong reset gi them. Nguyen nhan that
+             su nam o overflow:hidden cua chinh .content-wrapper (xem rule ben tren). */
+
+      /* .wrapper con co margin:0 auto o bien the boxed -> ep sat trai, khong can giua */
+      html body.skin-blue .wrapper {
+        margin-left: 0 !important;
+        box-shadow: none !important;
+      }
+
+      /* Padding ngang gon lai de card sat mep phai, khong bo trong mot mang lon */
+      html body.skin-blue #main-content-wrapper .content {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
       }
 
       /* Breadcrumb "Bảng điều khiển / …" */
@@ -397,17 +465,18 @@
         display: flex !important;
         flex-wrap: wrap !important;
         align-items: center !important;
-        justify-content: space-between !important;
+        justify-content: flex-end !important;
         gap: 8px 12px !important;
         row-gap: 8px !important;
         width: 100% !important;
       }
+
       /* 2 child cua zone-pag-header/footer: auto-width, khong ep col-lg-6 (50%) */
-      html body.skin-blue [class*="zone-pag-"] > .col-lg-6,
-      html body.skin-blue [class*="zone-pag-"] > [class*="change-"],
-      html body.skin-blue [class*="zone-pag-"] > [class*="filter-"],
-      html body.skin-blue [class*="zone-pag-"] > [class*="info-"],
-      html body.skin-blue [class*="zone-pag-"] > [class*="light-pagination"] {
+      html body.skin-blue [class*="zone-pag-"]>.col-lg-6,
+      html body.skin-blue [class*="zone-pag-"]>[class*="change-"],
+      html body.skin-blue [class*="zone-pag-"]>[class*="filter-"],
+      html body.skin-blue [class*="zone-pag-"]>[class*="info-"],
+      html body.skin-blue [class*="zone-pag-"]>[class*="light-pagination"] {
         width: auto !important;
         min-width: 0 !important;
         max-width: 100% !important;
@@ -417,6 +486,7 @@
         padding-right: 0 !important;
         margin: 0 !important;
       }
+
       /* Dropdown "Hien thi" (aps-hienthi-input) — khoang cach voi nhan */
       html body.skin-blue [class*="change-"] .aps-hienthi,
       html body.skin-blue [class*="change-"] .aps-hienthi-input,
@@ -427,6 +497,7 @@
         vertical-align: middle !important;
         margin: 0 !important;
       }
+
       html body.skin-blue [class*="change-"] {
         display: inline-flex !important;
         align-items: center !important;
@@ -443,6 +514,21 @@
         align-items: center !important;
         line-height: 1 !important;
         padding: 4px 10px !important;
+      }
+
+      /* Badge chua co so lieu -> an han, tranh "cuc xanh" trong nam canh tieu de.
+         BS3 co san .badge:empty{display:none} nhung bi display:inline-flex !important
+         o tren de len, nen phai khai bao lai. */
+      html body.skin-blue .box-title .badge:empty,
+      html body.skin-blue .box-title .badge.bg-light-blue:empty {
+        display: none !important;
+      }
+
+      /* Truong hop badge boc 1 span con rong (<span class="badge"><span id="..."></span></span>):
+         badge KHONG match :empty vi con text node xuong dong -> dung :has().
+         Tach rule rieng de browser khong ho tro :has() van giu duoc rule :empty o tren. */
+      html body.skin-blue .box-title .badge:has(> span:only-child:empty) {
+        display: none !important;
       }
 
       /* Chan wrap: simplePagination render <ul><li> mac dinh display:inline-block ->
@@ -462,6 +548,7 @@
         overflow-x: auto !important;
         max-width: 100% !important;
       }
+
       html body.skin-blue .compact-theme ul {
         display: flex !important;
         flex-wrap: nowrap !important;
@@ -471,7 +558,9 @@
         margin: 0 !important;
         overflow-x: hidden !important;
         max-width: 100% !important;
+        overflow: hidden;
       }
+
       html body.skin-blue .simple-pagination li,
       html body.skin-blue .light-theme li,
       html body.skin-blue .compact-theme li {
@@ -490,7 +579,7 @@
         background-image: none !important;
         color: #223771 !important;
         border: 1px solid #e2e8f0 !important;
-        border-radius: 6px !important;
+        border-radius: 4px !important;
         box-shadow: none !important;
         font-weight: 600 !important;
         min-width: 32px !important;
@@ -511,11 +600,12 @@
       html body.skin-blue .simple-pagination .current,
       html body.skin-blue .light-theme .current,
       html body.skin-blue .compact-theme .current {
-        background: #223771 !important;
+        background: #f1f5f9 !important;
         background-image: none !important;
-        color: #ffffff !important;
-        border-color: #223771 !important;
+        color: #222 !important;
+        border-color: #f1f5f9 !important;
         cursor: default !important;
+        border-radius: 4px ! IMPORTANT;
       }
 
       html body.skin-blue .simple-pagination .ellipse,
@@ -600,7 +690,7 @@
       /* Form inputs — vien nhat khop tone, focus dask-blue subtle (khong cam gao) */
       html body.skin-blue #main-content-wrapper .form-control {
         border: 1px solid #d1d1d1 !important;
-        border-radius: 8px !important;
+        border-radius: 6px !important;
         box-shadow: none !important;
         color: #888 !important;
         font-size: 14px !important;
@@ -632,16 +722,16 @@
 
       /* ═══ Select2 xin: flex center + border-radius + focus ring ═══ */
       .select2-container .select2-selection--single {
-        height: 38px !important;
-        min-height: 38px !important;
-        border: 1px solid #c1c1c1 !important;
-        border-radius: 8px !important;
-        background: #ffffff !important;
-        display: flex !important;
-        align-items: center !important;
-        padding: 0 !important;
-        transition: border-color .15s ease, box-shadow .15s ease !important;
-        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+        height: 38px;
+        min-height: 38px;
+        border: 1px solid #c1c1c1;
+        border-radius: 8px;
+        background: #ffffff;
+        display: flex;
+        align-items: center;
+        padding: 0;
+        transition: border-color .15s ease, box-shadow .15s ease;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
       }
 
       html body.skin-blue #main-content-wrapper .select2-container--focus .select2-selection--single,
@@ -655,8 +745,8 @@
       }
 
       html body.skin-blue #main-content-wrapper .select2-container--default .select2-selection--single .select2-selection__rendered {
-        line-height: 1 !important;
-        padding: 0 32px 0 12px !important;
+        line-height: 26px !important;
+        padding: 8px 15px 8px 6px !important;
         color: #0f172a !important;
         font-size: 14px !important;
         font-weight: 400;
@@ -676,7 +766,7 @@
 
       html body.skin-blue #main-content-wrapper .select2-container--default .select2-selection--single .select2-selection__arrow {
         height: 100% !important;
-        top: 0 !important;
+        top: 2px !important;
         right: 8px !important;
         width: 20px !important;
         display: flex !important;
@@ -772,7 +862,8 @@
         padding: 8px 12px !important;
         box-shadow: none !important;
         display: inline-flex;
-    gap: 8px;
+        align-items: center;
+        gap: 8px;
       }
 
       html body.skin-blue #main-content-wrapper .btn.btn-default {
@@ -1084,13 +1175,13 @@
         background: #223771 !important;
         color: #ffffff !important;
         border-bottom: 0 !important;
-        padding: 12px 55px !important;
+        padding: 15px 20px 10px 20px !important;
         min-height: 52px !important;
         border-top-left-radius: 12px !important;
         border-top-right-radius: 12px !important;
         display: flex !important;
         align-items: center !important;
-        justify-content: center !important;
+        justify-content: flex-start !important;
         position: relative !important;
       }
 
@@ -1232,6 +1323,7 @@
 
       html body.skin-blue .modal .modal-footer .pull-right {
         float: right !important;
+        gap: 0 !important;
       }
 
       html body.skin-blue #myModalAlert .modal-footer {
@@ -1323,7 +1415,7 @@
       }
 
       html body.skin-blue #main-content-wrapper .box-header .btnClose::after {
-        content: "Đóng";
+        content: "";
         color: #ffffff !important;
         font-size: 13px;
         font-weight: 600;
@@ -1795,10 +1887,8 @@
     <!-- <script type="text/javascript" src="Scripts/MathJax/MathJax.js"></script> -->
     <!--  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML" -->
 
-    <script src="<%= Apis.CommonV1.Base.AppSetting.GetString(" RootPathUpload")
-      %>/Core/uploadfile.js ? v = 1.0.0.12"></script><!--CORE JS-->
-    <script src="<%= Apis.CommonV1.Base.AppSetting.GetString(" RootPathUpload")
-      %>/ Core / uploadavatar.js ? v = 1.0.0.12"></script><!--CORE JS-->
+    <script src="<%= Apis.CommonV1.Base.AppSetting.GetString("RootPathUpload")%>/Core/uploadfile.js?v=1.0.0.12"></script><!--CORE JS-->
+    <script src="<%= Apis.CommonV1.Base.AppSetting.GetString("RootPathUpload")%>/Core/uploadavatar.js?v=1.0.0.12"></script><!--CORE JS-->
 
     <script type="text/javascript" src="Corei/constant.js?v=<%= Guid.NewGuid().ToString() %>"></script> <!--CORE JS-->
     <script type="text/javascript" src="Corei/systemroot.js?v=<%= Guid.NewGuid().ToString() %>"></script> <!--CORE JS-->
@@ -1809,69 +1899,69 @@
     <script type="text/javascript" src="App_Themes/Cms/Custom_V1/customs.js"></script><!-- custom -->
 
     <script type="text/javascript">
-      /* FIX 2026-09-05: SMART SELECT-ALL cho MOI bang phan trang server-side.
-         Van de: ~150 file JS co handler #chkSelectAll_XXX chi tick 10 dong visible;
-         voi bang co 24 / 800 / 29K dong (nhieu trang) user phai bam tung trang.
-         Giai phap: Bind delegated GLOBAL cho MOI checkbox id^="chkSelectAll_" trong
-         <thead> — sau khi handler goc chay xong, phat hien tong > visible thi hoi
-         user co muon TAI VA CHON HET, force pageSize=100000, reload, auto-tick het.
-         Chay o document level nen chan MOI cai click bat ke bind sau khi trang load. */
-      (function () {
-        if (typeof jQuery === 'undefined') return;
-        var $ = jQuery;
-        $(document).off('click.smartSelectAll')
-          .on('click.smartSelectAll',
+        /* FIX 2026-09-05: SMART SELECT-ALL cho MOI bang phan trang server-side.
+           Van de: ~150 file JS co handler #chkSelectAll_XXX chi tick 10 dong visible;
+           voi bang co 24 / 800 / 29K dong (nhieu trang) user phai bam tung trang.
+           Giai phap: Bind delegated GLOBAL cho MOI checkbox id^="chkSelectAll_" trong
+           <thead> — sau khi handler goc chay xong, phat hien tong > visible thi hoi
+           user co muon TAI VA CHON HET, force pageSize=100000, reload, auto-tick het.
+           Chay o document level nen chan MOI cai click bat ke bind sau khi trang load. */
+        (function () {
+          if (typeof jQuery === 'undefined') return;
+          var $ = jQuery;
+          $(document).off('click.smartSelectAll')
+            .on('click.smartSelectAll',
               'thead input[type=checkbox][id^="chkSelectAll_"]', function () {
-            var $ck = $(this);
-            if (!$ck.is(':checked')) return; // bo tick -> khong lam gi
-            var $tbl = $ck.closest('table');
-            var tblId = $tbl.attr('id');
-            if (!tblId) return;
-            // Parse tong dong tu label ".info-{tblId}" render boi systemroot pagination
-            var $info = $('.info-' + tblId);
-            var infoText = ($info.text() || '').trim();
-            var m = infoText.match(/(\d+)\s*d[ữu]\s*li[ệe]u/i);
-            var totalRows = m ? parseInt(m[1], 10) : 0;
-            var visibleRows = $tbl.find('tbody input:checkbox').length;
-            if (!totalRows || totalRows <= visibleRows) return; // ok da du -> skip
-            // Delay 10ms de handler goc (checkedAll_BgRow) chay xong roi moi hoi
-            setTimeout(function () {
-              var msg = 'Trang hiện chỉ hiển thị ' + visibleRows + '/' + totalRows +
-                ' dòng.\n\nBạn có muốn TẢI VÀ CHỌN HẾT ' + totalRows +
-                ' dòng không? (có thể mất vài giây)';
-              if (!confirm(msg)) return; // user cancel -> giu 10 dong visible
-              // Force pageSize = 100000 va trigger reload qua dropdown change
-              var $ddl = $('[id$=dropPageSizechange' + tblId + ']');
-              if (!$ddl.length) $ddl = $('#dropPageSizechange' + tblId);
-              if ($ddl.length) {
-                if ($ddl.find('option[value="100000"]').length === 0) {
-                  $ddl.append('<option value="100000">Tất cả</option>');
-                }
-                if (typeof edu !== 'undefined' && edu.system) {
-                  edu.system.pageSize_default = 100000;
-                  edu.system.pageIndex_default = 1;
-                }
-                $ddl.val('100000').trigger('change');
-              }
-              // Poll cho toi khi bang co so dong moi (> old + 2 de tranh false trigger)
-              var tries = 0;
-              var oldCount = visibleRows;
-              var timer = setInterval(function () {
-                tries++;
-                var nowCount = $tbl.find('tbody input:checkbox').length;
-                if (nowCount > oldCount + 2 || tries > 120) {
-                  clearInterval(timer);
-                  setTimeout(function () {
-                    $tbl.find('tbody input:checkbox')
-                      .prop('checked', true).attr('checked', true);
-                    $tbl.find('tbody tr').addClass('active');
-                    $ck.prop('checked', true);
-                  }, 150);
-                }
-              }, 250);
-            }, 10);
-          });
-      })();
+                var $ck = $(this);
+                if (!$ck.is(':checked')) return; // bo tick -> khong lam gi
+                var $tbl = $ck.closest('table');
+                var tblId = $tbl.attr('id');
+                if (!tblId) return;
+                // Parse tong dong tu label ".info-{tblId}" render boi systemroot pagination
+                var $info = $('.info-' + tblId);
+                var infoText = ($info.text() || '').trim();
+                var m = infoText.match(/(\d+)\s*d[ữu]\s*li[ệe]u/i);
+                var totalRows = m ? parseInt(m[1], 10) : 0;
+                var visibleRows = $tbl.find('tbody input:checkbox').length;
+                if (!totalRows || totalRows <= visibleRows) return; // ok da du -> skip
+                // Delay 10ms de handler goc (checkedAll_BgRow) chay xong roi moi hoi
+                setTimeout(function () {
+                  var msg = 'Trang hiện chỉ hiển thị ' + visibleRows + '/' + totalRows +
+                    ' dòng.\n\nBạn có muốn TẢI VÀ CHỌN HẾT ' + totalRows +
+                    ' dòng không? (có thể mất vài giây)';
+                  if (!confirm(msg)) return; // user cancel -> giu 10 dong visible
+                  // Force pageSize = 100000 va trigger reload qua dropdown change
+                  var $ddl = $('[id$=dropPageSizechange' + tblId + ']');
+                  if (!$ddl.length) $ddl = $('#dropPageSizechange' + tblId);
+                  if ($ddl.length) {
+                    if ($ddl.find('option[value="100000"]').length === 0) {
+                      $ddl.append('<option value="100000">Tất cả</option>');
+                    }
+                    if (typeof edu !== 'undefined' && edu.system) {
+                      edu.system.pageSize_default = 100000;
+                      edu.system.pageIndex_default = 1;
+                    }
+                    $ddl.val('100000').trigger('change');
+                  }
+                  // Poll cho toi khi bang co so dong moi (> old + 2 de tranh false trigger)
+                  var tries = 0;
+                  var oldCount = visibleRows;
+                  var timer = setInterval(function () {
+                    tries++;
+                    var nowCount = $tbl.find('tbody input:checkbox').length;
+                    if (nowCount > oldCount + 2 || tries > 120) {
+                      clearInterval(timer);
+                      setTimeout(function () {
+                        $tbl.find('tbody input:checkbox')
+                          .prop('checked', true).attr('checked', true);
+                        $tbl.find('tbody tr').addClass('active');
+                        $ck.prop('checked', true);
+                      }, 150);
+                    }
+                  }, 250);
+                }, 10);
+              });
+        })();
     </script>
 
     <script type="text/javascript">
@@ -1941,8 +2031,8 @@
           // - ep transparent trong scope sidebar de khong bi nen trang chen ngang.
           'html body.skin-blue .main-sidebar .menu-open, html body.skin-blue #menu_vertical .menu-open, html body.skin-blue #menu_vertical li { background: transparent !important; background-color: transparent !important; }',
           'html body.skin-blue #menu_vertical .treeview-menu, html body.skin-blue .sidebar-menu .treeview-menu { background:#1a2b5c !important; background-color:#1a2b5c !important; border-radius: 0 !important; margin: 2px 0 4px 0px !important; padding: 2px 0 2px 6px !important; border-left: 1px solid rgba(210,221,253,0.18) !important; box-shadow: none !important; }',
-          'html body.skin-blue #menu_vertical .treeview-menu > li > a, html body.skin-blue .sidebar-menu .treeview-menu > li > a { color: #ffffff !important; font-weight: 500 !important; background: transparent !important; background-image: none !important; border-left: 0 !important; }',
-          'html body.skin-blue #menu_vertical .treeview-menu > li.active > a, html body.skin-blue #menu_vertical .treeview-menu > li.menu-open > a, html body.skin-blue #menu_vertical .treeview-menu > li > a:hover, html body.skin-blue .sidebar-menu .treeview-menu > li.active > a, html body.skin-blue .sidebar-menu .treeview-menu > li.menu-open > a, html body.skin-blue .sidebar-menu .treeview-menu > li > a:hover, html body.skin-blue .sidebar-menu .treeview-menu > li.active, html body.skin-blue .sidebar-menu .treeview-menu > li.menu-open, html body.skin-blue #menu_vertical .treeview-menu > li.active, html body.skin-blue #menu_vertical .treeview-menu > li.menu-open { color: #f8843d !important; background: transparent !important; background-color: transparent !important; border-color: transparent !important; outline: none !important; box-shadow: none !important; border-radius: 0 !important; }',
+          'html body.skin-blue #menu_vertical .treeview-menu > li > a, html body.skin-blue .sidebar-menu .treeview-menu > li > a { color: #ffffff; font-weight: 500 !important; background: transparent !important; background-image: none !important; border-left: 1px solid rgba(210, 221, 253, 0.4) !important; }',
+          'html body.skin-blue #menu_vertical .treeview-menu > li.active > a, html body.skin-blue #menu_vertical .treeview-menu > li.menu-open > a, html body.skin-blue #menu_vertical .treeview-menu > li > a:hover, html body.skin-blue .sidebar-menu .treeview-menu > li.active > a, html body.skin-blue .sidebar-menu .treeview-menu > li.menu-open > a, html body.skin-blue .sidebar-menu .treeview-menu > li > a:hover, html body.skin-blue .sidebar-menu .treeview-menu > li.active, html body.skin-blue .sidebar-menu .treeview-menu > li.menu-open, html body.skin-blue #menu_vertical .treeview-menu > li.active, html body.skin-blue #menu_vertical .treeview-menu > li.menu-open { color: #f8843d !important; background: transparent !important; background-color: transparent !important; border-left: 1px solid rgba(210, 221, 253, 0.4) !important; outline: none !important; box-shadow: none !important; border-radius: 0 !important; }',
           'html body.skin-blue #menu_vertical .treeview-menu > li > a::before, html body.skin-blue #menu_vertical .treeview-menu > li > a::after { background-color: rgba(210,221,253,0.4) !important; }',
           'html body.skin-blue #menu_vertical .treeview-menu > li.active > a::before, html body.skin-blue #menu_vertical .treeview-menu > li.active > a::after, html body.skin-blue #menu_vertical .treeview-menu > li.menu-open > a::before, html body.skin-blue #menu_vertical .treeview-menu > li.menu-open > a::after, html body.skin-blue #menu_vertical .treeview-menu > li > a:hover::before, html body.skin-blue #menu_vertical .treeview-menu > li > a:hover::after { background-color: #f8843d !important; }'
         ].join('\n');
@@ -1983,7 +2073,7 @@
         var SUB_DEFAULT = {
           'background': 'transparent',
           'background-image': 'none',
-          'color': '#ffffff',
+          // 'color': '#ffffff',
           'font-weight': '500'
         };
         // Container submenu: trong suốt, phân cấp bằng border-left mỏng
@@ -1993,9 +2083,13 @@
           'background-color': '#1a2b5c !important',
           'background-image': 'none',
           'border-radius': '0',
-          'border-left': '1px solid rgba(210, 221, 253, 0.18)',
-          'margin': '2px 0 4px 0px',
-          'padding': '2px 0 2px 6px'
+          // 'border-left': '1px solid rgba(210, 221, 253, 0.18)',
+          'border-left': '0',
+          // 'margin': '2px 0 4px 0px',
+          'margin': ' 0px',
+          // 'padding': '2px 0 2px 6px',
+          'padding': '0',
+
         };
 
         function setStyle(el, obj) {

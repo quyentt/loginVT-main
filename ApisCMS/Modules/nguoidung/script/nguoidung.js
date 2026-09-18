@@ -9,11 +9,15 @@
 function NguoiDung() { }
 NguoiDung.prototype = {
     arrValid_NguoiDung: [],
+    arrValid_NguoiDung_Edit: [],
     dtNguoiDung: '',
     strNguoiDung_Id: '',
     iNguoiDung_PhanLoai: '',
     dtUser: '',
     strLoaiDoiTuong: 'CANBO',
+    //--[5] Cap nhat tai khoan
+    objNguoiDung_Current: null,     //ban ghi dang xem chi tiet (cache tu danh sach)
+    dtDonVi: [],                    //NS_CoCauToChuc/LayDanhSach
 
     init: function () {
         var me = this;
@@ -44,15 +48,25 @@ NguoiDung.prototype = {
             { "MA": "txtNguoiDung_MatKhau", "THONGTIN1": "EM" },
             { "MA": "txtNguoiDung_Email", "THONGTIN1": "EM" }
         ];
+        me.arrValid_NguoiDung_Edit = [
+            { "MA": "txtEditND_TaiKhoan", "THONGTIN1": "EM" },
+            { "MA": "txtEditND_TenDayDu", "THONGTIN1": "EM" }
+        ];
         me.getList_NguoiDung();
+        me.getList_DonVi();
         //edu.system.loadToCombo_DanhMucDuLieuDuLieu("QLTC.LOVT", "dropVaiTro_Loai", "Chọn loại vai trò");
         /*------------------------------------------
         --Discription: [0] Action common
         --Order: 
         -------------------------------------------*/
         $(".btnClose").click(function () {
+            //--Dong form Sua thi quay ve man Chi tiet, khong nhay ve danh sach
+            if ($(this).closest("#zone_bus_edit").length > 0) {
+                me.toggle_detail();
+                return;
+            }
             me.toggle_list();
-        }); 
+        });
         $(".btnAddnew").click(function () {
             me.toggle_input();
             $("#txtNguoiDung_Ho").focus();
@@ -88,7 +102,11 @@ NguoiDung.prototype = {
                 me.toggle_detail();
                 me.strNguoiDung_Id = strId;
                 edu.util.setOne_BgRow(strId, "tblNguoiDung");
-                me.getDetail_NguoiDung(strId, me.viewForm_NguoiDung);
+                me.getDetail_NguoiDung(strId, function (data) {
+                    //--giu lai ban ghi goc de form Cap nhat lay du lieu (ke ca cac cot khong hien thi)
+                    me.objNguoiDung_Current = (data && data.length > 0) ? data[0] : null;
+                    me.viewForm_NguoiDung(data);
+                });
             }
             else {
                 edu.system.alert(edu.constant.getting("NOTIFY", "SELECT_F"));
@@ -278,6 +296,24 @@ NguoiDung.prototype = {
                 me.save_KeThua(arrChecked_Id[i]);
             }
         });
+        /*------------------------------------------
+        --Discription: [5] Action Cap nhat thong tin tai khoan
+        -------------------------------------------*/
+        $("#btnEdit_NguoiDung").click(function () {
+            if (!edu.util.checkValue(me.strNguoiDung_Id) || !me.objNguoiDung_Current) {
+                edu.system.alert(edu.constant.getting("NOTIFY", "SELECT_F"));
+                return;
+            }
+            me.toggle_edit();
+            me.viewForm_Edit_NguoiDung(me.objNguoiDung_Current);
+            $("#txtEditND_TenDayDu").focus();
+        });
+        $("#btnUpdate_NguoiDung").click(function () {
+            var valid = edu.util.validInputForm(me.arrValid_NguoiDung_Edit);
+            if (valid) {
+                me.update_NguoiDung();
+            }
+        });
     },
     /*----------------------------------------------
     --Discription: function common
@@ -315,6 +351,9 @@ NguoiDung.prototype = {
     },
     toggle_initial_SV: function () {
         edu.util.toggle_overide("zone-bus-nd", "zone_bus_initial_SV");
+    },
+    toggle_edit: function () {
+        edu.util.toggle_overide("zone-bus-nd", "zone_bus_edit");
     },
     /*----------------------------------------------
     --Discription: [1] Acces DB NguoiDung
@@ -670,8 +709,9 @@ NguoiDung.prototype = {
     },
     viewForm_NguoiDung: function (data) {
         var me = this;
+        if (!data || data.length == 0) return;
         //view data
-        edu.util.viewHTMLById("lblNguoiDung_HoTen", data[0].TENDAYDU.toUpperCase());
+        edu.util.viewHTMLById("lblNguoiDung_HoTen", edu.util.returnEmpty(data[0].TENDAYDU).toUpperCase());
         edu.util.viewHTMLById("lblNguoiDung_TaiKhoan", data[0].TAIKHOAN);
         edu.util.viewHTMLById("lblNguoiDung_DienThoai", data[0].SODIENTHOAI);
         edu.util.viewHTMLById("lblNguoiDung_Email", data[0].EMAIL);
@@ -1325,6 +1365,176 @@ NguoiDung.prototype = {
                 });
             },
             contentType: true,
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
+
+    /*----------------------------------------------
+    --Discription: [5] Cap nhat thong tin tai khoan
+    --API: pkg_chung_quanlynguoidung.CapNhatThongTinTaiKhoan
+    ----------------------------------------------*/
+    /*--Lay gia tri dau tien ton tai trong ban ghi theo danh sach ten cot uu tien
+      (LayDanhSachNguoiDung khong dong nhat ten cot giua cac ban trien khai)--*/
+    pickField_NguoiDung: function (objData, arrKey) {
+        if (!objData) return "";
+        for (var i = 0; i < arrKey.length; i++) {
+            if (objData[arrKey[i]] !== undefined && objData[arrKey[i]] !== null) {
+                return objData[arrKey[i]];
+            }
+        }
+        return "";
+    },
+    getList_DonVi: function () {
+        var me = this;
+        //--Edit
+        var obj_list = {
+            'action': 'NS_CoCauToChuc/LayDanhSach',
+            'dTrangThai': 1,
+            'strLoaiCoCauToChuc_Id': '',
+            'strCoCauToChucCha_Id': ''
+        };
+        //
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    me.dtDonVi = edu.util.checkValue(data.Data) ? data.Data : [];
+                    me.loadToCombo_DonVi(me.dtDonVi);
+                }
+                else {
+                    edu.system.alert("NS_CoCauToChuc/LayDanhSach: " + data.Message, "w");
+                }
+            },
+            error: function (er) {
+                edu.system.alert("NS_CoCauToChuc/LayDanhSach (er): " + JSON.stringify(er), "w");
+            },
+            type: 'GET',
+            action: obj_list.action,
+
+            contentType: true,
+
+            data: obj_list,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
+    loadToCombo_DonVi: function (data) {
+        var obj = {
+            data: data,
+            renderInfor: {
+                id: "ID",
+                parentId: "",
+                name: "TEN",
+                code: "MA",
+                avatar: ""
+            },
+            renderPlace: ["dropEditND_DonVi"],
+            type: "",
+            title: "Chọn đơn vị",
+        };
+        edu.system.loadToCombo_data(obj);
+    },
+    viewForm_Edit_NguoiDung: function (objData) {
+        var me = this;
+        if (!objData) return;
+
+        var strTaiKhoan = edu.util.returnEmpty(objData.TAIKHOAN);
+        var strTenDayDu = edu.util.returnEmpty(objData.TENDAYDU);
+        //--Cac cot khong hien thi o man chi tiet: do ten cot co the khac nhau nen lay theo thu tu uu tien
+        var strDonVi_Id = me.pickField_NguoiDung(objData, ["CHUNG_DONVI_ID", "DONVI_ID", "DAOTAO_COCAUTOCHUC_ID"]);
+        var strDiaChi = me.pickField_NguoiDung(objData, ["DIACHI"]);
+        var strQuyDinh_Id = me.pickField_NguoiDung(objData, ["CHUNG_QUYDINHDOIMATKHAU_ID", "QUYDINHDOIMATKHAU_ID"]);
+        var iTrangThai = me.pickField_NguoiDung(objData, ["TRANGTHAI"]);
+        var iThoiHan = me.pickField_NguoiDung(objData, ["THOIHANPHAIDOIMATKHAU", "THOIHANDOIMATKHAU"]);
+        //--Khong co DONVI_ID thi do nguoc tu ten don vi sang ID trong danh muc co cau to chuc
+        if (!edu.util.checkValue(strDonVi_Id) && edu.util.checkValue(objData.TENDONVI)) {
+            for (var i = 0; i < me.dtDonVi.length; i++) {
+                if (me.dtDonVi[i].TEN == objData.TENDONVI) {
+                    strDonVi_Id = me.dtDonVi[i].ID;
+                    break;
+                }
+            }
+        }
+
+        edu.util.viewHTMLById("lblEditND_TieuDe", strTenDayDu + " (" + strTaiKhoan + ")");
+        edu.util.viewValById("hidEditND_Id", edu.util.returnEmpty(objData.ID));
+        edu.util.viewValById("hidEditND_HinhDaiDien", edu.util.returnEmpty(objData.HINHDAIDIEN));
+        edu.util.viewValById("hidEditND_QuyDinhDoiMatKhauId", strQuyDinh_Id);
+        edu.util.viewValById("txtEditND_TaiKhoan", strTaiKhoan);
+        edu.util.viewValById("txtEditND_TenDayDu", strTenDayDu);
+        edu.util.viewValById("txtEditND_Email", edu.util.returnEmpty(objData.EMAIL));
+        edu.util.viewValById("txtEditND_DienThoai", edu.util.returnEmpty(objData.SODIENTHOAI));
+        edu.util.viewValById("txtEditND_DiaChi", strDiaChi);
+        edu.util.viewValById("txtEditND_ThoiHanDoiMatKhau", iThoiHan);
+        edu.util.viewValById("dropEditND_TrangThai", edu.util.checkValue(iTrangThai) ? iTrangThai : 1);
+        edu.util.viewValById("dropEditND_DonVi", strDonVi_Id);
+        $("#imgEditND_Avatar").attr("src", edu.system.getRootPathImg(objData.HINHDAIDIEN));
+    },
+    update_NguoiDung: function () {
+        var me = this;
+        var strId = edu.util.getValById("hidEditND_Id");
+        if (!edu.util.checkValue(strId)) {
+            edu.system.alert(edu.constant.getting("NOTIFY", "SELECT_F"));
+            return;
+        }
+        //--QuanLyNguoiDung_MHEntity khai bao dTrangThai/dThoiHanDoiMatKhau la System.Double
+        //  KHONG nullable => gui null se loi "Error converting value {null} to type 'System.Double'"
+        //  ngay o buoc deserialize (HTTP 500). Rong thi phai gui so 0.
+        var iTrangThai = parseInt(edu.util.getValById("dropEditND_TrangThai"), 10);
+        var iThoiHan = parseInt(edu.util.getValById("txtEditND_ThoiHanDoiMatKhau"), 10);
+        if (isNaN(iTrangThai)) iTrangThai = 1;
+        if (isNaN(iThoiHan)) iThoiHan = 0;
+        //--Edit
+        var obj_save = {
+            'action': 'CMS_QuanLyNguoiDung_MH/AiAxDykgNRUpLi8mFSgvFSAoCikuIC8P',
+            'func': 'pkg_chung_quanlynguoidung.CapNhatThongTinTaiKhoan',
+            'iM': edu.system.iM,
+
+            'strId': strId,
+            'strTaiKhoan': edu.util.getValById("txtEditND_TaiKhoan"),
+            'strTenDayDu': edu.util.getValById("txtEditND_TenDayDu"),
+            'strDonViId': edu.util.getValById("dropEditND_DonVi"),
+            'dTrangThai': iTrangThai,
+            'strEmail': edu.util.getValById("txtEditND_Email"),
+            'dThoiHanDoiMatKhau': iThoiHan,
+            'strQuyDinhDoiMatKhauId': edu.util.getValById("hidEditND_QuyDinhDoiMatKhauId"),
+            'strDiaChi': edu.util.getValById("txtEditND_DiaChi"),
+            'strSoDienThoai': edu.util.getValById("txtEditND_DienThoai"),
+            'strHinhDaiDien': edu.util.getValById("hidEditND_HinhDaiDien"),
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        //default
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    edu.system.alert("Cập nhật thành công!", "s");
+                    //--Cap nhat lai ban ghi dang giu de man Chi tiet hien ngay gia tri moi
+                    if (me.objNguoiDung_Current) {
+                        me.objNguoiDung_Current.TAIKHOAN = obj_save.strTaiKhoan;
+                        me.objNguoiDung_Current.TENDAYDU = obj_save.strTenDayDu;
+                        me.objNguoiDung_Current.EMAIL = obj_save.strEmail;
+                        me.objNguoiDung_Current.SODIENTHOAI = obj_save.strSoDienThoai;
+                        me.objNguoiDung_Current.THOIHANPHAIDOIMATKHAU = obj_save.dThoiHanDoiMatKhau;
+                        me.objNguoiDung_Current.TENDONVI = $("#dropEditND_DonVi option:selected").text();
+                        me.viewForm_NguoiDung([me.objNguoiDung_Current]);
+                    }
+                    //--Nap lai danh sach de cache (me.dtNguoiDung) dong bo voi DB
+                    me.getList_NguoiDung();
+                    me.toggle_detail();
+                }
+                else {
+                    edu.system.alert(obj_save.func + ": " + data.Message, "w");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_save.func + " (er): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            action: obj_save.action,
+
+            contentType: true,
+
             data: obj_save,
             fakedb: [
             ]

@@ -141,10 +141,17 @@ PhanQuyenDiemLQL.prototype = {
             }
         });
 
-        $(".btnClose").click(function () {
+        //Các nút trong trang đều là <a href="#">. Click mà không chặn default sẽ ghi hash về "#",
+        //router hashchange trong index.aspx thấy hash rỗng -> reset về #dashboard (bật ra màn hình chính).
+        $("#zonebatdau, #zoneEdit").on("click", 'a[href="#"]', function (e) {
+            e.preventDefault();
+        });
+        $(".btnClose").click(function (e) {
+            e.preventDefault();
             me.toggle_form();
         });
-        $(".btnAdd").click(function () {
+        $(".btnAdd").click(function (e) {
+            e.preventDefault();
             me.toggle_edit();
         });
 
@@ -975,7 +982,11 @@ PhanQuyenDiemLQL.prototype = {
         console.log(jsonForm.colPos.center)
         edu.system.loadToTable_data(jsonForm);
         data.forEach(e => me.getList_KetQua_BangDuLieu(e));
-        edu.system.actionRowSpan(jsonForm.strTable_Id, [1, 2]);
+        //Chỉ gộp dòng khi bảng thực sự có từ 2 dòng dữ liệu trở lên.
+        //Bảng rỗng (hoặc chỉ có dòng "Không tìm thấy dữ liệu!") sẽ làm rowSpanSimple đọc rows[0].cells -> undefined
+        if ($("#" + jsonForm.strTable_Id + " tbody tr").length > 1) {
+            edu.system.actionRowSpan(jsonForm.strTable_Id, [1, 2]);
+        }
     },
 
     getList_KetQua_BangDuLieu: function (aData) {

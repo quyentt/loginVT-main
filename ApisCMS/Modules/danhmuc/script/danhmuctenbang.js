@@ -65,11 +65,13 @@ DanhMucTenBang.prototype = {
         });
         $("#btnDelete_DMTB").click(function (e) {
             e.preventDefault();
+            var arrChecked_Id = edu.util.getArrCheckedIds("tbldata_DMTB", "chkSelectAll_DMTB");
             var selected_id = edu.util.getCheckedIds(me.objHTML_DMTB);
             if (edu.util.checkValue(selected_id)) {
                 edu.system.confirm("Bạn có chắc chắn muốn xóa dữ liệu?");
                 $("#btnYes").click(function (e) {
-                    me.delete_DMTB(selected_id);
+                    arrChecked_Id.forEach(e => me.delete_DMTB(e))
+                    //me.delete_DMTB(selected_id);
                 });
                 return false;
             }

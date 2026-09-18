@@ -273,6 +273,15 @@ LopHocPhan.prototype = {
             arrChecked_Id.forEach(e => me.saveTaoDanhSachNhapDiem(e));
 
         });
+        $("#btnHuyTaoDSNhapDiem").click(function () {
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblLopHocPhan", "checkX");
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng chọn đối tượng?");
+                return;
+            }
+            arrChecked_Id.forEach(e => me.saveHuyTaoDanhSachNhapDiem(e));
+
+        });
     },
     toggle_form: function () {
         edu.util.toggle_overide("zone-bus", "zonebatdau");
@@ -1715,6 +1724,39 @@ LopHocPhan.prototype = {
         var obj_save = {
             'action': 'D_PhanQuyen_MH/FSAuBTQNKCQ0DykgMQUoJCwP',
             'func': 'pkg_diem_phanquyen.TaoDuLieuNhapDiem',
+            'iM': edu.system.iM,
+            'strDaoTao_LopHocPhan_Id': strDaoTao_LopHocPhan_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+
+        edu.system.makeRequest({
+            success: function (data) {
+
+                if (data.Success) {
+                    edu.system.alert("Thực hiện thành công", "s");
+                } else {
+                    edu.system.alert("Thất bại:" + data.Message, "w");
+                }
+            },
+            error: function (er) {
+
+                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: "POST",
+            action: obj_save.action,
+
+            contentType: true,
+
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
+    saveHuyTaoDanhSachNhapDiem: function (strDaoTao_LopHocPhan_Id) {
+        var me = this;
+        var obj_save = {
+            'action': 'D_PhanQuyen_MH/FSAuBTQNKCQ0DykgMQUoJCwP',
+            'func': 'PKG_DIEM_PHANQUYEN.HuyTaoDuLieuNhapDiem',
             'iM': edu.system.iM,
             'strDaoTao_LopHocPhan_Id': strDaoTao_LopHocPhan_Id,
             'strNguoiThucHien_Id': edu.system.userId,
