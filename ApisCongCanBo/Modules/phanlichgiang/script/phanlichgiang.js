@@ -371,7 +371,8 @@ PhanLichGiang.prototype = {
         var me = this;
         edu.util.toggle_overide("zonecontent", "zoneEdit");
         var ilength = window.innerHeight - 162;
-        $("#tblLichPhanGiang").parent().attr("style", "height: " + ilength + "px; overflow-y: scroll;");
+        $("#tblLichPhanGiang").parent().attr("style", "height: " + ilength + "px; overflow-y: scroll !important;");
+        $("#tblLichPhanGiang").parent().parent().attr("style", "height: " + (ilength + 10) + "px; overflow-y: scroll !important;;");
     },
 
     toggle_editBaiHoc: function () {

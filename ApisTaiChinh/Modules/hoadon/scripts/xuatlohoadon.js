@@ -1978,6 +1978,8 @@ InHoaDonTuDong.prototype = {//1
             'strDonViTinhTen_s': dtKhoanThu[0].DONVITINH_TEN,
             'strSoLuong_s': dtKhoanThu[0].SOLUONG,
             'strDonGia_s': dtKhoanThu[0].DONGIA,
+            'strTaiChinh_SoTien_TruocThue_s': dtKhoanThu[0].SOTIENTRUOCVAT,
+            'strVat': dtKhoanThu[0].VAT,
             'strChietKhaus': dtKhoanThu[0].CHIETKHAU,
             'strPhanTramChietKhaus': dtKhoanThu[0].TYLECHIETKHAU,
             'strTaiChinh_SoTien_s': dtKhoanThu[0].HINHTHUCTHU_TEN,
@@ -1991,6 +1993,7 @@ InHoaDonTuDong.prototype = {//1
         };
         var strHinhThucThu = "";
         let strSoTien = "";
+        let strSoTien_TruocThue = "";
         let strNoiDung = "";
         let strDonViTinh = "";
         let strSoLuong_s = "";
@@ -2003,6 +2006,7 @@ InHoaDonTuDong.prototype = {//1
             if (!strDonVi) strDonVi = "";
             strCacKhoanThu_Ids += "," + rowKT["ID"];
             strSoTien += "," + rowKT["SOTIEN"];
+            strSoTien_TruocThue += "," + rowKT["SOTIENTRUOCVAT"];
             strNoiDung += "#" + rowKT["NOIDUNG"];
             strDonViTinh += "," + strDonVi;
             strSoLuong_s += "," + rowKT["SOLUONG"];
@@ -2016,6 +2020,9 @@ InHoaDonTuDong.prototype = {//1
         })
         if (strSoTien != "") {
             strSoTien = strSoTien.substring(1);
+        }
+        if (strSoTien_TruocThue != "") {
+            strSoTien_TruocThue = strSoTien_TruocThue.substring(1);
         }
         if (strNoiDung != "") {
             strNoiDung = strNoiDung.substring(1);
@@ -2040,6 +2047,7 @@ InHoaDonTuDong.prototype = {//1
         }
 
         obj_save.strTaiChinh_SoTien_s = strSoTien;
+        obj_save.strTaiChinh_SoTien_TruocThue_s = strSoTien_TruocThue;
         obj_save.strTaiChinh_NoiDung_s = strNoiDung;
         obj_save.strDonViTinhTen_s = strDonViTinh;
         obj_save.strSoLuong_s = strSoLuong_s;
@@ -2071,6 +2079,21 @@ InHoaDonTuDong.prototype = {//1
                     }
                     else {
                         edu.system.alert("Lỗi: " + d.Message, "w");
+                        if (d.Data) {
+                            var strLink = d.Data;
+                            if (strLink.indexOf('http') === -1) {
+                                strLink = edu.system.objApi["HDDT"];
+                                strLink = strLink.substring(0, strLink.length - 3) + d.Data;
+                                if (strLink.indexOf('http') === -1) {
+                                    strLink = edu.system.strhost + strLink;
+                                }
+                            }
+                            var win = window.open(strLink, '_blank');
+                            if (win != undefined)
+                                win.focus();
+                            else edu.system.alert("Vui lòng cho phép mở tab mới trên trình duyệt và thử lại!");
+                        }
+                        
                         //edu.extend.notifyBeginLoading(d.Message, undefined, 5000);
                     }
                 },

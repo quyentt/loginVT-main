@@ -160,7 +160,9 @@ ThucHienIn.prototype = {
         var me = this;
         //--Edit
         var obj_list = {
-            'action': 'TN_KetQua_CongNhan_VB/LayDanhSach',
+            'action': 'TN_VanBang_ChungChi_MH/DSA4BRIVDx4KJDUQNCAeAi4vJg8pIC8eFwMP',
+            'func': 'PKG_VANBANG_CHUNGCHI.LayDSTN_KetQua_CongNhan_VB',
+            'iM': edu.system.iM,
             'strTuKhoa': edu.util.getValById('txtSearch'),
             'strPhanLoai_Id': edu.util.getValCombo('dropSearch_PhanLoai'),
             'strDaoTao_HeDaoTao_Id': edu.util.getValCombo('dropSearch_HeDaoTao'),

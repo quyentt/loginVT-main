@@ -2695,6 +2695,20 @@ ChungTu.prototype = {
         }
         
         function save_HoaDon(strTaiChinh_DaNop_Ids, strTAICHINH_CACKHOANTHU_Ids, strThoiGianDaoTaoIds, strNoiDung_s, strSoTien_s) {
+            var strVAT = null;
+            var strSoTienTruocThue = [];
+            var arrDaNop = [strTaiChinh_DaNop_Ids]
+            if (strTaiChinh_DaNop_Ids) arrDaNop = strTaiChinh_DaNop_Ids.split(',');
+            arrDaNop.forEach(e => {
+                var aDN = me.dtHoaDon.find(el => e == el.ID);
+                if (!strVAT) {
+                    if (strVAT != aDN.VAT) {
+                        edu.system.alert("Không suất được các khoản có VAT khác nhau");
+                        return;
+                    }
+                }
+                strSoTienTruocThue.push(aDN.SOTIENTRUOCVAT);
+            })
             var obj_save = {
                 'action': 'TC_DaNop_HoaDon/ThemMoi',
                 'versionAPI': 'v1.0',
@@ -2703,6 +2717,8 @@ ChungTu.prototype = {
                 'strTAICHINH_CACKHOANTHU_Ids': strTAICHINH_CACKHOANTHU_Ids,
                 'strTaiChinh_SoTien_s': strSoTien_s,
                 'strTaiChinh_NoiDung_s': strNoiDung_s,
+                'strTaiChinh_SoTien_TruocThue_s': strSoTienTruocThue.toString(),
+                'strVat': strVAT,
                 'strDonGia_s': strDonGia,
                 'strSoLuong_s': strSoLuong,
                 'strDonViTinhTen_s': arrDonViTinh.toString(),
@@ -2741,6 +2757,20 @@ ChungTu.prototype = {
         }
 
         function saveHDDT(strTaiChinh_DaNop_Ids, strTaiChinh_CacKhoanThu_Ids, strThoiGianDaoTaoIds, strNoiDung_s, strSoTien_s) {
+            var strVAT = null;
+            var strSoTienTruocThue = [];
+            var arrDaNop = [strTaiChinh_DaNop_Ids]
+            if (strTaiChinh_DaNop_Ids) arrDaNop = strTaiChinh_DaNop_Ids.split(',');
+            arrDaNop.forEach(e => {
+                var aDN = me.dtHoaDon.find(el => e == el.ID);
+                if (!strVAT) {
+                    if (strVAT != aDN.VAT) {
+                        edu.system.alert("Không suất được các khoản có VAT khác nhau");
+                        return;
+                    }
+                }
+                strSoTienTruocThue.push(aDN.SOTIENTRUOCVAT);
+            })
             var obj_save = {
                 'strNguoiThucHien_Id': edu.system.userId,
                 'strTaiChinh_CacKhoanThu_Ids': strTaiChinh_DaNop_Ids,
@@ -2750,6 +2780,8 @@ ChungTu.prototype = {
                 'strHinhThucThu_TEN': me.strHinhThucThu_Ten,
                 'strTaiChinh_SoTien_s': strSoTien_s,
                 'strTaiChinh_NoiDung_s': strNoiDung_s,
+                'strTaiChinh_SoTien_TruocThue_s': strSoTienTruocThue.toString(),
+                'strVat': strVAT,
                 'strDonGia_s': strDonGia,
                 'strSoLuong_s': strSoLuong,
                 'strDonViTinhTen_s': arrDonViTinh.toString(),
@@ -2787,6 +2819,20 @@ ChungTu.prototype = {
             }, false, false, false, null, linkHDDT, true);
         }
         function saveHDDT_Nhap(strTaiChinh_DaNop_Ids, strTaiChinh_CacKhoanThu_Ids, strThoiGianDaoTaoIds, strNoiDung_s, strSoTien_s) {
+            var strVAT = null;
+            var strSoTienTruocThue = [];
+            var arrDaNop = [strTaiChinh_DaNop_Ids]
+            if (strTaiChinh_DaNop_Ids) arrDaNop = strTaiChinh_DaNop_Ids.split(',');
+            arrDaNop.forEach(e => {
+                var aDN = me.dtHoaDon.find(el => e == el.ID);
+                if (!strVAT) {
+                    if (strVAT != aDN.VAT) {
+                        edu.system.alert("Không suất được các khoản có VAT khác nhau");
+                        return;
+                    }
+                }
+                strSoTienTruocThue.push(aDN.SOTIENTRUOCVAT);
+            })
             var obj_save = {
                 'strNguoiThucHien_Id': edu.system.userId,
                 'strTaiChinh_CacKhoanThu_Ids': strTaiChinh_DaNop_Ids,
@@ -2794,6 +2840,8 @@ ChungTu.prototype = {
                 'strDaoTao_ThoiGianDaoTao_Id': strThoiGianDaoTaoIds,
                 'strHinhThucThu_MA': me.strHinhThucThu_Ma,
                 'strHinhThucThu_TEN': me.strHinhThucThu_Ten,
+                'strTaiChinh_SoTien_TruocThue_s': strSoTienTruocThue.toString(),
+                'strVat': strVAT,
                 'strTaiChinh_SoTien_s': strSoTien_s,
                 'strTaiChinh_NoiDung_s': strNoiDung_s,
                 'strDonGia_s': strDonGia,
