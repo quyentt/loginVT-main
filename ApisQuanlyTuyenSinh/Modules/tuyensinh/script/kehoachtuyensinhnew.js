@@ -5068,12 +5068,12 @@ KeHoachTuyenSinhNew.prototype = {
         me._hsBound = true;
 
         $("#btnKQ_HS_Luu").on('click', function () { me._saveHoSoDM(); });
-        $("#btnKQ_HS_Reset").on('click', function () { me._resetFormHoSoDM(); });
-        $("#btnKQ_HS_HuySua").on('click', function () { me._resetFormHoSoDM(); });
+        // "Nhập lại" = bỏ những gì vừa gõ, vẽ lại lưới theo đúng dữ liệu dưới CSDL
+        $("#btnKQ_HS_Reset").on('click', function () { me._genTable_HoSoDM(me._dtHoSoDM || []); });
 
-        $("#tblKQ_HS").on('click', '.kqhs-edit', function () {
-            me._editHoSoDM($(this).attr('data-id'));
-        });
+        // Gõ số lượng → cập nhật ngay cột Tình trạng + dòng tổng, khỏi phải bấm Lưu mới thấy
+        $("#tblKQ_HS").on('input', '.kqhs-sl', function () { me._hsCapNhatTinhTrang(); });
+
         $("#tblKQ_HS").on('click', '.kqhs-del', function () {
             var id = $(this).attr('data-id');
             if (!edu.util.checkValue(id)) return;
@@ -5168,55 +5168,105 @@ KeHoachTuyenSinhNew.prototype = {
     /*------------------------------------------
     -- Dựng bảng + dòng tổng ở tfoot (quy ước: bảng có cột số phải có tổng)
     -------------------------------------------*/
-    _genTable_HoSoDM: function (rows) {
+    /* Lưới nhập hàng loạt (yêu cầu sếp Tuấn 21/09/2026): liệt kê SẴN toàn bộ loại hồ sơ
+       trong danh mục TUYENSINH.LOAIHOSO, cán bộ chỉ điền cột "Đã nộp" rồi bấm Lưu một lượt.
+       Dòng nào không nhập thì không gọi API — xem _saveHoSoDM.
+       "Cần nộp" là quy định nên để chỉ-xem; dòng đã khai thì lấy số trong CSDL, dòng chưa
+       khai thì lấy từ danh mục (nếu DM có khai), không có thì mặc định 1. */
+    _genTable_HoSoDM: function (rows, _try) {
         var me = main_doc.KeHoachTuyenSinhNew;
         var pick = me._kqPick;
         me._dtHoSoDM = rows || [];
 
         var esc = function (s) { return $('<div>').text(s == null ? '' : s).html(); };
         var num = function (v) { var n = parseInt(v, 10); return isNaN(n) ? 0 : n; };
+        var dm = me._dtLoaiHoSo || [];
 
-        if (me._dtHoSoDM.length === 0) {
-            $('#tblKQ_HS tbody').html('<tr><td class="kqhs-empty" colspan="7">Chưa khai danh mục hồ sơ nào</td></tr>');
+        if (!dm.length) {
+            // initKhai_DanhMuc nạp DM bất đồng bộ; mở tab nhanh quá thì chưa kịp về → chờ rồi vẽ lại.
             $('#tblKQ_HS tfoot').addClass('d-none');
             $('#lblKQ_HS_Tong').text('(0)');
+            _try = (_try || 0) + 1;
+            if (_try <= 25) {
+                $('#tblKQ_HS tbody').html('<tr><td class="kqhs-empty" colspan="7">Đang tải danh mục…</td></tr>');
+                setTimeout(function () { me._genTable_HoSoDM(rows, _try); }, 300);
+            } else {
+                $('#tblKQ_HS tbody').html('<tr><td class="kqhs-empty" colspan="7">'
+                    + 'Chưa tải được danh mục loại hồ sơ (TUYENSINH.LOAIHOSO)</td></tr>');
+            }
             return;
         }
 
-        var html = '', tongCan = 0, tongDa = 0;
-        for (var i = 0; i < me._dtHoSoDM.length; i++) {
-            var r = me._dtHoSoDM[i];
-            var id = String(pick(r, ['ID', 'Id', 'TS_HOSO_ID']) || '');
-            var canNop = num(pick(r, ['SOLUONGCANNOP', 'SoLuongCanNop', 'SL_CANNOP']));
-            var daNop = num(pick(r, ['SOLUONG', 'SoLuong', 'SL_DANOP']));
-            var tenLoai = pick(r, ['LOAIHOSO_TEN', 'TENLOAIHOSO', 'LOAIHOSO', 'TEN'])
-                || me._tenLoaiHoSo(pick(r, ['LOAIHOSO_ID', 'LoaiHoSo_Id']));
-            var du = (canNop > 0 && daNop >= canNop);
+        // Ghép dòng đã lưu dưới CSDL vào từng loại hồ sơ của danh mục
+        var daLuu = {};
+        me._dtHoSoDM.forEach(function (r) {
+            var k = String(pick(r, ['LOAIHOSO_ID', 'LoaiHoSo_Id']) || '');
+            if (k) daLuu[k] = r;
+        });
 
-            tongCan += canNop;
-            tongDa += daNop;
+        var html = '';
+        for (var i = 0; i < dm.length; i++) {
+            var loai = dm[i] || {};
+            var loaiId = String(loai.ID || loai.Id || loai.id || '');
+            if (!loaiId) continue;
+            var r = daLuu[loaiId] || null;
 
-            html += '<tr' + (id === me._suaHoSoDM_Id ? ' class="kqhs-editing"' : '') + '>'
+            var id = r ? String(pick(r, ['ID', 'Id', 'TS_HOSO_ID']) || '') : '';
+            var canNop = r ? num(pick(r, ['SOLUONGCANNOP', 'SoLuongCanNop', 'SL_CANNOP']))
+                : num(me._pickLoose(loai, ['SOLUONGCANNOP', 'SOLUONG', 'GIATRI']) || 1);
+            if (!canNop) canNop = 1;
+            var daNop = r ? num(pick(r, ['SOLUONG', 'SoLuong', 'SL_DANOP'])) : '';
+            var moTa = r ? pick(r, ['MOTA', 'MoTa', 'GHICHU']) : '';
+            var tenLoai = (loai.TEN || loai.Ten || '') || me._tenLoaiHoSo(loaiId);
+
+            html += '<tr' + (r ? ' class="kqhs-dalu"' : '') + ' data-loai="' + esc(loaiId) + '"'
+                + ' data-id="' + esc(id) + '"'
+                + ' data-can="' + canNop + '"'
+                + ' data-goc-sl="' + esc(daNop) + '"'
+                + ' data-goc-mota="' + esc(moTa) + '">'
                 + '<td class="kqhs-ct">' + (i + 1) + '</td>'
                 + '<td>' + esc(tenLoai || '-') + '</td>'
                 + '<td class="kqhs-num">' + canNop + '</td>'
-                + '<td class="kqhs-num">' + daNop + '</td>'
-                + '<td class="kqhs-ct"><span class="kqhs-tag ' + (du ? 'ok' : 'thieu') + '">'
-                + (du ? 'Đủ' : 'Thiếu') + '</span></td>'
-                + '<td>' + esc(pick(r, ['MOTA', 'MoTa', 'GHICHU'])) + '</td>'
+                + '<td class="kqhs-ct"><input type="number" min="0" step="1" class="kqhs-in kqhs-sl"'
+                + ' value="' + esc(daNop) + '" placeholder="—"></td>'
+                + '<td class="kqhs-ct"><span class="kqhs-tag"></span></td>'
+                + '<td><input type="text" class="kqhs-in kqhs-mota" value="' + esc(moTa) + '"'
+                + ' placeholder="Ghi chú (nếu có)"></td>'
                 + '<td class="kqhs-ct">'
-                + '<button type="button" class="kqhs-ibtn kqhs-edit" data-id="' + esc(id) + '" title="Sửa">'
-                + '<i class="fa-light fa-pen"></i></button>'
-                + '<button type="button" class="kqhs-ibtn kqhs-del" data-id="' + esc(id) + '" title="Xóa">'
-                + '<i class="fa-light fa-trash-can"></i></button>'
+                + (id ? ('<button type="button" class="kqhs-ibtn kqhs-del" data-id="' + esc(id)
+                    + '" title="Xóa dòng đã lưu"><i class="fa-light fa-trash-can"></i></button>') : '')
                 + '</td>'
                 + '</tr>';
         }
         $('#tblKQ_HS tbody').html(html);
+        $('#tblKQ_HS tfoot').removeClass('d-none');
+        $('#lblKQ_HS_Tong').text('(' + me._dtHoSoDM.length + '/' + dm.length + ')');
+        me._hsCapNhatTinhTrang();
+    },
+
+    /*------------------------------------------
+    -- Tính lại cột Tình trạng + dòng tổng theo số đang gõ trên lưới.
+    -- Ô để trống = chưa khai → không tô "Thiếu" cho đỡ đỏ cả bảng.
+    -------------------------------------------*/
+    _hsCapNhatTinhTrang: function () {
+        var tongCan = 0, tongDa = 0;
+        $('#tblKQ_HS tbody tr[data-loai]').each(function () {
+            var $r = $(this);
+            var can = parseInt($r.attr('data-can'), 10) || 0;
+            var v = $.trim($r.find('.kqhs-sl').val() || '');
+            var $tag = $r.find('.kqhs-tag');
+            tongCan += can;
+            if (v === '') {
+                $tag.attr('class', 'kqhs-tag').text('—');
+                return;
+            }
+            var da = parseInt(v, 10) || 0;
+            tongDa += da;
+            var du = (can > 0 && da >= can);
+            $tag.attr('class', 'kqhs-tag ' + (du ? 'ok' : 'thieu')).text(du ? 'Đủ' : 'Thiếu');
+        });
         $('#lblKQ_HS_TongCanNop').text(tongCan);
         $('#lblKQ_HS_TongDaNop').text(tongDa);
-        $('#tblKQ_HS tfoot').removeClass('d-none');
-        $('#lblKQ_HS_Tong').text('(' + me._dtHoSoDM.length + ')');
     },
 
     /*------------------------------------------
@@ -5233,65 +5283,22 @@ KeHoachTuyenSinhNew.prototype = {
     },
 
     /*------------------------------------------
-    -- Về chế độ Thêm mới, xóa trắng form nhập
+    -- Giữ lại cho tương thích: luồng cũ (form thêm từng dòng) gọi hàm này.
+    -- Lưới nhập hàng loạt không còn form nên chỉ việc vẽ lại theo dữ liệu CSDL.
     -------------------------------------------*/
     _resetFormHoSoDM: function () {
         var me = main_doc.KeHoachTuyenSinhNew;
         me._suaHoSoDM_Id = '';
-        // Về chế độ Thêm → mở khóa lại 2 ô mà chế độ Sửa đã chặn (xem _editHoSoDM)
-        $('#ddlKQ_HS_LoaiHoSo').prop('disabled', false);
-        $('#txtKQ_HS_CanNop').prop('readonly', false);
-        $('#ddlKQ_HS_LoaiHoSo').val('').trigger('change');
-        edu.util.resetValByArrId(['txtKQ_HS_CanNop', 'txtKQ_HS_SoLuong', 'txtKQ_HS_MoTa']);
-        $('#lblKQ_HS_FormTitle').text('Thêm danh mục hồ sơ');
-        $('#btnKQ_HS_Luu').html('<i class="fa-light fa-plus"></i> <span>Thêm vào danh sách</span>');
-        $('#btnKQ_HS_HuySua').addClass('d-none');
-        $('#tblKQ_HS tbody tr').removeClass('kqhs-editing');
     },
 
     /*------------------------------------------
-    -- Đổ 1 dòng lên form để sửa (đọc từ cache list, không gọi LayTT)
-    -------------------------------------------*/
-    _editHoSoDM: function (strId) {
-        var me = main_doc.KeHoachTuyenSinhNew;
-        var pick = me._kqPick;
-        if (!edu.util.checkValue(strId)) return;
-
-        var d = null;
-        for (var i = 0; i < (me._dtHoSoDM || []).length; i++) {
-            var rid = String(pick(me._dtHoSoDM[i], ['ID', 'Id', 'TS_HOSO_ID']) || '');
-            if (rid === String(strId)) { d = me._dtHoSoDM[i]; break; }
-        }
-        if (!d) { edu.system.alert("Không tìm thấy dòng danh mục trong danh sách", "w"); return; }
-
-        me._suaHoSoDM_Id = strId;
-        $('#ddlKQ_HS_LoaiHoSo').val(pick(d, ['LOAIHOSO_ID', 'LoaiHoSo_Id'])).trigger('change');
-        $('#txtKQ_HS_CanNop').val(pick(d, ['SOLUONGCANNOP', 'SoLuongCanNop']));
-        $('#txtKQ_HS_SoLuong').val(pick(d, ['SOLUONG', 'SoLuong']));
-        $('#txtKQ_HS_MoTa').val(pick(d, ['MOTA', 'MoTa']));
-
-        /* Sửa thì CHỈ được đổi "Số lượng đã nộp" (sếp chốt 21/09/2026):
-             - Loại hồ sơ: đổi loại tức là dòng khác, muốn vậy thì xóa rồi thêm mới.
-             - Số lượng cần nộp: là QUY ĐỊNH lấy từ danh mục, không phải số liệu nhập tay.
-           Khóa bằng disabled/readonly chứ không ẩn, để người dùng vẫn đọc được giá trị.
-           .val() của select disabled và input readonly vẫn đọc được nên payload gửi đủ param.
-           Mở khóa lại ở _resetFormHoSoDM. */
-        $('#ddlKQ_HS_LoaiHoSo').prop('disabled', true).trigger('change');
-        $('#txtKQ_HS_CanNop').prop('readonly', true);
-
-        $('#lblKQ_HS_FormTitle').text('Sửa danh mục hồ sơ');
-        $('#btnKQ_HS_Luu').html('<i class="fa-light fa-floppy-disk"></i> <span>Cập nhật</span>');
-        $('#btnKQ_HS_HuySua').removeClass('d-none');
-        $('#tblKQ_HS tbody tr').removeClass('kqhs-editing');
-        $('#tblKQ_HS').find('.kqhs-edit[data-id="' + strId + '"]').closest('tr').addClass('kqhs-editing');
-        me._goToPanel('kqdk_tab_hoso');
-        // Focus SAU khi đã chuyển panel + cuộn xong, không thì bị mất focus.
-        // Ô này là ô duy nhất sửa được nên đưa con trỏ vào sẵn.
-        setTimeout(function () { $('#txtKQ_HS_SoLuong').focus().select(); }, 150);
-    },
-
-    /*------------------------------------------
-    -- Ghi 1 dòng: chưa có _suaHoSoDM_Id thì Thêm, có rồi thì Sửa
+    -- Lưu cả lưới một lượt (yêu cầu sếp Tuấn 21/09/2026).
+    -- Quy tắc:
+    --   - Dòng CHƯA có trong CSDL và để trống ô "Đã nộp" → BỎ QUA, không gọi API.
+    --   - Dòng CHƯA có, có nhập → Them_TS_HoSo.
+    --   - Dòng ĐÃ có, giá trị đổi so với lúc nạp → Sua_TS_HoSo (so với data-goc-*).
+    --   - Dòng ĐÃ có, không đổi gì → bỏ qua, khỏi bắn request thừa.
+    -- "Cần nộp" lấy từ data-can (chỉ xem, không cho sửa — là quy định).
     -------------------------------------------*/
     _saveHoSoDM: function () {
         var me = main_doc.KeHoachTuyenSinhNew;
@@ -5300,49 +5307,79 @@ KeHoachTuyenSinhNew.prototype = {
             edu.system.alert("Cần lưu hồ sơ trước khi khai danh mục hồ sơ!", "w");
             return false;
         }
-        var strLoai = edu.util.getValById('ddlKQ_HS_LoaiHoSo');
-        if (!edu.util.checkValue(strLoai)) {
-            edu.system.alert("Vui lòng chọn loại hồ sơ!", "w");
-            $('#ddlKQ_HS_LoaiHoSo').focus();
+
+        var chuan = function (v) { return String(v == null ? '' : v).trim(); };
+        /* Param Oracle kiểu NUMBER: gửi "" thì proc Success nhưng không ghi. Mà entity
+           HoSo_MHEntity khai dSoLuong/dSoLuongCanNop là `double` NON-NULLABLE nên gửi null
+           là HTTP 500 "Error converting value {null} to type 'System.Double'" → quy về số. */
+        var so = function (v) { var n = parseInt(chuan(v), 10); return isNaN(n) ? 0 : n; };
+
+        var viec = [];
+        $('#tblKQ_HS tbody tr[data-loai]').each(function () {
+            var $r = $(this);
+            var id = chuan($r.attr('data-id'));
+            var slMoi = chuan($r.find('.kqhs-sl').val());
+            var motaMoi = chuan($r.find('.kqhs-mota').val());
+            var slGoc = chuan($r.attr('data-goc-sl'));
+            var motaGoc = chuan($r.attr('data-goc-mota'));
+
+            if (!id) {
+                // Chưa từng khai: không nhập gì thì thôi, đúng ý "cột nào ko nhập thì ko lưu"
+                if (slMoi === '' && motaMoi === '') return;
+            } else {
+                // Đã khai: chỉ gửi khi thật sự có thay đổi
+                if (slMoi === slGoc && motaMoi === motaGoc) return;
+            }
+            viec.push({
+                id: id,
+                loai: chuan($r.attr('data-loai')),
+                can: so($r.attr('data-can')),
+                sl: so(slMoi),
+                mota: motaMoi
+            });
+        });
+
+        if (!viec.length) {
+            edu.system.alert("Không có thay đổi nào để lưu.", "w");
             return false;
         }
 
-        /* Param Oracle kiểu NUMBER: gửi chuỗi rỗng "" thì proc Success nhưng không ghi,
-           nên phải gửi SỐ. Quy ước chung của hệ thống là rỗng → null, NHƯNG entity
-           TS_HoSo_MHEntity khai dSoLuong/dSoLuongCanNop là `double` NON-NULLABLE:
-           gửi null là JsonConvert chết ngay lúc deserialize, trả HTTP 500
-           "Error converting value {null} to type 'System.Double'. Path 'dSoLuong'".
-           → Ô rỗng quy về 0. (Muốn phân biệt "chưa khai" với "0" thì BE phải đổi
-           2 property đó sang double?.) */
-        var soN = function (id) {
-            var v = $.trim($('#' + id).val() || '');
-            if (v === '') return 0;
-            var n = parseInt(v, 10);
-            return isNaN(n) ? 0 : n;
-        };
-
-        var obj = {
-            'strTS_HoSoDuTuyen_Id': me.strSuaHoSo_Id,
-            'strTS_KeHoachTuyenSinh_Id': me.strDot_Id_ForKQ || '',   // Id ĐỢT tuyển sinh
-            'strLoaiHoSo_Id': strLoai,
-            'dSoLuongCanNop': soN('txtKQ_HS_CanNop'),
-            'dSoLuong': soN('txtKQ_HS_SoLuong'),
-            'strMoTa': $.trim($('#txtKQ_HS_MoTa').val() || '')
-        };
-
-        var dangSua = edu.util.checkValue(me._suaHoSoDM_Id);
-        var idSua = me._suaHoSoDM_Id;
-
-        // Dùng đúng API theo chữ ký BE: Thêm → Them_TS_HoSo, Sửa → Sua_TS_HoSo.
-        // 'strId' là đúng tên param (TS_HoSo_MHController, BE gửi 21/09/2026).
-        var api = dangSua ? me._ACT_HS.Sua : me._ACT_HS.Them;
-        if (dangSua) obj.strId = idSua;
-
-        me._hsCall(api, obj, function () {
-            edu.system.alert(dangSua ? "Cập nhật danh mục hồ sơ thành công!"
-                : "Thêm danh mục hồ sơ thành công!", "s");
-            me._resetFormHoSoDM();
+        var done = 0, failed = 0, total = viec.length, loi = [];
+        var finalize = function () {
+            if (done + failed !== total) return;
+            var msg = "Đã lưu " + done + "/" + total + " dòng";
+            if (failed) msg += " (lỗi: " + failed + ")" + (loi.length ? "<br/>" + loi.slice(0, 5).join("<br/>") : "");
+            edu.system.alert(msg, failed ? "w" : "s");
             me._loadHoSoDM_ForEdit(me.strSuaHoSo_Id);
+        };
+
+        viec.forEach(function (v) {
+            var api = v.id ? me._ACT_HS.Sua : me._ACT_HS.Them;
+            var d = {
+                'action': api.action, 'func': api.func, 'iM': edu.system.iM,
+                'strChucNang_Id': edu.system.strChucNang_Id,
+                'strNguoiThucHien_Id': edu.system.userId,
+                'strTS_HoSoDuTuyen_Id': me.strSuaHoSo_Id,
+                'strTS_KeHoachTuyenSinh_Id': me.strDot_Id_ForKQ || '',   // Id ĐỢT tuyển sinh
+                'strLoaiHoSo_Id': v.loai,
+                'dSoLuongCanNop': v.can,
+                'dSoLuong': v.sl,
+                'strMoTa': v.mota
+            };
+            if (v.id) d.strId = v.id;
+            edu.system.makeRequest({
+                success: function (data) {
+                    if (data && data.Success) done++;
+                    else { failed++; if (data && data.Message) loi.push(api.func + ": " + data.Message); }
+                    finalize();
+                },
+                error: function (er) {
+                    failed++;
+                    loi.push(api.func + " (er): " + JSON.stringify(er));
+                    finalize();
+                },
+                type: 'POST', contentType: true, action: api.action, data: d, fakedb: []
+            }, false, false, false, null);
         });
     },
 
@@ -5423,8 +5460,9 @@ KeHoachTuyenSinhNew.prototype = {
             'ddlKQ_HD_DoiTuong', 'ddlKQ_HD_HinhThucTT',
             // Tab 7 - Nguồn khai thác
             'ddlKQ_NguonKhaiThac',
-            // Tab 8 - Danh mục hồ sơ
-            'ddlKQ_HS_LoaiHoSo'
+            // Tab 8: dropdown loại hồ sơ đã bỏ khỏi giao diện (lưới nhập hàng loạt thay thế),
+            // chỉ còn thẻ select ẩn làm chỗ nạp DM → không cần select2 nữa.
+            // 'ddlKQ_HS_LoaiHoSo'
         ];
         for (var i = 0; i < dropIds.length; i++) {
             me._applyKQSelect2(dropIds[i]);

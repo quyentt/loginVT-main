@@ -1741,6 +1741,18 @@
     #kqdk_tab_hoso table.kqhs-table tbody tr:hover td { background:#f8fafc; }
     #kqdk_tab_hoso table.kqhs-table tr.kqhs-editing td { background:#eff6ff; }
     #kqdk_tab_hoso table.kqhs-table .kqhs-num { text-align:right; white-space:nowrap; }
+    /* Lưới nhập hàng loạt: ô số nhỏ gọn, căn giữa; ô mô tả chiếm hết bề ngang còn lại */
+    #kqdk_tab_hoso .kqhs-huongdan { margin:0 0 10px; }
+    #kqdk_tab_hoso table.kqhs-table input.kqhs-in {
+        width:100%; height:30px; padding:3px 8px; font-size:13.5px; font-weight:600;
+        color:#0f172a; border:1px solid #cbd5e1; border-radius:4px; box-sizing:border-box;
+        background:#fff; outline:none;
+    }
+    #kqdk_tab_hoso table.kqhs-table input.kqhs-in:focus { border-color:#2563eb; box-shadow:0 0 0 2px rgba(37,99,235,.14); }
+    #kqdk_tab_hoso table.kqhs-table input.kqhs-sl { text-align:center; }
+    /* Dòng đã có trong CSDL — nền nhạt để phân biệt với dòng chưa khai */
+    #kqdk_tab_hoso table.kqhs-table tr.kqhs-dalu td { background:#f8fbff; }
+    #kqdk_tab_hoso table.kqhs-table tr.kqhs-dalu:hover td { background:#eff6ff; }
     #kqdk_tab_hoso table.kqhs-table .kqhs-ct { text-align:center; white-space:nowrap; }
     #kqdk_tab_hoso table.kqhs-table td.kqhs-empty {
         text-align:center; color:#94a3b8; font-style:italic; padding:22px 12px;
@@ -2795,6 +2807,16 @@
                                 </div>
 
                                 <div id="kqdk_hs_zone">
+                                    <!-- Dropdown loại hồ sơ đã bỏ khỏi giao diện, nhưng initKhai_DanhMuc vẫn
+                                         nạp DM TUYENSINH.LOAIHOSO vào đây rồi mới gán cho me._dtLoaiHoSo —
+                                         nguồn dựng lưới bên dưới. Giữ thẻ ẩn để hàm nạp có chỗ đổ option,
+                                         xóa thẻ này là lưới trắng. -->
+                                    <select id="ddlKQ_HS_LoaiHoSo" class="d-none" aria-hidden="true"></select>
+
+                                    <!-- ẨN (yêu cầu sếp Tuấn 21/09/2026): "cho hiện hết danh mục ra và các a.c
+                                         sẽ chỉ nhập cột số lượng, cột nào ko nhập thì ko lưu — thay vì phải thêm
+                                         từng cái thì sẽ tiện hơn". Form thêm-từng-dòng bên dưới được thay bằng
+                                         lưới nhập hàng loạt. GIỮ LẠI, không xóa, để mở lại khi cần.
                                     <div class="aps-sv-section">
                                         <div class="aps-sv-section-title">
                                             <i class="fa-light fa-folder-plus"></i>
@@ -2833,11 +2855,18 @@
                                             </button>
                                         </div>
                                     </div>
+                                    -->
 
                                     <div class="aps-sv-section">
                                         <div class="aps-sv-section-title">
-                                            <i class="fa-light fa-list-check"></i> Danh mục đã khai
+                                            <i class="fa-light fa-list-check"></i> Danh mục hồ sơ giấy tờ
                                             <span id="lblKQ_HS_Tong" style="font-weight:600;color:#64748b;">(0)</span>
+                                        </div>
+                                        <div class="kqhs-note kqhs-huongdan">
+                                            <i class="fa-regular fa-circle-info"></i>
+                                            Bảng liệt kê sẵn toàn bộ loại hồ sơ. Chỉ cần điền
+                                            <b>Số lượng đã nộp</b> ở những dòng thí sinh đã nộp, rồi bấm
+                                            <b>“Lưu danh mục”</b>. Dòng để trống sẽ không lưu.
                                         </div>
                                         <div class="kqhs-tablebox">
                                             <table class="kqhs-table" id="tblKQ_HS">
@@ -2846,24 +2875,32 @@
                                                         <th style="width:52px">STT</th>
                                                         <th>Loại hồ sơ</th>
                                                         <th class="kqhs-num" style="width:110px">Cần nộp</th>
-                                                        <th class="kqhs-num" style="width:110px">Đã nộp</th>
+                                                        <th class="kqhs-ct" style="width:120px">Đã nộp</th>
                                                         <th class="kqhs-ct" style="width:90px">Tình trạng</th>
-                                                        <th>Mô tả</th>
-                                                        <th class="kqhs-ct" style="width:92px">Thao tác</th>
+                                                        <th style="min-width:180px">Mô tả</th>
+                                                        <th class="kqhs-ct" style="width:70px">Xóa</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr><td class="kqhs-empty" colspan="7">Chưa khai danh mục hồ sơ nào</td></tr>
+                                                    <tr><td class="kqhs-empty" colspan="7">Đang tải danh mục…</td></tr>
                                                 </tbody>
                                                 <tfoot class="d-none">
                                                     <tr>
                                                         <td colspan="2">Tổng cộng</td>
                                                         <td class="kqhs-num" id="lblKQ_HS_TongCanNop">0</td>
-                                                        <td class="kqhs-num" id="lblKQ_HS_TongDaNop">0</td>
+                                                        <td class="kqhs-ct" id="lblKQ_HS_TongDaNop">0</td>
                                                         <td colspan="3"></td>
                                                     </tr>
                                                 </tfoot>
                                             </table>
+                                        </div>
+                                        <div class="kqhs-actions">
+                                            <button type="button" class="aps-sv-btn aps-sv-btn-ghost kqhs-left" id="btnKQ_HS_Reset">
+                                                <i class="fa-light fa-rotate-left"></i> Nhập lại
+                                            </button>
+                                            <button type="button" class="aps-sv-btn aps-sv-btn-primary" id="btnKQ_HS_Luu">
+                                                <i class="fa-light fa-floppy-disk"></i> <span>Lưu danh mục</span>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
