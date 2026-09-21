@@ -464,6 +464,7 @@
                                 <th class="td-center">Kế hoạch đầu ra</th>
                                 <th class="td-center">Mẫu khai hồ sơ</th>
                                 <th class="td-center">Kết quả đăng ký</th>
+                                <th class="td-center">Khai danh mục hồ sơ</th>
                                 <th class="td-center">Tình trạng kế hoạch</th>
                                 <th class="td-center">Có public ko</th>
                                 <th class="td-center">Có khóa không</th>
@@ -493,6 +494,119 @@
                     </button>
                     <button id="btnAddDotTuyenSinh" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#them-moi-dot">
                         <i class="fa-regular fa-plus"></i><span> Thêm mới</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CSS grid Khai danh mục hồ sơ — scope theo #tblQuyDinhHoSo để không đụng bảng khác.
+     Sửa 3 thứ: (1) dữ liệu căn giữa ô thay vì dính mép trên, (2) ô nhập/chọn đủ cao
+     để chữ tiếng Việt có dấu (ệ, ộ, ấ) không bị cắt chân, (3) chữ đậm & tương phản cao. -->
+<style>
+    #tblQuyDinhHoSo thead th {
+        vertical-align: middle;
+        font-weight: 700;
+        color: #0f172a;
+        padding: 10px 10px;
+    }
+    #tblQuyDinhHoSo tbody td {
+        vertical-align: middle;
+        padding: 9px 10px;
+    }
+    /* height + line-height khai tường minh: theme base để line-height nhỏ nên phần
+       dưới của dấu bị viền ô cắt mất. */
+    #tblQuyDinhHoSo .form-control,
+    #tblQuyDinhHoSo .form-select {
+        height: 40px;
+        line-height: 24px;
+        padding: 7px 12px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #0f172a;
+        box-sizing: border-box;
+    }
+    /* Trả mũi tên xổ xuống về mặc định của trình duyệt — 2 select này không nằm
+       trong .custom-select nên không có <i class="fa-chevron-down"> để dựa vào.
+       background-image:none để không chồng 2 mũi tên nếu theme đã tự vẽ. */
+    #tblQuyDinhHoSo .form-select {
+        -webkit-appearance: menulist;
+        appearance: menulist;
+        background-image: none;
+        padding-right: 8px;
+    }
+    #tblQuyDinhHoSo .form-control::placeholder {
+        color: #64748b;
+        font-weight: 500;
+        font-style: normal;
+        opacity: 1;
+    }
+    #tblQuyDinhHoSo .qdhs-thutu,
+    #tblQuyDinhHoSo .qdhs-soluong { text-align: center; }
+    #tblQuyDinhHoSo .qdhs-xoa { font-weight: 600; }
+    #tblQuyDinhHoSo tr.qdhs-empty td { font-weight: 500; }
+</style>
+
+<!-- Modal: Khai danh mục hồ sơ giấy tờ (theo ĐỢT tuyển sinh)
+     Origin: pkg_tuyensinh_kehoach.LayDSTS_QuyDinhHoSo / Them_ / Sua_ / Xoa_TS_QuyDinhHoSo
+     Grid khai trực tiếp: mỗi dòng là 1 loại hồ sơ giấy tờ yêu cầu thí sinh nộp. -->
+<div class="modal fade modal_dot_tuyen_sinh" id="khai-danh-muc-ho-so">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-100 modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-header-wrap">
+                    <div class="title">
+                        <i class="fa-regular fa-folder-open"></i> Khai danh mục hồ sơ giấy tờ
+                        <span class="badge bg-light text-dark ms-2" id="lblQDHS_Dot" style="font-weight:500;"></span>
+                    </div>
+                    <button type="button" class="btn-close-custom" data-bs-dismiss="modal" aria-label="Đóng">
+                        <i class="fa-light fa-xmark"></i>
+                        <span>Đóng</span>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body" style="background:#f8fafc;">
+                <div style="border:1px solid #e5e7eb; border-radius:6px; padding:14px 16px; background:#fff;">
+                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px; font-size:14px; font-weight:700; color:#1e40af;">
+                        <i class="fa-solid fa-list-check"></i>
+                        <span>Danh sách hồ sơ giấy tờ</span>
+                        <span class="badge bg-primary" id="lblQDHS_Tong" style="margin-left:4px;">0</span>
+                    </div>
+                    <div class="aps-table-select scroll-table-x">
+                        <table id="tblQuyDinhHoSo" class="table table-hover table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="td-center" style="width:100px;">STT</th>
+                                    <th class="td-center">Loại hồ sơ <span style="color:#dc2626">*</span></th>
+                                    <th class="td-center" style="width:220px;">Số lượng</th>
+                                    <th class="td-center" style="width:280px;">Tính chất hồ sơ</th>
+                                    <th class="td-center" style="width:80px;">Xóa</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex justify-content-end mt-10">
+                        <a href="javascript:void(0)" id="btnQDHS_ThemDong" class="btn btn-default">
+                            <i class="fa-regular fa-plus"></i> Thêm hồ sơ
+                        </a>
+                    </div>
+                    <div class="fz12 mt-10" style="color:#64748b;">
+                        <i class="fa-regular fa-circle-info"></i>
+                        Bấm <b>Lưu</b> để ghi tất cả các dòng (dòng mới sẽ Thêm, dòng đã có sẽ Sửa).
+                        Nút <b>Xóa</b> ở từng dòng xóa ngay dòng đó.
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer d-flex justify-content-between w-100">
+                <div></div>
+                <div class="d-flex" style="gap:10px;">
+                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">
+                        <i class="fa fa-times-circle"></i>&nbsp;Đóng
+                    </button>
+                    <button type="button" id="btnQDHS_Luu" class="btn btn-primary">
+                        <i class="fas fa-save"></i>&nbsp;Lưu
                     </button>
                 </div>
             </div>
