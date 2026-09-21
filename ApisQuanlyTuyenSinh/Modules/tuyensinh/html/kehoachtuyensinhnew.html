@@ -1714,6 +1714,55 @@
         .aps-sv-compact .aps-sv-field > div[style*="margin-top"] { grid-column:1; }
         .aps-sv-compact .aps-sv-grid { grid-template-columns:1fr; }
     }
+
+    /* ═══════════════════════════════════════════════════════════════════
+       TAB 8 — DANH MỤC HỒ SƠ (PKG_TUYENSINH_HOSO)
+       Khác 7 tab kia: đây là bảng nhiều dòng (CRUD ngay trong tab), không
+       phải các field của 1 bản ghi. Style riêng, prefix .kqhs- để không
+       đụng .aps-sv-* và không đụng .table global của indexi.aspx.
+       ═══════════════════════════════════════════════════════════════════ */
+    #kqdk_tab_hoso .kqhs-note {
+        padding:11px 14px; background:#fffbeb; border:1px solid #fde68a; border-left:4px solid #f59e0b;
+        border-radius:6px; font-size:13px; color:#78350f; line-height:1.6; margin-bottom:12px;
+    }
+    #kqdk_tab_hoso .kqhs-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:10px; }
+    /* Nút Hủy sửa tách trái, nhóm ghi dồn phải */
+    #kqdk_tab_hoso .kqhs-actions .kqhs-left { margin-right:auto; }
+
+    #kqdk_tab_hoso .kqhs-tablebox { border:1px solid #e2e8f0; border-radius:6px; overflow-x:auto; background:#fff; }
+    #kqdk_tab_hoso table.kqhs-table { width:100%; border-collapse:collapse; margin:0; min-width:720px; font-size:13.5px; }
+    #kqdk_tab_hoso table.kqhs-table th {
+        background:#f1f5f9; color:#0f172a; font-weight:600; font-size:12.5px; letter-spacing:.2px;
+        padding:9px 12px; text-align:left; border-bottom:1px solid #e2e8f0; white-space:nowrap;
+    }
+    #kqdk_tab_hoso table.kqhs-table td {
+        padding:8px 12px; border-top:1px solid #eef2f7; color:#1e293b; vertical-align:middle;
+    }
+    #kqdk_tab_hoso table.kqhs-table tbody tr:hover td { background:#f8fafc; }
+    #kqdk_tab_hoso table.kqhs-table tr.kqhs-editing td { background:#eff6ff; }
+    #kqdk_tab_hoso table.kqhs-table .kqhs-num { text-align:right; white-space:nowrap; }
+    #kqdk_tab_hoso table.kqhs-table .kqhs-ct { text-align:center; white-space:nowrap; }
+    #kqdk_tab_hoso table.kqhs-table td.kqhs-empty {
+        text-align:center; color:#94a3b8; font-style:italic; padding:22px 12px;
+    }
+    /* Dòng tổng ở tfoot — quy ước chung cho bảng có cột số */
+    #kqdk_tab_hoso table.kqhs-table tfoot td {
+        background:#f8fafc; font-weight:700; color:#0f172a; border-top:2px solid #cbd5e1;
+    }
+    /* Nút thao tác trong dòng */
+    #kqdk_tab_hoso .kqhs-ibtn {
+        border:1px solid #cbd5e1; background:#fff; border-radius:4px; width:28px; height:28px;
+        line-height:1; color:#475569; margin:0 2px; padding:0;
+    }
+    #kqdk_tab_hoso .kqhs-ibtn:hover { background:#f1f5f9; color:#0f172a; }
+    #kqdk_tab_hoso .kqhs-ibtn.kqhs-del { border-color:#fecaca; color:#dc2626; }
+    #kqdk_tab_hoso .kqhs-ibtn.kqhs-del:hover { background:#fef2f2; }
+    /* Badge thiếu / đủ số lượng */
+    #kqdk_tab_hoso .kqhs-tag {
+        display:inline-block; padding:1px 9px; border-radius:20px; font-size:11.5px; font-weight:600;
+    }
+    #kqdk_tab_hoso .kqhs-tag.ok { background:#dcfce7; color:#15803d; }
+    #kqdk_tab_hoso .kqhs-tag.thieu { background:#fee2e2; color:#b91c1c; }
 </style>
 
 <!-- Modal: Kết quả đăng ký (Import trúng tuyển / Khai trực tiếp hồ sơ) -->
@@ -2200,6 +2249,7 @@
                             <button type="button" class="aps-sv-tab" data-target="kqdk_tab_giadinh"><span class="aps-sv-tab-num">5</span><i class="fa-light fa-people-roof"></i> Gia đình</button>
                             <button type="button" class="aps-sv-tab" data-target="kqdk_tab_hoadon"><span class="aps-sv-tab-num">6</span><i class="fa-light fa-file-invoice-dollar"></i> Xuất hóa đơn</button>
                             <button type="button" class="aps-sv-tab" data-target="kqdk_tab_nguonkt"><span class="aps-sv-tab-num">7</span><i class="fa-light fa-share-nodes"></i> Nguồn khai thác</button>
+                            <button type="button" class="aps-sv-tab" data-target="kqdk_tab_hoso"><span class="aps-sv-tab-num">8</span><i class="fa-light fa-folder-open"></i> Danh mục hồ sơ</button>
                         </div>
 
                         <div class="aps-sv-body">
@@ -2721,6 +2771,99 @@
                                         <div class="aps-sv-field aps-sv-col-full">
                                             <label class="aps-sv-label">Ghi chú nguồn khai thác</label>
                                             <input class="aps-sv-input" id="txtKQ_NguonKhaiThac_GhiChu" placeholder="Ghi chú thêm về nguồn khai thác (nếu có)">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ============ TAB 8: DANH MỤC HỒ SƠ ============ -->
+                            <!-- Khác 7 tab trên: tab này ghi NGAY vào bảng TS_HOSO qua
+                                 PKG_TUYENSINH_HOSO (Them/Sua/Xoa), không đi theo nút
+                                 "Lưu hồ sơ" chung ở cuối form. Lý do: 1 hồ sơ có NHIỀU
+                                 dòng danh mục, còn nút Lưu chung chỉ ghi 1 bản ghi hồ sơ.
+                                 Khóa gắn kết: TS_HoSoDuTuyen_Id (hồ sơ đang sửa)
+                                             + TS_KeHoachTuyenSinh_Id (Id ĐỢT tuyển sinh). -->
+                            <div class="aps-sv-panel aps-sv-compact" id="kqdk_tab_hoso">
+
+                                <!-- Hồ sơ chưa lưu → chưa có Id để gắn danh mục -->
+                                <div id="kqdk_hs_chualuu" class="kqhs-note d-none">
+                                    <i class="fa-solid fa-triangle-exclamation"></i>
+                                    <b>Chưa thể khai danh mục hồ sơ.</b>
+                                    Danh mục hồ sơ gắn với một hồ sơ đã tồn tại, nên cần bấm
+                                    <b>“Lưu hồ sơ”</b> ở cuối form trước, sau đó mở lại hồ sơ từ danh sách
+                                    rồi quay lại tab này để khai.
+                                </div>
+
+                                <div id="kqdk_hs_zone">
+                                    <div class="aps-sv-section">
+                                        <div class="aps-sv-section-title">
+                                            <i class="fa-light fa-folder-plus"></i>
+                                            <span id="lblKQ_HS_FormTitle">Thêm danh mục hồ sơ</span>
+                                        </div>
+                                        <div class="aps-sv-grid">
+                                            <div class="aps-sv-field">
+                                                <label class="aps-sv-label">Loại hồ sơ <span class="aps-sv-req">*</span></label>
+                                                <div class="aps-sv-select">
+                                                    <i class="fa-light fa-chevron-down"></i>
+                                                    <select class="aps-sv-input" id="ddlKQ_HS_LoaiHoSo"><option value="">-- Chọn loại hồ sơ --</option></select>
+                                                </div>
+                                            </div>
+                                            <div class="aps-sv-field">
+                                                <label class="aps-sv-label">Số lượng cần nộp</label>
+                                                <input type="number" min="0" step="1" class="aps-sv-input" id="txtKQ_HS_CanNop" placeholder="Ví dụ: 1">
+                                            </div>
+                                            <div class="aps-sv-field">
+                                                <label class="aps-sv-label">Số lượng đã nộp</label>
+                                                <input type="number" min="0" step="1" class="aps-sv-input" id="txtKQ_HS_SoLuong" placeholder="Ví dụ: 0">
+                                            </div>
+                                            <div class="aps-sv-field aps-sv-col-full">
+                                                <label class="aps-sv-label">Mô tả</label>
+                                                <input class="aps-sv-input" id="txtKQ_HS_MoTa" placeholder="Ghi chú về loại hồ sơ này (nếu có)">
+                                            </div>
+                                        </div>
+                                        <div class="kqhs-actions">
+                                            <button type="button" class="aps-sv-btn aps-sv-btn-ghost kqhs-left d-none" id="btnKQ_HS_HuySua">
+                                                <i class="fa-light fa-xmark"></i> Hủy sửa
+                                            </button>
+                                            <button type="button" class="aps-sv-btn aps-sv-btn-ghost" id="btnKQ_HS_Reset">
+                                                <i class="fa-light fa-rotate-left"></i> Nhập lại
+                                            </button>
+                                            <button type="button" class="aps-sv-btn aps-sv-btn-primary" id="btnKQ_HS_Luu">
+                                                <i class="fa-light fa-plus"></i> <span>Thêm vào danh sách</span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="aps-sv-section">
+                                        <div class="aps-sv-section-title">
+                                            <i class="fa-light fa-list-check"></i> Danh mục đã khai
+                                            <span id="lblKQ_HS_Tong" style="font-weight:600;color:#64748b;">(0)</span>
+                                        </div>
+                                        <div class="kqhs-tablebox">
+                                            <table class="kqhs-table" id="tblKQ_HS">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width:52px">STT</th>
+                                                        <th>Loại hồ sơ</th>
+                                                        <th class="kqhs-num" style="width:110px">Cần nộp</th>
+                                                        <th class="kqhs-num" style="width:110px">Đã nộp</th>
+                                                        <th class="kqhs-ct" style="width:90px">Tình trạng</th>
+                                                        <th>Mô tả</th>
+                                                        <th class="kqhs-ct" style="width:92px">Thao tác</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr><td class="kqhs-empty" colspan="7">Chưa khai danh mục hồ sơ nào</td></tr>
+                                                </tbody>
+                                                <tfoot class="d-none">
+                                                    <tr>
+                                                        <td colspan="2">Tổng cộng</td>
+                                                        <td class="kqhs-num" id="lblKQ_HS_TongCanNop">0</td>
+                                                        <td class="kqhs-num" id="lblKQ_HS_TongDaNop">0</td>
+                                                        <td colspan="3"></td>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>

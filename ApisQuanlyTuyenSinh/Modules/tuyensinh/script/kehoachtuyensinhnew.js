@@ -1913,6 +1913,9 @@ KeHoachTuyenSinhNew.prototype = {
             me._loadNguonKhaiThac(function () {
                 me._loadHoSoDoiTacTS(me.strSuaHoSo_CorePersonId);
             });
+            // Tab 8 — danh mục hồ sơ (TS_HOSO). Phải gọi SAU khi strDot_Id_ForKQ
+            // đã set ở trên, vì LayDSTS_HoSo lọc theo Id đợt tuyển sinh.
+            me._loadHoSoDM_ForEdit(strId);
         });
 
         // Chuyển sang screen Khai
@@ -4378,6 +4381,8 @@ KeHoachTuyenSinhNew.prototype = {
             // Tab Hóa đơn
             toLoad.push(["TS.DOITUONGHOADON", "ddlKQ_HD_DoiTuong", "-- Chọn đối tượng --"]);     // TODO: verify mã DM chuẩn
             toLoad.push(["PERSON_BANK_ACCOUNT.ACCOUNT_TYPE_CODE", "ddlKQ_HD_HinhThucTT", "-- Chọn hình thức --"]);
+            // Tab 8 — Danh mục hồ sơ. Cùng DM mà duyethoso.js đang dùng cho cột "Loại hồ sơ".
+            toLoad.push(["TUYENSINH.LOAIHOSO", "ddlKQ_HS_LoaiHoSo", "-- Chọn loại hồ sơ --"]);
 
             // Phương thức tuyển sinh: KHÔNG dùng dtPhuongAnTuyenSinh vì đó là bảng "Phương án" khác
             // với "Phương thức của Đợt" (FK cần TS_KH_DOT_PHUONGTHUC.ID). Chưa có API list theo đợt
@@ -4413,6 +4418,9 @@ KeHoachTuyenSinhNew.prototype = {
                     // Đối tượng hóa đơn: giữ data thô để đổi ID → MÃ CHỮ lúc lưu
                     // (BE chỉ nhận CA_NHAN/TO_CHUC — xem _maDoiTuongHoaDon).
                     if (p[1] === 'ddlKQ_HD_DoiTuong') me._dtDoiTuongHD = rows || [];
+                    // Tab 8: giữ data thô để tra TÊN loại hồ sơ khi dựng bảng
+                    // (API LayDSTS_HoSo có thể chỉ trả LOAIHOSO_ID, không trả tên).
+                    if (p[1] === 'ddlKQ_HS_LoaiHoSo') me._dtLoaiHoSo = rows || [];
                     onOne();
                 }, p[2]);
             });
@@ -4924,12 +4932,15 @@ KeHoachTuyenSinhNew.prototype = {
         kqdk_tab_trungtuyen: { so: 4, icon: 'fa-award', ten: 'Trúng tuyển' },
         kqdk_tab_giadinh: { so: 5, icon: 'fa-people-roof', ten: 'Gia đình' },
         kqdk_tab_hoadon: { so: 6, icon: 'fa-file-invoice-dollar', ten: 'Xuất hóa đơn' },
-        kqdk_tab_nguonkt: { so: 7, icon: 'fa-share-nodes', ten: 'Nguồn khai thác' }
+        kqdk_tab_nguonkt: { so: 7, icon: 'fa-share-nodes', ten: 'Nguồn khai thác' },
+        kqdk_tab_hoso: { so: 8, icon: 'fa-folder-open', ten: 'Danh mục hồ sơ' }
     },
 
-    // Thứ tự gốc 7 bước — các chỗ validate cũ đang tham chiếu theo CHỈ SỐ của mảng này
+    // Thứ tự gốc các bước — các chỗ validate cũ tham chiếu theo CHỈ SỐ của mảng này,
+    // nên tab mới BẮT BUỘC thêm vào CUỐI (chèn giữa sẽ lệch hết _goToTabByIndex).
     _PANEL_ORDER: ['kqdk_tab_canhan', 'kqdk_tab_cccd', 'kqdk_tab_xettuyen',
-        'kqdk_tab_trungtuyen', 'kqdk_tab_giadinh', 'kqdk_tab_hoadon', 'kqdk_tab_nguonkt'],
+        'kqdk_tab_trungtuyen', 'kqdk_tab_giadinh', 'kqdk_tab_hoadon', 'kqdk_tab_nguonkt',
+        'kqdk_tab_hoso'],
 
     _viewMode: '',
 
@@ -4943,7 +4954,10 @@ KeHoachTuyenSinhNew.prototype = {
                 },
                 { ten: 'Xét tuyển', icon: 'fa-file-pen', panels: ['kqdk_tab_xettuyen'] },
                 { ten: 'Trúng tuyển', icon: 'fa-award', panels: ['kqdk_tab_trungtuyen'] },
-                { ten: 'Xuất hóa đơn', icon: 'fa-file-invoice-dollar', panels: ['kqdk_tab_hoadon'] }
+                { ten: 'Xuất hóa đơn', icon: 'fa-file-invoice-dollar', panels: ['kqdk_tab_hoadon'] },
+                // Danh mục hồ sơ đứng riêng: nó ghi thẳng xuống DB theo từng dòng,
+                // gom chung với nhóm khai form sẽ gây hiểu nhầm là phải bấm "Lưu hồ sơ".
+                { ten: 'Danh mục hồ sơ', icon: 'fa-folder-open', panels: ['kqdk_tab_hoso'] }
             ];
         }
         return me._PANEL_ORDER.map(function (pid) {
@@ -4979,6 +4993,291 @@ KeHoachTuyenSinhNew.prototype = {
         $tabs.html(html);
         $('#kqdk_khai .aps-sv-panel').removeClass('active');
         nhom[0].panels.forEach(function (p) { $('#' + p).addClass('active'); });
+    },
+
+    /*==========================================================================
+    == TAB 8 — DANH MỤC HỒ SƠ  (PKG_TUYENSINH_HOSO / controller TS_HoSo_MH)
+    ==
+    == Khác 7 tab trên: 1 hồ sơ có NHIỀU dòng danh mục nên tab này tự ghi từng
+    == dòng xuống DB ngay (Thêm / Sửa / Xóa), KHÔNG đi theo nút "Lưu hồ sơ" chung.
+    ==
+    == Khóa gắn kết:
+    ==   strTS_HoSoDuTuyen_Id      = me.strSuaHoSo_Id      (hồ sơ đang mở)
+    ==   strTS_KeHoachTuyenSinh_Id = me.strDot_Id_ForKQ    (Id ĐỢT tuyển sinh — BE xác nhận)
+    ==
+    == 2 action LayDS/LayTT KHÔNG có trong tài liệu BE gửi, được suy ra từ quy tắc
+    == sinh action của hệ thống: action = base64(XOR(tên_method, 'A')), ký tự đệm 'P'.
+    == Quy tắc đã đối chiếu khớp 100% với các action có sẵn:
+    ==   Them_TS_HoSo -> FSkkLB4VEh4JLhIu   Sua_TS_HoSo -> EjQgHhUSHgkuEi4P
+    ==   Xoa_TS_HoSo  -> GS4gHhUSHgkuEi4P   LayDS_HoSo_TS_FULL -> DSA4BRIeCS4SLh4VEh4HFA0N
+    == Nếu BE chưa expose 2 endpoint đó thì đổi lại 2 hằng dưới đây.
+    ==========================================================================*/
+    _ACT_HS: {
+        LayDS: { action: 'TS_HoSo_MH/DSA4BRIVEh4JLhIu', func: 'pkg_tuyensinh_hoso.LayDSTS_HoSo' },
+        LayTT: { action: 'TS_HoSo_MH/DSA4FRUVEh4JLhIu', func: 'pkg_tuyensinh_hoso.LayTTTS_HoSo' },
+        Them: { action: 'TS_HoSo_MH/FSkkLB4VEh4JLhIu', func: 'pkg_tuyensinh_hoso.Them_TS_HoSo' },
+        Sua: { action: 'TS_HoSo_MH/EjQgHhUSHgkuEi4P', func: 'pkg_tuyensinh_hoso.Sua_TS_HoSo' },
+        Xoa: { action: 'TS_HoSo_MH/GS4gHhUSHgkuEi4P', func: 'pkg_tuyensinh_hoso.Xoa_TS_HoSo' }
+    },
+
+    _dtHoSoDM: [],          // cache danh sách dòng danh mục của hồ sơ đang mở
+    _dtLoaiHoSo: [],        // data thô DM TUYENSINH.LOAIHOSO (tra tên theo Id)
+    _suaHoSoDM_Id: '',      // Id dòng đang sửa; rỗng = đang ở chế độ Thêm
+    _hsBound: false,
+
+    /*------------------------------------------
+    -- Gọi API mã hóa dùng chung cho tab 8
+    -------------------------------------------*/
+    _hsCall: function (objApi, obj, fnOk) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var payload = $.extend({
+            'action': objApi.action,
+            'func': objApi.func,
+            'iM': edu.system.iM,
+            'strChucNang_Id': edu.system.strChucNang_Id,
+            'strNguoiThucHien_Id': edu.system.userId
+        }, obj || {});
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data && data.Success) {
+                    if (typeof fnOk === 'function') fnOk(data.Data || [], data);
+                } else {
+                    edu.system.alert(objApi.func + ": " + ((data && data.Message) || ''), "w");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(objApi.func + " (er): " + JSON.stringify(er), "w");
+            },
+            type: "POST",
+            action: payload.action,
+            contentType: true,
+            data: payload,
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    /*------------------------------------------
+    -- Bind sự kiện tab 8 (chỉ chạy 1 lần)
+    -------------------------------------------*/
+    _bindHoSoDM: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (me._hsBound) return;
+        me._hsBound = true;
+
+        $("#btnKQ_HS_Luu").on('click', function () { me._saveHoSoDM(); });
+        $("#btnKQ_HS_Reset").on('click', function () { me._resetFormHoSoDM(); });
+        $("#btnKQ_HS_HuySua").on('click', function () { me._resetFormHoSoDM(); });
+
+        $("#tblKQ_HS").on('click', '.kqhs-edit', function () {
+            me._editHoSoDM($(this).attr('data-id'));
+        });
+        $("#tblKQ_HS").on('click', '.kqhs-del', function () {
+            var id = $(this).attr('data-id');
+            if (!edu.util.checkValue(id)) return;
+            edu.system.confirm("Bạn có chắc chắn xóa dòng danh mục hồ sơ này không?");
+            $("#btnYes").off("click").on("click", function () {
+                me._deleteHoSoDM(id);
+            });
+        });
+    },
+
+    /*------------------------------------------
+    -- Nạp danh sách danh mục hồ sơ của hồ sơ đang mở.
+    -- Gọi từ openSuaHoSo (sau khi đã có strSuaHoSo_Id + strDot_Id_ForKQ).
+    -------------------------------------------*/
+    _loadHoSoDM_ForEdit: function (strHoSoId) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        me._bindHoSoDM();
+        me._resetFormHoSoDM();
+
+        // Chưa lưu hồ sơ thì chưa có khóa để gắn danh mục
+        if (!edu.util.checkValue(strHoSoId)) {
+            $('#kqdk_hs_chualuu').removeClass('d-none');
+            $('#kqdk_hs_zone').addClass('d-none');
+            me._genTable_HoSoDM([]);
+            return;
+        }
+        $('#kqdk_hs_chualuu').addClass('d-none');
+        $('#kqdk_hs_zone').removeClass('d-none');
+
+        me._hsCall(me._ACT_HS.LayDS, {
+            'PageNumber': 1,
+            'ItemPerPage': 500,
+            'strTS_HoSoDuTuyen_Id': strHoSoId,
+            'strLoaiHoSo_Id': '',
+            'strTS_KeHoachTuyenSinh_Id': me.strDot_Id_ForKQ || '',
+            'strNguoiTao_Id': '',
+            'strTuKhoa': ''
+        }, function (rows) {
+            me._genTable_HoSoDM(rows);
+        });
+    },
+
+    /*------------------------------------------
+    -- Dựng bảng + dòng tổng ở tfoot (quy ước: bảng có cột số phải có tổng)
+    -------------------------------------------*/
+    _genTable_HoSoDM: function (rows) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var pick = me._kqPick;
+        me._dtHoSoDM = rows || [];
+
+        var esc = function (s) { return $('<div>').text(s == null ? '' : s).html(); };
+        var num = function (v) { var n = parseInt(v, 10); return isNaN(n) ? 0 : n; };
+
+        if (me._dtHoSoDM.length === 0) {
+            $('#tblKQ_HS tbody').html('<tr><td class="kqhs-empty" colspan="7">Chưa khai danh mục hồ sơ nào</td></tr>');
+            $('#tblKQ_HS tfoot').addClass('d-none');
+            $('#lblKQ_HS_Tong').text('(0)');
+            return;
+        }
+
+        var html = '', tongCan = 0, tongDa = 0;
+        for (var i = 0; i < me._dtHoSoDM.length; i++) {
+            var r = me._dtHoSoDM[i];
+            var id = String(pick(r, ['ID', 'Id', 'TS_HOSO_ID']) || '');
+            var canNop = num(pick(r, ['SOLUONGCANNOP', 'SoLuongCanNop', 'SL_CANNOP']));
+            var daNop = num(pick(r, ['SOLUONG', 'SoLuong', 'SL_DANOP']));
+            var tenLoai = pick(r, ['LOAIHOSO_TEN', 'TENLOAIHOSO', 'LOAIHOSO', 'TEN'])
+                || me._tenLoaiHoSo(pick(r, ['LOAIHOSO_ID', 'LoaiHoSo_Id']));
+            var du = (canNop > 0 && daNop >= canNop);
+
+            tongCan += canNop;
+            tongDa += daNop;
+
+            html += '<tr' + (id === me._suaHoSoDM_Id ? ' class="kqhs-editing"' : '') + '>'
+                + '<td class="kqhs-ct">' + (i + 1) + '</td>'
+                + '<td>' + esc(tenLoai || '-') + '</td>'
+                + '<td class="kqhs-num">' + canNop + '</td>'
+                + '<td class="kqhs-num">' + daNop + '</td>'
+                + '<td class="kqhs-ct"><span class="kqhs-tag ' + (du ? 'ok' : 'thieu') + '">'
+                + (du ? 'Đủ' : 'Thiếu') + '</span></td>'
+                + '<td>' + esc(pick(r, ['MOTA', 'MoTa', 'GHICHU'])) + '</td>'
+                + '<td class="kqhs-ct">'
+                + '<button type="button" class="kqhs-ibtn kqhs-edit" data-id="' + esc(id) + '" title="Sửa">'
+                + '<i class="fa-light fa-pen"></i></button>'
+                + '<button type="button" class="kqhs-ibtn kqhs-del" data-id="' + esc(id) + '" title="Xóa">'
+                + '<i class="fa-light fa-trash-can"></i></button>'
+                + '</td>'
+                + '</tr>';
+        }
+        $('#tblKQ_HS tbody').html(html);
+        $('#lblKQ_HS_TongCanNop').text(tongCan);
+        $('#lblKQ_HS_TongDaNop').text(tongDa);
+        $('#tblKQ_HS tfoot').removeClass('d-none');
+        $('#lblKQ_HS_Tong').text('(' + me._dtHoSoDM.length + ')');
+    },
+
+    /*------------------------------------------
+    -- Tra tên loại hồ sơ theo Id từ data thô danh mục
+    -------------------------------------------*/
+    _tenLoaiHoSo: function (strId) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (!edu.util.checkValue(strId)) return '';
+        var dt = me._dtLoaiHoSo || [];
+        for (var i = 0; i < dt.length; i++) {
+            if (String(dt[i].ID) === String(strId)) return dt[i].TEN || dt[i].NAME || '';
+        }
+        return '';
+    },
+
+    /*------------------------------------------
+    -- Về chế độ Thêm mới, xóa trắng form nhập
+    -------------------------------------------*/
+    _resetFormHoSoDM: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        me._suaHoSoDM_Id = '';
+        $('#ddlKQ_HS_LoaiHoSo').val('').trigger('change');
+        edu.util.resetValByArrId(['txtKQ_HS_CanNop', 'txtKQ_HS_SoLuong', 'txtKQ_HS_MoTa']);
+        $('#lblKQ_HS_FormTitle').text('Thêm danh mục hồ sơ');
+        $('#btnKQ_HS_Luu').html('<i class="fa-light fa-plus"></i> <span>Thêm vào danh sách</span>');
+        $('#btnKQ_HS_HuySua').addClass('d-none');
+        $('#tblKQ_HS tbody tr').removeClass('kqhs-editing');
+    },
+
+    /*------------------------------------------
+    -- Đổ 1 dòng lên form để sửa (đọc từ cache list, không gọi LayTT)
+    -------------------------------------------*/
+    _editHoSoDM: function (strId) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var pick = me._kqPick;
+        if (!edu.util.checkValue(strId)) return;
+
+        var d = null;
+        for (var i = 0; i < (me._dtHoSoDM || []).length; i++) {
+            var rid = String(pick(me._dtHoSoDM[i], ['ID', 'Id', 'TS_HOSO_ID']) || '');
+            if (rid === String(strId)) { d = me._dtHoSoDM[i]; break; }
+        }
+        if (!d) { edu.system.alert("Không tìm thấy dòng danh mục trong danh sách", "w"); return; }
+
+        me._suaHoSoDM_Id = strId;
+        $('#ddlKQ_HS_LoaiHoSo').val(pick(d, ['LOAIHOSO_ID', 'LoaiHoSo_Id'])).trigger('change');
+        $('#txtKQ_HS_CanNop').val(pick(d, ['SOLUONGCANNOP', 'SoLuongCanNop']));
+        $('#txtKQ_HS_SoLuong').val(pick(d, ['SOLUONG', 'SoLuong']));
+        $('#txtKQ_HS_MoTa').val(pick(d, ['MOTA', 'MoTa']));
+
+        $('#lblKQ_HS_FormTitle').text('Sửa danh mục hồ sơ');
+        $('#btnKQ_HS_Luu').html('<i class="fa-light fa-floppy-disk"></i> <span>Cập nhật</span>');
+        $('#btnKQ_HS_HuySua').removeClass('d-none');
+        $('#tblKQ_HS tbody tr').removeClass('kqhs-editing');
+        $('#tblKQ_HS').find('.kqhs-edit[data-id="' + strId + '"]').closest('tr').addClass('kqhs-editing');
+        me._goToPanel('kqdk_tab_hoso');
+    },
+
+    /*------------------------------------------
+    -- Ghi 1 dòng: chưa có _suaHoSoDM_Id thì Thêm, có rồi thì Sửa
+    -------------------------------------------*/
+    _saveHoSoDM: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+
+        if (!edu.util.checkValue(me.strSuaHoSo_Id)) {
+            edu.system.alert("Cần lưu hồ sơ trước khi khai danh mục hồ sơ!", "w");
+            return false;
+        }
+        var strLoai = edu.util.getValById('ddlKQ_HS_LoaiHoSo');
+        if (!edu.util.checkValue(strLoai)) {
+            edu.system.alert("Vui lòng chọn loại hồ sơ!", "w");
+            $('#ddlKQ_HS_LoaiHoSo').focus();
+            return false;
+        }
+
+        // Param Oracle kiểu NUMBER: ô rỗng phải gửi null, gửi "" sẽ Success nhưng không ghi
+        var soN = function (id) {
+            var v = $.trim($('#' + id).val() || '');
+            if (v === '') return null;
+            var n = parseInt(v, 10);
+            return isNaN(n) ? null : n;
+        };
+
+        var obj = {
+            'strTS_HoSoDuTuyen_Id': me.strSuaHoSo_Id,
+            'strTS_KeHoachTuyenSinh_Id': me.strDot_Id_ForKQ || '',   // Id ĐỢT tuyển sinh
+            'strLoaiHoSo_Id': strLoai,
+            'dSoLuongCanNop': soN('txtKQ_HS_CanNop'),
+            'dSoLuong': soN('txtKQ_HS_SoLuong'),
+            'strMoTa': $.trim($('#txtKQ_HS_MoTa').val() || '')
+        };
+
+        var dangSua = edu.util.checkValue(me._suaHoSoDM_Id);
+        if (dangSua) obj.strId = me._suaHoSoDM_Id;
+
+        me._hsCall(dangSua ? me._ACT_HS.Sua : me._ACT_HS.Them, obj, function () {
+            edu.system.alert(dangSua ? "Cập nhật danh mục hồ sơ thành công!" : "Thêm danh mục hồ sơ thành công!", "s");
+            me._resetFormHoSoDM();
+            me._loadHoSoDM_ForEdit(me.strSuaHoSo_Id);
+        });
+    },
+
+    /*------------------------------------------
+    -- Xóa 1 dòng (ParamIds nhận danh sách Id, ở đây gửi 1)
+    -------------------------------------------*/
+    _deleteHoSoDM: function (strId) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        me._hsCall(me._ACT_HS.Xoa, { 'strIds': strId }, function () {
+            edu.system.alert("Xóa danh mục hồ sơ thành công!", "s");
+            if (me._suaHoSoDM_Id === strId) me._resetFormHoSoDM();
+            me._loadHoSoDM_ForEdit(me.strSuaHoSo_Id);
+        });
     },
 
     /*------------------------------------------
@@ -5045,7 +5344,9 @@ KeHoachTuyenSinhNew.prototype = {
             // Tab 6 - Xuất hóa đơn
             'ddlKQ_HD_DoiTuong', 'ddlKQ_HD_HinhThucTT',
             // Tab 7 - Nguồn khai thác
-            'ddlKQ_NguonKhaiThac'
+            'ddlKQ_NguonKhaiThac',
+            // Tab 8 - Danh mục hồ sơ
+            'ddlKQ_HS_LoaiHoSo'
         ];
         for (var i = 0; i < dropIds.length; i++) {
             me._applyKQSelect2(dropIds[i]);
@@ -5129,6 +5430,15 @@ KeHoachTuyenSinhNew.prototype = {
 
         // Cascade: clear Tỉnh + khóa lại Huyện/Xã về trạng thái ban đầu
         $('#ddlKQ_NS_Tinh, #ddlKQ_HK_Tinh').val('').trigger('change');   // trigger change để cascade fire
+
+        // Tab 8 — dọn bảng + form danh mục hồ sơ của hồ sơ trước. Mặc định coi như
+        // hồ sơ mới (chưa có Id) nên hiện lời nhắc "lưu hồ sơ trước"; openSuaHoSo
+        // sẽ gọi _loadHoSoDM_ForEdit để bật lại vùng nhập khi mở hồ sơ đã có.
+        main_doc.KeHoachTuyenSinhNew._resetFormHoSoDM();
+        main_doc.KeHoachTuyenSinhNew._genTable_HoSoDM([]);
+        $('#kqdk_hs_chualuu').removeClass('d-none');
+        $('#kqdk_hs_zone').addClass('d-none');
+
         // Về tab 1
         $('#kqdkKhaiTabs .aps-sv-tab').first().trigger('click');
         // Form vừa trắng → dọn luôn banner nhắc của hồ sơ trước
