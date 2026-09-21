@@ -5043,6 +5043,8 @@ KeHoachTuyenSinhNew.prototype = {
                 if (data && data.Success) {
                     if (typeof fnOk === 'function') fnOk(data.Data || [], data);
                 } else {
+                    // Hiện NGUYÊN message BE/CSDL trả về, không diễn giải lại — để còn
+                    // chụp màn hình báo BE đúng nội dung lỗi gốc.
                     edu.system.alert(objApi.func + ": " + ((data && data.Message) || ''), "w");
                 }
             },
@@ -5077,6 +5079,13 @@ KeHoachTuyenSinhNew.prototype = {
             if (!edu.util.checkValue(id)) return;
             edu.system.confirm("Bạn có chắc chắn xóa dòng danh mục hồ sơ này không?");
             $("#btnYes").off("click").on("click", function () {
+                // .off("click") gỡ luôn handler mặc định của systemroot (systemroot.js:5886
+                // — nó lo ẩn nút Yes + dọn #alert_content), nên phải TỰ đóng hộp confirm:
+                //   - không đóng thì nút Yes còn nguyên, bấm được nhiều lần → xóa lặp
+                //   - cờ edu.system.flag_alert vẫn true → alert "Xóa thành công" bị APPEND
+                //     vào chính hộp confirm đang mở thay vì mở hộp báo mới
+                $("#btnYes").off("click");
+                $('#myModalAlert').modal('hide');
                 me._deleteHoSoDM(id);
             });
         });
@@ -5086,7 +5095,7 @@ KeHoachTuyenSinhNew.prototype = {
     -- Nạp danh sách danh mục hồ sơ của hồ sơ đang mở.
     -- Gọi từ openSuaHoSo (sau khi đã có strSuaHoSo_Id + strDot_Id_ForKQ).
     -------------------------------------------*/
-    _loadHoSoDM_ForEdit: function (strHoSoId) {
+    _loadHoSoDM_ForEdit: function (strHoSoId, cb) {
         var me = main_doc.KeHoachTuyenSinhNew;
         me._bindHoSoDM();
         me._resetFormHoSoDM();
@@ -5096,22 +5105,64 @@ KeHoachTuyenSinhNew.prototype = {
             $('#kqdk_hs_chualuu').removeClass('d-none');
             $('#kqdk_hs_zone').addClass('d-none');
             me._genTable_HoSoDM([]);
+            if (typeof cb === 'function') cb([]);
             return;
         }
         $('#kqdk_hs_chualuu').addClass('d-none');
         $('#kqdk_hs_zone').removeClass('d-none');
 
-        me._hsCall(me._ACT_HS.LayDS, {
-            'PageNumber': 1,
-            'ItemPerPage': 500,
-            'strTS_HoSoDuTuyen_Id': strHoSoId,
-            'strLoaiHoSo_Id': '',
-            'strTS_KeHoachTuyenSinh_Id': me.strDot_Id_ForKQ || '',
-            'strNguoiTao_Id': '',
-            'strTuKhoa': ''
-        }, function (rows) {
-            me._genTable_HoSoDM(rows);
-        });
+        var xong = function (rows) {
+            me._genTable_HoSoDM(rows || []);
+            if (typeof cb === 'function') cb(rows || []);
+        };
+
+        /* Hai cách lọc, thử lần lượt (cùng kiểu loadKQDK_List dò LayDS_HoSo_TS_FULL):
+
+           [1] Lọc theo HỒ SƠ — đúng nghiệp vụ, chỉ ra giấy tờ của thí sinh đang mở.
+               Nhánh này trong proc từng văng "ORA-24338: statement handle not executed"
+               (21/09/2026), nhưng BE có sửa proc nên phải thử lại mỗi lần.
+           [2] Hỏng thì lùi về lọc theo ĐỢT. Lưu ý: khi ParamTS_HoSoDuTuyen_Id rỗng,
+               proc CHỈ trả các dòng có TS_HOSODUTUYEN_ID = NULL (tức danh mục khai ở
+               mức đợt) — không phải "tất cả". Đo được: thêm 1 dòng gắn đúng Id thí sinh
+               thì Them_ ghi đúng cả 2 Id (kiểm chứng qua LayTTTS_HoSo theo strId),
+               nhưng lọc kiểu [2] không thấy nó.
+               → Bảng khi đó hiện danh mục mức đợt, còn hơn để trắng.
+
+           Tên param phân trang là pageIndex/pageSize theo entity C#, KHÔNG phải
+           PageNumber/ItemPerPage của proc Oracle. */
+        var goiLayDS = function (theoHoSo, khiHong) {
+            var A = me._ACT_HS.LayDS;
+            var nhanKetQua = function (data) {
+                if (data && data.Success) { xong(data.Data || []); return; }
+                if (khiHong) { khiHong(); return; }
+                edu.system.alert(A.func + ": " + ((data && data.Message) || ''), "w");
+                xong([]);
+            };
+            edu.system.makeRequest({
+                success: nhanKetQua,
+                error: function (er) {
+                    if (khiHong) { khiHong(); return; }
+                    edu.system.alert(A.func + " (er): " + JSON.stringify(er), "w");
+                    xong([]);
+                },
+                type: 'POST', contentType: true, action: A.action,
+                data: {
+                    'action': A.action, 'func': A.func, 'iM': edu.system.iM,
+                    'strChucNang_Id': edu.system.strChucNang_Id,
+                    'strNguoiThucHien_Id': edu.system.userId,
+                    'pageIndex': 1,
+                    'pageSize': 500,
+                    'strTS_HoSoDuTuyen_Id': theoHoSo ? strHoSoId : '',
+                    'strLoaiHoSo_Id': '',
+                    'strTS_KeHoachTuyenSinh_Id': me.strDot_Id_ForKQ || '',
+                    'strNguoiTao_Id': '',
+                    'strTuKhoa': ''
+                },
+                fakedb: []
+            }, false, false, false, null);
+        };
+
+        goiLayDS(true, function () { goiLayDS(false, null); });
     },
 
     /*------------------------------------------
@@ -5187,6 +5238,9 @@ KeHoachTuyenSinhNew.prototype = {
     _resetFormHoSoDM: function () {
         var me = main_doc.KeHoachTuyenSinhNew;
         me._suaHoSoDM_Id = '';
+        // Về chế độ Thêm → mở khóa lại 2 ô mà chế độ Sửa đã chặn (xem _editHoSoDM)
+        $('#ddlKQ_HS_LoaiHoSo').prop('disabled', false);
+        $('#txtKQ_HS_CanNop').prop('readonly', false);
         $('#ddlKQ_HS_LoaiHoSo').val('').trigger('change');
         edu.util.resetValByArrId(['txtKQ_HS_CanNop', 'txtKQ_HS_SoLuong', 'txtKQ_HS_MoTa']);
         $('#lblKQ_HS_FormTitle').text('Thêm danh mục hồ sơ');
@@ -5216,12 +5270,24 @@ KeHoachTuyenSinhNew.prototype = {
         $('#txtKQ_HS_SoLuong').val(pick(d, ['SOLUONG', 'SoLuong']));
         $('#txtKQ_HS_MoTa').val(pick(d, ['MOTA', 'MoTa']));
 
+        /* Sửa thì CHỈ được đổi "Số lượng đã nộp" (sếp chốt 21/09/2026):
+             - Loại hồ sơ: đổi loại tức là dòng khác, muốn vậy thì xóa rồi thêm mới.
+             - Số lượng cần nộp: là QUY ĐỊNH lấy từ danh mục, không phải số liệu nhập tay.
+           Khóa bằng disabled/readonly chứ không ẩn, để người dùng vẫn đọc được giá trị.
+           .val() của select disabled và input readonly vẫn đọc được nên payload gửi đủ param.
+           Mở khóa lại ở _resetFormHoSoDM. */
+        $('#ddlKQ_HS_LoaiHoSo').prop('disabled', true).trigger('change');
+        $('#txtKQ_HS_CanNop').prop('readonly', true);
+
         $('#lblKQ_HS_FormTitle').text('Sửa danh mục hồ sơ');
         $('#btnKQ_HS_Luu').html('<i class="fa-light fa-floppy-disk"></i> <span>Cập nhật</span>');
         $('#btnKQ_HS_HuySua').removeClass('d-none');
         $('#tblKQ_HS tbody tr').removeClass('kqhs-editing');
         $('#tblKQ_HS').find('.kqhs-edit[data-id="' + strId + '"]').closest('tr').addClass('kqhs-editing');
         me._goToPanel('kqdk_tab_hoso');
+        // Focus SAU khi đã chuyển panel + cuộn xong, không thì bị mất focus.
+        // Ô này là ô duy nhất sửa được nên đưa con trỏ vào sẵn.
+        setTimeout(function () { $('#txtKQ_HS_SoLuong').focus().select(); }, 150);
     },
 
     /*------------------------------------------
@@ -5241,12 +5307,18 @@ KeHoachTuyenSinhNew.prototype = {
             return false;
         }
 
-        // Param Oracle kiểu NUMBER: ô rỗng phải gửi null, gửi "" sẽ Success nhưng không ghi
+        /* Param Oracle kiểu NUMBER: gửi chuỗi rỗng "" thì proc Success nhưng không ghi,
+           nên phải gửi SỐ. Quy ước chung của hệ thống là rỗng → null, NHƯNG entity
+           TS_HoSo_MHEntity khai dSoLuong/dSoLuongCanNop là `double` NON-NULLABLE:
+           gửi null là JsonConvert chết ngay lúc deserialize, trả HTTP 500
+           "Error converting value {null} to type 'System.Double'. Path 'dSoLuong'".
+           → Ô rỗng quy về 0. (Muốn phân biệt "chưa khai" với "0" thì BE phải đổi
+           2 property đó sang double?.) */
         var soN = function (id) {
             var v = $.trim($('#' + id).val() || '');
-            if (v === '') return null;
+            if (v === '') return 0;
             var n = parseInt(v, 10);
-            return isNaN(n) ? null : n;
+            return isNaN(n) ? 0 : n;
         };
 
         var obj = {
@@ -5259,10 +5331,16 @@ KeHoachTuyenSinhNew.prototype = {
         };
 
         var dangSua = edu.util.checkValue(me._suaHoSoDM_Id);
-        if (dangSua) obj.strId = me._suaHoSoDM_Id;
+        var idSua = me._suaHoSoDM_Id;
 
-        me._hsCall(dangSua ? me._ACT_HS.Sua : me._ACT_HS.Them, obj, function () {
-            edu.system.alert(dangSua ? "Cập nhật danh mục hồ sơ thành công!" : "Thêm danh mục hồ sơ thành công!", "s");
+        // Dùng đúng API theo chữ ký BE: Thêm → Them_TS_HoSo, Sửa → Sua_TS_HoSo.
+        // 'strId' là đúng tên param (TS_HoSo_MHController, BE gửi 21/09/2026).
+        var api = dangSua ? me._ACT_HS.Sua : me._ACT_HS.Them;
+        if (dangSua) obj.strId = idSua;
+
+        me._hsCall(api, obj, function () {
+            edu.system.alert(dangSua ? "Cập nhật danh mục hồ sơ thành công!"
+                : "Thêm danh mục hồ sơ thành công!", "s");
             me._resetFormHoSoDM();
             me._loadHoSoDM_ForEdit(me.strSuaHoSo_Id);
         });
