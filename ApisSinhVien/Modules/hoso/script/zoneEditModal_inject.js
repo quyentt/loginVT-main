@@ -2025,13 +2025,22 @@ if (typeof DeXuatHoSo === 'function' && DeXuatHoSo.prototype._bridgeLienHeToShad
             if (!typeId) return;
             if (!giaTri) {
                 /*------------------------------------------
-                -- Ô bị xoá trắng nhưng hồ sơ đang có bản ghi: KHÔNG ghi rỗng xuống.
-                -- Cột CONTACT_VALUE là NOT NULL nên UpdatePersonContact với chuỗi
-                -- rỗng sẽ ném ORA-01407, mà PKG_CORE_HOSONHANSU_05 lại không có proc
-                -- xoá liên hệ nào (chỉ Insert/Update/Get + DeleteCorePerson xoá cả
-                -- hồ sơ). Tức hiện chưa có đường xoá thật.
-                -- Vậy thì phải nói thẳng cho người dùng biết, thay vì lặng lẽ bỏ qua
-                -- rồi vẫn báo "Lưu thành công" như trước.
+                -- Ô trống KHÔNG có nghĩa là người dùng muốn xoá (21/09/2026).
+                --
+                -- Bản đầu coi "trống = xoá" và đã xoá nhầm email của hồ sơ đang mở:
+                -- ô Email ở tab Thông tin cơ bản có thể trống chỉ vì form chưa nạp
+                -- kịp (luồng gốc đổ giá trị vào đó ở mốc 800ms), hoặc vì người dùng
+                -- chỉ thao tác trong bảng ở tab Định danh & Liên hệ. Bấm Lưu là mất
+                -- dữ liệu dù không ai đụng tới ô đó.
+                --
+                -- Nay chỉ coi là xoá khi chính người dùng vừa xoá tay ô đó — cùng
+                -- cách làm với cụm địa chỉ Nơi sinh / Hộ khẩu ở trên.
+                -------------------------------------------*/
+                if (!$('#' + c[1]).attr('data-user-touched')) return;
+                /*------------------------------------------
+                -- Tới đây là người dùng thật sự xoá. Vẫn KHÔNG ghi rỗng xuống: cột
+                -- CONTACT_VALUE là NOT NULL nên Update chuỗi rỗng sẽ ném ORA-01407,
+                -- mà PKG_CORE_HOSONHANSU_05 không có proc xoá liên hệ nào.
                 -------------------------------------------*/
                 var cu = (dx.dtLienHe || []).filter(function (x) {
                     return (x.CONTACT_TYPE_CODE_ID === typeId) || (x.CONTACT_TYPE_CODE === typeId);
@@ -2145,6 +2154,27 @@ if (typeof DeXuatHoSo === 'function' && DeXuatHoSo.prototype._zeBuLienHe
             }, false, false, false, null);
         });
     };
+
+    /*------------------------------------------
+    -- Đánh dấu ô nào người dùng TỰ TAY sửa. Chỉ sự kiện input của thao tác thật
+    -- mới bắn; code đổ dữ liệu bằng .val()/viewValById thì không, nên phân biệt
+    -- được "người dùng xoá" với "form chưa nạp".
+    -------------------------------------------*/
+    DeXuatHoSo.prototype._zeBindLienHeTouched = function () {
+        $('#txtEmailCaNhan, #txtDienThoai').off('.zelhtouch')
+            .on('input.zelhtouch', function () { $(this).attr('data-user-touched', '1'); });
+    };
+
+    // Mở hồ sơ khác thì quên dấu của hồ sơ trước
+    if (DeXuatHoSo.prototype._loadTabInfoExtras) {
+        var _origLTI_LH = DeXuatHoSo.prototype._loadTabInfoExtras;
+        DeXuatHoSo.prototype._loadTabInfoExtras = function (personId) {
+            try { $('#txtEmailCaNhan, #txtDienThoai').removeAttr('data-user-touched'); } catch (e) { }
+            var kq = _origLTI_LH.apply(this, arguments);
+            try { this._zeBindLienHeTouched(); } catch (e) { }
+            return kq;
+        };
+    }
 
     /*------------------------------------------
     -- Bấm Lưu: chờ cầu nối chạy xong (nó mới là chỗ phát hiện ô bị xoá trắng)
@@ -2800,3 +2830,625 @@ if (typeof DeXuatHoSo === 'function' && DeXuatHoSo.prototype._zeVeBadge
         setTimeout(zeGopNgaySinh, 1200);
     });
 })();
+
+/*==============================================================================
+== CHỐT AN TOÀN: KHÔNG XÁC ĐỊNH ĐƯỢC HỒ SƠ THÌ KHÔNG ĐƯỢC LƯU  (21/09/2026)
+==
+== Sự cố: máy khách báo "sửa thông tin học sinh không cho sửa", màn hình ném
+==   ORA-01400: cannot insert NULL into ("TRIENKHAICKNV"."CORE_PERSON"."INITIAL_CONTEXT_CODE")
+== Lỗi của câu INSERT, tức lúc đó luồng lưu đi nhánh InsertCorePerson chứ không
+== phải UpdateCorePerson — mà người dùng đang SỬA.
+==
+== Vì sao mất Id: openEditByPerson thoát ngay ở dòng đầu khi person.id rỗng
+== (dexuathoso.js:5541), nên strDeXuatHoSo_Id lẫn _lockedPersonId đều chưa từng
+== được gán. Ba trang dựng form ngay trong trang (Xem hồ sơ / Danh sách / Cập
+== nhật) thì form LUÔN hiển thị sẵn, không phải bật ra, nên người dùng không hề
+== biết hồ sơ chưa nạp được: cứ gõ rồi bấm Lưu.
+== save_DeXuatHoSo thấy strId rỗng là mặc định coi như thêm mới.
+==
+== Chốt này đứng ngay trước lúc gửi request:
+==   - Id còn giữ được ở chỗ khác  → đổi sang UpdateCorePerson, sửa đúng hồ sơ;
+==   - không còn gì để bám         → CHẶN, không gửi, báo người dùng chọn lại.
+== Thà không lưu còn hơn đẻ ra hồ sơ rác hoặc ném mã lỗi Oracle vào mặt người dùng.
+==
+== Chỉ 4 trang sửa hồ sơ nạp file này; trang Tạo hồ sơ (hoso_taomoi.html) không
+== include nên luồng thêm mới thật không bị đụng tới.
+==============================================================================*/
+if (typeof edu !== 'undefined' && edu.system && edu.system.makeRequest
+    && !edu.system._zeChanInsertCorePerson) {
+    edu.system._zeChanInsertCorePerson = true;
+
+    // Lấy nguyên action string nhánh Update của save_DeXuatHoSo — không tự bịa
+    var _ZE_CP_UPD = 'NS_HoSoNhanSu5_MH/FDElIDUkAi4zJBEkMzIuLwPP';
+
+    /*------------------------------------------
+    -- Báo ngay dưới thanh thông tin sinh viên, KHÔNG nhét vào trong tab: người
+    -- dùng có thể đang đứng ở tab Định danh hay Xuất hoá đơn, báo trong tab khác
+    -- thì họ không nhìn thấy. Cũng không dùng edu.system.alert vì alert của BS3
+    -- chồng lên nhau sẽ gỡ body.modal-open làm form đang mở tự đóng.
+    -------------------------------------------*/
+    var _zeBaoChanLuu = function (msg) {
+        var modal = document.getElementById('zoneEdit');
+        if (!modal) return;
+        var el = document.getElementById('zeChanLuu');
+        if (!el) {
+            el = document.createElement('div');
+            el.id = 'zeChanLuu';
+            el.style.cssText = 'margin:0;padding:11px 24px;background:#fef2f2;'
+                + 'border-bottom:1px solid #fca5a5;color:#b91c1c;font-size:13.5px;'
+                + 'font-weight:600;line-height:1.5;';
+            var moc = document.getElementById('zeThanhSV') || modal.querySelector('.box-header');
+            if (moc && moc.parentNode) moc.parentNode.insertBefore(el, moc.nextSibling);
+            else modal.insertBefore(el, modal.firstChild);
+        }
+        el.textContent = msg;
+        el.style.display = '';
+    };
+    window._zeXoaChanLuu = function () {
+        var el = document.getElementById('zeChanLuu');
+        if (el) el.style.display = 'none';
+    };
+
+    var _mrTruoc = edu.system.makeRequest;
+    edu.system.makeRequest = function (o) {
+        try {
+            if (o && o.data && o.data.func === 'PKG_CORE_HOSONHANSU_05.InsertCorePerson') {
+                var dx = (window.main_doc && window.main_doc.DeXuatHoSo) || null;
+                var pid = dx ? ((dx._lockedPersonId || dx.strDeXuatHoSo_Id || '') + '').trim() : '';
+                if (pid) {
+                    // Id mất giữa chừng nhưng còn bản sao → sửa đúng hồ sơ, không thêm mới
+                    o.data.strId = pid;
+                    o.data.func = 'PKG_CORE_HOSONHANSU_05.UpdateCorePerson';
+                    o.data.action = _ZE_CP_UPD;
+                    o.action = _ZE_CP_UPD;
+                    dx.strDeXuatHoSo_Id = pid;
+                    console.warn('[ZE] Luồng lưu định gọi InsertCorePerson khi đang sửa'
+                        + ' → đã chuyển sang UpdateCorePerson với Id ' + pid);
+                } else {
+                    // Không còn gì để bám: chặn hẳn, và hạ cờ để khỏi báo "Lưu thành công"
+                    if (dx) dx.icheck = false;
+                    _zeBaoChanLuu('Chưa chọn được hồ sơ nên không lưu được.'
+                        + ' Vui lòng bấm chọn lại sinh viên trong danh sách rồi nhập lại.');
+                    console.warn('[ZE] CHẶN InsertCorePerson: không xác định được hồ sơ đang mở'
+                        + ' (strDeXuatHoSo_Id và _lockedPersonId đều rỗng).');
+                    return;                       // không gửi request
+                }
+            }
+        } catch (e) { }
+        return _mrTruoc.apply(this, arguments);
+    };
+
+    // Mở hồ sơ khác thì dọn thông báo cũ
+    if (typeof DeXuatHoSo === 'function' && DeXuatHoSo.prototype.openEditByPerson) {
+        var _origOpenChan = DeXuatHoSo.prototype.openEditByPerson;
+        DeXuatHoSo.prototype.openEditByPerson = function (person) {
+            if (person && person.id && typeof window._zeXoaChanLuu === 'function') window._zeXoaChanLuu();
+            return _origOpenChan.apply(this, arguments);
+        };
+    }
+}
+
+/*==============================================================================
+== KHÔI PHỤC LIÊN HỆ BỊ TẮT CỜ  (21/09/2026)
+==
+== Bản xoá mềm ngày 16/09 coi "ô trống = muốn xoá" nên đã tắt cờ nhầm một số bản
+== ghi email/điện thoại. Dữ liệu KHÔNG mất — chỉ là IS_ACTIVE = 0, nên bật lại
+== được. Điều kiện phát sinh đã vá, hàm này để dọn hậu quả.
+==
+== Gõ trong Console khi đang mở hồ sơ:  _zeKhoiPhucLienHe()
+==============================================================================*/
+window._zeKhoiPhucLienHe = function () {
+    var dx = (window.main_doc && window.main_doc.DeXuatHoSo) || null;
+    if (!dx) { console.warn('Chưa có main_doc.DeXuatHoSo'); return; }
+    var pid = ((dx.strDeXuatHoSo_Id || dx._lockedPersonId || '') + '').trim();
+    if (!pid) { console.warn('Chưa mở hồ sơ nào'); return; }
+
+    var GET = 'NS_HoSoNhanSu5_MH/BiQ1ESQzMi4vAi4vNSAiNQM4ESQzMi4vHggl';
+    var UPD = 'NS_HoSoNhanSu5_MH/FDElIDUkESQzMi4vAi4vNSAiNQPP';
+
+    edu.system.makeRequest({
+        success: function (data) {
+            var rows = (data && data.Success && data.Data) || [];
+            // Chỉ những bản ghi đang bị tắt cờ mới cần bật lại
+            var tat = rows.filter(function (x) {
+                return x && x.IS_ACTIVE !== undefined && x.IS_ACTIVE !== null && x.IS_ACTIVE != 1;
+            });
+            if (!tat.length) { console.log('Hồ sơ này không có liên hệ nào bị tắt cờ.'); return; }
+            console.log('Đang bật lại ' + tat.length + ' bản ghi:',
+                tat.map(function (x) { return x.CONTACT_VALUE || x.VALUE; }));
+            var conLai = tat.length;
+            tat.forEach(function (x) {
+                edu.system.makeRequest({
+                    success: function (d) {
+                        console.log((d && d.Success ? '✔ ' : '✘ ') + (x.CONTACT_VALUE || x.VALUE)
+                            + (d && d.Message ? ' — ' + d.Message : ''));
+                    },
+                    error: function (er) { console.warn('lỗi:', er); },
+                    complete: function () {
+                        if (--conLai === 0 && typeof dx.getList_LienHe === 'function') {
+                            setTimeout(function () { dx.getList_LienHe(); }, 200);
+                            console.log('Xong. Đóng form mở lại để xem kết quả.');
+                        }
+                    },
+                    type: 'POST', contentType: true, action: UPD,
+                    data: {
+                        'action': UPD,
+                        'func': 'PKG_CORE_HOSONHANSU_05.UpdatePersonContact',
+                        'iM': edu.system.iM,
+                        'strId': x.ID,
+                        'strChucNang_Id': edu.system.strChucNang_Id,
+                        'strPersonId': pid,
+                        'strContactTypeCode': x.CONTACT_TYPE_CODE_ID || x.CONTACT_TYPE_CODE,
+                        'strContactValue': x.CONTACT_VALUE || x.VALUE,
+                        'dIsPrimary': (x.IS_PRIMARY == 1) ? 1 : 0,
+                        'dIsActive': 1,
+                        'dIs_Active': 1,
+                        'strNguoiThucHien_Id': edu.system.userId
+                    },
+                    fakedb: []
+                }, false, false, false, null);
+            });
+        },
+        error: function (er) { console.warn('Không đọc được danh sách liên hệ:', er); },
+        type: 'POST', contentType: true, action: GET,
+        data: {
+            'action': GET,
+            'func': 'PKG_CORE_HOSONHANSU_05.GetPersonContactByPerson_Id',
+            'iM': edu.system.iM,
+            'strChucNang_Id': edu.system.strChucNang_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strPerson_Id': pid
+        },
+        fakedb: []
+    }, false, false, false, null);
+};
+
+/*==============================================================================
+== CẦU NỐI TAB 1 XOÁ TRẮNG Ô NGƯỜI DÙNG VỪA GÕ Ở TAB 2  (21/09/2026)
+==
+== Hiện tượng: nhập đủ 4 ô trong tab "Định danh & Liên hệ" (TAX_CODE, CCCD, Điện
+== thoại, Email) rồi Lưu → báo thành công nhưng CHỈ TAX_CODE được lưu.
+==
+== Vì sao đúng TAX_CODE sống: nó là ô duy nhất không có cầu nối từ tab 1.
+== Hai hàm cầu nối của luồng gốc ghi đè VÔ ĐIỀU KIỆN:
+==   _bridgeCccdToShadow : $('#txtSoDinhDinh'+cid).val( $('#txtCCCD_So').val() )
+==   _bridgeOneLienHe    : $('#txtLienHe'+typeId).val( $('#'+uiFieldId).val() )
+== Chúng chạy ngay đầu handler nút Lưu. Người dùng gõ thẳng vào bảng ở tab 2 mà
+== không đụng tab 1 → ô tab 1 rỗng → cầu nối ghi rỗng đè lên đúng thứ vừa gõ →
+== save_DinhDanh / save_LienHe thấy rỗng là bỏ qua, không gửi gì.
+==
+== Cách xử lý: chụp giá trị các ô trong bảng TRƯỚC khi cầu nối chạy, xong thì ô
+== nào bị làm rỗng mà trước đó có giá trị thì trả lại. Không đụng vào logic phân
+== loại của bản gốc, và không đè lên giá trị hợp lệ mà cầu nối vừa ghi vào (chỉ
+== khôi phục khi ô đang rỗng).
+==============================================================================*/
+if (typeof DeXuatHoSo === 'function' && DeXuatHoSo.prototype._bridgeLienHeToShadow
+    && !DeXuatHoSo.prototype._zeGiuOBangHooked) {
+    DeXuatHoSo.prototype._zeGiuOBangHooked = true;
+
+    // Chụp giá trị hiện có của một nhóm ô trong bảng, theo danh mục loại
+    var _zeChup = function (dsLoai, cacTienTo) {
+        var luu = [];
+        (dsLoai || []).forEach(function (l) {
+            cacTienTo.forEach(function (tt) {
+                var $o = $('#' + tt + l.ID);
+                if (!$o.length) return;
+                var v = (($o.val() || '') + '');
+                if (v.trim()) luu.push({ id: tt + l.ID, val: v });
+            });
+        });
+        return luu;
+    };
+
+    // Trả lại những ô bị làm rỗng; ô nào đang có giá trị thì để yên
+    var _zeTraLai = function (luu) {
+        (luu || []).forEach(function (m) {
+            var $o = $('#' + m.id);
+            if ($o.length && !(($o.val() || '') + '').trim()) $o.val(m.val);
+        });
+    };
+
+    var _origLH_Giu = DeXuatHoSo.prototype._bridgeLienHeToShadow;
+    DeXuatHoSo.prototype._bridgeLienHeToShadow = function () {
+        var luu = [];
+        try { luu = _zeChup(this.dtLoaiLienHe, ['txtLienHe']); } catch (e) { }
+        var kq = _origLH_Giu.apply(this, arguments);
+        try { _zeTraLai(luu); } catch (e) { }
+        return kq;
+    };
+
+    if (DeXuatHoSo.prototype._bridgeCccdToShadow) {
+        var _origDD_Giu = DeXuatHoSo.prototype._bridgeCccdToShadow;
+        DeXuatHoSo.prototype._bridgeCccdToShadow = function () {
+            var luu = [];
+            try {
+                luu = _zeChup(this.dtLoaiDinhDanh, ['txtSoDinhDinh', 'txtNgayCap', 'txtNoiCap']);
+            } catch (e) { }
+            var kq = _origDD_Giu.apply(this, arguments);
+            try { _zeTraLai(luu); } catch (e) { }
+            return kq;
+        };
+    }
+}
+
+/*==============================================================================
+== SOI TỪNG Ô LÚC LƯU ĐỊNH DANH / LIÊN HỆ  (21/09/2026 — tạm thời)
+==
+== Nhập đủ 4 ô ở tab Định danh & Liên hệ nhưng mở lại chỉ còn TAX_CODE. Bản vá
+== chặn cầu nối ghi đè rỗng chưa đủ, nên thay vì đoán tiếp thì in thẳng ra: mỗi
+== loại đọc được giá trị gì từ ô nào, có Id bản ghi chưa, và luồng gốc quyết định
+== GỬI hay BỎ QUA. Chỗ nào mất dữ liệu sẽ lộ ngay.
+==
+== Xong việc thì tắt bằng cách bọc lại dòng console.log trong zeDebug ở đầu file.
+==============================================================================*/
+if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype._zeSoiLuuConHooked) {
+    DeXuatHoSo.prototype._zeSoiLuuConHooked = true;
+
+    [['save_DinhDanh', 'txtSoDinhDinh'], ['save_LienHe', 'txtLienHe']].forEach(function (c) {
+        var ten = c[0], tienTo = c[1];
+        var goc = DeXuatHoSo.prototype[ten];
+        if (typeof goc !== 'function') return;
+        DeXuatHoSo.prototype[ten] = function (typeId) {
+            try {
+                var $o = $('#' + tienTo + typeId);
+                var v = (($o.val() || '') + '');
+                zeDebug('[ZE ' + ten + ']', {
+                    'IdLoại': typeId,
+                    'Ô': '#' + tienTo + typeId,
+                    'Có trên màn hình': $o.length,
+                    'Giá trị đọc được': v,
+                    'Id bản ghi': $o.attr('name') || '(rỗng → sẽ INSERT)',
+                    'Kết luận': v.trim() ? 'GỬI' : 'BỎ QUA vì ô rỗng'
+                });
+            } catch (e) { }
+            return goc.apply(this, arguments);
+        };
+    });
+
+    // In luôn toàn cảnh các ô ngay khi bấm Lưu, trước khi chuỗi lưu chạy
+    $(document).on('mousedown.zesoi', '#btnSave_DeXuatHoSo', function () {
+        var dx = (window.main_doc && window.main_doc.DeXuatHoSo) || null;
+        if (!dx) return;
+        setTimeout(function () {
+            var bang = [];
+            (dx.dtLoaiDinhDanh || []).forEach(function (l) {
+                bang.push({
+                    'Nhóm': 'Định danh', 'Tên loại': l.TEN,
+                    'Giá trị': ($('#txtSoDinhDinh' + l.ID).val() || ''),
+                    'Id bản ghi': $('#txtSoDinhDinh' + l.ID).attr('name') || ''
+                });
+            });
+            (dx.dtLoaiLienHe || []).forEach(function (l) {
+                bang.push({
+                    'Nhóm': 'Liên hệ', 'Tên loại': l.TEN,
+                    'Giá trị': ($('#txtLienHe' + l.ID).val() || ''),
+                    'Id bản ghi': $('#txtLienHe' + l.ID).attr('name') || ''
+                });
+            });
+            zeDebug('[ZE] Các ô ngay sau khi bấm Lưu:');
+            if (console.table) console.table(bang); else zeDebug(bang);
+        }, 50);
+    });
+}
+
+/*==============================================================================
+== SOI TIẾP: CHUỖI LƯU CHẾT Ở ĐÂU  (21/09/2026 — tạm thời)
+==
+== Log lượt trước cho thấy 4 ô còn nguyên dữ liệu lúc bấm Lưu, nhưng save_DinhDanh
+== và save_LienHe KHÔNG hề được gọi. Hai hàm đó nằm trong success của CorePerson,
+== nên điểm chết chỉ có thể là:
+==   - CorePerson trả Success = false, hoặc
+==   - cờ icheck bị một hàm KiemTraThongTin... hạ xuống false ("Dữ liệu tồn tại"),
+==     khiến save_DeXuatHoSo thoát ngay dòng đầu.
+== Phần này in ra cả hai.
+==============================================================================*/
+if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype._zeSoiChuoiLuuHooked) {
+    DeXuatHoSo.prototype._zeSoiChuoiLuuHooked = true;
+
+    if (DeXuatHoSo.prototype.save_DeXuatHoSo) {
+        var _gocSaveSoi = DeXuatHoSo.prototype.save_DeXuatHoSo;
+        DeXuatHoSo.prototype.save_DeXuatHoSo = function () {
+            zeDebug('[ZE save_DeXuatHoSo] được gọi', {
+                'icheck': this.icheck,
+                'strDeXuatHoSo_Id': this.strDeXuatHoSo_Id || '(rỗng → sẽ INSERT)',
+                '_lockedPersonId': this._lockedPersonId || ''
+            });
+            if (!this.icheck) {
+                zeDebug('%c[ZE] DỪNG TẠI ĐÂY: icheck = false nên cả lượt lưu bị bỏ qua'
+                    + ' (một hàm KiemTraThongTin... đã báo dữ liệu tồn tại)',
+                    'color:#dc2626;font-weight:bold');
+            }
+            return _gocSaveSoi.apply(this, arguments);
+        };
+    }
+}
+
+if (typeof edu !== 'undefined' && edu.system && edu.system.makeRequest
+    && !edu.system._zeSoiCorePersonHooked) {
+    edu.system._zeSoiCorePersonHooked = true;
+    var _mrSoi = edu.system.makeRequest;
+    edu.system.makeRequest = function (o) {
+        try {
+            var f = (o && o.data && o.data.func) || '';
+            if (/CorePerson|KiemTraThongTin/.test(f) && typeof o.success === 'function') {
+                var ten = f.split('.').pop();
+                zeDebug('[ZE →] ' + ten, {
+                    'strId': o.data.strId || '(rỗng)',
+                    'giá trị kiểm tra': o.data.strIdentifier_No || o.data.strContactValue || '',
+                    'loại': o.data.strIdentifier_Type_Code || o.data.strContactTypeCode || ''
+                });
+                var sgSoi = o.success;
+                o.success = function (d) {
+                    zeDebug('[ZE ←] ' + ten, {
+                        'Success': d && d.Success,
+                        'Message': (d && d.Message) || '',
+                        'Số dòng trả về': (d && d.Data && d.Data.length !== undefined) ? d.Data.length : '-',
+                        'Ghi chú': (/KiemTra/.test(ten) && d && d.Data && d.Data.length > 0)
+                            ? '>>> TRÙNG DỮ LIỆU → sẽ hạ cờ icheck, cả lượt lưu bị huỷ' : ''
+                    });
+                    return sgSoi.apply(this, arguments);
+                };
+            }
+        } catch (e) { }
+        return _mrSoi.apply(this, arguments);
+    };
+}
+
+/*==============================================================================
+== BÁO RÕ KHI BỊ CHẶN VÌ TRÙNG DỮ LIỆU  (21/09/2026)
+==
+== Đã truy ra nguyên nhân "nhập 4 ô, lưu xong chỉ còn 1": không phải mất dữ liệu.
+== KiemTraThongTinLienHe thấy email đã tồn tại ở hồ sơ khác → save_KiemTraLienHe
+== hạ cờ icheck → save_DeXuatHoSo thoát ngay dòng đầu → CẢ LƯỢT LƯU bị huỷ, kể
+== cả những ô hoàn toàn hợp lệ và cả tab Thông tin cơ bản. Ô TAX_CODE trông như
+== "lưu được" thật ra đã có bản ghi từ trước chứ không phải vừa ghi.
+==
+== Đây là quy tắc nghiệp vụ của máy chủ, không sửa ở đây. Nhưng câu thông báo gốc
+== "Dữ liệu tồn tại: Email cá nhân" thì quá cụt: không nói giá trị nào trùng, và
+== quan trọng nhất là không nói rằng MỌI THỨ VỪA NHẬP ĐỀU KHÔNG ĐƯỢC LƯU. Phần
+== này nói đủ ý đó và tô đỏ đúng ô gây ra.
+==============================================================================*/
+if (typeof edu !== 'undefined' && edu.system && edu.system.makeRequest
+    && !edu.system._zeBaoTrungHooked) {
+    edu.system._zeBaoTrungHooked = true;
+
+    var _zeBaoTrung = function (msg) {
+        var modal = document.getElementById('zoneEdit');
+        if (!modal) return;
+        var el = document.getElementById('zeChanLuu');
+        if (!el) {
+            el = document.createElement('div');
+            el.id = 'zeChanLuu';
+            el.style.cssText = 'margin:0;padding:11px 24px;background:#fef2f2;'
+                + 'border-bottom:1px solid #fca5a5;color:#b91c1c;font-size:13.5px;'
+                + 'font-weight:600;line-height:1.5;';
+            var moc = document.getElementById('zeThanhSV') || modal.querySelector('.box-header');
+            if (moc && moc.parentNode) moc.parentNode.insertBefore(el, moc.nextSibling);
+            else modal.insertBefore(el, modal.firstChild);
+        }
+        el.textContent = msg;
+        el.style.display = '';
+    };
+
+    var _zeToDo = function (oId) {
+        var $o = $('#' + oId);
+        if (!$o.length) return;
+        $o.css({ 'border': '1px solid #dc2626', 'background': '#fef2f2' });
+        // Người dùng sửa lại thì trả về bình thường
+        $o.off('.zetrung').on('input.zetrung', function () {
+            $(this).css({ 'border': '', 'background': '' });
+        });
+    };
+
+    var _mrTrung = edu.system.makeRequest;
+    edu.system.makeRequest = function (o) {
+        try {
+            var f = (o && o.data && o.data.func) || '';
+            if (/KiemTraThongTin(LienHe|DinhDanh)/.test(f) && typeof o.success === 'function') {
+                var laLienHe = /LienHe/.test(f);
+                var typeId = laLienHe ? o.data.strContactTypeCode : o.data.strIdentifier_Type_Code;
+                var giaTri = laLienHe ? o.data.strContactValue : o.data.strIdentifier_No;
+                var sgTrung = o.success;
+                o.success = function (d) {
+                    try {
+                        if (d && d.Success && d.Data && d.Data.length > 0) {
+                            var dx = (window.main_doc && window.main_doc.DeXuatHoSo) || null;
+                            var ds = (dx && (laLienHe ? dx.dtLoaiLienHe : dx.dtLoaiDinhDanh)) || [];
+                            var loai = ds.filter(function (l) { return l.ID === typeId; })[0];
+                            var tenLoai = (loai && loai.TEN) || (laLienHe ? 'Thông tin liên hệ' : 'Định danh');
+                            _zeToDo((laLienHe ? 'txtLienHe' : 'txtSoDinhDinh') + typeId);
+                            _zeBaoTrung('Không lưu được: ' + tenLoai
+                                + (giaTri ? ' "' + giaTri + '"' : '')
+                                + ' đã được dùng ở một hồ sơ khác.'
+                                + ' Toàn bộ nội dung vừa nhập trong lần Lưu này đều KHÔNG được ghi lại'
+                                + ' — sửa lại ô đang tô đỏ rồi bấm Lưu lần nữa.');
+                        }
+                    } catch (e) { }
+                    return sgTrung.apply(this, arguments);
+                };
+            }
+        } catch (e) { }
+        return _mrTrung.apply(this, arguments);
+    };
+
+    // Mở hồ sơ khác thì dọn cảnh báo cũ
+    if (typeof DeXuatHoSo === 'function' && DeXuatHoSo.prototype.openEditByPerson) {
+        var _origOpenTrung = DeXuatHoSo.prototype.openEditByPerson;
+        DeXuatHoSo.prototype.openEditByPerson = function (person) {
+            try {
+                var el = document.getElementById('zeChanLuu');
+                if (el) el.style.display = 'none';
+                $('[id^="txtLienHe"], [id^="txtSoDinhDinh"]').css({ 'border': '', 'background': '' });
+            } catch (e) { }
+            return _origOpenTrung.apply(this, arguments);
+        };
+    }
+}
+
+/*==============================================================================
+== "LÀ THÔNG TIN CHÍNH" CHỈ ĐƯỢC CHỌN MỘT  (21/09/2026)
+==
+== Máy chủ ném:
+==   ORA-00001: unique constraint (TRIENKHAICKNN.UX_PERSON_IDENT_PRIMARY) violated
+==   ORA-06512: at "TRIENKHAICKNN.PKG_CORE_HOSONHANSU_05", line 591
+== khi tick "Là thông tin chính" cho cả TAX_CODE lẫn CCCD. Ràng buộc đó quy định
+== mỗi hồ sơ chỉ được MỘT bản ghi định danh mang cờ chính (liên hệ cũng vậy).
+==
+== Giao diện lại để ô tick tự do nên người dùng tick được nhiều dòng, và chỉ biết
+== mình sai khi nhận một dòng mã lỗi Oracle. Ở đây cho mấy ô đó hành xử như nút
+== chọn một trong nhiều: tick dòng này thì dòng khác trong CÙNG bảng tự bỏ tick.
+== Hai bảng độc lập nhau — định danh một cái chính, liên hệ một cái chính.
+==
+== Không tự sửa dữ liệu đang có lúc nạp lên: chỉ can thiệp khi người dùng tự tay
+== tick, còn hiển thị thì phản ánh đúng những gì đang nằm dưới cơ sở dữ liệu.
+==============================================================================*/
+if (typeof jQuery !== 'undefined' && !window._zeMotChinhHooked) {
+    window._zeMotChinhHooked = true;
+
+    $(document).on('change.zemotchinh',
+        '#tblDinhDanh input[type="checkbox"], #tblLienHe input[type="checkbox"]',
+        function () {
+            if (!this.checked) return;
+            var $bang = $(this).closest('table');
+            if (!$bang.length) return;
+            $bang.find('input[type="checkbox"]').not(this)
+                .prop('checked', false).removeAttr('checked');
+        });
+
+    /*------------------------------------------
+    -- Dịch mã lỗi Oracle sang câu người dùng hiểu được. Vẫn giữ nguyên mã gốc ở
+    -- cuối câu để lúc cần còn tra cứu / gửi cho bên máy chủ.
+    -------------------------------------------*/
+    if (typeof edu !== 'undefined' && edu.system && edu.system.makeRequest
+        && !edu.system._zeDichLoiPrimaryHooked) {
+        edu.system._zeDichLoiPrimaryHooked = true;
+
+        var _zeBaoPrimary = function (msg) {
+            var modal = document.getElementById('zoneEdit');
+            if (!modal) return;
+            var el = document.getElementById('zeChanLuu');
+            if (!el) {
+                el = document.createElement('div');
+                el.id = 'zeChanLuu';
+                el.style.cssText = 'margin:0;padding:11px 24px;background:#fef2f2;'
+                    + 'border-bottom:1px solid #fca5a5;color:#b91c1c;font-size:13.5px;'
+                    + 'font-weight:600;line-height:1.5;';
+                var moc = document.getElementById('zeThanhSV') || modal.querySelector('.box-header');
+                if (moc && moc.parentNode) moc.parentNode.insertBefore(el, moc.nextSibling);
+                else modal.insertBefore(el, modal.firstChild);
+            }
+            el.textContent = msg;
+            el.style.display = '';
+        };
+
+        var _mrPrimary = edu.system.makeRequest;
+        edu.system.makeRequest = function (o) {
+            try {
+                var f = (o && o.data && o.data.func) || '';
+                if (/PersonIdentifier|PersonContact/.test(f) && typeof o.success === 'function') {
+                    var sgP = o.success;
+                    o.success = function (d) {
+                        try {
+                            var m = (d && d.Message) || '';
+                            if (/UX_PERSON_IDENT_PRIMARY|UX_PERSON_CONTACT_PRIMARY/i.test(m)
+                                || (/ORA-00001/.test(m) && /PRIMARY/i.test(m))) {
+                                var nhom = /Identifier/.test(f) ? 'định danh' : 'liên hệ';
+                                _zeBaoPrimary('Mỗi hồ sơ chỉ được chọn MỘT dòng ' + nhom
+                                    + ' là "thông tin chính". Hiện đang có nhiều hơn một dòng được tick'
+                                    + ' nên máy chủ từ chối. Bỏ bớt dấu tick rồi Lưu lại.'
+                                    + '  [ORA-00001]');
+                            }
+                        } catch (e) { }
+                        return sgP.apply(this, arguments);
+                    };
+                }
+            } catch (e) { }
+            return _mrPrimary.apply(this, arguments);
+        };
+    }
+}
+
+/*==============================================================================
+== SỬA Ô Ở BẢNG TAB 2 BỊ TAB 1 GHI ĐÈ BẰNG GIÁ TRỊ CŨ  (21/09/2026)
+==
+== Hiện tượng: sửa TAX_CODE thì được, sửa CCCD thì không — số cũ quay lại.
+== Vì TAX_CODE không có cầu nối từ tab 1, còn CCCD thì có:
+==   _bridgeCccdToShadow: $('#txtSoDinhDinh'+cid).val( $('#txtCCCD_So').val() )
+== Ô #txtCCCD_So ở tab 1 đang giữ số CŨ (do luồng nạp đổ vào lúc mở hồ sơ). Người
+== dùng sửa số mới ngay trong bảng tab 2, bấm Lưu → cầu nối lấy số cũ ở tab 1 ghi
+== đè lên số mới → lưu lại đúng số cũ, nhìn như "sửa không ăn".
+==
+== Bản vá trước chỉ cứu trường hợp bị ghi đè RỖNG nên không đỡ được ca này.
+==
+== Nguyên tắc xử lý: ô nào người dùng vừa sửa thì ô đó thắng. Mỗi lần gõ tay là
+== đóng một mốc thời gian lên ô; sau khi cầu nối chạy, ô ở bảng nào có mốc mới
+== hơn phía tab 1 thì trả lại giá trị người dùng vừa gõ. Không ai gõ thì để
+== nguyên hành vi cũ.
+==============================================================================*/
+if (typeof DeXuatHoSo === 'function' && DeXuatHoSo.prototype._bridgeLienHeToShadow
+    && !DeXuatHoSo.prototype._zeUuTienOVuaSuaHooked) {
+    DeXuatHoSo.prototype._zeUuTienOVuaSuaHooked = true;
+
+    var _ZE_O_TAB1 = '#txtCCCD_So, #txtCCCD_NgayCap, #txtCCCD_NoiCap, #txtEmailCaNhan, #txtDienThoai';
+
+    // Đóng mốc thời gian mỗi khi người dùng gõ tay (code đổ dữ liệu bằng .val()
+    // không bắn sự kiện input nên không bị tính nhầm)
+    $(document).on('input.zemoc',
+        '#tblDinhDanh input, #tblLienHe input, ' + _ZE_O_TAB1,
+        function () { $(this).attr('data-ze-sua', Date.now()); });
+
+    var _zeMoc = function (sel) {
+        var max = 0;
+        $(sel).each(function () {
+            var v = parseInt($(this).attr('data-ze-sua') || '0', 10);
+            if (v > max) max = v;
+        });
+        return max;
+    };
+
+    // Chụp giá trị + mốc của mọi ô trong 2 bảng
+    var _zeChupCoMoc = function () {
+        var luu = [];
+        $('#tblDinhDanh input[type="text"], #tblDinhDanh input:not([type]), '
+            + '#tblLienHe input[type="text"], #tblLienHe input:not([type])').each(function () {
+                if (!this.id) return;
+                luu.push({ id: this.id, val: (($(this).val() || '') + ''), moc: _zeMoc(this) });
+            });
+        return luu;
+    };
+
+    var _zeTraLaiTheoMoc = function (luu, mocTab1) {
+        (luu || []).forEach(function (m) {
+            var $o = $('#' + m.id);
+            if (!$o.length) return;
+            var hienTai = (($o.val() || '') + '');
+            if (hienTai === m.val) return;                 // không bị đụng
+            // Trả lại khi: bị xoá trắng, hoặc người dùng vừa sửa ô này mới hơn tab 1
+            if (!hienTai.trim() || (m.moc && m.moc >= mocTab1)) $o.val(m.val);
+        });
+    };
+
+    ['_bridgeCccdToShadow', '_bridgeLienHeToShadow'].forEach(function (ten) {
+        var goc = DeXuatHoSo.prototype[ten];
+        if (typeof goc !== 'function') return;
+        DeXuatHoSo.prototype[ten] = function () {
+            var luu = [], mocTab1 = 0;
+            try { luu = _zeChupCoMoc(); mocTab1 = _zeMoc(_ZE_O_TAB1); } catch (e) { }
+            var kq = goc.apply(this, arguments);
+            try { _zeTraLaiTheoMoc(luu, mocTab1); } catch (e) { }
+            return kq;
+        };
+    });
+
+    // Mở hồ sơ khác thì xoá hết mốc của hồ sơ trước
+    if (DeXuatHoSo.prototype.openEditByPerson) {
+        var _origOpenMoc = DeXuatHoSo.prototype.openEditByPerson;
+        DeXuatHoSo.prototype.openEditByPerson = function (person) {
+            try {
+                $('#tblDinhDanh input, #tblLienHe input').removeAttr('data-ze-sua');
+                $(_ZE_O_TAB1).removeAttr('data-ze-sua');
+            } catch (e) { }
+            return _origOpenMoc.apply(this, arguments);
+        };
+    }
+}
