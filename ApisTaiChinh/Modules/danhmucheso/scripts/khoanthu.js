@@ -175,6 +175,7 @@ KhoanThu.prototype = {
         edu.util.resetValById(me.objInput_DMLKT.strMoTa);
         edu.util.resetValById(me.objInput_DMLKT.strNguoiTao_Id);
         edu.util.resetValById("txtMaThanhToanDinhDanh");
+        edu.util.resetValById("txtVATHD");
         edu.util.resetValById('dropDonViTinh');
         $("#myModal input[type=checkbox]").each(function () {
             $(this).attr('checked', false);
@@ -213,6 +214,7 @@ KhoanThu.prototype = {
             'dKiemTraNoKhiXetHB': $("#chkKiemTraNoKhiXetHocBong").is(':checked') ? 1 : undefined,
             'dKiemTraNoKhiXetHV': $("#chkKiemTraNoKhiXetHocVu").is(':checked') ? 1 : undefined,
             'strMaThanhToanDinhDanh': edu.system.getValById('txtMaThanhToanDinhDanh'),
+            'dVAT': edu.system.getValById('txtVATHD'),
             'dKiemTraNoKhiXetTN': $("#chkKiemTraNoKhiXetTotNghiep").is(':checked') ? 1 : undefined,
             'dKiemTraNoKhiDangKyHoc': $("#chkKiemTraNoKhiDangKyHoc").is(':checked') ? 1 : undefined,
             'dTinhPhiTuDongLopRieng': $("#chkTinhPhiTuDongLopRieng").is(':checked') ? 1 : undefined,
@@ -394,6 +396,9 @@ KhoanThu.prototype = {
                     "mDataProp": "NHOMCACKHOANTHU_TEN"
                 },
                 {
+                    "mDataProp": "VAT"
+                },
+                {
                     "mDataProp": "MOTA"
                 },
                 {
@@ -441,6 +446,7 @@ KhoanThu.prototype = {
         edu.util.viewValById(me.objInput_DMLKT.strMoTa, data.MOTA);
         edu.util.viewValById(me.objInput_DMLKT.iThutuUuTienGachNo, data.THUTUUUTIENGACHNO);
         edu.util.viewValById("txtMaThanhToanDinhDanh", data.MATHANHTOANDINHDANH);
+        edu.util.viewValById("txtVATHD", data.VAT);
         edu.util.viewValById("dropDonViTinh", data.DONVITINH_ID);
         $("#chkKhoanRieng").prop("checked", data.KHOANTHURIENG);
         $("#chkTinhPhiTuDong").prop("checked", data.TINHPHITUDONG);
