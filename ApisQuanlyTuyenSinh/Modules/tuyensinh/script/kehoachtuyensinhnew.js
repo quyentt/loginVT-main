@@ -516,6 +516,11 @@ KeHoachTuyenSinhNew.prototype = {
             } else if (mode === 'khai') {
                 $('#kqdk_khai').removeClass('d-none');
                 me._exitSuaMode();   // ensure Thêm mới mode, banner ẩn, save btn "Lưu hồ sơ"
+                /* ⚠ PHẢI xoá trắng form. _exitSuaMode chỉ tắt cờ sửa / ẩn banner / đổi nhãn nút,
+                   KHÔNG đụng tới dữ liệu đang nằm trên các ô. Thiếu dòng này thì: xem hồ sơ
+                   người A → đóng → bấm "Khai trực tiếp hồ sơ" là cả form vẫn đầy thông tin của
+                   A, khai mới thành sửa nhầm người (khách báo 22/09/2026). */
+                me.resetKhai_HoSo();
                 me.initKhai_DanhMuc();
                 // Đợt tuyển sinh: load từ cache dtDotTuyenSinh; auto-select nếu chỉ 1 đợt
                 // hoặc preselect nếu context Đợt đã có (mở từ row Đợt).
@@ -773,6 +778,9 @@ KeHoachTuyenSinhNew.prototype = {
         $("#ket-qua-dk").on('hidden.bs.modal', function () {
             me._exitSuaMode();
             me._kqdkVaoTuList = false;
+            // Dọn luôn form khai: đóng modal là không còn ai đọc dữ liệu trên đó nữa, để lại
+            // chỉ tổ lần sau mở lên thấy thông tin của người cũ.
+            me.resetKhai_HoSo();
         });
 
         // Tự tính tổng điểm khi user nhập điểm môn/UT
@@ -5693,6 +5701,11 @@ KeHoachTuyenSinhNew.prototype = {
         main_doc.KeHoachTuyenSinhNew._genTable_HoSoDM([]);
         $('#kqdk_hs_chualuu').removeClass('d-none');
         $('#kqdk_hs_zone').addClass('d-none');
+
+        // Tab 8 cũng là một phần của form: không dọn thì lưới danh mục vẫn còn của hồ sơ trước.
+        // Truyền rỗng → hiện nhắc "chưa lưu hồ sơ" và xoá lưới. openSuaHoSo gọi lại ngay sau
+        // đó với Id thật nên không ảnh hưởng luồng Sửa.
+        main_doc.KeHoachTuyenSinhNew._loadHoSoDM_ForEdit('');
 
         // Về tab 1
         $('#kqdkKhaiTabs .aps-sv-tab').first().trigger('click');
