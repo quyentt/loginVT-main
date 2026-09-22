@@ -1567,7 +1567,7 @@
     .aps-sv-tabs.d-none { display:none !important; }
 
     .aps-sv-tabs { display:flex; flex-wrap:wrap; gap:6px; padding:14px 18px 0; border-bottom:1px solid var(--aps-sv-border); background:#f8fafc; }
-    .aps-sv-tab { display:inline-flex; align-items:center; gap:8px; padding:11px 18px; border:none; background:transparent; color:var(--aps-sv-label); font-size:14px; font-weight:600; cursor:pointer; border-radius:10px 10px 0 0; border-bottom:3px solid transparent; transition:all .18s ease; white-space:nowrap; }
+    .aps-sv-tab { display:inline-flex; align-items:center; gap:8px; padding:11px 18px; border:none; background:transparent; color:var(--aps-sv-label); font-size:15px; font-weight:700; cursor:pointer; border-radius:10px 10px 0 0; border-bottom:3px solid transparent; transition:all .18s ease; white-space:nowrap; }
     .aps-sv-tab i { font-size:15px; }
     .aps-sv-tab:hover { color:var(--aps-sv-primary); background:var(--aps-sv-primary-soft); }
     .aps-sv-tab.active { color:var(--aps-sv-primary); background:#fff; border-bottom-color:var(--aps-sv-primary); }
@@ -1589,7 +1589,9 @@
     .aps-sv-field.aps-sv-col-full .aps-sv-input { max-width:760px; }
     .aps-sv-label { display:block; font-size:14px; font-weight:600; color:var(--aps-sv-label); margin-bottom:8px; }
     .aps-sv-label .aps-sv-req { color:#ef4444; margin-left:2px; }
-    .aps-sv-form .aps-sv-input { width:100%; height:42px; padding:0 14px; font-size:15px; color:var(--aps-sv-text); background:#fff; border:1px solid var(--aps-sv-border); border-radius:var(--aps-sv-radius); transition:border-color .15s, box-shadow .15s; outline:none; box-sizing:border-box; }
+    /* line-height khai tường minh: không có nó thì hộp dòng bó sát cỡ chữ, dấu tiếng Việt
+       (ế, ộ, ữ) chạm mép trên ô trông như bị cắt. */
+    .aps-sv-form .aps-sv-input { width:100%; height:42px; line-height:40px; padding:0 14px; font-size:15px; color:var(--aps-sv-text); background:#fff; border:1px solid var(--aps-sv-border); border-radius:var(--aps-sv-radius); transition:border-color .15s, box-shadow .15s; outline:none; box-sizing:border-box; }
     .aps-sv-form textarea.aps-sv-input { height:auto; min-height:90px; padding:12px 14px; resize:vertical; }
     .aps-sv-form .aps-sv-input::placeholder { color:#94a3b8; }
     .aps-sv-form .aps-sv-input:focus { border-color:var(--aps-sv-primary); box-shadow:0 0 0 3px rgba(37, 99, 235, .14); }
@@ -1633,7 +1635,9 @@
     .select2-dropdown { border-color:var(--aps-sv-border); border-radius:6px; box-shadow:0 8px 24px -12px rgba(15,23,42,.35); }
     .select2-search--dropdown .select2-search__field { border:1px solid var(--aps-sv-border); border-radius:4px; padding:6px 10px; font-size:13px; outline:none; }
     .select2-search--dropdown .select2-search__field:focus { border-color:var(--aps-sv-primary); box-shadow:0 0 0 2px rgba(37, 99, 235, .12); }
-    .select2-results__option { padding:9px 14px; font-size:14px; color:var(--aps-sv-text); transition:background .1s; }
+    /* Danh sách xổ xuống cũng phải to theo ô, không thì chọn xong mới đọc được */
+    .select2-results__option { padding:10px 14px; font-size:15px; font-weight:500; color:var(--aps-sv-text); transition:background .1s; }
+    .select2-search--dropdown .select2-search__field { font-size:14.5px; height:34px; }
     .select2-results__option--highlighted[aria-selected] { background:var(--aps-sv-primary) !important; color:#fff !important; }
     .select2-results__option[aria-selected="true"] { background:var(--aps-sv-primary-soft); color:var(--aps-sv-primary); font-weight:600; }
     .select2-results__option[aria-selected="true"].select2-results__option--highlighted { background:var(--aps-sv-primary) !important; color:#fff !important; }
@@ -1679,31 +1683,41 @@
     .aps-sv-panel.aps-sv-compact { background:transparent; margin:0; padding:0; }
     .aps-sv-compact .aps-sv-section { background:#fff; border:1px solid #e2e8f0; border-radius:8px; padding:12px 16px 14px; }
     .aps-sv-compact .aps-sv-section + .aps-sv-section { margin-top:12px; }
-    .aps-sv-compact .aps-sv-section-title { font-size:12.5px; letter-spacing:.4px; margin:0 0 12px; padding-bottom:8px; border-bottom:1px solid #e8edf3; gap:7px; }
+    .aps-sv-compact .aps-sv-section-title { font-size:14.5px; font-weight:800; letter-spacing:.3px; margin:0 0 13px; padding-bottom:9px; border-bottom:1px solid #e8edf3; gap:8px; }
     .aps-sv-compact .aps-sv-section-title::after { display:none; }
-    .aps-sv-compact .aps-sv-section-title i { font-size:13px; }
+    .aps-sv-compact .aps-sv-section-title i { font-size:15px; }
 
     /* Ô hẹp lại nên một hàng chứa được nhiều cụm hơn */
-    .aps-sv-compact .aps-sv-grid { grid-template-columns:repeat(auto-fit, minmax(340px, 1fr)); gap:9px 24px; }
+    .aps-sv-compact .aps-sv-grid { grid-template-columns:repeat(auto-fit, minmax(370px, 1fr)); gap:11px 26px; }
     /* Nhãn trái - ô phải. Cột nhãn cố định để mọi ô nhập thẳng hàng nhau. */
     .aps-sv-compact .aps-sv-field,
-    .aps-sv-compact .aps-sv-field.aps-sv-col-full { display:grid; grid-template-columns:136px minmax(0, 1fr); align-items:center; column-gap:10px; }
-    .aps-sv-compact .aps-sv-label { margin:0; font-size:13px; font-weight:600; color:#334155; line-height:1.35; }
+    .aps-sv-compact .aps-sv-field.aps-sv-col-full { display:grid; grid-template-columns:158px minmax(0, 1fr); align-items:center; column-gap:12px; }
+    /* Khách báo 22/09/2026: "chữ bé quá bọn em nhìn đau mắt quá" → nhãn 13→14.5px, đậm hơn
+       (600→700) và màu tối hơn. Cột nhãn nới 136→158px cho vừa chữ to. */
+    .aps-sv-compact .aps-sv-label { margin:0; font-size:14.5px; font-weight:700; color:#1e293b; line-height:1.35; }
     .aps-sv-compact .aps-sv-field.aps-sv-col-full .aps-sv-input { max-width:none; }
-    .aps-sv-form .aps-sv-compact .aps-sv-input { height:32px; font-size:13.5px; padding:0 10px; border-radius:4px; }
-    .aps-sv-form .aps-sv-compact textarea.aps-sv-input { height:auto; min-height:58px; padding:7px 10px; }
-    .aps-sv-compact .aps-sv-input-icon > i { left:10px; font-size:12.5px; }
-    .aps-sv-compact .aps-sv-input-icon .aps-sv-input { padding-left:30px; }
-    .aps-sv-compact .aps-sv-select > i { right:11px; font-size:11px; }
+    /* Ô nhập: 34→38px, chữ 14→15px, in đậm (600) và màu #0f172a theo chuẩn tương phản
+       đã chốt; placeholder giữ nhạt hơn để phân biệt với giá trị thật.
+       line-height khai tường minh, thiếu nó là dấu tiếng Việt (ế, ữ) chạm mép trên ô. */
+    .aps-sv-form .aps-sv-compact .aps-sv-input { height:38px; line-height:36px; font-size:15px; font-weight:600; color:#0f172a; padding:0 12px; border-radius:4px; }
+    .aps-sv-form .aps-sv-compact .aps-sv-input::placeholder { color:#64748b; font-weight:500; font-style:normal; opacity:1; }
+    .aps-sv-form .aps-sv-compact textarea.aps-sv-input { height:auto; min-height:70px; line-height:1.5; padding:9px 12px; }
+    .aps-sv-compact .aps-sv-input-icon > i { left:12px; font-size:13.5px; }
+    .aps-sv-compact .aps-sv-input-icon .aps-sv-input { padding-left:34px; }
+    .aps-sv-compact .aps-sv-select > i { right:11px; font-size:12px; }
     .aps-sv-compact .aps-sv-select select.aps-sv-input { padding-right:28px; }
-    /* Dòng chú thích nhỏ dưới ô (nếu có) phải lùi sang cột ô nhập, không đội lên nhãn */
-    .aps-sv-compact .aps-sv-field > div[style*="margin-top"] { grid-column:2; }
+    /* Dòng chú thích nhỏ dưới ô (nếu có) phải lùi sang cột ô nhập, không đội lên nhãn.
+       Mấy dòng này khai font-size ngay trong thuộc tính style của thẻ nên CSS thường thua —
+       phải !important mới nâng cỡ chữ lên được. */
+    .aps-sv-compact .aps-sv-field > div[style*="margin-top"] { grid-column:2; font-size:13px !important; color:#64748b !important; line-height:1.55 !important; }
 
     /* select2 phải thấp theo, không thì ô chọn cao hơn ô gõ, cả hàng nhìn so le.
        Phải đủ 4 class mới thắng rule .aps-sv-form .select2-... ở phía trên. */
-    .aps-sv-form .aps-sv-compact .select2-container--default .select2-selection--single { height:32px !important; }
-    .aps-sv-form .aps-sv-compact .select2-container--default .select2-selection--single .select2-selection__rendered { line-height:30px; font-size:13.5px; padding-left:10px; padding-right:30px; }
-    .aps-sv-form .aps-sv-compact .select2-container--default .select2-selection--single .select2-selection__arrow { height:30px; right:5px; }
+    .aps-sv-form .aps-sv-compact .select2-container--default .select2-selection--single { height:38px !important; }
+    .aps-sv-form .aps-sv-compact .select2-container--default .select2-selection--single .select2-selection__rendered { line-height:36px; font-size:15px; font-weight:600; color:#0f172a; padding-left:12px; padding-right:32px; }
+    .aps-sv-form .aps-sv-compact .select2-container--default .select2-selection--single .select2-selection__arrow { height:36px; right:6px; }
+    /* Chưa chọn gì thì nhạt + thường, để phân biệt ngay với giá trị đã chọn */
+    .aps-sv-form .aps-sv-compact .select2-container--default .select2-selection__placeholder { color:#64748b !important; font-weight:500; font-style:normal; }
     .aps-sv-form .aps-sv-compact .select2-container--default .select2-selection__clear { font-size:15px; margin-right:20px; }
 
     @media (max-width: 900px) {
@@ -1724,6 +1738,11 @@
     #kqdk_tab_hoso .kqhs-note {
         padding:11px 14px; background:#fffbeb; border:1px solid #fde68a; border-left:4px solid #f59e0b;
         border-radius:6px; font-size:13px; color:#78350f; line-height:1.6; margin-bottom:12px;
+    }
+    /* Ghi chú mang tính hướng dẫn (không phải cảnh báo) → tone xanh, khỏi làm người dùng
+       tưởng đang có lỗi. Dùng cho lời nhắc ở chế độ khai mới. */
+    #kqdk_tab_hoso .kqhs-note.kqhs-note-info {
+        background:#eff6ff; border-color:#bfdbfe; border-left-color:#2563eb; color:#1e3a8a;
     }
     #kqdk_tab_hoso .kqhs-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:10px; }
     /* Nút Hủy sửa tách trái, nhóm ghi dồn phải */
@@ -2789,21 +2808,26 @@
                             </div>
 
                             <!-- ============ TAB 8: DANH MỤC HỒ SƠ ============ -->
-                            <!-- Khác 7 tab trên: tab này ghi NGAY vào bảng TS_HOSO qua
-                                 PKG_TUYENSINH_HOSO (Them/Sua/Xoa), không đi theo nút
-                                 "Lưu hồ sơ" chung ở cuối form. Lý do: 1 hồ sơ có NHIỀU
-                                 dòng danh mục, còn nút Lưu chung chỉ ghi 1 bản ghi hồ sơ.
-                                 Khóa gắn kết: TS_HoSoDuTuyen_Id (hồ sơ đang sửa)
+                            <!-- Khác 7 tab trên: 1 hồ sơ có NHIỀU dòng danh mục nên tab này
+                                 ghi từng dòng xuống TS_HOSO qua PKG_TUYENSINH_HOSO
+                                 (Them/Sua/Xoa), nhưng vẫn kích hoạt bằng nút "Lưu hồ sơ" /
+                                 "Cập nhật hồ sơ" chung ở cuối form (gộp 1 nút, 22/09/2026).
+                                 Khóa gắn kết: TS_HoSoDuTuyen_Id (Id hồ sơ — khi khai mới thì
+                                 tra ra sau khi Them_HoSo_TS chạy xong)
                                              + TS_KeHoachTuyenSinh_Id (Id ĐỢT tuyển sinh). -->
                             <div class="aps-sv-panel aps-sv-compact" id="kqdk_tab_hoso">
 
-                                <!-- Hồ sơ chưa lưu → chưa có Id để gắn danh mục -->
-                                <div id="kqdk_hs_chualuu" class="kqhs-note d-none">
-                                    <i class="fa-solid fa-triangle-exclamation"></i>
-                                    <b>Chưa thể khai danh mục hồ sơ.</b>
-                                    Danh mục hồ sơ gắn với một hồ sơ đã tồn tại, nên cần bấm
-                                    <b>“Lưu hồ sơ”</b> ở cuối form trước, sau đó mở lại hồ sơ từ danh sách
-                                    rồi quay lại tab này để khai.
+                                <!-- Chế độ KHAI MỚI: vẫn cho khai ngay (sếp Khoa 22/09/2026 —
+                                     "đây là khai báo từ đầu, học sinh mang theo giấy tờ gì thì
+                                     phải ghim vào cho nó"). Danh mục được ghi xuống ngay sau khi
+                                     hồ sơ được tạo, trong cùng một lần bấm Lưu. -->
+                                <div id="kqdk_hs_chualuu" class="kqhs-note kqhs-note-info d-none">
+                                    <i class="fa-regular fa-circle-info"></i>
+                                    <b>Hồ sơ khai mới — khai luôn được.</b>
+                                    Điền <b>Số lượng đã nộp</b> cho những giấy tờ thí sinh mang tới,
+                                    rồi bấm <b>“Lưu hồ sơ”</b> ở cuối form: hệ thống lưu hồ sơ và ghim
+                                    danh mục giấy tờ trong cùng một lần. Chưa chọn <b>Đợt tuyển sinh</b>
+                                    (tab <b>Trúng tuyển</b>) thì bảng dưới chưa biết lấy danh mục của hệ nào.
                                 </div>
 
                                 <div id="kqdk_hs_zone">
@@ -2870,8 +2894,8 @@
                                             Bảng lấy theo <b>danh mục hồ sơ đã khai cho đợt tuyển sinh</b>
                                             (Các đợt tuyển sinh → cột “Khai danh mục hồ sơ”). Chỉ cần điền
                                             <b>Số lượng đã nộp</b> ở những dòng thí sinh đã nộp — bấm
-                                            <b>“Cập nhật hồ sơ”</b> ở cuối trang là lưu luôn cùng hồ sơ.
-                                            Dòng để trống sẽ không lưu.
+                                            <b>“Lưu hồ sơ” / “Cập nhật hồ sơ”</b> ở cuối trang là lưu luôn
+                                            cùng hồ sơ. Dòng để trống sẽ không lưu.
                                         </div>
                                         <div class="kqhs-tablebox">
                                             <table class="kqhs-table" id="tblKQ_HS">
@@ -3284,7 +3308,7 @@
         tryNext();
     })();
 </script>
-<script src="modules/tuyensinh/script/kehoachtuyensinhnew.js?v=1.0.9.0"></script>
+<script src="modules/tuyensinh/script/kehoachtuyensinhnew.js?v=1.0.9.2"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['KeHoachTuyenSinhNew'] = new KeHoachTuyenSinhNew();

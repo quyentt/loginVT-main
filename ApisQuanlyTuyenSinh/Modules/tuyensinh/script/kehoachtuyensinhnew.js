@@ -86,9 +86,10 @@ KeHoachTuyenSinhNew.prototype = {
             if (edu.util.checkValue(strId)) {
                 me.strKeHoachTuyenSinh_Id = strId;
                 me.getDetail_KeHoachTuyenSinh(strId);
-                // Chế độ Xem-sửa: hiện nút Xóa, đổi title
+                // Chế độ Xem-sửa: hiện nút Xóa, đổi title, khóa ô Mã
                 $('#chi-tiet .modal-header .title').html('<i class="fa-regular fa-pen-to-square"></i> Xem - sửa kế hoạch tuyển sinh');
                 $('#btnDelete_KH').removeClass('d-none');
+                me._khoaMaKeHoach(true);
             }
         });
 
@@ -749,7 +750,9 @@ KeHoachTuyenSinhNew.prototype = {
             // là phải nạp lại đúng bộ quy định của hệ mới — bỏ cache rồi vẽ lại.
             me._dtQuyDinhHS = null;
             me._dtQuyDinhHS_Dot = '';
-            if (edu.util.checkValue(me.strSuaHoSo_Id)) me._loadHoSoDM_ForEdit(me.strSuaHoSo_Id);
+            // Cả khi KHAI MỚI (chưa có strSuaHoSo_Id): chọn đợt xong là lưới phải hiện ra
+            // để cán bộ ghim luôn giấy tờ thí sinh mang tới.
+            me._loadHoSoDM_ForEdit(me.strSuaHoSo_Id || '');
         });
 
         // Cascade: chọn Nguyện vọng đầu ra → load Lớp dự kiến theo Đầu ra đó
@@ -4563,6 +4566,15 @@ KeHoachTuyenSinhNew.prototype = {
             }
         }
         me._reapplyKQSelect2('ddlKQ_DotTuyenSinh');
+
+        /* .val() KHÔNG bắn sự kiện change → handler change.dotkq (nơi nạp lại tab 8)
+           không chạy, nên lưới danh mục hồ sơ của form KHAI MỚI đứng trắng dù đợt đã
+           được chọn sẵn. Tự gọi lại ở đây. Chỉ làm cho chế độ khai mới: luồng Sửa
+           (openSuaHoSo) gọi _loadHoSoDM_ForEdit ngay sau đó với Id thật, gọi ở đây
+           nữa là bắn thừa một lượt request. */
+        if (!edu.util.checkValue(me.strSuaHoSo_Id) && edu.util.checkValue($sel.val())) {
+            me._loadHoSoDM_ForEdit('');
+        }
     },
 
     /*------------------------------------------
@@ -5023,12 +5035,15 @@ KeHoachTuyenSinhNew.prototype = {
     /*==========================================================================
     == TAB 8 — DANH MỤC HỒ SƠ  (PKG_TUYENSINH_HOSO / controller TS_HoSo_MH)
     ==
-    == Khác 7 tab trên: 1 hồ sơ có NHIỀU dòng danh mục nên tab này tự ghi từng
-    == dòng xuống DB ngay (Thêm / Sửa / Xóa), KHÔNG đi theo nút "Lưu hồ sơ" chung.
+    == Khác 7 tab trên: 1 hồ sơ có NHIỀU dòng danh mục nên tab này ghi từng dòng
+    == xuống DB (Thêm / Sửa / Xóa), nhưng do nút "Lưu hồ sơ" / "Cập nhật hồ sơ"
+    == chung ở cuối form kích hoạt (gộp 1 nút, 22/09/2026).
     ==
     == Khóa gắn kết:
-    ==   strTS_HoSoDuTuyen_Id      = me.strSuaHoSo_Id      (hồ sơ đang mở)
-    ==   strTS_KeHoachTuyenSinh_Id = me.strDot_Id_ForKQ    (Id ĐỢT tuyển sinh — BE xác nhận)
+    ==   strTS_HoSoDuTuyen_Id      = Id hồ sơ. Sửa: me.strSuaHoSo_Id. Khai mới: chưa có
+    ==                               lúc gõ lưới → tra sau khi Them_HoSo_TS chạy xong
+    ==                               (_findNewPersonId trả kèm HOSO_ID).
+    ==   strTS_KeHoachTuyenSinh_Id = Id ĐỢT tuyển sinh (BE xác nhận, dù tên param là KeHoach)
     ==
     == 2 action LayDS/LayTT KHÔNG có trong tài liệu BE gửi, được suy ra từ quy tắc
     == sinh action của hệ thống: action = base64(XOR(tên_method, 'A')), ký tự đệm 'P'.
@@ -5101,6 +5116,18 @@ KeHoachTuyenSinhNew.prototype = {
         // Gõ số lượng → cập nhật ngay cột Tình trạng + dòng tổng, khỏi phải bấm Lưu mới thấy
         $("#tblKQ_HS").on('input', '.kqhs-sl', function () { me._hsCapNhatTinhTrang(); });
 
+        // Lưới trắng vì chưa chọn đợt → đưa thẳng người dùng sang chỗ chọn, đỡ phải
+        // tự mò xem "tab Trúng tuyển" nằm đâu.
+        $("#tblKQ_HS").on('click', '.kqhs-gotodot', function () {
+            me._goToPanel('kqdk_tab_trungtuyen');
+            setTimeout(function () {
+                var $s = $('#ddlKQ_DotTuyenSinh');
+                // Đợt dùng select2 → focus vào ô gốc không thấy gì, phải mở dropdown
+                if ($s.hasClass('select2-hidden-accessible')) { try { $s.select2('open'); return; } catch (e) { } }
+                $s.focus();
+            }, 250);
+        });
+
         $("#tblKQ_HS").on('click', '.kqhs-del', function () {
             var id = $(this).attr('data-id');
             if (!edu.util.checkValue(id)) return;
@@ -5127,12 +5154,19 @@ KeHoachTuyenSinhNew.prototype = {
         me._bindHoSoDM();
         me._resetFormHoSoDM();
 
-        // Chưa lưu hồ sơ thì chưa có khóa để gắn danh mục
+        /* KHAI MỚI (chưa có Id hồ sơ) — vẫn dựng lưới theo QUY ĐỊNH của đợt.
+           Sếp Khoa 22/09/2026: "đây là khai báo từ đầu... học sinh mang theo giấy tờ gì
+           thì phải ghim vào cho nó, chứ đâu phải nhận rồi mới thu hồ sơ".
+           Chưa có khóa TS_HoSoDuTuyen_Id nên KHÔNG gọi API ở đây: số đã nộp được giữ
+           trên DOM, saveKhai_HoSo chụp lại rồi gửi ngay sau khi Them_HoSo_TS tạo xong
+           hồ sơ và tra được Id (xem _saveHoSoDM_Rows). */
         if (!edu.util.checkValue(strHoSoId)) {
             $('#kqdk_hs_chualuu').removeClass('d-none');
-            $('#kqdk_hs_zone').addClass('d-none');
-            me._genTable_HoSoDM([]);
-            if (typeof cb === 'function') cb([]);
+            $('#kqdk_hs_zone').removeClass('d-none');
+            me._hsLayQuyDinh(function () {
+                me._genTable_HoSoDM([]);
+                if (typeof cb === 'function') cb([]);
+            });
             return;
         }
         $('#kqdk_hs_chualuu').addClass('d-none');
@@ -5317,8 +5351,10 @@ KeHoachTuyenSinhNew.prototype = {
             var chuaCoDot = !edu.util.checkValue(me._hsDotHienTai());
             $('#tblKQ_HS tbody').html('<tr><td class="kqhs-empty" colspan="8">'
                 + (chuaCoDot
-                    ? ('Chưa xác định được <b>đợt tuyển sinh</b> của hồ sơ này.<br/>'
-                        + 'Sang tab <b>Trúng tuyển</b> chọn Đợt tuyển sinh, danh mục sẽ hiện theo hệ của đợt đó.')
+                    ? ('Chưa chọn <b>đợt tuyển sinh</b> nên chưa biết lấy danh mục của hệ nào.<br/>'
+                        + '<button type="button" class="aps-sv-btn aps-sv-btn-primary kqhs-gotodot" '
+                        + 'style="margin-top:10px;"><i class="fa-light fa-arrow-right"></i> '
+                        + 'Chọn đợt tuyển sinh</button>')
                     : ('Đợt tuyển sinh này chưa khai danh mục hồ sơ cần nộp.<br/>'
                         + 'Vào <b>Các đợt tuyển sinh</b> → cột <b>“Khai danh mục hồ sơ”</b> để khai trước.'))
                 + '</td></tr>');
@@ -5439,16 +5475,12 @@ KeHoachTuyenSinhNew.prototype = {
     --     Dùng khi gộp vào nút "Cập nhật hồ sơ" (saveSuaHoSo_Full) — phải gộp chung một
     --     thông báo, vì BS3 chồng alert sẽ gỡ body.modal-open làm modal tự đóng.
     -------------------------------------------*/
-    _saveHoSoDM: function (cb) {
-        var me = main_doc.KeHoachTuyenSinhNew;
-        var goiCb = function (kq) { if (typeof cb === 'function') cb(kq); };
-
-        if (!edu.util.checkValue(me.strSuaHoSo_Id)) {
-            if (cb) { goiCb({ done: 0, failed: 0, total: 0, loi: [] }); return false; }
-            edu.system.alert("Cần lưu hồ sơ trước khi khai danh mục hồ sơ!", "w");
-            return false;
-        }
-
+    /*------------------------------------------
+    -- Thu những dòng CẦN GHI trên lưới (đọc thẳng DOM).
+    -- Tách riêng vì luồng KHAI MỚI phải chụp lưới TRƯỚC khi gọi Them_HoSo_TS:
+    -- lúc callback về thì resetKhai_HoSo() đã xoá trắng lưới rồi.
+    -------------------------------------------*/
+    _hsThuLuoi: function () {
         var chuan = function (v) { return String(v == null ? '' : v).trim(); };
         /* Param Oracle kiểu NUMBER: gửi "" thì proc Success nhưng không ghi. Mà entity
            HoSo_MHEntity khai dSoLuong/dSoLuongCanNop là `double` NON-NULLABLE nên gửi null
@@ -5479,10 +5511,42 @@ KeHoachTuyenSinhNew.prototype = {
                 mota: motaMoi
             });
         });
+        return viec;
+    },
 
+    _saveHoSoDM: function (cb) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var goiCb = function (kq) { if (typeof cb === 'function') cb(kq); };
+
+        if (!edu.util.checkValue(me.strSuaHoSo_Id)) {
+            if (cb) { goiCb({ done: 0, failed: 0, total: 0, loi: [] }); return false; }
+            edu.system.alert("Cần lưu hồ sơ trước khi khai danh mục hồ sơ!", "w");
+            return false;
+        }
+
+        var viec = me._hsThuLuoi();
         if (!viec.length) {
             if (cb) { goiCb({ done: 0, failed: 0, total: 0, loi: [] }); return false; }
             edu.system.alert("Không có thay đổi nào để lưu.", "w");
+            return false;
+        }
+        me._saveHoSoDM_Rows(me.strSuaHoSo_Id, me._hsDotHienTai(), viec, cb, true);
+    },
+
+    /*------------------------------------------
+    -- Gửi các dòng đã thu xuống BE. Tách khỏi _saveHoSoDM để luồng KHAI MỚI gọi lại
+    -- được với Id hồ sơ vừa tạo (lúc đó lưới trên DOM đã bị dọn).
+    --   cb      : có thì KHÔNG tự alert/reload, để người gọi gộp chung một thông báo
+    --             (chồng alert là BS3 gỡ body.modal-open → modal tự đóng).
+    --   taiLai  : chỉ true khi đang ở form Sửa và muốn nạp lại lưới sau khi lưu xong.
+    -------------------------------------------*/
+    _saveHoSoDM_Rows: function (strHoSoId, strDotId, viec, cb, taiLai) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var goiCb = function (kq) { if (typeof cb === 'function') cb(kq); };
+        viec = viec || [];
+
+        if (!edu.util.checkValue(strHoSoId) || !viec.length) {
+            goiCb({ done: 0, failed: 0, total: viec.length, loi: [], thieuId: !edu.util.checkValue(strHoSoId) });
             return false;
         }
 
@@ -5497,7 +5561,7 @@ KeHoachTuyenSinhNew.prototype = {
             var msg = "Đã lưu " + done + "/" + total + " dòng";
             if (failed) msg += " (lỗi: " + failed + ")" + (loi.length ? "<br/>" + loi.slice(0, 5).join("<br/>") : "");
             edu.system.alert(msg, failed ? "w" : "s");
-            me._loadHoSoDM_ForEdit(me.strSuaHoSo_Id);
+            if (taiLai) me._loadHoSoDM_ForEdit(strHoSoId);
         };
 
         viec.forEach(function (v) {
@@ -5506,8 +5570,8 @@ KeHoachTuyenSinhNew.prototype = {
                 'action': api.action, 'func': api.func, 'iM': edu.system.iM,
                 'strChucNang_Id': edu.system.strChucNang_Id,
                 'strNguoiThucHien_Id': edu.system.userId,
-                'strTS_HoSoDuTuyen_Id': me.strSuaHoSo_Id,
-                'strTS_KeHoachTuyenSinh_Id': me.strDot_Id_ForKQ || '',   // Id ĐỢT tuyển sinh
+                'strTS_HoSoDuTuyen_Id': strHoSoId,
+                'strTS_KeHoachTuyenSinh_Id': strDotId || '',   // Id ĐỢT tuyển sinh
                 'strLoaiHoSo_Id': v.loai,
                 'dSoLuongCanNop': v.can,
                 'dSoLuong': v.sl,
@@ -5694,17 +5758,11 @@ KeHoachTuyenSinhNew.prototype = {
         // Cascade: clear Tỉnh + khóa lại Huyện/Xã về trạng thái ban đầu
         $('#ddlKQ_NS_Tinh, #ddlKQ_HK_Tinh').val('').trigger('change');   // trigger change để cascade fire
 
-        // Tab 8 — dọn bảng + form danh mục hồ sơ của hồ sơ trước. Mặc định coi như
-        // hồ sơ mới (chưa có Id) nên hiện lời nhắc "lưu hồ sơ trước"; openSuaHoSo
-        // sẽ gọi _loadHoSoDM_ForEdit để bật lại vùng nhập khi mở hồ sơ đã có.
+        // Tab 8 cũng là một phần của form: không dọn thì lưới danh mục vẫn còn số của
+        // hồ sơ trước. Truyền rỗng = chế độ khai mới → lưới dựng lại theo quy định của
+        // đợt, các ô "Đã nộp" trắng. openSuaHoSo gọi lại ngay sau đó với Id thật nên
+        // không ảnh hưởng luồng Sửa.
         main_doc.KeHoachTuyenSinhNew._resetFormHoSoDM();
-        main_doc.KeHoachTuyenSinhNew._genTable_HoSoDM([]);
-        $('#kqdk_hs_chualuu').removeClass('d-none');
-        $('#kqdk_hs_zone').addClass('d-none');
-
-        // Tab 8 cũng là một phần của form: không dọn thì lưới danh mục vẫn còn của hồ sơ trước.
-        // Truyền rỗng → hiện nhắc "chưa lưu hồ sơ" và xoá lưới. openSuaHoSo gọi lại ngay sau
-        // đó với Id thật nên không ảnh hưởng luồng Sửa.
         main_doc.KeHoachTuyenSinhNew._loadHoSoDM_ForEdit('');
 
         // Về tab 1
@@ -5978,7 +6036,11 @@ KeHoachTuyenSinhNew.prototype = {
                 nguyenVong: g('ddlKQ_NguyenVongDauRa')
             },
             cccd: g('txtKQ_SoCCCD'),
-            hoTen: hoTen
+            hoTen: hoTen,
+            // Tab 8 — giấy tờ thí sinh mang tới, khai ngay từ lúc thêm mới.
+            // Phải chụp ở đây vì lưới bị dọn trắng ngay khi lưu xong.
+            danhMuc: me._hsThuLuoi(),
+            dot: me._hsDotHienTai()
         };
 
         edu.system.makeRequest({
@@ -5990,12 +6052,28 @@ KeHoachTuyenSinhNew.prototype = {
                     // Soát cảnh báo hóa đơn NGAY BÂY GIỜ: mọi nhánh dưới đây đều chạy
                     // async, tới lúc callback về thì form có thể đã bị dọn trắng.
                     var canhBaoHD = me._hoaDonWarnText();
-                    var xuLy = function (pid) {
+                    var xuLy = function (pid, hosoId) {
                         if (pid) {
                             me._saveKhai_PhuThuoc(pid, snap);
-                            edu.system.alert("Đã lưu hồ sơ thành công"
-                                + me._addrWarnText(snap.addr) + canhBaoHD, "s");
-                            me.resetKhai_HoSo();
+                            /* Danh mục hồ sơ (tab 8) gắn theo HOSO_ID chứ không phải person,
+                               nên chỉ ghi được sau khi tra ra Id hồ sơ vừa tạo. Gộp kết quả
+                               vào ĐÚNG MỘT alert: bắn alert thứ hai là BS3 gỡ body.modal-open
+                               làm modal tự đóng (xem feedback_bs3_alert_stacking). */
+                            me._saveHoSoDM_Rows(hosoId, snap.dot, snap.danhMuc, function (kq) {
+                                var txtDM = '';
+                                if (kq && kq.total && !kq.thieuId) {
+                                    txtDM = '<br/>Danh mục hồ sơ: đã lưu ' + kq.done + '/' + kq.total + ' dòng'
+                                        + (kq.failed ? ' <span class="text-danger">(lỗi: ' + kq.failed + ')</span>' : '');
+                                } else if (kq && kq.total && kq.thieuId) {
+                                    // Hồ sơ đã lưu nhưng không tra được Id → danh mục chưa xuống DB.
+                                    // Nói thẳng ra, đừng để người dùng tưởng đã ghim xong giấy tờ.
+                                    txtDM = '<br/><b>Chưa lưu được danh mục hồ sơ</b> (không tra được mã hồ sơ vừa tạo).'
+                                        + '<br/>Mở lại hồ sơ trong danh sách → tab <b>Danh mục hồ sơ</b> → nhập lại rồi bấm <b>"Cập nhật hồ sơ"</b>.';
+                                }
+                                edu.system.alert("Đã lưu hồ sơ thành công"
+                                    + me._addrWarnText(snap.addr) + canhBaoHD + txtDM, kq && kq.thieuId ? "w" : "s");
+                                me.resetKhai_HoSo();
+                            });
                             return;
                         }
                         // Không tra được Core_Person_Id → 7 bảng phụ CHƯA được ghi.
@@ -6009,8 +6087,12 @@ KeHoachTuyenSinhNew.prototype = {
                             + '<b>"Cập nhật hồ sơ"</b> một lần để lưu nốt.', 'w');
                     };
                     var newPersonId = me._pickCorePersonIdFromResp(data);
-                    if (newPersonId) xuLy(newPersonId);
-                    else me._findNewPersonId(snap.cccd, snap.hoTen, xuLy);
+                    // Có danh mục hồ sơ cần ghi thì PHẢI tra ngược danh sách: response
+                    // Them_HoSo_TS không trả HOSO_ID, mà tab 8 gắn theo Id đó.
+                    if (newPersonId && !(snap.danhMuc && snap.danhMuc.length)) xuLy(newPersonId, '');
+                    else me._findNewPersonId(snap.cccd, snap.hoTen, function (pid, hosoId) {
+                        xuLy(pid || newPersonId, hosoId);
+                    });
                 } else {
                     edu.system.alert("Them_HoSo_TS: " + ((data && data.Message) || 'Lỗi không xác định'), "w");
                 }
@@ -6526,6 +6608,24 @@ KeHoachTuyenSinhNew.prototype = {
                 var d = data.Data;
                 if (d.length !== undefined) d = d[0];   // proc trả cursor → lấy dòng đầu
                 if (!d) return;
+                /* Vớt Đợt tuyển sinh từ bản chi tiết khi view danh sách không trả DOT_ID.
+                   Đợt rỗng kéo theo cả dây: dropdown Nguyện vọng load sai, và
+                   Them_TS_HoSo_DoiTacTS báo "Khong ton tai ho so tuyen sinh" vì proc tra hồ
+                   sơ theo bộ (kế hoạch + đợt + nguyện vọng + người). */
+                if (!edu.util.checkValue(me.strDot_Id_ForKQ)) {
+                    var dotCT = me._pickLoose(d, ['HOSO_KH_TS_DOT_ID', 'KH_TS_DOT_ID',
+                        'TS_KH_TUYENSINH_DOT_ID', 'DOT_ID'])
+                        || me._kqPickFuzzy(d, /DOT.*_ID$/i);
+                    if (edu.util.checkValue(dotCT)) {
+                        me.strDot_Id_ForKQ = dotCT;
+                        me._ensureDotTuyenSinh(function () {
+                            me._loadDotToKhai();
+                            // Đợt vừa xác định được → Nguyện vọng / Phương thức phải nạp lại theo đợt
+                            me._loadNguyenVongDauRa();
+                            me._loadPhuongThucTuyenSinh();
+                        });
+                    }
+                }
                 me._bindHoSoDetail_ForEdit(d);
                 // Dropdown phụ thuộc danh mục nạp async → bind lại vài mốc cho chắc
                 setTimeout(function () { me._bindHoSoDetail_ForEdit(d); }, 900);
@@ -8065,9 +8165,13 @@ KeHoachTuyenSinhNew.prototype = {
             'func': 'PKG_CORE_TS_HOSO.Them_TS_HoSo_DoiTacTS',
             'iM': edu.system.iM,
             'strId': '',   // entity có strId (thêm mới → rỗng)
-            // 3 tham số context giống Them_HoSo_TS
+            /* 3 tham số context giống Them_HoSo_TS. Proc dùng đúng bộ này để TRA RA hồ sơ;
+               thiếu một mảnh là "Khong ton tai ho so tuyen sinh" (khách báo 22/09/2026).
+               Đợt phải lấy qua _hsDotHienTai(): ưu tiên dropdown trên form — đó là đợt THẬT
+               của hồ sơ đang mở — vì strDot_Id_ForKQ chỉ là context lúc mở modal, vào thẳng
+               từ danh sách Kết quả đăng ký thì nó rỗng. */
             'strHoSo_KH_TS_Id': me.strKeHoachTuyenSinh_Id || '',
-            'strHoSo_KH_TS_Dot_Id': me.strDot_Id_ForKQ || '',
+            'strHoSo_KH_TS_Dot_Id': me._hsDotHienTai(),
             'strNguyenVong_DauRa_Id': snap ? (snap.nguyenVong || '')
                 : (edu.system.getValById('ddlKQ_NguyenVongDauRa') || ''),
             'strCore_Person_Id': corePersonId,
@@ -8089,7 +8193,18 @@ KeHoachTuyenSinhNew.prototype = {
         edu.system.makeRequest({
             success: function (data) {
                 if (!data || !data.Success) {
-                    edu.system.alert('Ghi nhận nguồn khai thác lỗi: ' + ((data && data.Message) || ''), 'w');
+                    // Kèm context đang gửi: lỗi loại này gần như luôn do một mảnh bị rỗng,
+                    // nhìn phát biết ngay thay vì phải mở F12 dò lại.
+                    var thieu = [];
+                    if (!edu.util.checkValue(obj_save.strHoSo_KH_TS_Id)) thieu.push('Kế hoạch');
+                    if (!edu.util.checkValue(obj_save.strHoSo_KH_TS_Dot_Id)) thieu.push('Đợt tuyển sinh');
+                    if (!edu.util.checkValue(obj_save.strNguyenVong_DauRa_Id)) thieu.push('Nguyện vọng đầu ra');
+                    if (!edu.util.checkValue(obj_save.strCore_Person_Id)) thieu.push('Mã người học');
+                    edu.system.alert('Ghi nhận nguồn khai thác lỗi: ' + ((data && data.Message) || '')
+                        + (thieu.length
+                            ? ('<br/><span style="color:#b45309;">Đang thiếu: <b>' + thieu.join(', ')
+                                + '</b> — vào tab <b>Trúng tuyển</b> chọn đủ rồi lưu lại.</span>')
+                            : ''), 'w');
                     return;
                 }
                 // Gỡ bản cũ SAU khi thêm thành công — nếu làm ngược, thêm lỗi là mất luôn
@@ -8156,11 +8271,13 @@ KeHoachTuyenSinhNew.prototype = {
     --   2) hỏi ngay lập tức, BE có thể chưa commit xong bản ghi vừa thêm
     -- Nay: hỏi theo từ khóa → không ra thì quét cả danh sách của KH+Đợt rồi lọc
     -- tại chỗ → vẫn không ra thì chờ rồi thử lại, tối đa 3 nhịp (0.9s/1.8s/2.7s).
+    -- cb(corePersonId, hoSoId): trả kèm HOSO_ID vì tab 8 (danh mục hồ sơ) gắn theo Id
+    -- hồ sơ chứ không theo person, mà response Them_HoSo_TS cũng không có Id đó.
     -------------------------------------------*/
     _findNewPersonId: function (cccd, hoTen, cb) {
         var me = main_doc.KeHoachTuyenSinhNew;
-        var xong = function (id) { if (typeof cb === 'function') cb(id || ''); };
-        if (!edu.util.checkValue(cccd) && !edu.util.checkValue(hoTen)) { xong(''); return; }
+        var xong = function (id, hosoId) { if (typeof cb === 'function') cb(id || '', hosoId || ''); };
+        if (!edu.util.checkValue(cccd) && !edu.util.checkValue(hoTen)) { xong('', ''); return; }
         var chuan = function (s) { return ((s || '') + '').trim().toLowerCase(); };
         // So CCCD theo chữ số thôi — file/BE hay dính khoảng trắng, dấu gạch
         var soCC = function (s) { return ((s || '') + '').replace(/\D/g, ''); };
@@ -8182,9 +8299,10 @@ KeHoachTuyenSinhNew.prototype = {
                             return chuan(me._pickLoose(r, ['COREPERSON_HOTEN', 'HOTEN'])) === chuan(hoTen);
                         })[0];
                     }
-                    ok(hit ? me._pickLoose(hit, ['COREPERSON_ID', 'CORE_PERSON_ID', 'PERSON_ID']) : '');
+                    ok(hit ? me._pickLoose(hit, ['COREPERSON_ID', 'CORE_PERSON_ID', 'PERSON_ID']) : '',
+                        hit ? me._pickLoose(hit, ['HOSO_ID', 'ID', 'TS_HOSO_ID']) : '');
                 },
-                error: function () { ok(''); },
+                error: function () { ok('', ''); },
                 type: 'POST',
                 contentType: true,
                 action: 'SV_Core_TS_HoSo_MH/DSA4BRIeCS4SLh4VEgPP',
@@ -8211,14 +8329,14 @@ KeHoachTuyenSinhNew.prototype = {
 
         var nhip = 0;
         var vong = function () {
-            doTim(edu.util.checkValue(cccd) ? cccd : (hoTen || ''), function (id) {
-                if (id) { xong(id); return; }
+            doTim(edu.util.checkValue(cccd) ? cccd : (hoTen || ''), function (id, hsId) {
+                if (id) { xong(id, hsId); return; }
                 // Proc có thể không tìm theo CCCD → quét cả danh sách rồi lọc tại chỗ
-                doTim('', function (id2) {
-                    if (id2) { xong(id2); return; }
+                doTim('', function (id2, hsId2) {
+                    if (id2) { xong(id2, hsId2); return; }
                     if (++nhip > 3) {
                         kqdkNoLog('[LuuHoSo] không tra được Core_Person_Id sau ' + nhip + ' nhịp');
-                        xong('');
+                        xong('', '');
                         return;
                     }
                     setTimeout(vong, 900 * nhip);   // chờ BE commit xong rồi hỏi lại
@@ -8613,6 +8731,10 @@ KeHoachTuyenSinhNew.prototype = {
         if (!data) return;
         var d = data;
 
+        // Đây là lối vào DUY NHẤT của chế độ Xem-sửa → khóa Mã ngay tại đây, khỏi phụ
+        // thuộc nút nào mở modal (nút Chi tiết ở bảng đã khóa sẵn, nhưng còn lối khác).
+        main_doc.KeHoachTuyenSinhNew._khoaMaKeHoach(true);
+
         edu.util.viewValById('txtKH_Ma', d.MA || d.Ma || d.KEHOACH_MA || '');
         edu.util.viewValById('txtKH_Ten', d.TEN || d.Ten || d.KEHOACH_TEN || '');
         edu.util.viewValById('txtKH_NamTuyenSinh', d.NAM_TUYENSINH || '');
@@ -8964,6 +9086,25 @@ KeHoachTuyenSinhNew.prototype = {
         $('#chkKH_ConHieuLuc').prop('checked', true);
         $('#chi-tiet .modal-header .title').html('<i class="fa-regular fa-plus"></i> Thêm mới kế hoạch tuyển sinh');
         $('#btnDelete_KH').addClass('d-none');
+        main_doc.KeHoachTuyenSinhNew._khoaMaKeHoach(false);   // Thêm mới thì phải gõ được Mã
+    },
+
+    /*------------------------------------------
+    -- Khóa / mở ô "Mã" của kế hoạch (modal #chi-tiet).
+    -- Mã là khóa nghiệp vụ: đợt, hồ sơ, giấy báo… đều tham chiếu theo nó, sửa lại là
+    -- lệch dữ liệu cũ. Nên chỉ gõ lúc THÊM MỚI, vào Xem-sửa thì chỉ đọc (yêu cầu
+    -- sếp Khoa 22/09/2026).
+    -- ⚠ Dùng readonly chứ KHÔNG dùng disabled: disabled thì .val() vẫn đọc được nhưng
+    --    nhiều helper/trình duyệt bỏ qua field, dễ gửi Mã rỗng lên proc Upd → xoá trắng mã.
+    -------------------------------------------*/
+    _khoaMaKeHoach: function (khoa) {
+        $('#txtKH_Ma')
+            .prop('readonly', !!khoa)
+            .attr('title', khoa ? 'Mã kế hoạch không được sửa sau khi đã tạo' : '')
+            .css({
+                'background-color': khoa ? '#f1f5f9' : '',
+                'cursor': khoa ? 'not-allowed' : ''
+            });
     },
 
     /*------------------------------------------
