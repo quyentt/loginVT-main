@@ -1866,7 +1866,10 @@ KeHoachTuyenSinhNew.prototype = {
         if (!s) return '';
         var m = String(s).trim().match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
         if (m) return m[3] + '-' + ('0' + m[2]).slice(-2) + '-' + ('0' + m[1]).slice(-2);
-        if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+        // BE hay trả kèm giờ ("2007-03-15T00:00:00" / "2007-03-15 00:00:00") — cắt lấy
+        // 10 ký tự đầu, chứ trả nguyên chuỗi thì input type=date từ chối và để trống.
+        var mISO = String(s).trim().match(/^(\d{4}-\d{2}-\d{2})/);
+        if (mISO) return mISO[1];
         return s;
     },
 
@@ -1989,8 +1992,9 @@ KeHoachTuyenSinhNew.prototype = {
         $('#btnKhaiSave').html('<i class="fa-light fa-floppy-disk"></i> Cập nhật hồ sơ');
         $('#btnKhaiDoiNVDauVao').removeClass('d-none');
 
-        // Format ngày sinh cho input text (dd/mm/yyyy) — tránh browser locale mangle (input type=date)
-        var ngaySinh = me._ngaySinhToUI(pick(d, ['COREPERSON_NGAYSINH', 'CorePerson_NgaySinh']));
+        // Ô ngày sinh là input type=date → chỉ nhận ISO yyyy-mm-dd. Đưa dd/mm/yyyy vào
+        // là trình duyệt lặng lẽ để trống, form Sửa sẽ mất ngày sinh.
+        var ngaySinh = me._ngaySinhToISO(pick(d, ['COREPERSON_NGAYSINH', 'CorePerson_NgaySinh']));
 
         // Populate các field có từ cache
         $('#txtKQ_HoTen').val(pick(d, ['COREPERSON_HOTEN']));
@@ -2463,8 +2467,9 @@ KeHoachTuyenSinhNew.prototype = {
             'strHanhDong_Code': 'SUA',
             'strHoSo_Id': me.strSuaHoSo_Id,
             'strCorePerson_HoTen': hoTen,
-            // BE strict format dd/mm/yyyy (comment dòng 1097-1098). Input text đã lưu dd/mm/yyyy → gửi thẳng.
-            'strCorePerson_NgaySinh': g('txtKQ_NgaySinh'),
+            // BE strict format dd/mm/yyyy (comment dòng 1097-1098). Ô nhập là type=date
+            // nên trả về ISO yyyy-mm-dd → PHẢI đổi lại, gửi ISO thẳng là BE hiểu sai ngày/tháng.
+            'strCorePerson_NgaySinh': me._ngaySinhToUI(g('txtKQ_NgaySinh')),
             'strCorePerson_GioiTinh_Id': g('ddlKQ_GioiTinh'),
             'strPersonContact_DienThoai': g('txtKQ_DienThoai'),
             'strPersonContact_Email': g('txtKQ_Email'),
@@ -5865,10 +5870,13 @@ KeHoachTuyenSinhNew.prototype = {
         var hoTen = edu.system.getValById('txtKQ_HoTen');
         if (!edu.util.checkValue(hoTen)) { warn("Vui lòng nhập Họ và tên", 0, 'txtKQ_HoTen'); return; }
 
-        var strNgaySinh = edu.system.getValById('txtKQ_NgaySinh');
+        // Ô type=date: chưa chọn đủ ngày thì trình duyệt trả rỗng, nên chỉ cần kiểm tra
+        // rỗng. Vẫn đổi sang dd/mm/yyyy rồi soát lại lần nữa — phòng trình duyệt cũ
+        // không hỗ trợ type=date và tụt về ô text gõ tay.
+        var strNgaySinh = me._ngaySinhToUI(edu.system.getValById('txtKQ_NgaySinh'));
         if (!edu.util.checkValue(strNgaySinh)) { warn("Vui lòng nhập Ngày tháng năm sinh", 0, 'txtKQ_NgaySinh'); return; }
         if (!/^\d{2}\/\d{2}\/\d{4}$/.test(strNgaySinh)) {
-            warn("Ngày sinh phải theo định dạng dd/mm/yyyy (VD: 15/03/2007)", 0, 'txtKQ_NgaySinh'); return;
+            warn("Ngày sinh chưa hợp lệ — chọn lại ngày trên lịch", 0, 'txtKQ_NgaySinh'); return;
         }
 
         if (!edu.util.checkValue(edu.system.getValById('ddlKQ_GioiTinh'))) {
@@ -5903,10 +5911,10 @@ KeHoachTuyenSinhNew.prototype = {
 
         var g = function (id) { return edu.system.getValById(id) || ''; };
 
-        // Input text dd/mm/yyyy → payload strCorePerson_NgaySinh giữ nguyên dd/mm/yyyy (BE strict)
+        // Ô nhập là type=date (ISO) → đổi về dd/mm/yyyy cho payload, BE strict format này.
         // Đồng thời tách số riêng biệt cho dCorePerson_NgayS/ThangS/NamS
         var dNgayS = '', dThangS = '', dNamS = '';
-        var strNgaySinh = g('txtKQ_NgaySinh');
+        var strNgaySinh = me._ngaySinhToUI(g('txtKQ_NgaySinh'));
         if (strNgaySinh) {
             var m = strNgaySinh.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
             if (m) { dNgayS = parseInt(m[1], 10); dThangS = parseInt(m[2], 10); dNamS = parseInt(m[3], 10); }

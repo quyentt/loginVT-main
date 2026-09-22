@@ -2312,7 +2312,10 @@
                                         </div>
                                         <div class="aps-sv-field">
                                             <label class="aps-sv-label">Ngày tháng năm sinh <span class="aps-sv-req">*</span></label>
-                                            <input type="text" class="aps-sv-input" id="txtKQ_NgaySinh" placeholder="dd/mm/yyyy" maxlength="10" inputmode="numeric" pattern="\d{2}/\d{2}/\d{4}">
+                                            <!-- type=date giống ô "Ngày cấp" bên CCCD (yêu cầu sếp Khoa 22/09/2026):
+                                                 có lịch bấm chọn, khỏi gõ tay. Ô này trả giá trị ISO yyyy-mm-dd, trong khi
+                                                 BE nhận dd/mm/yyyy → mọi chỗ đọc/ghi phải đi qua _ngaySinhToUI / _ngaySinhToISO. -->
+                                            <input type="date" class="aps-sv-input" id="txtKQ_NgaySinh">
                                         </div>
                                         <div class="aps-sv-field">
                                             <label class="aps-sv-label">Giới tính <span class="aps-sv-req">*</span></label>
@@ -3324,7 +3327,7 @@
         tryNext();
     })();
 </script>
-<script src="modules/tuyensinh/script/kehoachtuyensinhnew.js?v=1.0.9.3"></script>
+<script src="modules/tuyensinh/script/kehoachtuyensinhnew.js?v=1.0.9.4"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['KeHoachTuyenSinhNew'] = new KeHoachTuyenSinhNew();
