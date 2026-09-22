@@ -648,8 +648,22 @@ KeHoachTuyenSinhNew.prototype = {
             });
         });
         $('#btnKQDK_AutoClass').click(function () { me.kqdk_PhanLopTuDong_Selected(); });
-        $('#chkKQDK_All').click(function () {
+        /* ⚠ Phải bind DELEGATE qua bảng, KHÔNG bind thẳng vào #chkKQDK_All.
+           Đổi chế độ xem Gọn/Đầy đủ là _kqApplyTableMode thay nguyên <thead> bằng
+           .html(...) → ô tick cũ bị vứt đi kèm luôn handler, ô tick mới sinh ra không
+           có ai nghe → bấm "check all" không ăn gì. Bảng #tblKQDK_HoSo là thẻ tĩnh
+           trong HTML (chỉ thead/tbody bị thay ruột) nên bám vào nó là chắc. */
+        $('#tblKQDK_HoSo').on('click', '#chkKQDK_All', function () {
             $('#tblKQDK_HoSo tbody .kqdk-sel').prop('checked', $(this).is(':checked'));
+        });
+        // Bỏ tick 1 dòng thì ô "check all" phải nhả ra, tick đủ cả trang thì tự bật —
+        // không có cái này người dùng thấy ô tổng vẫn xanh dù đã bỏ bớt dòng.
+        $('#tblKQDK_HoSo').on('change', 'tbody .kqdk-sel', function () {
+            var $all = $('#tblKQDK_HoSo tbody .kqdk-sel');
+            var soChon = $all.filter(':checked').length;
+            $('#chkKQDK_All')
+                .prop('checked', soChon > 0 && soChon === $all.length)
+                .prop('indeterminate', soChon > 0 && soChon < $all.length);
         });
 
         // Phân trang FE cho bảng Kết quả đăng ký (data đã cache đầy đủ ở _kqViewData)
@@ -3675,7 +3689,9 @@ KeHoachTuyenSinhNew.prototype = {
         var $wrap = $('#kqdk_pagination_wrap');
 
         $tbody.html('');
-        $('#chkKQDK_All').prop('checked', false);
+        // Sang trang khác là danh sách tick trắng lại → ô tổng phải về hẳn trạng thái
+        // chưa chọn (bỏ cả nửa-tick), không thì trang mới hiện tick tổng mà không dòng nào chọn.
+        $('#chkKQDK_All').prop('checked', false).prop('indeterminate', false);
 
         if (!total) {
             $tbody.append('<tr><td class="td-center" colspan="53">Không có dữ liệu</td></tr>');
