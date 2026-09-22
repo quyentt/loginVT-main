@@ -2861,10 +2861,14 @@
                                         <div class="aps-sv-section-title">
                                             <i class="fa-light fa-list-check"></i> Danh mục hồ sơ giấy tờ
                                             <span id="lblKQ_HS_Tong" style="font-weight:600;color:#64748b;">(0)</span>
+                                            <!-- Cho thấy đang lấy quy định của ĐỢT nào (mỗi đợt = một hệ),
+                                                 để người dùng phát hiện ngay nếu hồ sơ gắn nhầm đợt. -->
+                                            <span id="lblKQ_HS_Dot" style="font-weight:500;color:#1e40af;background:#e0edff;border:1px solid #bfd4ff;border-radius:10px;padding:2px 10px;font-size:12px;margin-left:8px;"></span>
                                         </div>
                                         <div class="kqhs-note kqhs-huongdan">
                                             <i class="fa-regular fa-circle-info"></i>
-                                            Bảng liệt kê sẵn toàn bộ loại hồ sơ. Chỉ cần điền
+                                            Bảng lấy theo <b>danh mục hồ sơ đã khai cho đợt tuyển sinh</b>
+                                            (Các đợt tuyển sinh → cột “Khai danh mục hồ sơ”). Chỉ cần điền
                                             <b>Số lượng đã nộp</b> ở những dòng thí sinh đã nộp, rồi bấm
                                             <b>“Lưu danh mục”</b>. Dòng để trống sẽ không lưu.
                                         </div>
@@ -2874,19 +2878,20 @@
                                                     <tr>
                                                         <th style="width:52px">STT</th>
                                                         <th>Loại hồ sơ</th>
-                                                        <th class="kqhs-num" style="width:110px">Cần nộp</th>
-                                                        <th class="kqhs-ct" style="width:120px">Đã nộp</th>
+                                                        <th class="kqhs-ct" style="width:120px">Tính chất</th>
+                                                        <th class="kqhs-num" style="width:100px">Cần nộp</th>
+                                                        <th class="kqhs-ct" style="width:110px">Đã nộp</th>
                                                         <th class="kqhs-ct" style="width:90px">Tình trạng</th>
-                                                        <th style="min-width:180px">Mô tả</th>
+                                                        <th style="min-width:170px">Mô tả</th>
                                                         <th class="kqhs-ct" style="width:70px">Xóa</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr><td class="kqhs-empty" colspan="7">Đang tải danh mục…</td></tr>
+                                                    <tr><td class="kqhs-empty" colspan="8">Đang tải danh mục…</td></tr>
                                                 </tbody>
                                                 <tfoot class="d-none">
                                                     <tr>
-                                                        <td colspan="2">Tổng cộng</td>
+                                                        <td colspan="3">Tổng cộng</td>
                                                         <td class="kqhs-num" id="lblKQ_HS_TongCanNop">0</td>
                                                         <td class="kqhs-ct" id="lblKQ_HS_TongDaNop">0</td>
                                                         <td colspan="3"></td>

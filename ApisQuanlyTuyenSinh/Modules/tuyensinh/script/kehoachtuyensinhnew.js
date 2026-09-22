@@ -740,6 +740,11 @@ KeHoachTuyenSinhNew.prototype = {
             me._loadPhuongThucTuyenSinh();
             $('#ddlKQ_LopDuKien').html('<option value="">-- Chọn nguyện vọng đầu ra trước --</option>')
                 .prop('disabled', true).val('');
+            // Tab 8 lấy danh mục hồ sơ theo QUY ĐỊNH của đợt (mỗi đợt = một hệ), nên đổi đợt
+            // là phải nạp lại đúng bộ quy định của hệ mới — bỏ cache rồi vẽ lại.
+            me._dtQuyDinhHS = null;
+            me._dtQuyDinhHS_Dot = '';
+            if (edu.util.checkValue(me.strSuaHoSo_Id)) me._loadHoSoDM_ForEdit(me.strSuaHoSo_Id);
         });
 
         // Cascade: chọn Nguyện vọng đầu ra → load Lớp dự kiến theo Đầu ra đó
@@ -5162,62 +5167,169 @@ KeHoachTuyenSinhNew.prototype = {
             }, false, false, false, null);
         };
 
-        goiLayDS(true, function () { goiLayDS(false, null); });
+        // Lấy QUY ĐỊNH của đợt trước (khung của bảng), rồi mới lấy số đã nộp của thí sinh
+        me._hsLayQuyDinh(function () {
+            goiLayDS(true, function () { goiLayDS(false, null); });
+        });
+    },
+
+    /*------------------------------------------
+    -- Danh mục hồ sơ QUY ĐỊNH cho đợt tuyển sinh — chính là dữ liệu khai ở modal
+    -- "Khai danh mục hồ sơ giấy tờ" (cột Khai ở bảng Các đợt).
+    -- Đây là KHUNG của lưới tab 8: đợt khai bao nhiêu loại thì thí sinh hiện bấy nhiêu dòng,
+    -- KHÔNG liệt kê cả danh mục TUYENSINH.LOAIHOSO (sếp Tuấn chốt 22/09/2026).
+    -- Cache theo Id đợt; đổi đợt là nạp lại.
+    -------------------------------------------*/
+    /*------------------------------------------
+    -- Đợt đang áp dụng cho hồ sơ đang mở. Mỗi đợt gắn một HỆ đào tạo (TS_CD_… = cao đẳng),
+    -- nên lấy quy định theo đợt này chính là lấy đúng bộ hồ sơ của hệ đó.
+    -- Ưu tiên dropdown "Đợt tuyển sinh" ngay trên form (tab Trúng tuyển) vì đó là đợt THẬT
+    -- của hồ sơ; strDot_Id_ForKQ chỉ là context lúc mở modal, có thể rỗng hoặc lệch khi
+    -- vào thẳng từ danh sách Kết quả đăng ký.
+    -------------------------------------------*/
+    _hsDotHienTai: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        return ($('#ddlKQ_DotTuyenSinh').val() || '') || me.strDot_Id_ForKQ || '';
+    },
+
+    _hsLayQuyDinh: function (cb) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var xong = function () { if (typeof cb === 'function') cb(me._dtQuyDinhHS || []); };
+        var dotId = me._hsDotHienTai();
+        if (me._dtQuyDinhHS && me._dtQuyDinhHS_Dot === dotId) { xong(); return; }
+        if (!edu.util.checkValue(dotId)) { me._dtQuyDinhHS = []; me._dtQuyDinhHS_Dot = dotId; xong(); return; }
+
+        // Cần danh mục Tính chất hồ sơ để đổi Id → tên hiển thị
+        me._qdhsEnsureDM(function () {
+            edu.system.makeRequest({
+                success: function (data) {
+                    me._dtQuyDinhHS = (data && data.Success && edu.util.checkValue(data.Data)) ? data.Data : [];
+                    me._dtQuyDinhHS_Dot = dotId;
+                    xong();
+                },
+                error: function () {
+                    me._dtQuyDinhHS = [];
+                    me._dtQuyDinhHS_Dot = dotId;
+                    xong();
+                },
+                type: 'POST',
+                contentType: true,
+                action: me._ACTION_QDHS_LayDS,
+                data: {
+                    'action': me._ACTION_QDHS_LayDS,
+                    'func': 'pkg_tuyensinh_kehoach.LayDSTS_QuyDinhHoSo',
+                    'iM': edu.system.iM,
+                    'strTuKhoa': '',
+                    // ⚠ Param mang tên KeHoachTuyenSinh nhưng BE nhận Id ĐỢT
+                    'strTS_KeHoachTuyenSinh_Id': dotId,
+                    'strLoaiHoSo_Id': '',
+                    'strNguoiTao_Id': '',
+                    'pageIndex': 1,
+                    'pageSize': 500
+                },
+                fakedb: []
+            }, false, false, false, null);
+        });
+    },
+
+    /*------------------------------------------
+    -- Id tính chất hồ sơ → tên hiển thị (DM TUYENSINH.TINHCHATHOSO).
+    -------------------------------------------*/
+    /*------------------------------------------
+    -- Badge cạnh tiêu đề: đang lấy quy định theo đợt/hệ nào.
+    -------------------------------------------*/
+    _hsVeBadgeDot: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var $b = $('#lblKQ_HS_Dot');
+        if (!$b.length) return;
+        var dotId = me._hsDotHienTai();
+        if (!edu.util.checkValue(dotId)) {
+            $b.text('').hide();
+            return;
+        }
+        var ten = '';
+        (me.dtDotTuyenSinh || []).forEach(function (d) {
+            if (String(d.ID || d.Id || d.id || '') !== String(dotId)) return;
+            var ma = d.MA || d.Ma || '', t = d.TEN || d.Ten || '';
+            ten = (t && ma && t !== ma) ? (t + ' (' + ma + ')') : (t || ma);
+        });
+        if (!ten) ten = ($('#ddlKQ_DotTuyenSinh option:selected').text() || '').trim();
+        $b.text(ten ? ('Theo đợt: ' + ten) : '').toggle(!!ten);
+    },
+
+    _hsTenTinhChat: function (id) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (!edu.util.checkValue(id)) return '';
+        var dt = me.dtQDHS_TinhChatHoSo || [];
+        for (var i = 0; i < dt.length; i++) {
+            if (String(dt[i].ID || dt[i].Id || dt[i].id) === String(id)) {
+                return dt[i].TEN || dt[i].Ten || '';
+            }
+        }
+        return '';
     },
 
     /*------------------------------------------
     -- Dựng bảng + dòng tổng ở tfoot (quy ước: bảng có cột số phải có tổng)
     -------------------------------------------*/
-    /* Lưới nhập hàng loạt (yêu cầu sếp Tuấn 21/09/2026): liệt kê SẴN toàn bộ loại hồ sơ
-       trong danh mục TUYENSINH.LOAIHOSO, cán bộ chỉ điền cột "Đã nộp" rồi bấm Lưu một lượt.
-       Dòng nào không nhập thì không gọi API — xem _saveHoSoDM.
-       "Cần nộp" là quy định nên để chỉ-xem; dòng đã khai thì lấy số trong CSDL, dòng chưa
-       khai thì lấy từ danh mục (nếu DM có khai), không có thì mặc định 1. */
-    _genTable_HoSoDM: function (rows, _try) {
+    /* LƯỚI NHẬP HÀNG LOẠT — khung lấy từ QUY ĐỊNH của đợt.
+       Sếp Tuấn chốt 22/09/2026: "trong phần khai báo danh mục của từng hệ, mình đã khai báo
+       hồ sơ cần nộp của từng hệ rồi" → tab 8 CHỈ hiện đúng các loại hồ sơ đã khai cho đợt
+       (modal "Khai danh mục hồ sơ giấy tờ" ở bảng Các đợt, pkg_tuyensinh_kehoach.*_TS_QuyDinhHoSo),
+       KHÔNG liệt kê cả danh mục TUYENSINH.LOAIHOSO.
+       Hai nguồn ghép lại:
+         - _dtQuyDinhHS  (theo ĐỢT)  → khung bảng: loại hồ sơ, tính chất, SỐ LƯỢNG CẦN NỘP
+         - rows           (theo HỒ SƠ) → số đã nộp + mô tả của chính thí sinh đang mở
+       Cán bộ chỉ điền cột "Đã nộp"; dòng để trống thì không gọi API (xem _saveHoSoDM). */
+    _genTable_HoSoDM: function (rows) {
         var me = main_doc.KeHoachTuyenSinhNew;
         var pick = me._kqPick;
         me._dtHoSoDM = rows || [];
 
         var esc = function (s) { return $('<div>').text(s == null ? '' : s).html(); };
         var num = function (v) { var n = parseInt(v, 10); return isNaN(n) ? 0 : n; };
-        var dm = me._dtLoaiHoSo || [];
+        var qd = me._dtQuyDinhHS || [];
 
-        if (!dm.length) {
-            // initKhai_DanhMuc nạp DM bất đồng bộ; mở tab nhanh quá thì chưa kịp về → chờ rồi vẽ lại.
+        me._hsVeBadgeDot();
+        if (!qd.length) {
+            var chuaCoDot = !edu.util.checkValue(me._hsDotHienTai());
+            $('#tblKQ_HS tbody').html('<tr><td class="kqhs-empty" colspan="8">'
+                + (chuaCoDot
+                    ? ('Chưa xác định được <b>đợt tuyển sinh</b> của hồ sơ này.<br/>'
+                        + 'Sang tab <b>Trúng tuyển</b> chọn Đợt tuyển sinh, danh mục sẽ hiện theo hệ của đợt đó.')
+                    : ('Đợt tuyển sinh này chưa khai danh mục hồ sơ cần nộp.<br/>'
+                        + 'Vào <b>Các đợt tuyển sinh</b> → cột <b>“Khai danh mục hồ sơ”</b> để khai trước.'))
+                + '</td></tr>');
             $('#tblKQ_HS tfoot').addClass('d-none');
             $('#lblKQ_HS_Tong').text('(0)');
-            _try = (_try || 0) + 1;
-            if (_try <= 25) {
-                $('#tblKQ_HS tbody').html('<tr><td class="kqhs-empty" colspan="7">Đang tải danh mục…</td></tr>');
-                setTimeout(function () { me._genTable_HoSoDM(rows, _try); }, 300);
-            } else {
-                $('#tblKQ_HS tbody').html('<tr><td class="kqhs-empty" colspan="7">'
-                    + 'Chưa tải được danh mục loại hồ sơ (TUYENSINH.LOAIHOSO)</td></tr>');
-            }
             return;
         }
 
-        // Ghép dòng đã lưu dưới CSDL vào từng loại hồ sơ của danh mục
-        var daLuu = {};
+        // Số đã nộp của thí sinh, tra theo loại hồ sơ
+        var daNopTheoLoai = {};
         me._dtHoSoDM.forEach(function (r) {
             var k = String(pick(r, ['LOAIHOSO_ID', 'LoaiHoSo_Id']) || '');
-            if (k) daLuu[k] = r;
+            if (k) daNopTheoLoai[k] = r;
         });
 
+        me._hsVeBadgeDot();
+
         var html = '';
-        for (var i = 0; i < dm.length; i++) {
-            var loai = dm[i] || {};
-            var loaiId = String(loai.ID || loai.Id || loai.id || '');
+        for (var i = 0; i < qd.length; i++) {
+            var q = qd[i] || {};
+            var loaiId = String(me._pickLoose(q, ['LOAIHOSO_ID', 'LOAI_HOSO_ID']) || '');
             if (!loaiId) continue;
-            var r = daLuu[loaiId] || null;
+            var r = daNopTheoLoai[loaiId] || null;
 
             var id = r ? String(pick(r, ['ID', 'Id', 'TS_HOSO_ID']) || '') : '';
-            var canNop = r ? num(pick(r, ['SOLUONGCANNOP', 'SoLuongCanNop', 'SL_CANNOP']))
-                : num(me._pickLoose(loai, ['SOLUONGCANNOP', 'SOLUONG', 'GIATRI']) || 1);
-            if (!canNop) canNop = 1;
+            // Cần nộp = SỐ LƯỢNG trong quy định của đợt (không phải số cán bộ tự gõ)
+            var canNop = num(me._pickLoose(q, ['SOLUONG', 'SO_LUONG'])) || 1;
             var daNop = r ? num(pick(r, ['SOLUONG', 'SoLuong', 'SL_DANOP'])) : '';
             var moTa = r ? pick(r, ['MOTA', 'MoTa', 'GHICHU']) : '';
-            var tenLoai = (loai.TEN || loai.Ten || '') || me._tenLoaiHoSo(loaiId);
+            var tenLoai = me._pickLoose(q, ['LOAIHOSO_TEN', 'LOAI_HOSO_TEN'])
+                || me._tenLoaiHoSo(loaiId);
+            var tinhChat = me._pickLoose(q, ['TINHCHATHOSO_TEN', 'TINHCHAT_HOSO_TEN'])
+                || me._hsTenTinhChat(me._pickLoose(q, ['TINHCHATHOSO_ID', 'TINHCHAT_HOSO_ID']));
 
             html += '<tr' + (r ? ' class="kqhs-dalu"' : '') + ' data-loai="' + esc(loaiId) + '"'
                 + ' data-id="' + esc(id) + '"'
@@ -5226,6 +5338,7 @@ KeHoachTuyenSinhNew.prototype = {
                 + ' data-goc-mota="' + esc(moTa) + '">'
                 + '<td class="kqhs-ct">' + (i + 1) + '</td>'
                 + '<td>' + esc(tenLoai || '-') + '</td>'
+                + '<td class="kqhs-ct">' + esc(tinhChat) + '</td>'
                 + '<td class="kqhs-num">' + canNop + '</td>'
                 + '<td class="kqhs-ct"><input type="number" min="0" step="1" class="kqhs-in kqhs-sl"'
                 + ' value="' + esc(daNop) + '" placeholder="—"></td>'
@@ -5240,7 +5353,7 @@ KeHoachTuyenSinhNew.prototype = {
         }
         $('#tblKQ_HS tbody').html(html);
         $('#tblKQ_HS tfoot').removeClass('d-none');
-        $('#lblKQ_HS_Tong').text('(' + me._dtHoSoDM.length + '/' + dm.length + ')');
+        $('#lblKQ_HS_Tong').text('(' + me._dtHoSoDM.length + '/' + qd.length + ')');
         me._hsCapNhatTinhTrang();
     },
 
