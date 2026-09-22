@@ -156,6 +156,7 @@ Import_PhaiNop.prototype = {
                 edu.system.alert("Mẫu import này chưa cấu hình file mẫu để tải. Vui lòng liên hệ quản trị viên!");
                 return;
             }
+            if (url_report.indexOf('http') == -1) url_report = edu.system.strhost + "/" + url_report
             location.href = url_report;
         });
         $("#tblDaImport").delegate('input', 'click', function (e) {
