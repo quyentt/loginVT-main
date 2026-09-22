@@ -33,10 +33,10 @@ InHoaDonTuDong.prototype = {//1
         edu.system.pageSize_default = 10;
         edu.extend.addNotify();
         
-        $("#MainContent").delegate("#zonetabkhoanthu", "click", function (e) {
-            e.preventDefault();
-            me.activeTabFun();
-        });
+        //$("#MainContent").delegate("#zonetabkhoanthu", "click", function (e) {
+        //    e.preventDefault();
+        //    me.activeTabFun();
+        //});
         me.getList_LoHoaDon();
         me.getList_DMLKT();
         me.getList_NguoiThu();

@@ -162,6 +162,8 @@ Import_DaNop.prototype = {
                 edu.system.alert("Mẫu import này chưa được cấu hình file mẫu. Vui lòng liên hệ quản trị viên để bổ sung đường dẫn file mẫu trong hệ thống.", "w");
                 return;
             }
+
+            if (url_report.indexOf('http') == -1) url_report = edu.system.strhost + "/" + url_report
             window.open(url_report, "_blank");
         });
         $("#tblDaImport").delegate('input', 'click', function (e) {
