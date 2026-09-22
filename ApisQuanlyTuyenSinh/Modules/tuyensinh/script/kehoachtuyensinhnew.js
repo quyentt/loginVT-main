@@ -888,6 +888,9 @@ KeHoachTuyenSinhNew.prototype = {
             for (var x in obj_list) {
                 addKeyValue(x, obj_list[x]);
             }
+            var chon = me._kqLayIdDaTick();
+            addKeyValue("strSinhVienID", chon.person.join(','));
+            addKeyValue("strHoSoID", chon.hoso.join(','));
         });
         
         edu.system.getList_MauImport("zonebtnBaoCao_KHTS2", function (addKeyValue) {
@@ -904,7 +907,43 @@ KeHoachTuyenSinhNew.prototype = {
             for (var x in obj_list) {
                 addKeyValue(x, obj_list[x]);
             }
+            // Cùng quy tắc với zone báo cáo phía trên: có tick dòng nào thì báo cáo
+            // đúng những dòng đó, không tick thì để rỗng = lấy theo bộ lọc tìm kiếm.
+            var chon2 = me._kqLayIdDaTick();
+            addKeyValue("strSinhVienID", chon2.person.join(','));
+            addKeyValue("strHoSoID", chon2.hoso.join(','));
         });
+    },
+
+    /*------------------------------------------
+    -- Gom Id của các dòng ĐANG TICK ở bảng Kết quả đăng ký (#tblKQDK_HoSo).
+    -- Trả 2 danh sách vì mỗi dòng có 2 khóa khác nhau và mỗi báo cáo cần một kiểu:
+    --   person : COREPERSON_ID  — "sinh viên" / người học
+    --   hoso   : HOSO_ID        — bản ghi hồ sơ tuyển sinh
+    -- Ưu tiên đọc từ _kqViewData theo data-kq-idx (đủ cột nhất), thiếu mới lùi về
+    -- thuộc tính data-* trên <tr> — cùng cách kqdk_PhanLopTuDong_Selected đang làm.
+    -- Không tick dòng nào → 2 mảng rỗng, KHÔNG chặn: báo cáo chạy theo bộ lọc như cũ.
+    -------------------------------------------*/
+    _kqLayIdDaTick: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var kq = { person: [], hoso: [] };
+        $('#tblKQDK_HoSo tbody .kqdk-sel:checked').each(function () {
+            var $tr = $(this).closest('tr');
+            var idx = parseInt($tr.attr('data-kq-idx'), 10);
+            var row = (!isNaN(idx) && me._kqViewData && me._kqViewData[idx]) ? me._kqViewData[idx] : null;
+
+            var pid = row ? me._kqPick(row, ['COREPERSON_ID', 'CorePerson_Id', 'CORE_PERSON_ID',
+                'Core_Person_Id', 'PERSON_ID', 'Person_Id']) : '';
+            if (!pid) pid = $tr.attr('data-core-person-id') || '';
+
+            var hid = row ? me._kqPick(row, ['HOSO_ID', 'ID', 'HoSo_Id', 'Id']) : '';
+            if (!hid) hid = $tr.attr('data-id') || '';
+
+            // Lọc trùng: cùng một người có thể có nhiều dòng hồ sơ
+            if (pid && kq.person.indexOf(pid) < 0) kq.person.push(pid);
+            if (hid && kq.hoso.indexOf(hid) < 0) kq.hoso.push(hid);
+        });
+        return kq;
     },
 
     /*==========================================================================
