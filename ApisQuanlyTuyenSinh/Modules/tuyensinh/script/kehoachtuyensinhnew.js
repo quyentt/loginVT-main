@@ -2497,14 +2497,26 @@ KeHoachTuyenSinhNew.prototype = {
                     // Tab 7 — ghi nhận nguồn khai thác SAU CÙNG. Chế độ Sửa đã biết sẵn
                     // Core_Person_Id của hồ sơ đang mở (lưu ở openSuaHoSo).
                     me.save_HoSoDoiTacTS(me.strSuaHoSo_CorePersonId || '');
-                    edu.system.alert("Cập nhật hồ sơ thành công"
-                        + me._addrWarnText(addrBlocks) + me._nguonWarnText()
-                        + me._hoaDonWarnText(), "s");
-                    me._exitSuaMode();
-                    // Về lại screen list và refresh
-                    $('#kqdk_khai').addClass('d-none');
-                    $('#kqdk_list').removeClass('d-none');
-                    me.loadKQDK_List();
+                    /* Tab 8 — danh mục hồ sơ giấy tờ. Gộp về MỘT nút (yêu cầu 22/09/2026):
+                       không còn nút "Lưu danh mục" riêng, bấm "Cập nhật hồ sơ" là lưu luôn.
+                       Gọi TRƯỚC khi dọn form vì _saveHoSoDM đọc thẳng từ lưới trong DOM.
+                       Truyền callback để nó KHÔNG tự alert — gộp chung một thông báo, tránh
+                       chồng alert làm BS3 gỡ body.modal-open khiến modal tự đóng. */
+                    me._saveHoSoDM(function (kq) {
+                        var txtDM = '';
+                        if (kq && kq.total) {
+                            txtDM = '<br/>Danh mục hồ sơ: đã lưu ' + kq.done + '/' + kq.total + ' dòng'
+                                + (kq.failed ? ' <span class="text-danger">(lỗi: ' + kq.failed + ')</span>' : '');
+                        }
+                        edu.system.alert("Cập nhật hồ sơ thành công"
+                            + me._addrWarnText(addrBlocks) + me._nguonWarnText()
+                            + me._hoaDonWarnText() + txtDM, "s");
+                        me._exitSuaMode();
+                        // Về lại screen list và refresh
+                        $('#kqdk_khai').addClass('d-none');
+                        $('#kqdk_list').removeClass('d-none');
+                        me.loadKQDK_List();
+                    });
                 } else {
                     edu.system.alert("Sua_HoSo_TS: " + ((data && data.Message) || 'Lỗi'), "w");
                 }
@@ -5072,6 +5084,8 @@ KeHoachTuyenSinhNew.prototype = {
         if (me._hsBound) return;
         me._hsBound = true;
 
+        // Nút "Lưu danh mục" đã ẩn (gộp vào "Cập nhật hồ sơ" — xem saveSuaHoSo_Full).
+        // Vẫn bind phòng khi bật lại nút đó trong HTML.
         $("#btnKQ_HS_Luu").on('click', function () { me._saveHoSoDM(); });
         // "Nhập lại" = bỏ những gì vừa gõ, vẽ lại lưới theo đúng dữ liệu dưới CSDL
         $("#btnKQ_HS_Reset").on('click', function () { me._genTable_HoSoDM(me._dtHoSoDM || []); });
@@ -5412,11 +5426,17 @@ KeHoachTuyenSinhNew.prototype = {
     --   - Dòng ĐÃ có, giá trị đổi so với lúc nạp → Sua_TS_HoSo (so với data-goc-*).
     --   - Dòng ĐÃ có, không đổi gì → bỏ qua, khỏi bắn request thừa.
     -- "Cần nộp" lấy từ data-can (chỉ xem, không cho sửa — là quy định).
+    --
+    -- cb: truyền vào thì hàm KHÔNG tự alert và KHÔNG reload, mà gọi cb({done,failed,total,loi}).
+    --     Dùng khi gộp vào nút "Cập nhật hồ sơ" (saveSuaHoSo_Full) — phải gộp chung một
+    --     thông báo, vì BS3 chồng alert sẽ gỡ body.modal-open làm modal tự đóng.
     -------------------------------------------*/
-    _saveHoSoDM: function () {
+    _saveHoSoDM: function (cb) {
         var me = main_doc.KeHoachTuyenSinhNew;
+        var goiCb = function (kq) { if (typeof cb === 'function') cb(kq); };
 
         if (!edu.util.checkValue(me.strSuaHoSo_Id)) {
+            if (cb) { goiCb({ done: 0, failed: 0, total: 0, loi: [] }); return false; }
             edu.system.alert("Cần lưu hồ sơ trước khi khai danh mục hồ sơ!", "w");
             return false;
         }
@@ -5453,6 +5473,7 @@ KeHoachTuyenSinhNew.prototype = {
         });
 
         if (!viec.length) {
+            if (cb) { goiCb({ done: 0, failed: 0, total: 0, loi: [] }); return false; }
             edu.system.alert("Không có thay đổi nào để lưu.", "w");
             return false;
         }
@@ -5460,6 +5481,11 @@ KeHoachTuyenSinhNew.prototype = {
         var done = 0, failed = 0, total = viec.length, loi = [];
         var finalize = function () {
             if (done + failed !== total) return;
+            if (cb) {
+                // Người gọi tự lo thông báo + điều hướng (tránh chồng alert)
+                goiCb({ done: done, failed: failed, total: total, loi: loi });
+                return;
+            }
             var msg = "Đã lưu " + done + "/" + total + " dòng";
             if (failed) msg += " (lỗi: " + failed + ")" + (loi.length ? "<br/>" + loi.slice(0, 5).join("<br/>") : "");
             edu.system.alert(msg, failed ? "w" : "s");
