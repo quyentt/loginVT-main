@@ -873,6 +873,38 @@ KeHoachTuyenSinhNew.prototype = {
 
         // Đọc dữ liệu từ nguồn API (mapping cột API ↔ trường thông tin, lưu localStorage)
         me.initDocAPI_Bindings();
+
+        edu.system.getList_MauImport("zonebtnBaoCao_KHTS", function (addKeyValue) {
+            var obj_list = {
+                'strTuKhoa': edu.system.getValById('txtSearch_TuKhoa'),
+                'strLoai_TuyenSinh_Id': edu.system.getValById('ddlLoaiNguonTuyenSinh'),
+                'strTs_PhuongAn_TuyenSinh_Id': edu.system.getValById('ddlPhuongAnTuyenSinh'),
+                'strNam_TuyenSinh': edu.system.getValById('txtSearch_NamTuyenSinh'),
+                'strNam_Hoc': edu.system.getValById('txtSearch_NamHoc'),
+                'strHoc_Ky': edu.system.getValById('txtSearch_HocKy'),
+                'strPlan_Status_Code': edu.system.getValById('ddlTinhTrangKeHoach'),
+                'dIs_Active': edu.system.getValById('ddlConHieuLuc'),
+            };
+            for (var x in obj_list) {
+                addKeyValue(x, obj_list[x]);
+            }
+        });
+        
+        edu.system.getList_MauImport("zonebtnBaoCao_KHTS2", function (addKeyValue) {
+            var obj_list = {
+                'strTuKhoa': edu.system.getValById('txtSearch_TuKhoa'),
+                'strLoai_TuyenSinh_Id': edu.system.getValById('ddlLoaiNguonTuyenSinh'),
+                'strTs_PhuongAn_TuyenSinh_Id': edu.system.getValById('ddlPhuongAnTuyenSinh'),
+                'strNam_TuyenSinh': edu.system.getValById('txtSearch_NamTuyenSinh'),
+                'strNam_Hoc': edu.system.getValById('txtSearch_NamHoc'),
+                'strHoc_Ky': edu.system.getValById('txtSearch_HocKy'),
+                'strPlan_Status_Code': edu.system.getValById('ddlTinhTrangKeHoach'),
+                'dIs_Active': edu.system.getValById('ddlConHieuLuc'),
+            };
+            for (var x in obj_list) {
+                addKeyValue(x, obj_list[x]);
+            }
+        });
     },
 
     /*==========================================================================
