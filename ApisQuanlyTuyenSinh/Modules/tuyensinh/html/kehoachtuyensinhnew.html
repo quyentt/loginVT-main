@@ -1691,6 +1691,12 @@
     .aps-sv-panel.aps-sv-compact { background:transparent; margin:0; padding:0; }
     .aps-sv-compact .aps-sv-section { background:#fff; border:1px solid #e2e8f0; border-radius:8px; padding:12px 16px 14px; }
     .aps-sv-compact .aps-sv-section + .aps-sv-section { margin-top:12px; }
+    /* Hai mục xếp cạnh nhau (Bố | Mẹ). auto-fit + minmax nên màn hẹp tự tụt xuống
+       1 cột, khỏi cần media query riêng. gap thay cho margin-top của .aps-sv-section
+       + .aps-sv-section — nếu không khử margin đó thì cột phải bị đẩy tụt xuống. */
+    .kqdk-2cot { display:grid; grid-template-columns:repeat(auto-fit, minmax(430px, 1fr)); gap:12px; align-items:start; }
+    .kqdk-2cot > .aps-sv-section + .aps-sv-section,
+    .aps-sv-compact .kqdk-2cot > .aps-sv-section + .aps-sv-section { margin-top:0; }
     /* Ô tích "Nhập mục này" ở tiêu đề mục đóng/mở (xem _initSectionToggle).
        Đẩy sát phải bằng margin-left:auto để không dính vào tên mục. */
     .aps-sv-section-title .kqdk-sec-toggle {
@@ -2667,6 +2673,10 @@
 
                             <!-- ============ TAB 5: GIA ĐÌNH ============ -->
                             <div class="aps-sv-panel aps-sv-compact" id="kqdk_tab_giadinh">
+                                <!-- Bố / Mẹ xếp CẠNH NHAU cho gọn (yêu cầu khách 23/09/2026:
+                                     "chỗ này cho lên đây được không em, cho gọn"). Mỗi khối chỉ còn
+                                     2 ô nên xếp dọc thì trống nửa màn. Màn hẹp tự xuống dòng. -->
+                                <div class="kqdk-2cot">
                                 <div class="aps-sv-section">
                                     <div class="aps-sv-section-title"><i class="fa-light fa-person"></i> Thông tin về Bố</div>
                                     <div class="aps-sv-grid">
@@ -2726,6 +2736,7 @@
                                         -->
                                     </div>
                                 </div>
+                                </div><!-- /.kqdk-2cot -->
                             </div>
 
                             <!-- ============ TAB 6: XUẤT HÓA ĐƠN (bỏ CCCD — đã có ở tab 2) ============ -->
