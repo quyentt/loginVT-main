@@ -1148,6 +1148,15 @@ PhanCongLop.prototype = {
                     "mDataProp": "TENLOP"
                 },
                 {
+                    //"mDataProp": "DaoTao_ChuongTrinh_Ten (DaoTao_ChuongTrinh_Ma)",
+                    "mRender": function (nRow, aData) {
+                        return edu.util.returnEmpty(aData.DAOTAO_CHUONGTRINH_TEN) + " (" + edu.util.returnEmpty(aData.DAOTAO_CHUONGTRINH_MA) + ")";
+                    }
+                },
+                {
+                    "mDataProp": "DAOTAO_KHOADAOTAO_TEN"
+                },
+                {
                     "mRender": function (nRow, aData) {
                         return '<span><a class="btn btn-default btnDetail" id="' + aData.ID + '" name="' + aData.ID + '" title="Chi tiết">Chi tiết</a></span>';
                     }
