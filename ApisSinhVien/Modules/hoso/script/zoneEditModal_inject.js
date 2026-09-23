@@ -1851,38 +1851,57 @@ if (typeof DeXuatHoSo === 'function' && DeXuatHoSo.prototype._bridgeLienHeToShad
     -- Tìm bản ghi của đúng loại + đúng người. PERSON_ID chỉ so khi API có trả,
     -- không có thì đành tin theo loại (dữ liệu đã lấy theo từng hồ sơ).
     -------------------------------------------*/
+    /*------------------------------------------
+    -- So GUID KHÔNG phân biệt hoa thường (23/09/2026).
+    -- Trước đây so thẳng bằng ===: danh sách trả GUID viết thường mà Id hồ sơ đang
+    -- mở viết hoa là trượt hết, khiến bản ghi có sẵn bị coi như không tồn tại.
+    -------------------------------------------*/
+    var _zeBang = function (a, b) {
+        return ((a || '') + '').trim().toUpperCase() === ((b || '') + '').trim().toUpperCase();
+    };
+
     var _zeTimBanGhi = function (ds, pid, khopLoai) {
         return (ds || []).filter(function (x) {
             if (!khopLoai(x)) return false;
-            return !pid || !x.PERSON_ID || ((x.PERSON_ID + '') === (pid + ''));
+            return !pid || !x.PERSON_ID || _zeBang(x.PERSON_ID, pid);
         })[0];
     };
 
+    /*------------------------------------------
+    -- Danh sách CHƯA nạp thì KHÔNG được xoá name (23/09/2026).
+    -- Danh sách của hồ sơ nạp bất đồng bộ. Nếu lúc bấm Lưu nó còn rỗng mà vẫn xoá
+    -- name thì luồng gốc tưởng bản ghi chưa tồn tại → chạy bước kiểm tra trùng →
+    -- máy chủ thấy chính CCCD của hồ sơ này đang nằm trong bảng → báo "đã được
+    -- dùng ở hồ sơ khác" dù người dùng không hề sửa ô đó. Rỗng thì để nguyên
+    -- những gì luồng gốc đã gán, chỉ dọn khi biết chắc là không có bản ghi.
+    -------------------------------------------*/
     DeXuatHoSo.prototype._zeDatLaiNameLienHe = function () {
         var dx = this;
         var pid = dx.strDeXuatHoSo_Id || dx._lockedPersonId || '';
+        var daNap = !!(dx.dtLienHe && dx.dtLienHe.length);
         (dx.dtLoaiLienHe || []).forEach(function (loai) {
             var $o = $('#txtLienHe' + loai.ID);
             if (!$o.length) return;
             var ban = _zeTimBanGhi(dx.dtLienHe, pid, function (x) {
-                return (x.CONTACT_TYPE_CODE_ID === loai.ID) || (x.CONTACT_TYPE_CODE === loai.ID);
+                return _zeBang(x.CONTACT_TYPE_CODE_ID, loai.ID) || _zeBang(x.CONTACT_TYPE_CODE, loai.ID);
             });
             if (ban && ban.ID) $o.attr('name', ban.ID);
-            else $o.removeAttr('name');          // loại này chưa có bản ghi → phải Thêm mới
+            else if (daNap) $o.removeAttr('name');   // chắc chắn chưa có bản ghi → Thêm mới
         });
     };
 
     DeXuatHoSo.prototype._zeDatLaiNameDinhDanh = function () {
         var dx = this;
         var pid = dx.strDeXuatHoSo_Id || dx._lockedPersonId || '';
+        var daNap = !!(dx.dtDinhDanh && dx.dtDinhDanh.length);
         (dx.dtLoaiDinhDanh || []).forEach(function (loai) {
             var $o = $('#txtSoDinhDinh' + loai.ID);
             if (!$o.length) return;
             var ban = _zeTimBanGhi(dx.dtDinhDanh, pid, function (x) {
-                return (x.IDENTIFIER_TYPE_CODE === loai.ID) || (x.IDENTIFIER_TYPE_CODE_ID === loai.ID);
+                return _zeBang(x.IDENTIFIER_TYPE_CODE, loai.ID) || _zeBang(x.IDENTIFIER_TYPE_CODE_ID, loai.ID);
             });
             if (ban && ban.ID) $o.attr('name', ban.ID);
-            else $o.removeAttr('name');
+            else if (daNap) $o.removeAttr('name');
         });
     };
 
@@ -3451,4 +3470,80 @@ if (typeof DeXuatHoSo === 'function' && DeXuatHoSo.prototype._bridgeLienHeToShad
             return _origOpenMoc.apply(this, arguments);
         };
     }
+}
+
+/*==============================================================================
+== "TRÙNG VỚI CHÍNH MÌNH" THÌ KHÔNG PHẢI TRÙNG  (23/09/2026)
+==
+== ĐHLN báo: chỉ sửa TÊN và NGÀY SINH, không đụng gì tới CCCD, vậy mà bị chặn
+== "CCCD 026208003347 đã được dùng ở một hồ sơ khác" — trong khi số đó chính là
+== CCCD của hồ sơ đang mở.
+==
+== Cơ chế gây ra: luồng gốc chỉ bỏ qua bước kiểm tra trùng khi ô định danh đang
+== mang name (Id bản ghi). Mất name vì bất cứ lý do gì — danh sách nạp chậm, so
+== GUID lệch hoa thường — là nó chạy kiểm tra trùng, và máy chủ dĩ nhiên tìm thấy
+== chính bản ghi của hồ sơ này → hạ cờ icheck → HUỶ CẢ LƯỢT LƯU, mất luôn phần
+== tên và ngày sinh người ta vừa sửa.
+==
+== Hai nguyên nhân kia đã vá ở trên. Đây là lớp chặn cuối, đánh vào đúng bản
+== chất: nếu mọi dòng máy chủ trả về đều là của chính hồ sơ đang mở, hoặc giá trị
+== đó vốn đã nằm trong hồ sơ này, thì đó KHÔNG phải trùng — dọn khỏi kết quả để
+== luồng gốc chạy tiếp bình thường.
+==
+== Trùng với hồ sơ NGƯỜI KHÁC thì vẫn chặn y như cũ, không nới lỏng quy tắc.
+==============================================================================*/
+if (typeof edu !== 'undefined' && edu.system && edu.system.makeRequest
+    && !edu.system._zeBoQuaTrungChinhMinhHooked) {
+    edu.system._zeBoQuaTrungChinhMinhHooked = true;
+
+    var _zeSo = function (a, b) {
+        return ((a || '') + '').trim().toUpperCase() === ((b || '') + '').trim().toUpperCase();
+    };
+
+    var _mrTrungMinh = edu.system.makeRequest;
+    edu.system.makeRequest = function (o) {
+        try {
+            var f = (o && o.data && o.data.func) || '';
+            if (/KiemTraThongTin(LienHe|DinhDanh)/.test(f) && typeof o.success === 'function') {
+                var laLienHe = /LienHe/.test(f);
+                var giaTri = laLienHe ? o.data.strContactValue : o.data.strIdentifier_No;
+                var typeId = laLienHe ? o.data.strContactTypeCode : o.data.strIdentifier_Type_Code;
+                var sgTM = o.success;
+                o.success = function (d) {
+                    try {
+                        if (d && d.Data && d.Data.length) {
+                            var dx = (window.main_doc && window.main_doc.DeXuatHoSo) || null;
+                            var pid = dx ? (dx.strDeXuatHoSo_Id || dx._lockedPersonId || '') : '';
+
+                            // Giá trị này vốn đã là của hồ sơ đang mở?
+                            var dsMinh = (dx && (laLienHe ? dx.dtLienHe : dx.dtDinhDanh)) || [];
+                            var laCuaMinh = dsMinh.some(function (x) {
+                                var v = laLienHe ? (x.CONTACT_VALUE || x.VALUE) : x.IDENTIFIER_NO;
+                                var t = laLienHe ? (x.CONTACT_TYPE_CODE_ID || x.CONTACT_TYPE_CODE)
+                                    : (x.IDENTIFIER_TYPE_CODE || x.IDENTIFIER_TYPE_CODE_ID);
+                                return _zeSo(v, giaTri) && (!typeId || _zeSo(t, typeId));
+                            });
+
+                            // Hoặc mọi dòng máy chủ trả về đều thuộc chính hồ sơ này
+                            var conNguoiKhac = d.Data.filter(function (r) {
+                                var rp = r && (r.PERSON_ID || r.PERSONID || r.CORE_PERSON_ID);
+                                if (!rp || !pid) return true;      // không biết của ai → giữ, cứ coi là người khác
+                                return !_zeSo(rp, pid);
+                            });
+
+                            if (laCuaMinh || conNguoiKhac.length === 0) {
+                                console.warn('[ZE] "' + giaTri + '" trùng với CHÍNH hồ sơ đang mở'
+                                    + ' → bỏ qua cảnh báo trùng, cho lưu bình thường.');
+                                d.Data = [];                       // luồng gốc sẽ không hạ cờ icheck
+                            } else {
+                                d.Data = conNguoiKhac;             // chỉ giữ phần trùng thật
+                            }
+                        }
+                    } catch (e) { }
+                    return sgTM.apply(this, arguments);
+                };
+            }
+        } catch (e) { }
+        return _mrTrungMinh.apply(this, arguments);
+    };
 }
