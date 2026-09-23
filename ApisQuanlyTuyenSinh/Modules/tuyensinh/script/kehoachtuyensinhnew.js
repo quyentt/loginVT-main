@@ -5042,23 +5042,58 @@ KeHoachTuyenSinhNew.prototype = {
             return chuan(me._truong12TuId(e.ID)) === t
                 || chuan(e.TEN) === t || chuan(e.MA) === t;
         })[0];
-        if (hit) { $sel.val(hit.ID); }
-        else {
-            if (!$sel.find('option[value="__khac__"]').length) $sel.append('<option value="__khac__"></option>');
-            $sel.find('option[value="__khac__"]').text(text);
-            $sel.val('__khac__');
+        if (hit) {
+            $sel.val(hit.ID);
+            $('#txtKQ_Truong12_Khac').val('');
+        } else {
+            // Không có trong danh mục (trường mới / dữ liệu cũ gõ tay) → đổ vào ô gõ tay
+            // để cán bộ sửa được, thay vì nhét option ảo vào danh sách chọn.
+            $sel.val('');
+            $('#txtKQ_Truong12_Khac').val(text);
         }
         me._reapplyKQSelect2('ddlKQ_Truong12');
     },
 
+    /*------------------------------------------
+    -- Hai ô cùng ghi vào MỘT chỗ (#txtKQ_TruongMaTen — giá trị thật gửi BE):
+    --   #ddlKQ_Truong12      chọn từ danh mục TUYENSINH.TRUONGHOC
+    --   #txtKQ_Truong12_Khac gõ tay, cho trường chưa có trong danh mục
+    -- Luật: ô nào vừa được dùng thì ô kia nhường. Gõ tay có chữ → ưu tiên chữ gõ tay.
+    -- Không có luật này thì hai ô cùng có giá trị, không ai biết cái nào xuống DB.
+    -------------------------------------------*/
     _bindTruong12: function () {
         var me = main_doc.KeHoachTuyenSinhNew;
+        var $tay = function () { return $('#txtKQ_Truong12_Khac'); };
+        var layTay = function () { return $.trim($tay().val() || ''); };
+
         $('#ddlKQ_Truong12').off('change.kqtr').on('change.kqtr', function () {
             var v = $(this).val() || '';
+            if (!v) {
+                // Bỏ chọn trong danh mục: nếu đang có chữ gõ tay thì giữ chữ đó,
+                // không thì mới xoá trắng giá trị gửi đi.
+                edu.util.viewValById('txtKQ_TruongMaTen', layTay());
+                return;
+            }
             var txt = (v === '__khac__')
                 ? ($(this).find('option[value="__khac__"]').text() || '')
                 : me._truong12TuId(v);
             edu.util.viewValById('txtKQ_TruongMaTen', txt);
+            $tay().val('');       // đã chọn trong danh mục → bỏ phần gõ tay
+        });
+
+        $('#txtKQ_Truong12_Khac').off('input.kqtr').on('input.kqtr', function () {
+            var tay = layTay();
+            if (tay === '') {
+                // Xoá hết chữ gõ tay → quay về giá trị của ô chọn (nếu đang chọn)
+                var v = $('#ddlKQ_Truong12').val() || '';
+                edu.util.viewValById('txtKQ_TruongMaTen', v ? me._truong12TuId(v) : '');
+                return;
+            }
+            edu.util.viewValById('txtKQ_TruongMaTen', tay);
+            // Bỏ chọn ô danh mục cho khỏi hiểu nhầm. .trigger('change') là để select2
+            // vẽ lại placeholder; handler ở trên thấy value rỗng sẽ lấy đúng chữ gõ tay,
+            // nên không sợ xoá ngược lại cái vừa gõ.
+            if ($('#ddlKQ_Truong12').val()) $('#ddlKQ_Truong12').val('').trigger('change');
         });
     },
 
@@ -5927,7 +5962,7 @@ KeHoachTuyenSinhNew.prototype = {
         var arrTxt = [
             'txtKQ_HoTen', 'txtKQ_NgaySinh', 'txtKQ_DienThoai', 'txtKQ_Email', 'txtKQ_NoiSinh',
             'txtKQ_SoCCCD', 'txtKQ_NgayCapCCCD', 'txtKQ_NoiCapCCCD', 'txtKQ_HK_SoNha',
-            'txtKQ_MaTinh12', 'txtKQ_TruongMaTen',
+            'txtKQ_MaTinh12', 'txtKQ_TruongMaTen', 'txtKQ_Truong12_Khac',
             'txtKQ_ToHopMa', 'txtKQ_ToHopTen',
             'txtKQ_Diem1', 'txtKQ_Diem2', 'txtKQ_Diem3', 'txtKQ_DiemUT',
             'txtKQ_TongDiemMon', 'txtKQ_TongDiemXT',
