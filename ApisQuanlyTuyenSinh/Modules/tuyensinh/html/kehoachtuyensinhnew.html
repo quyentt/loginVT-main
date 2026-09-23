@@ -2796,7 +2796,14 @@
                                         </div>
                                         <div class="aps-sv-field">
                                             <label class="aps-sv-label">Họ tên người mua hàng</label>
-                                            <input class="aps-sv-input" id="txtKQ_HD_NguoiMua" placeholder="Người nộp tiền / người mua">
+                                            <!-- Tự điền theo ô Họ và tên ở tab Cá nhân; gõ tay vào đây
+                                                 là từ đó thôi tự điền (người mua có thể là phụ huynh).
+                                                 Xem _autoFillHoaDonTen. -->
+                                            <input class="aps-sv-input" id="txtKQ_HD_NguoiMua" placeholder="Tự điền theo Họ và tên — sửa lại được">
+                                            <div style="margin-top:6px;font-size:12.5px;color:#64748b;">
+                                                <i class="fa-light fa-wand-magic-sparkles"></i>
+                                                Lấy theo <b>Họ và tên</b> ở tab Cá nhân. Người mua là người khác (bố/mẹ) thì gõ đè lên.
+                                            </div>
                                         </div>
                                         <div class="aps-sv-field aps-sv-col-full">
                                             <label class="aps-sv-label">Tên đơn vị / Công ty <span style="font-weight:500;color:#94a3b8">(nếu xuất cho tổ chức)</span></label>
@@ -3486,7 +3493,7 @@
         tryNext();
     })();
 </script>
-<script src="modules/tuyensinh/script/kehoachtuyensinhnew.js?v=1.0.10.7"></script>
+<script src="modules/tuyensinh/script/kehoachtuyensinhnew.js?v=1.0.11.0"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['KeHoachTuyenSinhNew'] = new KeHoachTuyenSinhNew();

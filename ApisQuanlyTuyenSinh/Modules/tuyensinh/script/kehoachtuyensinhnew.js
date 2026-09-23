@@ -2538,6 +2538,10 @@ KeHoachTuyenSinhNew.prototype = {
 
         // Populate các field có từ cache
         $('#txtKQ_HoTen').val(pick(d, ['COREPERSON_HOTEN']));
+        // .val() không phát sự kiện input → phải tự gọi, không thì hồ sơ chưa có
+        // thông tin hóa đơn sẽ để trống ô Họ tên người mua.
+        // _loadPersonInvoice chạy sau sẽ ghi đè bằng tên đã lưu (nếu có).
+        me._autoFillHoaDonTen();
         $('#txtKQ_NgaySinh').val(ngaySinh);
         $('#txtKQ_DienThoai').val(pick(d, ['PERSONCONTACT_DIENTHOAI']));
         $('#txtKQ_Email').val(pick(d, ['PERSONCONTACT_EMAIL']));
@@ -5548,6 +5552,25 @@ KeHoachTuyenSinhNew.prototype = {
         });
         // Gõ vào ô địa chỉ hóa đơn = tự quyết → từ đó không tự điền đè lên nữa
         $('#txtKQ_HD_DiaChi').off('.kqtouch').on('input.kqtouch', danhDau);
+
+        /* Họ tên người mua hàng tự điền theo Họ và tên ở tab Cá nhân (khách yêu cầu
+           23/09/2026), cùng luật với ô Địa chỉ: gõ tay vào ô hóa đơn là từ đó thôi
+           tự điền — người mua có thể là phụ huynh chứ không phải thí sinh. */
+        $('#txtKQ_HoTen').off('.kqhdten').on('input.kqhdten', function () {
+            me._autoFillHoaDonTen();
+        });
+        $('#txtKQ_HD_NguoiMua').off('.kqhdten').on('input.kqhdten', danhDau);
+    },
+
+    /*------------------------------------------
+    -- Chép Họ và tên (tab Cá nhân) sang Họ tên người mua hàng (tab Xuất hóa đơn).
+    -- Bỏ qua khi người dùng đã tự gõ vào ô hóa đơn, hoặc khi hồ sơ đã có tên người
+    -- mua lưu sẵn — xem _loadPersonInvoice.
+    -------------------------------------------*/
+    _autoFillHoaDonTen: function () {
+        var $hd = $('#txtKQ_HD_NguoiMua');
+        if (!$hd.length || $hd.attr('data-user-touched')) return;
+        edu.util.viewValById('txtKQ_HD_NguoiMua', edu.system.getValById('txtKQ_HoTen') || '');
     },
 
     /*------------------------------------------
@@ -5569,7 +5592,9 @@ KeHoachTuyenSinhNew.prototype = {
         $('#ddlKQ_NS_Tinh, #ddlKQ_NS_Huyen, #ddlKQ_NS_Xa,'
             + '#ddlKQ_HK_Tinh, #ddlKQ_HK_Huyen, #ddlKQ_HK_Xa,'
             + '#txtKQ_NoiSinh, #txtKQ_HK_SoNha,'
-            + '#txtKQ_HD_DiaChi').removeAttr('data-user-touched');
+            // Cả ô Họ tên người mua: sang hồ sơ khác mà còn cờ "đã sửa tay" thì
+            // ô đó sẽ không tự điền nữa, người dùng tưởng chức năng hỏng.
+            + '#txtKQ_HD_DiaChi, #txtKQ_HD_NguoiMua').removeAttr('data-user-touched');
     },
 
     /*------------------------------------------
@@ -6452,6 +6477,7 @@ KeHoachTuyenSinhNew.prototype = {
         // Tương tự với nguồn khai thác: giữ lại id cũ là bỏ chọn ở hồ sơ B sẽ XOÁ bản ghi của A
         main_doc.KeHoachTuyenSinhNew._currentDoiTacRowId = '';
         main_doc.KeHoachTuyenSinhNew._currentDoiTacRowIds = [];
+        main_doc.KeHoachTuyenSinhNew._currentDoiTacNguonId = '';
         main_doc.KeHoachTuyenSinhNew._currentDoiTacPartnerId = '';
         main_doc.KeHoachTuyenSinhNew._currentDoiTacGhiChu = '';
         // Sang hồ sơ khác → quên dấu "user đã sửa địa chỉ" của hồ sơ trước
@@ -8296,6 +8322,11 @@ KeHoachTuyenSinhNew.prototype = {
                 // Nay đổ theo đúng đối tượng của chính bản ghi đó.
                 if (me._loaiHD_TuGiaTri(inv.BUYER_TYPE_LOAI) === 'CN') {
                     setVal('txtKQ_HD_NguoiMua', inv.BUYER_NAME_TENNM);
+                    // Đã có tên lưu sẵn → khoá tự-điền, khỏi bị họ tên ở tab Cá nhân
+                    // ghi đè mất tên người mua cũ (cùng lý lẽ với ô Địa chỉ bên dưới).
+                    if (edu.util.checkValue(inv.BUYER_NAME_TENNM)) {
+                        $('#txtKQ_HD_NguoiMua').attr('data-user-touched', '1');
+                    }
                 } else {
                     setVal('txtKQ_HD_TenDonVi', inv.BUYER_NAME_TENNM);
                 }
@@ -8783,6 +8814,21 @@ KeHoachTuyenSinhNew.prototype = {
 
     _ACTION_Xoa_HoSo_DoiTacTS: 'SV_Core_TS_HoSo_MH/GS4gHhUSHgkuEi4eBS4oFSAiFRIP',
 
+    /* PKG_CORE_TS_HOSO.Sua_TS_HoSo_DoiTacTS — BE xác nhận CÓ (23/09/2026).
+       Chữ ký KHÁC hàm Thêm: không nhận bộ (kế hoạch + đợt + nguyện vọng) mà nhận
+       strId + strTS_HoSo_Nguon_Id. Nhờ vậy sửa không dính "Khong ton tai ho so tuyen sinh".
+       Có hàm này thì đổi nguồn KHÔNG phải thêm-rồi-xóa nữa → hết cảnh đẻ dòng rác. */
+    _ACTION_Sua_HoSo_DoiTacTS: 'SV_Core_TS_HoSo_MH/EjQgHhUSHgkuEi4eBS4oFSAiFRIP',
+
+    _currentDoiTacNguonId: '',   // TS_HOSO_NGUON_ID của dòng đang có (nếu view trả về)
+
+    // dd/MM/yyyy — proc TO_DATE tham số ngày, gửi rỗng dễ fail ngầm
+    _ngayHomNay: function () {
+        var d = new Date();
+        var p = function (n) { return n < 10 ? '0' + n : '' + n; };
+        return p(d.getDate()) + '/' + p(d.getMonth() + 1) + '/' + d.getFullYear();
+    },
+
     // Bản ghi ghi-nhận đang có của hồ sơ đang mở — dùng để gỡ / thay thế
     _currentDoiTacRowId: '',
     _currentDoiTacRowIds: [],   // TẤT CẢ dòng đang có (kể cả rác của các lần đổi trước)
@@ -8896,7 +8942,12 @@ KeHoachTuyenSinhNew.prototype = {
             'iM': edu.system.iM,
             'strHoSo_KH_TS_Id': me.strKeHoachTuyenSinh_Id || '',
             'strHoSo_KH_TS_Dot_Id': me._hsDotHienTai(),
-            'strNguyenVong_DauRa_Id': me._nvDauRaHienTai(),
+            /* ⚠ CỐ Ý GỬI RỖNG. Nhánh lọc theo nguyện vọng đầu ra làm proc chết
+               ORA-24338 (23/09/2026). Bằng chứng: cột "Nguồn khai thác" ở bảng danh sách
+               gọi ĐÚNG proc này và chạy tốt — khác mỗi chỗ nó để param này rỗng.
+               Lọc theo nguyện vọng chuyển xuống làm ở FE, xem _dtcLocTheoNV.
+               BE sửa xong nhánh đó thì trả lại me._nvDauRaHienTai() cho gọn. */
+            'strNguyenVong_DauRa_Id': '',
             'strCore_Person_Id': corePersonId || '',
             'strTS_DoiTacTuyenSinh_Id': '',
             // Convention Oracle: param prefix 'd' là NUMBER → rỗng phải gửi null,
@@ -8910,6 +8961,22 @@ KeHoachTuyenSinhNew.prototype = {
     },
 
     /*------------------------------------------
+    -- Lọc theo nguyện vọng đầu ra ngay tại FE (thay cho nhánh lọc đang hỏng dưới proc).
+    -- Dòng nào không có cột nguyện vọng thì GIỮ LẠI — không có cột để so mà loại đi
+    -- là mất sạch dữ liệu, tệ hơn nhiều so với hiện dư một dòng.
+    -------------------------------------------*/
+    _dtcLocTheoNV: function (rows) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var nv = me._nvDauRaHienTai();
+        if (!nv || !rows || !rows.length) return rows || [];
+        var khop = rows.filter(function (r) {
+            var v = me._pickLoose(r, ['NGUYENVONG_DAURA_ID', 'TS_KEHOACH_DAU_RA_ID', 'DAURA_ID']);
+            return !v || String(v) === String(nv);
+        });
+        return khop.length ? khop : rows;
+    },
+
+    /*------------------------------------------
     -- Sau khi ghi xong: đọc lại, GIỮ bản mới nhất, xoá phần dư.
     -- Làm theo hướng này thì dù proc Thêm là chèn mới hay ghi đè, bản đang hiệu lực
     -- cũng không bao giờ bị xoá nhầm.
@@ -8919,7 +8986,7 @@ KeHoachTuyenSinhNew.prototype = {
         if (!edu.util.checkValue(corePersonId)) return;
         edu.system.makeRequest({
             success: function (data) {
-                var rows = (data && data.Success && edu.util.checkValue(data.Data)) ? data.Data : [];
+                var rows = me._dtcLocTheoNV((data && data.Success && edu.util.checkValue(data.Data)) ? data.Data : []);
                 console.log('[NguonKhaiThac] sau khi lưu còn ' + rows.length + ' dòng'
                     + (rows.length ? ' — cột: ' + Object.keys(rows[0]).join(', ') : ''));
                 if (rows.length <= 1) {
@@ -8966,11 +9033,12 @@ KeHoachTuyenSinhNew.prototype = {
                     + ' | nguyện vọng=' + obj_list.strNguyenVong_DauRa_Id + ' | người=' + corePersonId
                     + (data && !data.Success ? (' | lỗi: ' + (data.Message || '')) : ''));
                 if (!data || !data.Success || !edu.util.checkValue(data.Data) || !data.Data.length) return;
-                var rows = data.Data;
-                /* ⚠ KHÔNG lấy Data[0]. PKG_CORE_TS_HOSO không có hàm Sửa nên mỗi lần đổi
-                   nguồn là THÊM bản mới rồi mới xoá bản cũ; xoá mà trượt (không dò ra Id
-                   dòng) thì bản cũ nằm lại, lần sau danh sách trả về nhiều dòng và Data[0]
-                   là bản CŨ NHẤT → form hiện nguồn cũ hoặc trống dù vừa lưu thành công.
+                // Nhánh lọc theo nguyện vọng dưới proc đang hỏng → lọc tại đây
+                var rows = me._dtcLocTheoNV(data.Data);
+                if (!rows.length) return;
+                /* ⚠ KHÔNG lấy Data[0]. Dữ liệu cũ có thể còn dòng rác từ thời chưa dùng
+                   Sua_ (đổi nguồn phải thêm-rồi-xoá, xoá trượt là dòng cũ nằm lại) —
+                   khi đó Data[0] là bản CŨ NHẤT, form hiện nguồn cũ dù vừa lưu thành công.
                    Đúng hiện tượng khách báo 23/09/2026 "cập nhật được 2 lần rồi thôi". */
                 var r = me._dtcDongMoiNhat(rows);
                 if (!r) return;
@@ -8988,6 +9056,9 @@ KeHoachTuyenSinhNew.prototype = {
                 var ghiChu = r.GHICHU || r.GhiChu || '';
                 me._currentDoiTacPartnerId = id;
                 me._currentDoiTacGhiChu = ghiChu;
+                // Sua_TS_HoSo_DoiTacTS có nhận strTS_HoSo_Nguon_Id → giữ lại nếu view trả,
+                // để lúc sửa gửi đúng giá trị cũ thay vì rỗng (rỗng dễ bị proc ghi đè mất).
+                me._currentDoiTacNguonId = me._pickLoose(r, ['TS_HOSO_NGUON_ID', 'HOSO_NGUON_ID']) || '';
                 if (ghiChu) edu.util.viewValById('txtKQ_NguonKhaiThac_GhiChu', ghiChu);
                 if (!id) return;
                 // Danh mục nạp async → set qua _setSelectByIdOrText để có retry chờ <option>
@@ -9031,13 +9102,56 @@ KeHoachTuyenSinhNew.prototype = {
             kqdkNoLog('[NguonKhaiThac] thiếu Core_Person_Id → không ghi nhận được nguồn khai thác');
             return;
         }
-        // PKG_CORE_TS_HOSO không có Sua_TS_HoSo_DoiTacTS → đổi nguồn phải Thêm bản mới
-        // rồi Xóa bản cũ. Không đổi gì thì thôi, tránh mỗi lần bấm Cập nhật lại đẻ 1 dòng.
         var rowCu = cuaNguoiNay ? (me._currentDoiTacRowId || '') : '';
         var ghiChuMoi = snap ? (snap.ghiChu || '')
             : (edu.system.getValById('txtKQ_NguonKhaiThac_GhiChu') || '');
+        // Không đổi gì thì thôi, khỏi bắn request thừa mỗi lần bấm Cập nhật
         if (rowCu && strDoiTac_Id === me._currentDoiTacPartnerId
             && ghiChuMoi === (me._currentDoiTacGhiChu || '')) return;
+
+        /* ĐÃ CÓ bản ghi → dùng Sua_TS_HoSo_DoiTacTS (BE xác nhận có, 23/09/2026).
+           Ưu điểm so với cách thêm-rồi-xoá cũ:
+             - không đẻ dòng rác, khỏi phải dọn
+             - chữ ký KHÔNG cần bộ (kế hoạch + đợt + nguyện vọng) nên không dính
+               "Khong ton tai ho so tuyen sinh" khi mấy khóa đó chưa xác định được. */
+        if (rowCu) {
+            var obj_sua = {
+                'action': me._ACTION_Sua_HoSo_DoiTacTS,
+                'func': 'PKG_CORE_TS_HOSO.Sua_TS_HoSo_DoiTacTS',
+                'iM': edu.system.iM,
+                'strId': rowCu,
+                'strTS_HoSo_Nguon_Id': me._currentDoiTacNguonId || '',
+                'strCore_Person_Id': corePersonId,
+                'strTS_DoiTacTuyenSinh_Id': strDoiTac_Id,
+                'strNgay_Ghi_Nhan': me._ngayHomNay(),
+                'dIs_Primary': 1,
+                'dIs_Current': 1,
+                'dIs_Active': 1,
+                'strNguon_Ghi_Nhan_Code': '',
+                'strNguoi_Ghi_Nhan_Id': edu.system.userId,
+                'strGhiChu': ghiChuMoi,
+                'strNguoiThucHien_Id': edu.system.userId
+            };
+            console.log('[NguonKhaiThac] SỬA dòng ' + rowCu + ' → đối tác=' + strDoiTac_Id);
+            edu.system.makeRequest({
+                success: function (data) {
+                    console.log('[NguonKhaiThac] SỬA kết quả: Success=' + (data && data.Success)
+                        + ' | ' + ((data && data.Message) || ''));
+                    if (!data || !data.Success) {
+                        edu.system.alert('Cập nhật nguồn khai thác lỗi: ' + ((data && data.Message) || ''), 'w');
+                        return;
+                    }
+                    me._currentDoiTacPartnerId = strDoiTac_Id;
+                    me._currentDoiTacGhiChu = ghiChuMoi;
+                },
+                error: function (er) {
+                    edu.system.alert('Cập nhật nguồn khai thác lỗi (er): ' + JSON.stringify(er), 'w');
+                },
+                type: 'POST', contentType: true, action: obj_sua.action, data: obj_sua, fakedb: []
+            }, false, false, false, null);
+            return;
+        }
+
         var obj_save = {
             'action': 'SV_Core_TS_HoSo_MH/FSkkLB4VEh4JLhIuHgUuKBUgIhUS',
             'func': 'PKG_CORE_TS_HOSO.Them_TS_HoSo_DoiTacTS',
@@ -9058,11 +9172,7 @@ KeHoachTuyenSinhNew.prototype = {
             'strTS_DoiTacTuyenSinh_Id': strDoiTac_Id,
             // Ngày ghi nhận: gửi ngày hiện tại dd/MM/yyyy thay vì rỗng — proc có thể
             // TO_DATE tham số này, chuỗi rỗng dễ làm insert fail ngầm (Success=true, Id rỗng).
-            'strNgay_Ghi_Nhan': (function () {
-                var d = new Date();
-                var p = function (n) { return n < 10 ? '0' + n : '' + n; };
-                return p(d.getDate()) + '/' + p(d.getMonth() + 1) + '/' + d.getFullYear();
-            })(),
+            'strNgay_Ghi_Nhan': me._ngayHomNay(),
             'dIs_Primary': 1,
             'dIs_Current': 1,
             'strNguon_Ghi_Nhan_Code': '',
@@ -9135,6 +9245,7 @@ KeHoachTuyenSinhNew.prototype = {
         me._currentInvoicePersonId = '';
         me._currentDoiTacRowId = '';
         me._currentDoiTacRowIds = [];
+        me._currentDoiTacNguonId = '';
         me._currentDoiTacPersonId = personId;
         me._currentDoiTacPartnerId = '';
         me._currentDoiTacGhiChu = '';
