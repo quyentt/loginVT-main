@@ -1691,6 +1691,20 @@
     .aps-sv-panel.aps-sv-compact { background:transparent; margin:0; padding:0; }
     .aps-sv-compact .aps-sv-section { background:#fff; border:1px solid #e2e8f0; border-radius:8px; padding:12px 16px 14px; }
     .aps-sv-compact .aps-sv-section + .aps-sv-section { margin-top:12px; }
+    /* Ô tích "Nhập mục này" ở tiêu đề mục đóng/mở (xem _initSectionToggle).
+       Đẩy sát phải bằng margin-left:auto để không dính vào tên mục. */
+    .aps-sv-section-title .kqdk-sec-toggle {
+        margin:0 0 0 auto; display:inline-flex; align-items:center; gap:6px; cursor:pointer;
+        font-size:12.5px; font-weight:600; letter-spacing:0; text-transform:none;
+        color:#64748b; user-select:none; white-space:nowrap;
+    }
+    .aps-sv-section-title .kqdk-sec-toggle input { width:15px; height:15px; margin:0; cursor:pointer; accent-color:var(--aps-sv-primary); }
+    .aps-sv-section-title .kqdk-sec-toggle:hover { color:var(--aps-sv-primary); }
+    /* Mục đang đóng: tiêu đề nhạt đi để thấy ngay là chưa bật, không phải lỗi mất nội dung */
+    .aps-sv-section.kqdk-sec-dong .aps-sv-section-title { opacity:.62; margin-bottom:0; border-bottom-color:transparent; }
+    .aps-sv-section.kqdk-sec-dong { padding-top:6px; padding-bottom:6px; }
+    .aps-sv-section.kqdk-sec-dong .kqdk-sec-toggle { opacity:1; color:#64748b; }
+
     .aps-sv-compact .aps-sv-section-title { font-size:14.5px; font-weight:800; letter-spacing:.3px; margin:0 0 13px; padding-bottom:9px; border-bottom:1px solid #e8edf3; gap:8px; }
     .aps-sv-compact .aps-sv-section-title::after { display:none; }
     .aps-sv-compact .aps-sv-section-title i { font-size:15px; }
@@ -2450,7 +2464,12 @@
                             <!-- aps-sv-compact: bố cục gọn (nhãn trái, ô thấp, nền xám) — đang thử
                                  riêng ở tab này. Gỡ class ra là về bố cục thoáng như các tab khác. -->
                             <div class="aps-sv-panel aps-sv-compact" id="kqdk_tab_xettuyen">
-                                <div class="aps-sv-section">
+                                <!-- data-an-mac-dinh="1": mục này MẶC ĐỊNH ĐÓNG, muốn nhập thì tích ô
+                                     "Nhập mục này" ở tiêu đề (yêu cầu khách hàng 23/09/2026 — trường
+                                     hiện không dùng khối xét tuyển). Trạng thái tích nhớ theo máy.
+                                     Muốn đóng sẵn mục khác: thêm đúng thuộc tính này vào .aps-sv-section,
+                                     không phải sửa JS (xem _initSectionToggle). -->
+                                <div class="aps-sv-section" data-an-mac-dinh="1" data-sec-key="xt_thongtin">
                                     <div class="aps-sv-section-title"><i class="fa-light fa-clipboard-list-check"></i> Thông tin xét tuyển</div>
                                     <div class="aps-sv-grid">
                                         <div class="aps-sv-field">
@@ -2484,7 +2503,7 @@
                                     </div>
                                 </div>
 
-                                <div class="aps-sv-section">
+                                <div class="aps-sv-section" data-an-mac-dinh="1" data-sec-key="xt_truonglop12">
                                     <div class="aps-sv-section-title"><i class="fa-light fa-school"></i> Trường lớp 12</div>
                                     <div class="aps-sv-grid">
                                         <div class="aps-sv-field">
@@ -2518,7 +2537,7 @@
                                     </div>
                                 </div>
 
-                                <div class="aps-sv-section">
+                                <div class="aps-sv-section" data-an-mac-dinh="1" data-sec-key="xt_tohopdiem">
                                     <div class="aps-sv-section-title"><i class="fa-light fa-calculator"></i> Tổ hợp môn &amp; điểm xét tuyển</div>
                                     <div class="aps-sv-grid">
                                         <div class="aps-sv-field">
@@ -3327,7 +3346,7 @@
         tryNext();
     })();
 </script>
-<script src="modules/tuyensinh/script/kehoachtuyensinhnew.js?v=1.0.9.5"></script>
+<script src="modules/tuyensinh/script/kehoachtuyensinhnew.js?v=1.0.9.6"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['KeHoachTuyenSinhNew'] = new KeHoachTuyenSinhNew();

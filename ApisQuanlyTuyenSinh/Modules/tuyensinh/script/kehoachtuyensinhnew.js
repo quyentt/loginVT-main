@@ -874,6 +874,9 @@ KeHoachTuyenSinhNew.prototype = {
         // Đọc dữ liệu từ nguồn API (mapping cột API ↔ trường thông tin, lưu localStorage)
         me.initDocAPI_Bindings();
 
+        // Các mục khai không dùng tới → đóng sẵn, tích ô mới sổ ra
+        me._initSectionToggle();
+
         edu.system.getList_MauImport("zonebtnBaoCao_KHTS", function (addKeyValue) {
             var obj_list = {
                 'strTuKhoa': edu.system.getValById('txtSearch_TuKhoa'),
@@ -912,6 +915,107 @@ KeHoachTuyenSinhNew.prototype = {
             var chon2 = me._kqLayIdDaTick();
             addKeyValue("strSinhVienID", chon2.person.join(','));
             addKeyValue("strHoSoID", chon2.hoso.join(','));
+        });
+    },
+
+    /*==========================================================================
+    == MỤC KHAI ĐÓNG/MỞ  (yêu cầu khách hàng 23/09/2026)
+    == "cho ẩn cái này đi, khi nào cần đánh dấu tích vào nó sổ ra, vì hiện tại
+    ==  bên em không dùng cái này" — trường không dùng khối Xét tuyển.
+    ==
+    == Cách khai: thêm data-an-mac-dinh="1" + data-sec-key="<khóa>" vào thẻ
+    == .aps-sv-section trong HTML là xong, KHÔNG phải sửa hàm này.
+    ==
+    == ⚠ Chỉ ẨN chứ không xóa field: dữ liệu cũ của hồ sơ vẫn nạp vào ô bình thường
+    ==   và vẫn được gửi đi khi lưu. Nếu sau này muốn "đóng mục = không gửi dữ liệu"
+    ==   thì phải sửa thêm ở hàm ghép payload, đừng tưởng ẩn là tự khỏi gửi.
+    == Trạng thái tích nhớ trong localStorage theo từng máy (mỗi cán bộ một kiểu dùng).
+    ==========================================================================*/
+    _KQ_SEC_LS: 'kqdk_section_mo',
+
+    _secDocTrangThai: function () {
+        try { return JSON.parse(localStorage.getItem(main_doc.KeHoachTuyenSinhNew._KQ_SEC_LS) || '{}') || {}; }
+        catch (e) { return {}; }
+    },
+
+    _secGhiTrangThai: function (key, mo) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        try {
+            var m = me._secDocTrangThai();
+            m[key] = !!mo;
+            localStorage.setItem(me._KQ_SEC_LS, JSON.stringify(m));
+        } catch (e) { }
+    },
+
+    /*------------------------------------------
+    -- Đóng/mở phần thân của 1 mục. Thân = mọi thẻ con TRỪ dòng tiêu đề,
+    -- nên mục có nhiều khối (grid + ghi chú + bảng) vẫn ẩn/hiện trọn vẹn.
+    -------------------------------------------*/
+    _secApDung: function ($sec, mo) {
+        $sec.children().not('.aps-sv-section-title').toggle(!!mo);
+        $sec.toggleClass('kqdk-sec-dong', !mo);
+        $sec.find('> .aps-sv-section-title .kqdk-sec-toggle input').prop('checked', !!mo);
+    },
+
+    _initSectionToggle: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (me._secBound) return;
+        me._secBound = true;
+
+        var luu = me._secDocTrangThai();
+        $('#kqdk_khai .aps-sv-section[data-an-mac-dinh="1"]').each(function (i) {
+            var $sec = $(this);
+            var $title = $sec.children('.aps-sv-section-title').first();
+            if (!$title.length || $title.find('.kqdk-sec-toggle').length) return;
+
+            var key = $sec.attr('data-sec-key') || ('sec' + i);
+            $sec.attr('data-sec-key', key);
+
+            var $lb = $('<label class="kqdk-sec-toggle" title="Tích để mở mục này ra nhập">'
+                + '<input type="checkbox"><span>Nhập mục này</span></label>');
+            $title.append($lb);
+
+            me._secApDung($sec, !!luu[key]);
+
+            $lb.find('input').on('change', function () {
+                var mo = $(this).is(':checked');
+                me._secApDung($sec, mo);
+                me._secGhiTrangThai(key, mo);
+            });
+        });
+    },
+
+    /*------------------------------------------
+    -- Mở mục chứa field (nếu đang đóng) rồi mới focus.
+    -- Cần cho luồng validate: nhảy tới một ô nằm trong mục đang đóng thì người dùng
+    -- chỉ thấy thông báo mà không thấy ô nào sáng lên, tưởng hệ thống báo bậy.
+    -------------------------------------------*/
+    _secMoTheoField: function (fieldId) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var $sec = $('#' + fieldId).closest('.aps-sv-section.kqdk-sec-dong');
+        if (!$sec.length) return;
+        me._secApDung($sec, true);
+        me._secGhiTrangThai($sec.attr('data-sec-key') || '', true);
+    },
+
+    /*------------------------------------------
+    -- Mở những mục đang đóng NHƯNG hồ sơ này có dữ liệu ở trong.
+    -- Nếu không có bước này: hồ sơ cũ đã nhập điểm xét tuyển, mở ra thấy mục đóng im,
+    -- người dùng tưởng mất dữ liệu — hoặc tệ hơn là nhập lại chồng lên.
+    -- Chỉ mở TẠM cho hồ sơ đang xem, KHÔNG ghi vào localStorage (mặc định vẫn là đóng).
+    -- Ô điểm mặc định "0"/"0.00" không tính là có dữ liệu.
+    -------------------------------------------*/
+    _secMoNeuCoDuLieu: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        $('#kqdk_khai .aps-sv-section.kqdk-sec-dong').each(function () {
+            var $sec = $(this), co = false;
+            $sec.find('input, select, textarea').each(function () {
+                var v = $.trim(String($(this).val() == null ? '' : $(this).val()));
+                if (v === '' || v === '0' || v === '0.0' || v === '0.00') return;
+                co = true;
+                return false;
+            });
+            if (co) me._secApDung($sec, true);
         });
     },
 
@@ -2020,6 +2124,10 @@ KeHoachTuyenSinhNew.prototype = {
             // Tab 8 — danh mục hồ sơ (TS_HOSO). Phải gọi SAU khi strDot_Id_ForKQ
             // đã set ở trên, vì LayDSTS_HoSo lọc theo Id đợt tuyển sinh.
             me._loadHoSoDM_ForEdit(strId);
+            // Các mục đang đóng mà hồ sơ này có dữ liệu thì bung ra cho thấy.
+            // Đợi các nhánh nạp async (dropdown retry tới ~1.8s) xong mới soát.
+            setTimeout(function () { me._secMoNeuCoDuLieu(); }, 1200);
+            setTimeout(function () { me._secMoNeuCoDuLieu(); }, 2400);
         });
 
         // Chuyển sang screen Khai
@@ -5902,6 +6010,9 @@ KeHoachTuyenSinhNew.prototype = {
         var warn = function (msg, tabIdx, fieldId) {
             edu.system.alert(msg, "w");
             goTab(tabIdx);
+            // Ô cần nhập có thể nằm trong mục đang đóng → mở ra rồi mới focus,
+            // không thì người dùng chỉ thấy cảnh báo mà chẳng thấy ô nào.
+            me._secMoTheoField(fieldId);
             $('#' + fieldId).focus();
         };
 
