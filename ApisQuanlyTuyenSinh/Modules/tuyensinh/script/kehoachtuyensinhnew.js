@@ -539,6 +539,10 @@ KeHoachTuyenSinhNew.prototype = {
                 me._preloadDMForList();
                 me.loadKQDK_List();
             }
+            // Cho thấy đang làm việc trên kế hoạch/hệ nào — vẽ ngay, rồi vẽ lại sau khi
+            // cache đợt nạp xong (dropdown Đợt nạp async).
+            me._veBadgeKeHoach();
+            setTimeout(function () { me._veBadgeKeHoach(); }, 700);
         });
 
         // Toolbar list: search / reload / export / select all
@@ -767,6 +771,7 @@ KeHoachTuyenSinhNew.prototype = {
             // Cả khi KHAI MỚI (chưa có strSuaHoSo_Id): chọn đợt xong là lưới phải hiện ra
             // để cán bộ ghim luôn giấy tờ thí sinh mang tới.
             me._loadHoSoDM_ForEdit(me.strSuaHoSo_Id || '');
+            me._veBadgeKeHoach();
         });
 
         // Cascade: chọn Nguyện vọng đầu ra → load Lớp dự kiến theo Đầu ra đó
@@ -877,6 +882,30 @@ KeHoachTuyenSinhNew.prototype = {
         // Các mục khai không dùng tới → đóng sẵn, tích ô mới sổ ra
         me._initSectionToggle();
 
+        /*---- Tra cứu người học toàn hệ thống ----*/
+        $('#btnTraCuuNguoiHoc').click(function () {
+            // Danh mục Giới tính — hồ sơ tuyển sinh chỉ trả Id, cần bảng tra để ra chữ.
+            // Hàm tự chặn gọi lại lần 2 nên bấm bao nhiêu lần cũng chỉ nạp một lượt.
+            me._preloadDMForList();
+            $('#tra-cuu-nguoi-hoc').modal('show');
+            setTimeout(function () { $('#txtTraCuu_TuKhoa').focus(); }, 350);
+        });
+        $('#btnTraCuu_Tim').click(function () { me.traCuu_Tim(); });
+        $('#txtTraCuu_TuKhoa').on('keypress', function (e) {
+            if (e.which === 13) { e.preventDefault(); me.traCuu_Tim(); }
+        });
+        $('#btnTraCuu_Xoa').click(function () {
+            $('#txtTraCuu_TuKhoa').val('');
+            $('#txtTraCuu_NgaySinh').val('');
+            $('#lblTraCuu_Tong').text('');
+            $('#tblTraCuu tbody').html('<tr><td colspan="9" class="text-center text-muted" style="padding:26px;">'
+                + 'Nhập họ tên hoặc số CCCD rồi bấm <b>Tra cứu</b>.</td></tr>');
+            $('#txtTraCuu_TuKhoa').focus();
+        });
+        $('#tblTraCuu').on('click', '.tc-mo-hoso', function () {
+            me.traCuu_MoHoSo($(this).attr('data-hoso'), $(this).attr('data-kh'), $(this).attr('data-dot'));
+        });
+
         edu.system.getList_MauImport("zonebtnBaoCao_KHTS", function (addKeyValue) {
             var obj_list = {
                 'strTuKhoa': edu.system.getValById('txtSearch_TuKhoa'),
@@ -916,6 +945,356 @@ KeHoachTuyenSinhNew.prototype = {
             addKeyValue("strSinhVienID", chon2.person.join(','));
             addKeyValue("strHoSoID", chon2.hoso.join(','));
         });
+    },
+
+    /*==========================================================================
+    == TRA CỨU NGƯỜI HỌC TOÀN HỆ THỐNG  (sếp Khoa 23/09/2026)
+    == "tìm 1 học sinh bất kỳ, chỉ biết họ tên / ngày sinh / số CCCD, mà không
+    ==  biết nó đang ở năm nào, hệ nào... lần vết học sinh mà không biết cháu nó
+    ==  đang học ở đâu thì chết"
+    ==
+    == Ô "Tìm nhanh" ở bảng Kết quả đăng ký KHÔNG làm được việc này: nó lọc trên
+    == đám dòng đã tải của MỘT kế hoạch + MỘT đợt. Ở đây hỏi thẳng xuống hệ thống.
+    ==
+    == 3 API, đã đo bằng console 23/09/2026 (đừng nghi lại, đã chạy thật):
+    ==   LayDS_HoSo_TS         bỏ trống kế hoạch + đợt → 48 dòng cho từ khóa "Nguyễn"
+    ==                         → tìm được toàn hệ thống. Tìm bằng CCCD cũng ra.
+    ==   LayDSNguoiHoc_All     dBoQuaPhamVi=1 → bỏ giới hạn phạm vi theo quyền.
+    ==                         Trả sẵn hệ / khóa / ngành / lớp / trạng thái.
+    ==   Pr_Ts_Kh_Dau_Ra_Get_Ds bỏ trống kế hoạch → 92 dòng đầu ra của TẤT CẢ kế hoạch,
+    ==                         mỗi dòng có TS_KEHOACH_TUYENSINH_TEN + ..._DOT_TEN.
+    ==
+    == ⚠ Vì sao phải có bước đầu ra: response hồ sơ tuyển sinh KHÔNG có kế hoạch,
+    ==   KHÔNG có đợt, KHÔNG có năm — chỉ có NGUYENVONG_DAURA_ID. Bản chi tiết
+    ==   LayTT_HoSo_TS (42 cột) cũng không có. Nên "đang ở đâu" chỉ suy ra được
+    ==   bằng cách tra ngược nguyện vọng đầu ra → (kế hoạch, đợt, hệ, ngành).
+    ==   Nếu sau này BE bổ sung 2 cột đó vào LayDS_HoSo_TS thì bỏ được _tcEnsureDauRa.
+    ==========================================================================*/
+    _TC_ACT: {
+        HoSo: { action: 'SV_Core_TS_HoSo_MH/DSA4BRIeCS4SLh4VEgPP', func: 'PKG_CORE_TS_HOSO.LayDS_HoSo_TS' },
+        NguoiHoc: { action: 'SV_NGUOIHOC_01_MH/DSA4BRIPJjQuKAkuIh4ALS0P', func: 'PKG_CORE_NGUOIHOC_01.LayDSNguoiHoc_All' },
+        DauRa: { action: 'TS_Core_KeHoach_MH/ETMeFTIeCikeBSA0HhMgHgYkNR4FMgPP', func: 'PKG_CORE_TS_KEHOACH.Pr_Ts_Kh_Dau_Ra_Get_Ds' }
+    },
+
+    _tcDauRaMap: null,      // DAURA_ID → { khTen, dotTen, khId, dotId, heTen, khoaTen, nganhTen }
+    _tcDangChay: false,
+
+    /*------------------------------------------
+    -- Map nguyện vọng đầu ra → kế hoạch/đợt/hệ/ngành. Một lần cho cả phiên
+    -- (92 dòng, không đáng để gọi lại mỗi lần tra).
+    -------------------------------------------*/
+    _tcEnsureDauRa: function (cb) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var xong = function () { if (typeof cb === 'function') cb(); };
+        if (me._tcDauRaMap) { xong(); return; }
+        var A = me._TC_ACT.DauRa;
+        edu.system.makeRequest({
+            success: function (data) {
+                var map = {};
+                var rows = (data && data.Success && edu.util.checkValue(data.Data)) ? data.Data : [];
+                for (var i = 0; i < rows.length; i++) {
+                    var r = rows[i] || {};
+                    var id = r.ID || r.Id;
+                    if (!id) continue;
+                    map[id] = {
+                        khId: r.TS_KEHOACH_TUYENSINH_ID || '',
+                        khTen: r.TS_KEHOACH_TUYENSINH_TEN || '',
+                        dotId: r.TS_KEHOACH_TUYENSINH_DOT_ID || '',
+                        dotTen: r.TS_KEHOACH_TUYENSINH_DOT_TEN || '',
+                        heTen: r.DAOTAO_HEDAOTAO_TEN || '',
+                        khoaTen: r.DAOTAO_KHOADAOTAO_TEN || '',
+                        nganhTen: r.DAOTAO_NGANH_TS_TEN || r.DAOTAO_NGANH_DT_TEN || r.TEN || ''
+                    };
+                }
+                me._tcDauRaMap = map;
+                xong();
+            },
+            // Hỏng thì vẫn tra cứu được, chỉ là cột "Đang ở đâu" thiếu kế hoạch/đợt
+            error: function () { me._tcDauRaMap = {}; xong(); },
+            type: 'POST', contentType: true, action: A.action,
+            data: {
+                'action': A.action, 'func': A.func, 'iM': edu.system.iM,
+                'strTuKhoa': '', 'strTs_Kh_TuyenSinh_Id': '', 'strTs_Kh_TuyenSinh_Dot_Id': '',
+                'strTs_Kh_Dot_PhuongThuc_Id': '', 'strOutput_Status_Code': '',
+                'dIs_Public': '', 'dIs_Active': 1
+            },
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    /*------------------------------------------
+    -- Các biến thể hoa/thường của từ khóa.
+    -- ⚠ `LayDS_HoSo_TS` so khớp CÓ PHÂN BIỆT HOA THƯỜNG (đo 23/09/2026: gõ "tạ thị út"
+    --   ra 0 dòng, gõ "Tạ Thị Út" ra đúng hồ sơ; còn "Nguyễn" ra 48 dòng vì trùng đúng
+    --   kiểu chữ đang lưu). `LayDSNguoiHoc_All` thì không phân biệt — nên tìm theo tên
+    --   chỉ ra người học mà mất hồ sơ tuyển sinh, đúng hiện tượng sếp Khoa gặp.
+    --   Chữa tạm ở FE bằng cách thử lần lượt vài kiểu viết; gốc rễ là proc nên dùng
+    --   UPPER() cả hai vế — đã ghi vào danh sách báo BE.
+    -------------------------------------------*/
+    _tcBienThe: function (kw) {
+        var out = [];
+        var them = function (s) {
+            s = $.trim(s || '');
+            if (s && out.indexOf(s) < 0) out.push(s);
+        };
+        them(kw);
+        // Kiểu lưu phổ biến nhất trong CSDL: viết hoa chữ đầu mỗi từ ("Tạ Thị Út")
+        them(String(kw).toLowerCase().replace(/(^|\s)(\S)/g, function (m, a, b) { return a + b.toUpperCase(); }));
+        them(String(kw).toUpperCase());
+        them(String(kw).toLowerCase());
+        return out;
+    },
+
+    /*------------------------------------------
+    -- Tìm hồ sơ tuyển sinh, thử lần lượt các kiểu viết cho tới khi ra dữ liệu.
+    -- Dừng ngay ở kiểu đầu tiên có kết quả nên bình thường chỉ tốn 1 request;
+    -- chỉ khi gõ sai kiểu chữ mới phải thử thêm.
+    -------------------------------------------*/
+    _tcTimHoSo: function (kw, chung, cb) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var A = me._TC_ACT.HoSo;
+        var dsKw = me._tcBienThe(kw);
+        var i = 0;
+
+        var thu = function () {
+            if (i >= dsKw.length) { cb([]); return; }
+            var k = dsKw[i++];
+            edu.system.makeRequest({
+                success: function (d) {
+                    var rows = (d && d.Success && edu.util.checkValue(d.Data)) ? d.Data : [];
+                    if (rows.length || i >= dsKw.length) { cb(rows); return; }
+                    thu();
+                },
+                error: function () { if (i >= dsKw.length) { cb([]); return; } thu(); },
+                type: 'POST', contentType: true, action: A.action,
+                data: $.extend({}, chung, {
+                    'action': A.action, 'func': A.func,
+                    'strTuKhoa': k,
+                    'strVaiTroDangNhap_Id': edu.system.strVaiTro_Id || '',
+                    'strChucNangHeThong_Id': edu.system.strChucNang_Id || '',
+                    'strHanhDong_Code': 'XEM',
+                    // Để TRỐNG kế hoạch + đợt = tìm toàn hệ thống (đã đo, không phải đoán)
+                    'strHoSo_KH_TS_Id': '', 'strHoSo_KH_TS_Dot_Id': '', 'strHoSo_KH_Dot_PT_Id': '',
+                    'strNguyenVong_DauRa_Id': '', 'strHoSo_KetQuaCode': '',
+                    'strHoSo_TuNgay': '', 'strHoSo_DenNgay': ''
+                }),
+                fakedb: []
+            }, false, false, false, null);
+        };
+        thu();
+    },
+
+    traCuu_Tim: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var kw = $.trim($('#txtTraCuu_TuKhoa').val() || '');
+        if (kw.length < 2) {
+            edu.system.alert('Nhập ít nhất 2 ký tự (họ tên hoặc số CCCD) rồi tra cứu.', 'w');
+            return;
+        }
+        if (me._tcDangChay) return;
+        me._tcDangChay = true;
+
+        $('#lblTraCuu_Tong').text('');
+        $('#tblTraCuu tbody').html('<tr><td colspan="9" class="text-center text-muted" style="padding:26px;">'
+            + '<i class="fa-light fa-spinner fa-spin"></i> Đang tìm trên toàn hệ thống…</td></tr>');
+
+        var ketQua = { ts: null, nh: null };
+        var xong = function () {
+            if (ketQua.ts === null || ketQua.nh === null) return;
+            me._tcDangChay = false;
+            me._tcRender(ketQua.ts, ketQua.nh, kw);
+        };
+
+        // Nạp map đầu ra trước (cache) rồi mới bắn 2 nguồn — cần map ngay lúc dựng bảng
+        me._tcEnsureDauRa(function () {
+            var chung = {
+                'iM': edu.system.iM,
+                'strTuKhoa': kw,
+                'strNguoiThucHien_Id': edu.system.userId,
+                'pageIndex': 1,
+                'pageSize': 200
+            };
+
+            me._tcTimHoSo(kw, chung, function (rows) { ketQua.ts = rows; xong(); });
+
+            var B = me._TC_ACT.NguoiHoc;
+            edu.system.makeRequest({
+                success: function (d) { ketQua.nh = (d && d.Success && edu.util.checkValue(d.Data)) ? d.Data : []; xong(); },
+                error: function () { ketQua.nh = []; xong(); },
+                type: 'POST', contentType: true, action: B.action,
+                data: $.extend({
+                    'action': B.action, 'func': B.func,
+                    'strVaiTroDangNhap_Id': edu.system.vaiTroDangNhap_Id || edu.system.strVaiTro_Id || '',
+                    'strChucNangHeThong_Id': edu.system.chucNangHeThong_Id || edu.system.strChucNang_Id || '',
+                    'strHanhDong_Code': '',
+                    'strDaoTao_HeDaoTao_Id': '', 'strDaoTao_KhoaDaoTao_Id': '', 'strDaoTao_ChuongTrinh_Id': '',
+                    'strDaoTao_KhoaQuanLy_Id': '', 'strDaoTao_LopQuanLy_Id': '', 'strStudyStatus_Ids': '',
+                    'dIsPrimary': '',
+                    // Bỏ giới hạn phạm vi theo quyền — mục đích của màn này là tìm toàn trường
+                    'dBoQuaPhamVi': 1
+                }, chung),
+                fakedb: []
+            }, false, false, false, null);
+        });
+    },
+
+    /*------------------------------------------
+    -- Gộp 2 nguồn thành 1 bảng. Mỗi bản ghi = 1 dòng, KHÔNG gộp theo người:
+    -- một em nộp 2 nguyện vọng, hoặc học 2 ngành, thì phải thấy đủ cả 2 chỗ —
+    -- gộp lại là giấu mất đúng thứ sếp cần nhìn.
+    -------------------------------------------*/
+    _tcRender: function (rowsTS, rowsNH, kw) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var pick = me._kqPick;
+        var esc = function (s) { return $('<div>').text(s == null ? '' : s).html(); };
+        var map = me._tcDauRaMap || {};
+
+        // Lọc thêm theo ngày sinh nếu có nhập (2 nguồn trả dd/mm/yyyy, ô lọc là ISO)
+        var ngayLoc = me._ngaySinhToUI($('#txtTraCuu_NgaySinh').val() || '');
+        var hopNgay = function (ns) {
+            if (!ngayLoc) return true;
+            return me._ngaySinhToUI(ns) === ngayLoc;
+        };
+
+        var ds = [];
+
+        (rowsTS || []).forEach(function (r) {
+            var ns = pick(r, ['COREPERSON_NGAYSINH']);
+            if (!hopNgay(ns)) return;
+            var dr = map[pick(r, ['NGUYENVONG_DAURA_ID'])] || {};
+            ds.push({
+                loai: 'TS',
+                personId: pick(r, ['COREPERSON_ID', 'CORE_PERSON_ID', 'PERSON_ID']),
+                hoTen: pick(r, ['COREPERSON_HOTEN']),
+                ngaySinh: ns,
+                gioiTinh: me._kqLookupById(pick(r, ['COREPERSON_GIOITINH_ID']), 'ddlKQ_GioiTinh'),
+                cccd: pick(r, ['PERSONIDEN_SOCCCD']),
+                dienThoai: pick(r, ['PERSONCONTACT_DIENTHOAI']),
+                hosoId: pick(r, ['HOSO_ID']),
+                khId: dr.khId || '', dotId: dr.dotId || '',
+                noi: dr.khTen
+                    ? ('<b>Tuyển sinh</b><br/><span class="tc-phu">' + esc(dr.khTen)
+                        + (dr.dotTen ? ' — đợt ' + esc(dr.dotTen) : '') + '</span>'
+                        + ((dr.heTen || dr.nganhTen)
+                            ? '<br/><span class="tc-phu">' + esc(dr.heTen)
+                              + (dr.nganhTen ? ' • ' + esc(dr.nganhTen) : '') + '</span>' : ''))
+                    : '<b>Tuyển sinh</b><br/><span class="tc-phu">chưa xác định được kế hoạch/đợt</span>',
+                trangThai: [pick(r, ['HOSO_KETQUA']), pick(r, ['HOSO_STATUS'])]
+                    .filter(function (x) { return !!x; }).join('<br/>')
+            });
+        });
+
+        (rowsNH || []).forEach(function (r) {
+            var ns = r.NGAYSINH || r.DATE_OF_BIRTH || r.QLSV_NGUOIHOC_NGAYSINH || '';
+            if (!hopNgay(ns)) return;
+            var he = r.DAOTAO_HEDAOTAO_TEN || r.TENHEDAOTAO || '';
+            var khoa = r.DAOTAO_KHOADAOTAO_TEN || r.KHOAHOC_N1_TEN || '';
+            var lop = r.DAOTAO_LOPQUANLY_TEN || r.LOPQUANLY_TEN || '';
+            var nganh = r.DAOTAO_CHUONGTRINH_TEN || r.NGANHHOC_N1_TEN || r.TENCHUONGTRINH || '';
+            var coHoc = !!(he || khoa || lop || nganh);
+            ds.push({
+                loai: 'NH',
+                chuaGan: !coHoc,          // dòng "rỗng ruột" — dùng để lọc bớt ở dưới
+                personId: r.PERSON_ID || r.QLSV_NGUOIHOC_ID || r.ID || '',
+                hoTen: r.FULL_NAME || ((r.HODEM || '') + ' ' + (r.TEN || '')).trim(),
+                ngaySinh: ns,
+                gioiTinh: r.GIOITINH_TEN || '',
+                cccd: r.DINHDANH_CHINH_SO || '',
+                dienThoai: r.SODIENTHOAI_CANHAN || r.SODIENTHOAI_GIADINH || '',
+                maSV: r.MASO || r.MA_NGUOIHOC_CHINH || r.QLSV_NGUOIHOC_MASO || '',
+                noi: coHoc
+                    ? ('<b>Đang học</b><br/><span class="tc-phu">' + esc(he)
+                        + (khoa ? ' • khóa ' + esc(khoa) : '') + '</span>'
+                        + '<br/><span class="tc-phu">' + esc(nganh)
+                        + (lop ? ' • lớp ' + esc(lop) : '') + '</span>')
+                    // HASSTUDY=0 + hệ/khóa/lớp đều rỗng: đã tiếp nhận nhưng chưa phân lớp.
+                    // Phải nói rõ, không được hiển thị như "đang học" — sếp sẽ tìm nhầm chỗ.
+                    : '<b>Hồ sơ người học</b><br/><span class="tc-phu">chưa gắn quá trình học (chưa phân lớp)</span>',
+                trangThai: r.QLSV_TRANGTHAINGUOIHOC_TEN || r.STUDY_STATUS_TEN || ''
+            });
+        });
+
+        /* Bỏ dòng "hồ sơ người học chưa gắn quá trình học" khi người đó ĐÃ có dòng khác
+           (sếp Khoa 23/09/2026: "cái hồ sơ nào chưa được gắn á không hiển thị cho tôi").
+           Dòng đó không nói thêm được gì ngoài dòng tuyển sinh đã có — chỉ làm rối bảng.
+           ⚠ Vẫn GIỮ nếu người đó không còn dòng nào khác: ẩn nốt là tra tên ra "không tìm
+           thấy" trong khi hệ thống có hồ sơ — đúng kiểu mất dấu mà màn này sinh ra để chống. */
+        var khoaNguoi = function (x) {
+            return x.personId || x.cccd || (String(x.hoTen || '') + '|' + String(x.ngaySinh || ''));
+        };
+        var coDongThat = {};
+        ds.forEach(function (x) { if (!x.chuaGan) coDongThat[khoaNguoi(x)] = true; });
+        var soAn = 0;
+        ds = ds.filter(function (x) {
+            if (x.chuaGan && coDongThat[khoaNguoi(x)]) { soAn++; return false; }
+            return true;
+        });
+
+        // Cùng một người thì các dòng đứng liền nhau cho dễ đọc
+        ds.sort(function (a, b) {
+            var n = String(a.hoTen || '').localeCompare(String(b.hoTen || ''), 'vi');
+            if (n !== 0) return n;
+            return (a.loai === b.loai) ? 0 : (a.loai === 'TS' ? -1 : 1);
+        });
+
+        var soTS = ds.filter(function (x) { return x.loai === 'TS'; }).length;
+        var soNH = ds.length - soTS;
+        $('#lblTraCuu_Tong').text(ds.length
+            ? (ds.length + ' kết quả — ' + soTS + ' hồ sơ tuyển sinh, ' + soNH + ' người học'
+                + (soAn ? ' (ẩn ' + soAn + ' dòng chưa gắn quá trình học)' : ''))
+            : '');
+
+        if (!ds.length) {
+            $('#tblTraCuu tbody').html('<tr><td colspan="9" class="text-center text-muted" style="padding:26px;">'
+                + 'Không tìm thấy ai khớp với <b>' + esc(kw) + '</b>'
+                + (ngayLoc ? ' và ngày sinh <b>' + esc(ngayLoc) + '</b>' : '') + '.'
+                + '<br/><span style="font-size:12.5px;">Thử bỏ bớt dấu, nhập họ tên ngắn hơn, hoặc tra bằng số CCCD.</span>'
+                + '</td></tr>');
+            return;
+        }
+
+        var html = '';
+        ds.forEach(function (x, i) {
+            var badge = (x.loai === 'TS')
+                ? '<span class="tc-cham tc-cham-ts"></span>'
+                : '<span class="tc-cham tc-cham-nh"></span>';
+            html += '<tr>'
+                + '<td class="td-center">' + (i + 1) + '</td>'
+                + '<td>' + badge + '<b>' + esc(x.hoTen) + '</b>'
+                + (x.maSV ? '<br/><span class="tc-phu">Mã SV: ' + esc(x.maSV) + '</span>' : '') + '</td>'
+                + '<td class="td-center">' + esc(x.ngaySinh) + '</td>'
+                + '<td class="td-center">' + esc(x.gioiTinh) + '</td>'
+                + '<td class="td-center">' + esc(x.cccd) + '</td>'
+                + '<td class="td-center">' + esc(x.dienThoai) + '</td>'
+                + '<td>' + x.noi + '</td>'
+                + '<td class="td-center"><span class="tc-phu">' + (x.trangThai || '') + '</span></td>'
+                + '<td class="td-center">'
+                + ((x.loai === 'TS' && x.hosoId && x.khId)
+                    ? ('<button type="button" class="btn btn-sm btn-primary tc-mo-hoso" data-hoso="' + esc(x.hosoId)
+                        + '" data-kh="' + esc(x.khId) + '" data-dot="' + esc(x.dotId) + '">Mở hồ sơ</button>')
+                    : '')
+                + '</td>'
+                + '</tr>';
+        });
+        $('#tblTraCuu tbody').html(html);
+    },
+
+    /*------------------------------------------
+    -- Mở thẳng hồ sơ tuyển sinh tìm được: đặt lại context kế hoạch + đợt, mở modal
+    -- Kết quả đăng ký rồi để loadKQDK_List bật form Sửa khi danh sách về.
+    -- Phải chờ modal tra cứu ĐÓNG HẲN mới mở modal kia — mở chồng thì Bootstrap
+    -- gỡ mất lớp nền và màn hình khóa cứng.
+    -------------------------------------------*/
+    traCuu_MoHoSo: function (hosoId, khId, dotId) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (!edu.util.checkValue(hosoId) || !edu.util.checkValue(khId)) return;
+        me.strKeHoachTuyenSinh_Id = khId;
+        me.strDot_Id_ForKQ = dotId || '';
+        me._traCuu_MoHoSoId = hosoId;
+        $('#tra-cuu-nguoi-hoc').one('hidden.bs.modal', function () {
+            $('#ket-qua-dk').modal('show');
+        });
+        $('#tra-cuu-nguoi-hoc').modal('hide');
     },
 
     /*==========================================================================
@@ -2098,6 +2477,19 @@ KeHoachTuyenSinhNew.prototype = {
             'TS_KH_TUYENSINH_DOT_ID', 'DOT_ID'])
             || me._kqPickFuzzy(d, /DOT.*_ID$/i);
         var dotTen = pick(d, ['HOSO_KH_TS_DOT_TEN', 'DOT_TEN', 'TEN_DOT']);
+        /* View danh sách KHÔNG có cột đợt (đã đo 23/09/2026 — cả LayTT_HoSo_TS cũng không),
+           nên đoạn dò ở trên gần như luôn ra rỗng. Suy ngược từ nguyện vọng đầu ra:
+           mỗi đầu ra thuộc đúng một (kế hoạch + đợt). Thiếu bước này thì đợt rỗng →
+           dropdown Nguyện vọng / Phương thức nạp ra rỗng → bấm Cập nhật là dính
+           "Ghi nhận nguồn khai thác lỗi: Khong ton tai ho so tuyen sinh". */
+        if (!dotId) {
+            var nvId = pick(d, ['NGUYENVONG_DAURA_ID', 'NguyenVong_DauRa_Id']);
+            var dr = nvId ? ((me._kqDauRaMap || {})[nvId] || null) : null;
+            if (dr && dr.dotId) {
+                dotId = dr.dotId;
+                if (!dotTen) dotTen = dr.dotTen || '';
+            }
+        }
         if (dotId) me.strDot_Id_ForKQ = dotId;
 
         me._ensureDotTuyenSinh(function () {
@@ -2124,6 +2516,7 @@ KeHoachTuyenSinhNew.prototype = {
             // Tab 8 — danh mục hồ sơ (TS_HOSO). Phải gọi SAU khi strDot_Id_ForKQ
             // đã set ở trên, vì LayDSTS_HoSo lọc theo Id đợt tuyển sinh.
             me._loadHoSoDM_ForEdit(strId);
+            me._veBadgeKeHoach();
             // Các mục đang đóng mà hồ sơ này có dữ liệu thì bung ra cho thấy.
             // Đợi các nhánh nạp async (dropdown retry tới ~1.8s) xong mới soát.
             setTimeout(function () { me._secMoNeuCoDuLieu(); }, 1200);
@@ -2350,6 +2743,12 @@ KeHoachTuyenSinhNew.prototype = {
                     var id = r.ID || r.Id || r.TS_KH_DAU_RA_ID;
                     if (!id) continue;
                     map[id] = {
+                        // Kế hoạch + đợt của chính nguyện vọng này. Bắt buộc phải giữ:
+                        // response hồ sơ (cả list lẫn detail) KHÔNG có 2 khóa này, đây là
+                        // đường duy nhất suy ra được đợt của một hồ sơ.
+                        khId: r.TS_KEHOACH_TUYENSINH_ID || '',
+                        dotId: r.TS_KEHOACH_TUYENSINH_DOT_ID || '',
+                        dotTen: r.TS_KEHOACH_TUYENSINH_DOT_TEN || '',
                         nganhId: r.DAOTAO_NGANH_TS_ID || r.DAOTAO_NGANH_DT_ID || '',
                         nganhTen: r.DAOTAO_NGANH_TS_TEN || r.DAOTAO_NGANH_DT_TEN || '',
                         ctTen: r.DAOTAO_TOCHUCCHUONGTRINH_TEN || '',
@@ -2917,7 +3316,16 @@ KeHoachTuyenSinhNew.prototype = {
                     var afterAll = function () {
                         // Qua _kqApplyAllFilters chứ không render thẳng: tải lại sau khi
                         // sửa/xóa hồ sơ vẫn giữ nguyên bộ lọc người dùng đang đặt.
-                        if (--remaining === 0) me._kqApplyAllFilters();
+                        if (--remaining !== 0) return;
+                        me._kqApplyAllFilters();
+                        /* Đi từ màn "Tra cứu người học" sang: danh sách vừa có cache thì mở
+                           luôn hồ sơ đó ra. openSuaHoSo đọc từ dtKQDK_HoSo nên BẮT BUỘC phải
+                           đợi tới đây, gọi sớm hơn là báo "không tìm thấy hồ sơ trong cache". */
+                        if (edu.util.checkValue(me._traCuu_MoHoSoId)) {
+                            var id = me._traCuu_MoHoSoId;
+                            me._traCuu_MoHoSoId = '';
+                            setTimeout(function () { me.openSuaHoSo(id); }, 60);
+                        }
                     };
                     me._ensureKQDK_DauRaMap(afterAll);
                     me._ensureNganhMaLookup(afterAll);
@@ -4775,6 +5183,7 @@ KeHoachTuyenSinhNew.prototype = {
         if (!edu.util.checkValue(me.strSuaHoSo_Id) && edu.util.checkValue($sel.val())) {
             me._loadHoSoDM_ForEdit('');
         }
+        me._veBadgeKeHoach();
     },
 
     /*------------------------------------------
@@ -5478,9 +5887,75 @@ KeHoachTuyenSinhNew.prototype = {
     -- của hồ sơ; strDot_Id_ForKQ chỉ là context lúc mở modal, có thể rỗng hoặc lệch khi
     -- vào thẳng từ danh sách Kết quả đăng ký.
     -------------------------------------------*/
+    /*------------------------------------------
+    -- Badge "kế hoạch — đợt" ở tiêu đề modal Kết quả đăng ký.
+    -- Mục đích: khai mới / sửa hồ sơ đều biết đang làm việc trên HỆ nào, khỏi nhập nhầm
+    -- kế hoạch (sếp Khoa 23/09/2026). Đợt chưa xác định thì nói thẳng là chưa chọn,
+    -- KHÔNG để trống — trống thì người dùng tưởng đã đúng.
+    -------------------------------------------*/
+    _veBadgeKeHoach: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var $b = $('#lblKQDK_KeHoach');
+        if (!$b.length) return;
+
+        var esc = function (s) { return $('<div>').text(s == null ? '' : s).html(); };
+        var tenMa = function (arr, id) {
+            for (var i = 0; i < (arr || []).length; i++) {
+                var d = arr[i];
+                if (String(d.ID || d.Id || d.id || '') !== String(id)) continue;
+                var ma = d.MA || d.Ma || d.KEHOACH_MA || '';
+                var ten = d.TEN || d.Ten || d.KEHOACH_TEN || '';
+                return (ten && ma && ten !== ma) ? (ten + ' (' + ma + ')') : (ten || ma || '');
+            }
+            return '';
+        };
+
+        var kh = tenMa(me.dtKeHoachTuyenSinh, me.strKeHoachTuyenSinh_Id);
+        // Đặt display tường minh chứ không dùng .show(): CSS đang khai display:none,
+        // .show() trả về giá trị mặc định của thẻ nên dễ hiện sai kiểu.
+        if (!kh) { $b.html('').css('display', 'none'); return; }
+
+        var dotId = me._hsDotHienTai();
+        var dot = dotId ? tenMa(me.dtDotTuyenSinh, dotId) : '';
+        if (!dot && dotId) dot = ($('#ddlKQ_DotTuyenSinh option:selected').text() || '').trim();
+
+        $b.html('<i class="fa-light fa-layer-group"></i> ' + esc(kh)
+            + (dot
+                ? ('<span class="kqdk-badge-sep">›</span><span class="kqdk-badge-dot">' + esc(dot) + '</span>')
+                : '<span class="kqdk-badge-sep">›</span><span style="color:#b45309;">chưa chọn đợt</span>'))
+            .css('display', 'inline-block');
+    },
+
     _hsDotHienTai: function () {
         var me = main_doc.KeHoachTuyenSinhNew;
-        return ($('#ddlKQ_DotTuyenSinh').val() || '') || me.strDot_Id_ForKQ || '';
+        var v = ($('#ddlKQ_DotTuyenSinh').val() || '') || me.strDot_Id_ForKQ || '';
+        if (v) return v;
+        /* Cứu cánh cuối: suy đợt từ NGUYỆN VỌNG ĐẦU RA của hồ sơ.
+           Cần vì cả LayDS_HoSo_TS lẫn LayTT_HoSo_TS đều KHÔNG trả đợt (đo 23/09/2026),
+           nên mở hồ sơ thẳng từ danh sách là đợt rỗng → dropdown Nguyện vọng nạp ra rỗng
+           → bấm Cập nhật thì báo "Khong ton tai ho so tuyen sinh". */
+        var nv = me._nvDauRaHienTai();
+        var dr = nv ? ((me._kqDauRaMap || {})[nv] || null) : null;
+        return (dr && dr.dotId) ? dr.dotId : '';
+    },
+
+    /*------------------------------------------
+    -- Nguyện vọng đầu ra của hồ sơ đang mở.
+    -- Ưu tiên dropdown trên form; dropdown chưa nạp được (vì đợt rỗng) thì lấy thẳng
+    -- từ dòng hồ sơ trong cache danh sách — dữ liệu đó luôn có NGUYENVONG_DAURA_ID.
+    -------------------------------------------*/
+    _nvDauRaHienTai: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var v = edu.system.getValById('ddlKQ_NguyenVongDauRa') || '';
+        if (v) return v;
+        if (!edu.util.checkValue(me.strSuaHoSo_Id)) return '';
+        var rows = me.dtKQDK_HoSo || [];
+        for (var i = 0; i < rows.length; i++) {
+            if (me._kqPick(rows[i], ['HOSO_ID', 'ID', 'HoSo_Id', 'Id']) === me.strSuaHoSo_Id) {
+                return me._kqPick(rows[i], ['NGUYENVONG_DAURA_ID', 'NguyenVong_DauRa_Id']) || '';
+            }
+        }
+        return '';
     },
 
     _hsLayQuyDinh: function (cb) {
@@ -5954,6 +6429,7 @@ KeHoachTuyenSinhNew.prototype = {
         main_doc.KeHoachTuyenSinhNew._currentInvoiceId = '';
         // Tương tự với nguồn khai thác: giữ lại id cũ là bỏ chọn ở hồ sơ B sẽ XOÁ bản ghi của A
         main_doc.KeHoachTuyenSinhNew._currentDoiTacRowId = '';
+        main_doc.KeHoachTuyenSinhNew._currentDoiTacRowIds = [];
         main_doc.KeHoachTuyenSinhNew._currentDoiTacPartnerId = '';
         main_doc.KeHoachTuyenSinhNew._currentDoiTacGhiChu = '';
         // Sang hồ sơ khác → quên dấu "user đã sửa địa chỉ" của hồ sơ trước
@@ -8277,6 +8753,7 @@ KeHoachTuyenSinhNew.prototype = {
 
     // Bản ghi ghi-nhận đang có của hồ sơ đang mở — dùng để gỡ / thay thế
     _currentDoiTacRowId: '',
+    _currentDoiTacRowIds: [],   // TẤT CẢ dòng đang có (kể cả rác của các lần đổi trước)
     _currentDoiTacPartnerId: '',
     _currentDoiTacGhiChu: '',
 
@@ -8322,21 +8799,73 @@ KeHoachTuyenSinhNew.prototype = {
             + 'PKG_CORE_TS_HOSO chưa có hàm xóa TS_HoSo_DoiTacTS.</span>';
     },
 
-    _loadHoSoDoiTacTS: function (corePersonId) {
+    /*------------------------------------------
+    -- Id CỦA CHÍNH DÒNG ghi-nhận (TS_HOSO_DOITACTS) — không phải Id đối tác.
+    -- Dò rộng vì chưa dump được tên cột thật: tên đoán trượt là không xoá được dòng cũ,
+    -- mà không xoá được thì dòng rác dồn lại và form hiện sai nguồn.
+    -------------------------------------------*/
+    _dtcRowId: function (r) {
         var me = main_doc.KeHoachTuyenSinhNew;
-        // Gắn bản ghi đang nhớ vào đúng chủ của nó — xem chú thích ở _loadPersonInvoice.
-        // Ở đây hậu quả nặng hơn: nhớ nhầm là XOÁ bản ghi của người khác.
-        me._currentDoiTacPersonId = corePersonId || '';
-        if (!edu.util.checkValue(corePersonId)) return;
-        if (!edu.util.checkValue(me._ACTION_LayDS_HoSo_DoiTacTS)) return;
-        var obj_list = {
+        if (!r) return '';
+        var id = me._pickLoose(r, ['ID', 'TS_HOSO_DOITACTS_ID', 'HOSO_DOITACTS_ID',
+            'HOSO_DOITAC_ID', 'TS_HOSO_DOITAC_ID']);
+        if (id) return id;
+        for (var k in r) {
+            if (!r.hasOwnProperty(k)) continue;
+            var K = String(k).toUpperCase();
+            // Trừ Id của đối tác và của người/hồ sơ — đó là khóa ngoài, xoá nhầm là chết
+            if (K.indexOf('DOITACTUYENSINH') >= 0 || K.indexOf('PERSON') >= 0) continue;
+            if (/_ID$/.test(K) && K.indexOf('HOSO') >= 0 && K.indexOf('DOITAC') >= 0 && r[k]) return r[k];
+        }
+        return '';
+    },
+
+    /*------------------------------------------
+    -- Chọn dòng ghi-nhận ĐANG HIỆU LỰC trong danh sách trả về:
+    -- ưu tiên IS_CURRENT=1, rồi tới ngày ghi nhận/ngày tạo mới nhất, cuối cùng lấy dòng cuối.
+    -------------------------------------------*/
+    _dtcDongMoiNhat: function (rows) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (!rows || !rows.length) return null;
+        if (rows.length === 1) return rows[0];
+
+        // Đổi mọi kiểu ngày về số để so: "20260923094512" hoặc "23/09/2026" → 20260923...
+        var moc = function (r) {
+            var s = String(me._pickLoose(r, ['NGAYTAO', 'NGAY_TAO']) || '');
+            if (/^\d{8,14}$/.test(s)) return parseInt(s.substring(0, 14), 10);
+            var g = String(me._pickLoose(r, ['NGAY_GHI_NHAN', 'NGAYGHINHAN']) || '')
+                .match(/^(\d{2})\/(\d{2})\/(\d{4})/);
+            if (g) return parseInt(g[3] + g[2] + g[1] + '000000', 10);
+            return 0;
+        };
+
+        var uuTien = rows.filter(function (r) {
+            return String(me._pickLoose(r, ['IS_CURRENT', 'ISCURRENT']) || '') === '1';
+        });
+        var ds = uuTien.length ? uuTien : rows;
+
+        var best = ds[ds.length - 1], bestMoc = moc(best);
+        for (var i = 0; i < ds.length; i++) {
+            var m = moc(ds[i]);
+            if (m >= bestMoc) { best = ds[i]; bestMoc = m; }
+        }
+        return best;
+    },
+
+    /*------------------------------------------
+    -- Payload lọc dùng chung cho LayDS_TS_HoSo_DoiTacTS (đọc + dọn rác).
+    -- Một chỗ duy nhất để đọc và ghi không lệch bộ khóa.
+    -------------------------------------------*/
+    _dtcFilter: function (corePersonId) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        return {
             'action': me._ACTION_LayDS_HoSo_DoiTacTS,
             'func': 'PKG_CORE_TS_HOSO.LayDS_TS_HoSo_DoiTacTS',
             'iM': edu.system.iM,
             'strHoSo_KH_TS_Id': me.strKeHoachTuyenSinh_Id || '',
-            'strHoSo_KH_TS_Dot_Id': me.strDot_Id_ForKQ || '',
-            'strNguyenVong_DauRa_Id': edu.system.getValById('ddlKQ_NguyenVongDauRa') || '',
-            'strCore_Person_Id': corePersonId,
+            'strHoSo_KH_TS_Dot_Id': me._hsDotHienTai(),
+            'strNguyenVong_DauRa_Id': me._nvDauRaHienTai(),
+            'strCore_Person_Id': corePersonId || '',
             'strTS_DoiTacTuyenSinh_Id': '',
             // Convention Oracle: param prefix 'd' là NUMBER → rỗng phải gửi null,
             // gửi '' sẽ dính PLS-00306 wrong number or types of arguments.
@@ -8346,13 +8875,84 @@ KeHoachTuyenSinhNew.prototype = {
             'strTuKhoa': '',
             'strNguoiThucHien_Id': edu.system.userId
         };
+    },
+
+    /*------------------------------------------
+    -- Sau khi ghi xong: đọc lại, GIỮ bản mới nhất, xoá phần dư.
+    -- Làm theo hướng này thì dù proc Thêm là chèn mới hay ghi đè, bản đang hiệu lực
+    -- cũng không bao giờ bị xoá nhầm.
+    -------------------------------------------*/
+    _dtcDonRac: function (corePersonId) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (!edu.util.checkValue(corePersonId)) return;
         edu.system.makeRequest({
             success: function (data) {
+                var rows = (data && data.Success && edu.util.checkValue(data.Data)) ? data.Data : [];
+                console.log('[NguonKhaiThac] sau khi lưu còn ' + rows.length + ' dòng'
+                    + (rows.length ? ' — cột: ' + Object.keys(rows[0]).join(', ') : ''));
+                if (rows.length <= 1) {
+                    if (rows.length === 1) {
+                        me._currentDoiTacRowId = me._dtcRowId(rows[0]);
+                        me._currentDoiTacRowIds = me._currentDoiTacRowId ? [me._currentDoiTacRowId] : [];
+                    }
+                    return;
+                }
+                var giu = me._dtcDongMoiNhat(rows);
+                var idGiu = me._dtcRowId(giu);
+                me._currentDoiTacRowId = idGiu;
+                me._currentDoiTacRowIds = idGiu ? [idGiu] : [];
+                rows.forEach(function (r) {
+                    var rid = me._dtcRowId(r);
+                    // Không dò ra Id thì THÔI, đừng đoán — thà để dòng dư còn hơn xoá nhầm
+                    if (!rid || rid === idGiu) return;
+                    console.log('[NguonKhaiThac] xoá dòng dư', rid);
+                    me._xoaDoiTacTS(rid);
+                });
+            },
+            error: function () { },
+            type: 'POST', contentType: true,
+            action: me._ACTION_LayDS_HoSo_DoiTacTS,
+            data: me._dtcFilter(corePersonId),
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    _loadHoSoDoiTacTS: function (corePersonId) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        // Gắn bản ghi đang nhớ vào đúng chủ của nó — xem chú thích ở _loadPersonInvoice.
+        // Ở đây hậu quả nặng hơn: nhớ nhầm là XOÁ bản ghi của người khác.
+        me._currentDoiTacPersonId = corePersonId || '';
+        if (!edu.util.checkValue(corePersonId)) return;
+        if (!edu.util.checkValue(me._ACTION_LayDS_HoSo_DoiTacTS)) return;
+        // Cùng bộ lọc với lúc ghi và lúc dọn rác — ghi một kiểu đọc một kiểu là
+        // lưu xong mở lại không thấy nguồn khai thác đâu.
+        var obj_list = me._dtcFilter(corePersonId);
+        edu.system.makeRequest({
+            success: function (data) {
+                var soDong = (data && data.Success && edu.util.checkValue(data.Data)) ? data.Data.length : 0;
+                console.log('[NguonKhaiThac] đọc lên: ' + soDong + ' dòng | đợt=' + obj_list.strHoSo_KH_TS_Dot_Id
+                    + ' | nguyện vọng=' + obj_list.strNguyenVong_DauRa_Id + ' | người=' + corePersonId
+                    + (data && !data.Success ? (' | lỗi: ' + (data.Message || '')) : ''));
                 if (!data || !data.Success || !edu.util.checkValue(data.Data) || !data.Data.length) return;
-                var r = data.Data[0];
+                var rows = data.Data;
+                /* ⚠ KHÔNG lấy Data[0]. PKG_CORE_TS_HOSO không có hàm Sửa nên mỗi lần đổi
+                   nguồn là THÊM bản mới rồi mới xoá bản cũ; xoá mà trượt (không dò ra Id
+                   dòng) thì bản cũ nằm lại, lần sau danh sách trả về nhiều dòng và Data[0]
+                   là bản CŨ NHẤT → form hiện nguồn cũ hoặc trống dù vừa lưu thành công.
+                   Đúng hiện tượng khách báo 23/09/2026 "cập nhật được 2 lần rồi thôi". */
+                var r = me._dtcDongMoiNhat(rows);
+                if (!r) return;
+                console.log('[NguonKhaiThac] dòng chọn:', r);
+                // Nhớ TẤT CẢ dòng cũ để lần lưu sau dọn sạch, không chỉ mỗi dòng đang hiện
+                me._currentDoiTacRowIds = rows.map(function (x) { return me._dtcRowId(x); })
+                    .filter(function (x) { return !!x; });
                 var id = r.TS_DOITACTUYENSINH_ID || r.Ts_DoiTacTuyenSinh_Id || '';
                 // Id của chính bản ghi ghi-nhận (khác với Id đối tác) — cần để Xóa/Sửa
-                me._currentDoiTacRowId = me._pickLoose(r, ['ID', 'TS_HOSO_DOITACTS_ID', 'HOSO_DOITAC_ID']);
+                me._currentDoiTacRowId = me._dtcRowId(r);
+                if (rows.length > 1 || !me._currentDoiTacRowId) {
+                    kqdkNoLog('[NguonKhaiThac] ' + rows.length + ' dòng, rowId="'
+                        + me._currentDoiTacRowId + '" — cột:', Object.keys(rows[0] || {}));
+                }
                 var ghiChu = r.GHICHU || r.GhiChu || '';
                 me._currentDoiTacPartnerId = id;
                 me._currentDoiTacGhiChu = ghiChu;
@@ -8385,8 +8985,13 @@ KeHoachTuyenSinhNew.prototype = {
         if (!edu.util.checkValue(strDoiTac_Id)) {
             // Bỏ chọn nguồn khai thác → phải GỠ bản ghi cũ. Trước đây hàm return thẳng
             // ở đây nên bấm Cập nhật xong nguồn cũ vẫn còn nguyên.
-            if (cuaNguoiNay && edu.util.checkValue(me._currentDoiTacRowId)) {
-                me._xoaDoiTacTS(me._currentDoiTacRowId);
+            if (cuaNguoiNay) {
+                var ds = (me._currentDoiTacRowIds || []).slice();
+                if (edu.util.checkValue(me._currentDoiTacRowId) && ds.indexOf(me._currentDoiTacRowId) < 0) {
+                    ds.push(me._currentDoiTacRowId);
+                }
+                ds.forEach(function (rid) { me._xoaDoiTacTS(rid); });
+                me._currentDoiTacRowIds = [];
             }
             return;
         }
@@ -8413,8 +9018,10 @@ KeHoachTuyenSinhNew.prototype = {
                từ danh sách Kết quả đăng ký thì nó rỗng. */
             'strHoSo_KH_TS_Id': me.strKeHoachTuyenSinh_Id || '',
             'strHoSo_KH_TS_Dot_Id': me._hsDotHienTai(),
-            'strNguyenVong_DauRa_Id': snap ? (snap.nguyenVong || '')
-                : (edu.system.getValById('ddlKQ_NguyenVongDauRa') || ''),
+            // Khai mới thì lấy từ ảnh chụp form; Sửa thì qua _nvDauRaHienTai — có cứu cánh
+            // đọc từ cache danh sách khi dropdown chưa nạp được (nguyên nhân lỗi
+            // "Khong ton tai ho so tuyen sinh" khách báo 23/09/2026).
+            'strNguyenVong_DauRa_Id': (snap && snap.nguyenVong) ? snap.nguyenVong : me._nvDauRaHienTai(),
             'strCore_Person_Id': corePersonId,
             'strTS_DoiTacTuyenSinh_Id': strDoiTac_Id,
             // Ngày ghi nhận: gửi ngày hiện tại dd/MM/yyyy thay vì rỗng — proc có thể
@@ -8431,8 +9038,14 @@ KeHoachTuyenSinhNew.prototype = {
             'strGhiChu': ghiChuMoi,
             'strNguoiThucHien_Id': edu.system.userId
         };
+        console.log('[NguonKhaiThac] GHI → đối tác=' + obj_save.strTS_DoiTacTuyenSinh_Id
+            + ' | KH=' + obj_save.strHoSo_KH_TS_Id + ' | đợt=' + obj_save.strHoSo_KH_TS_Dot_Id
+            + ' | nguyện vọng=' + obj_save.strNguyenVong_DauRa_Id
+            + ' | người=' + obj_save.strCore_Person_Id + ' | dòng cũ=' + (rowCu || '(không có)'));
         edu.system.makeRequest({
             success: function (data) {
+                console.log('[NguonKhaiThac] GHI kết quả: Success=' + (data && data.Success)
+                    + ' | Id=' + ((data && data.Id) || '(không trả)') + ' | ' + ((data && data.Message) || ''));
                 if (!data || !data.Success) {
                     // Kèm context đang gửi: lỗi loại này gần như luôn do một mảnh bị rỗng,
                     // nhìn phát biết ngay thay vì phải mở F12 dò lại.
@@ -8448,9 +9061,14 @@ KeHoachTuyenSinhNew.prototype = {
                             : ''), 'w');
                     return;
                 }
-                // Gỡ bản cũ SAU khi thêm thành công — nếu làm ngược, thêm lỗi là mất luôn
-                // dữ liệu đang có mà không có gì thay thế.
-                if (rowCu) me._xoaDoiTacTS(rowCu);
+                /* ⚠ TUYỆT ĐỐI KHÔNG xoá theo Id nhớ từ trước.
+                   `Them_TS_HoSo_DoiTacTS` có thể là UPSERT theo bộ (kế hoạch + đợt + nguyện
+                   vọng + người) — y như `Them_TS_HoSo` bên tab 8 đã xác minh. Khi đó bản
+                   "mới" chính là bản cũ, xoá rowCu là xoá luôn thứ vừa ghi → lưu báo thành
+                   công mà mở lại trống trơn (khách báo 23/09/2026, do chính đoạn dọn rác
+                   mình thêm sáng nay).
+                   Cách an toàn: đọc lại danh sách, GIỮ bản mới nhất, chỉ xoá phần dư. */
+                me._dtcDonRac(corePersonId);
             },
             error: function (er) {
                 edu.system.alert('Ghi nhận nguồn khai thác lỗi (er): ' + JSON.stringify(er), 'w');
@@ -8484,6 +9102,7 @@ KeHoachTuyenSinhNew.prototype = {
         me._currentInvoiceId = '';
         me._currentInvoicePersonId = '';
         me._currentDoiTacRowId = '';
+        me._currentDoiTacRowIds = [];
         me._currentDoiTacPersonId = personId;
         me._currentDoiTacPartnerId = '';
         me._currentDoiTacGhiChu = '';
