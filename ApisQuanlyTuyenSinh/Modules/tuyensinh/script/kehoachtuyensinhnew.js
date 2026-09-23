@@ -3100,8 +3100,28 @@ KeHoachTuyenSinhNew.prototype = {
                     me.save_PersonProfile(me.strSuaHoSo_CorePersonId || '', profileInfo);
                     // Tab 5 Gia đình — PERSON_FAMILY, cũng ngoài spec Sua_HoSo_TS
                     me.save_PersonFamily(me.strSuaHoSo_CorePersonId || '', famList);
-                    // CCCD ngày cấp / nơi cấp — Sua_HoSo_TS chỉ nhận mỗi số CCCD
-                    me.save_PersonIden(me.strSuaHoSo_CorePersonId || '', idenInfo);
+                    /* CCCD ngày cấp / nơi cấp — Sua_HoSo_TS chỉ nhận mỗi số CCCD.
+                       ⚠ SỐ CCCD hiện ở bảng danh sách lấy từ PERSON_IDENTIFIER, tức do
+                       chính hàm này ghi. Nó chạy 2 bước (đọc bản cũ → ghi đè) nên xong
+                       SAU nút Cập nhật. Phải chờ nó báo xong rồi mới tải lại danh sách,
+                       không thì bảng vẫn hiện số cũ và phải F5 (sếp Khoa 23/09/2026). */
+                    var idenXong = false;
+                    var dmXong = false;
+                    var taiLaiDS = function () {
+                        if (!idenXong || !dmXong) return;
+                        me.loadKQDK_List();
+                    };
+                    me.save_PersonIden(me.strSuaHoSo_CorePersonId || '', idenInfo, function () {
+                        idenXong = true;
+                        taiLaiDS();
+                    });
+                    // Phòng hờ: nhánh CCCD không gọi lại (mất mạng, thiếu Core_Person_Id...)
+                    // thì vẫn tải lại sau 2s, đừng để danh sách đứng im mãi.
+                    setTimeout(function () {
+                        if (idenXong) return;
+                        idenXong = true;
+                        taiLaiDS();
+                    }, 2000);
                     // Tab 7 — ghi nhận nguồn khai thác SAU CÙNG. Chế độ Sửa đã biết sẵn
                     // Core_Person_Id của hồ sơ đang mở (lưu ở openSuaHoSo).
                     me.save_HoSoDoiTacTS(me.strSuaHoSo_CorePersonId || '');
@@ -3120,10 +3140,12 @@ KeHoachTuyenSinhNew.prototype = {
                             + me._addrWarnText(addrBlocks) + me._nguonWarnText()
                             + me._hoaDonWarnText() + txtDM, "s");
                         me._exitSuaMode();
-                        // Về lại screen list và refresh
+                        // Về lại screen list; việc tải lại do taiLaiDS lo — nó chờ cả
+                        // nhánh ghi CCCD xong mới gọi, tránh đọc phải dữ liệu cũ.
                         $('#kqdk_khai').addClass('d-none');
                         $('#kqdk_list').removeClass('d-none');
-                        me.loadKQDK_List();
+                        dmXong = true;
+                        taiLaiDS();
                     });
                 } else {
                     edu.system.alert("Sua_HoSo_TS: " + ((data && data.Message) || 'Lỗi'), "w");
@@ -7476,9 +7498,16 @@ KeHoachTuyenSinhNew.prototype = {
         return i.so ? i : null;
     },
 
-    save_PersonIden: function (personId, i) {
+    /*------------------------------------------
+    -- cb: gọi khi ĐÃ GHI XONG. Cần vì số CCCD hiển thị ở bảng danh sách lấy từ
+    -- PERSON_IDENTIFIER — do chính hàm này ghi, mà nó là chuỗi 2 bước (đọc rồi mới ghi).
+    -- Không chờ thì tải lại danh sách xong rồi nó mới ghi → bảng vẫn hiện số cũ,
+    -- phải F5 mới thấy (sếp Khoa báo 23/09/2026 khi sửa hàng loạt CCCD thiếu số 0).
+    -------------------------------------------*/
+    save_PersonIden: function (personId, i, cb) {
         var me = main_doc.KeHoachTuyenSinhNew;
-        if (!edu.util.checkValue(personId) || !i) return;
+        var xong = function () { if (typeof cb === 'function') cb(); };
+        if (!edu.util.checkValue(personId) || !i) { xong(); return; }
         me._ensureIdenTypeDM(function () {
             edu.system.makeRequest({
                 success: function (data) {
@@ -7493,9 +7522,9 @@ KeHoachTuyenSinhNew.prototype = {
                             strip(r.IDENTIFIER_TYPE_CODE_NAME || r.IDENTIFIER_TYPE_NAME));
                     })[0] || (rows || []).filter(function (r) { return r.IS_PRIMARY == 1; })[0]
                         || (rows || [])[0];
-                    me._writeIden(personId, i, old || null);
+                    me._writeIden(personId, i, old || null, cb);
                 },
-                error: function () { me._writeIden(personId, i, null); },
+                error: function () { me._writeIden(personId, i, null, cb); },
                 type: 'POST',
                 contentType: true,
                 action: me._ACTION_Iden_LayDS,
@@ -7512,13 +7541,14 @@ KeHoachTuyenSinhNew.prototype = {
         });
     },
 
-    _writeIden: function (personId, i, old) {
+    _writeIden: function (personId, i, old, cb) {
         var me = main_doc.KeHoachTuyenSinhNew;
+        var xong = function () { if (typeof cb === 'function') cb(); };
         var oldId = old ? me._pickLoose(old, ['ID', 'PERSON_IDENTIFIER_ID']) : '';
         var isUpd = edu.util.checkValue(oldId);
         // Sửa thì giữ nguyên loại giấy tờ của bản ghi cũ, khỏi phụ thuộc danh mục
         var typeId = (old && old.IDENTIFIER_TYPE_CODE) || me._idenTypeId();
-        if (!edu.util.checkValue(typeId)) return;
+        if (!edu.util.checkValue(typeId)) { xong(); return; }
         var payload = {
             'action': isUpd ? me._ACTION_Iden_Sua : me._ACTION_Iden_Them,
             'func': 'PKG_CORE_HOSONHANSU_05.' + (isUpd ? 'UpdatePersonIdentifier' : 'InsertPersonIdentifier'),
@@ -7537,8 +7567,10 @@ KeHoachTuyenSinhNew.prototype = {
         };
         if (isUpd) payload.strId = oldId;
         edu.system.makeRequest({
-            success: function () { },
-            error: function () { },
+            // Báo xong ở cả 2 nhánh: hỏng cũng phải tải lại danh sách, không thì
+            // màn hình treo ở trạng thái cũ mà người dùng không biết vì sao.
+            success: function () { xong(); },
+            error: function () { xong(); },
             type: 'POST',
             contentType: true,
             action: payload.action,
