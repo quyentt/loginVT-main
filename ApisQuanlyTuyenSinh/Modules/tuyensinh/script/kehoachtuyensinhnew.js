@@ -882,6 +882,10 @@ KeHoachTuyenSinhNew.prototype = {
         // Các mục khai không dùng tới → đóng sẵn, tích ô mới sổ ra
         me._initSectionToggle();
 
+        // Ô lịch hiện theo ngôn ngữ trình duyệt → in lại ngày theo dd/mm/yyyy cho chắc
+        me._bindNgayHienThi('txtKQ_NgaySinh', 'lblKQ_NgaySinh_VN');
+        me._bindNgayHienThi('txtKQ_NgayCapCCCD', 'lblKQ_NgayCapCCCD_VN');
+
         /*---- Tra cứu người học toàn hệ thống ----*/
         $('#btnTraCuuNguoiHoc').click(function () {
             // Danh mục Giới tính — hồ sơ tuyển sinh chỉ trả Id, cần bảng tra để ra chữ.
@@ -2542,7 +2546,8 @@ KeHoachTuyenSinhNew.prototype = {
         // thông tin hóa đơn sẽ để trống ô Họ tên người mua.
         // _loadPersonInvoice chạy sau sẽ ghi đè bằng tên đã lưu (nếu có).
         me._autoFillHoaDonTen();
-        $('#txtKQ_NgaySinh').val(ngaySinh);
+        // .trigger('change') để dòng "Ngày đã chọn: dd/mm/yyyy" dưới ô lịch cập nhật theo
+        $('#txtKQ_NgaySinh').val(ngaySinh).trigger('change');
         $('#txtKQ_DienThoai').val(pick(d, ['PERSONCONTACT_DIENTHOAI']));
         $('#txtKQ_Email').val(pick(d, ['PERSONCONTACT_EMAIL']));
         $('#txtKQ_SoCCCD').val(pick(d, ['PERSONIDEN_SOCCCD']));
@@ -5560,6 +5565,29 @@ KeHoachTuyenSinhNew.prototype = {
             me._autoFillHoaDonTen();
         });
         $('#txtKQ_HD_NguoiMua').off('.kqhdten').on('input.kqhdten', danhDau);
+    },
+
+    /*------------------------------------------
+    -- In lại ngày đã chọn theo dd/mm/yyyy ngay dưới ô lịch.
+    -- Lý do: <input type="date"> hiển thị theo NGÔN NGỮ TRÌNH DUYỆT, không theo định dạng
+    -- ngày của Windows — máy cài Chrome tiếng Anh ra mm/dd/yyyy dù Windows đã đổi sang
+    -- dd/MM/yyyy (khách báo 23/09/2026). Giá trị gửi đi luôn đúng, chỉ chỗ nhìn là dễ lẫn:
+    -- 09/07 không biết là 9 tháng 7 hay 7 tháng 9. Dòng này khử hẳn cái mơ hồ đó.
+    -------------------------------------------*/
+    _bindNgayHienThi: function (inputId, hintId) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var $in = $('#' + inputId), $hint = $('#' + hintId);
+        if (!$in.length || !$hint.length) return;
+        var ve = function () {
+            var v = me._ngaySinhToUI($in.val() || '');
+            $hint.html(v ? ('<i class="fa-light fa-calendar-check"></i> Ngày đã chọn: <b>' + v + '</b> (ngày/tháng/năm)') : '');
+        };
+        $in.off('.kqngay').on('input.kqngay change.kqngay', ve);
+        // Gọi luôn 1 lần cho trường hợp mở hồ sơ cũ (giá trị đổ bằng code, không có sự kiện)
+        ve();
+        // Và vài nhịp sau, vì các hàm nạp form chạy async
+        setTimeout(ve, 1200);
+        setTimeout(ve, 2400);
     },
 
     /*------------------------------------------
