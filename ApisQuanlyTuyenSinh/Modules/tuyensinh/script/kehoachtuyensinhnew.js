@@ -6841,6 +6841,81 @@ KeHoachTuyenSinhNew.prototype = {
         for (var i = 0; i < dropIds.length; i++) {
             me._applyKQSelect2(dropIds[i]);
         }
+        me._bindKQSelectKeyboard();
+    },
+
+    _bindKQSelectKeyboard: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (me._kqSelectKeyboardBound) return;
+        me._kqSelectKeyboardBound = true;
+
+        $(document).on('focusin.kqselecttypeahead', '#ket-qua-dk .select2-selection--single', function () {
+            var $select = $(this).closest('.select2-container').prev('select');
+            if (!$select.length || !$select.hasClass('select2-hidden-accessible')) return;
+            me._kqActiveSelect = $select[0];
+            if (!$('.select2-container--open').length) $select.select2('open');
+        });
+
+        var moveKQSelectFocus = function ($select, reverse) {
+            if (!$select.length) return false;
+
+            var $focusables = $('#kqdk_khai').find(
+                'input:not([type="hidden"]):not(:disabled), textarea:not(:disabled),'
+                + ' button:not(:disabled), .select2-selection--single'
+            ).filter(':visible').filter(function () {
+                return $(this).attr('tabindex') !== '-1';
+            });
+            var $selection = $select.nextAll('.select2-container').first().find('.select2-selection--single');
+            var index = $focusables.index($selection);
+            if (index < 0) return false;
+
+            var nextIndex = index + (reverse ? -1 : 1);
+            if (nextIndex < 0 || nextIndex >= $focusables.length) return false;
+
+            $select.select2('close');
+            $focusables.eq(nextIndex).trigger('focus');
+            return true;
+        };
+
+        $(document).on('keydown.kqselecttypeahead', '#ket-qua-dk .select2-search__field', function (e) {
+            if (e.key !== 'Tab') return;
+
+            var $select = $(me._kqActiveSelect);
+            if (!$select.length) return;
+            if (moveKQSelectFocus($select, e.shiftKey)) e.preventDefault();
+        });
+
+        $(document).on('keydown.kqselecttypeahead', '#ket-qua-dk .select2-selection--single', function (e) {
+            var $selection = $(this);
+            var $select = $selection.closest('.select2-container').prev('select');
+            if (!$select.length || !$select.hasClass('select2-hidden-accessible')) return;
+            me._kqActiveSelect = $select[0];
+
+            if (e.key === 'Tab') {
+                if (moveKQSelectFocus($select, e.shiftKey)) e.preventDefault();
+                return;
+            }
+            if (e.isComposing || e.ctrlKey || e.metaKey || e.altKey || !e.key || e.key.length !== 1) return;
+
+            var firstKey = e.key;
+            e.preventDefault();
+            $select.select2('open');
+
+            setTimeout(function () {
+                var $search = $('.select2-container--open .select2-search__field:visible').first();
+                if ($search.length) {
+                    $search.val(firstKey).trigger('input').focus();
+                    return;
+                }
+
+                var needle = firstKey.toLocaleLowerCase();
+                var $match = $select.find('option').filter(function () {
+                    var text = ($(this).text() || '').trim().toLocaleLowerCase();
+                    return $(this).val() !== '' && (text.indexOf(needle) === 0 || text.indexOf(needle) >= 0);
+                }).first();
+                if ($match.length) $select.val($match.val()).trigger('change');
+            }, 0);
+        });
     },
 
     /*------------------------------------------
