@@ -1700,8 +1700,12 @@
     /* Dòng in lại ngày đã chọn theo dd/mm/yyyy, đặt dưới ô lịch.
        Cần vì ô <input type="date"> hiển thị theo ngôn ngữ trình duyệt: máy cài Chrome
        tiếng Anh thì ra mm/dd/yyyy dù Windows đã để dd/MM/yyyy. */
-    .kq-ngay-hint { margin-top:5px; font-size:12.5px; color:#475569; line-height:1.4; min-height:17px; }
-    .kq-ngay-hint b { color:#0f172a; }
+    /* Ô lịch + chữ nhắc ngày nằm CÙNG MỘT HÀNG. Để chữ xuống dòng là ô này cao hơn
+       các ô cùng hàng, kéo lệch cả lưới — chỗ trống theo chiều ngang thì còn nhiều. */
+    .kq-ngay-wrap { display:flex; align-items:center; gap:8px; min-width:0; }
+    .kq-ngay-wrap > .aps-sv-input { flex:1 1 auto; min-width:0; }
+    .kq-ngay-hint { flex:0 0 auto; font-size:12px; color:#64748b; white-space:nowrap; }
+    .kq-ngay-hint b { color:#0f172a; font-weight:600; }
 
     /* Badge kế hoạch + đợt cạnh tiêu đề modal Kết quả đăng ký.
        Nền sáng trên header xanh đậm để đọc được, và tách hẳn khỏi chữ tiêu đề. */
@@ -2375,12 +2379,16 @@
                                             <!-- type=date giống ô "Ngày cấp" bên CCCD (yêu cầu sếp Khoa 22/09/2026):
                                                  có lịch bấm chọn, khỏi gõ tay. Ô này trả giá trị ISO yyyy-mm-dd, trong khi
                                                  BE nhận dd/mm/yyyy → mọi chỗ đọc/ghi phải đi qua _ngaySinhToUI / _ngaySinhToISO. -->
-                                            <input type="date" class="aps-sv-input" id="txtKQ_NgaySinh">
-                                            <!-- Ô lịch hiển thị theo NGÔN NGỮ TRÌNH DUYỆT (máy tiếng Anh
-                                                 sẽ ra mm/dd/yyyy) chứ không theo định dạng ngày của Windows.
-                                                 Dòng này in lại ngày đã chọn theo dd/mm/yyyy để khỏi đọc nhầm.
+                                            <!-- Ô lịch hiển thị theo NGÔN NGỮ TRÌNH BUYỆT (máy tiếng Anh
+                                                 ra mm/dd/yyyy) chứ không theo định dạng ngày của Windows.
+                                                 Chữ bên phải in lại ngày theo dd/mm/yyyy để khỏi đọc nhầm.
+                                                 ⚠ Phải nằm CÙNG HÀNG với ô nhập: để xuống dòng thì ô này
+                                                 cao hơn các ô khác, cả hàng lệch hẳn đi (sếp Khoa 24/09/2026).
                                                  Xem _bindNgayHienThi. -->
-                                            <div class="kq-ngay-hint" id="lblKQ_NgaySinh_VN"></div>
+                                            <div class="kq-ngay-wrap">
+                                                <input type="date" class="aps-sv-input" id="txtKQ_NgaySinh">
+                                                <span class="kq-ngay-hint" id="lblKQ_NgaySinh_VN"></span>
+                                            </div>
                                         </div>
                                         <div class="aps-sv-field">
                                             <label class="aps-sv-label">Giới tính <span class="aps-sv-req">*</span></label>
@@ -2470,8 +2478,10 @@
                                         </div>
                                         <div class="aps-sv-field">
                                             <label class="aps-sv-label">Ngày / tháng / năm cấp</label>
-                                            <input type="date" class="aps-sv-input" id="txtKQ_NgayCapCCCD">
-                                            <div class="kq-ngay-hint" id="lblKQ_NgayCapCCCD_VN"></div>
+                                            <div class="kq-ngay-wrap">
+                                                <input type="date" class="aps-sv-input" id="txtKQ_NgayCapCCCD">
+                                                <span class="kq-ngay-hint" id="lblKQ_NgayCapCCCD_VN"></span>
+                                            </div>
                                         </div>
                                         <div class="aps-sv-field aps-sv-col-full">
                                             <label class="aps-sv-label">Nơi cấp</label>
@@ -3532,7 +3542,7 @@
         tryNext();
     })();
 </script>
-<script src="modules/tuyensinh/script/kehoachtuyensinhnew.js?v=1.0.12.1"></script>
+<script src="modules/tuyensinh/script/kehoachtuyensinhnew.js?v=1.0.12.2"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['KeHoachTuyenSinhNew'] = new KeHoachTuyenSinhNew();

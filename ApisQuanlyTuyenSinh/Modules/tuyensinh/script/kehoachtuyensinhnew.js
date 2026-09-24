@@ -5956,7 +5956,9 @@ KeHoachTuyenSinhNew.prototype = {
         if (!$in.length || !$hint.length) return;
         var ve = function () {
             var v = me._ngaySinhToUI($in.val() || '');
-            $hint.html(v ? ('<i class="fa-light fa-calendar-check"></i> Ngày đã chọn: <b>' + v + '</b> (ngày/tháng/năm)') : '');
+            // Gọn trong một dòng: dài quá là ô nhập bị bóp lại, mà chỗ cần đọc chỉ là con số
+            $hint.attr('title', v ? ('Ngày đã chọn: ' + v + ' (ngày/tháng/năm)') : '')
+                .html(v ? ('<b>' + v + '</b>') : '');
         };
         $in.off('.kqngay').on('input.kqngay change.kqngay', ve);
         // Gọi luôn 1 lần cho trường hợp mở hồ sơ cũ (giá trị đổ bằng code, không có sự kiện)
