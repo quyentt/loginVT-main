@@ -3429,10 +3429,10 @@
                 <div class="d-flex align-items-end flex-wrap mb-15" style="gap:12px;">
                     <div style="flex:1; min-width:280px; max-width:460px;">
                         <label style="display:block;font-size:12.5px;font-weight:700;color:#334155;margin-bottom:4px;">
-                            Họ tên / Số CCCD / Mã hồ sơ / Mã sinh viên
+                            Họ tên / Số CCCD / Mã hồ sơ / Mã sinh viên / Mã lớp quản lý
                         </label>
                         <input id="txtTraCuu_TuKhoa" class="form-control" style="height:40px;font-weight:600;color:#0f172a;"
-                               placeholder="VD: Nguyễn Khoa Vinh  —  hoặc  046211014012">
+                               placeholder="VD: Nguyễn Khoa Vinh — 046211014012 — 66CCK2_VLVH">
                     </div>
                     <div style="width:190px;">
                         <label style="display:block;font-size:12.5px;font-weight:700;color:#334155;margin-bottom:4px;">
@@ -3454,6 +3454,7 @@
                     <b>“Đang ở đâu”</b> cho biết em đó còn ở tuyển sinh (kế hoạch nào, đợt nào) hay
                     đã sang người học (hệ, khóa, lớp). Một em có thể hiện <b>nhiều dòng</b> nếu nộp
                     nhiều nguyện vọng hoặc đã học ở nhiều ngành.
+                    Gõ <b>mã lớp quản lý</b> thì ra <b>cả lớp</b> (tối đa 3 lớp khớp nhất).
                 </div>
 
                 <div class="table-responsive" style="max-height:calc(100vh - 300px);overflow:auto;">
@@ -3467,16 +3468,42 @@
                                 <th style="width:140px;text-align:center;">Số CCCD</th>
                                 <th style="width:120px;text-align:center;">Điện thoại</th>
                                 <th style="min-width:330px;">Đang ở đâu</th>
+                                <!-- Lớp quản lý tách cột riêng (sếp Khoa 24/09/2026): hồ sơ tuyển sinh
+                                     chưa có lớp, lớp chỉ sinh ra sau khi phân lớp bên người học —
+                                     nên phải tra chéo theo người, xem _tcRender. -->
+                                <th style="width:150px;text-align:center;">Lớp quản lý</th>
                                 <th style="width:150px;text-align:center;">Trạng thái</th>
                                 <th style="width:120px;text-align:center;">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr><td colspan="9" class="text-center text-muted" style="padding:26px;">
+                            <tr><td colspan="10" class="text-center text-muted" style="padding:26px;">
                                 Nhập họ tên hoặc số CCCD rồi bấm <b>Tra cứu</b>.
                             </td></tr>
                         </tbody>
                     </table>
+                </div>
+
+                <!-- Phân trang: kết quả tra theo lớp có thể lên vài trăm dòng, đổ hết một
+                     lượt là cuộn mỏi tay và trình duyệt ì. Cắt trang ngay tại chỗ vì dữ
+                     liệu đã nằm sẵn trong bộ nhớ, không phải hỏi lại hệ thống. -->
+                <div id="tcPagerWrap" class="d-none d-flex align-items-center flex-wrap"
+                     style="gap:10px; margin-top:12px; font-size:13px;">
+                    <span>Hiển thị</span>
+                    <select id="ddlTraCuu_PageSize" class="form-control" style="width:auto; height:34px; padding:3px 8px;">
+                        <option value="25">25</option>
+                        <option value="50" selected>50</option>
+                        <option value="100">100</option>
+                        <option value="500">500</option>
+                    </select>
+                    <span>dòng/trang</span>
+                    <span style="margin-left:auto;"></span>
+                    <button type="button" id="btnTraCuu_First" class="btn btn-default" style="height:34px;">«</button>
+                    <button type="button" id="btnTraCuu_Prev" class="btn btn-default" style="height:34px;">‹</button>
+                    <span>Trang <b id="lblTraCuu_Page">1</b> / <b id="lblTraCuu_PageTotal">1</b></span>
+                    <button type="button" id="btnTraCuu_Next" class="btn btn-default" style="height:34px;">›</button>
+                    <button type="button" id="btnTraCuu_Last" class="btn btn-default" style="height:34px;">»</button>
+                    <span class="text-muted" id="lblTraCuu_Range" style="margin-left:8px;"></span>
                 </div>
             </div>
         </div>
@@ -3505,7 +3532,7 @@
         tryNext();
     })();
 </script>
-<script src="modules/tuyensinh/script/kehoachtuyensinhnew.js?v=1.0.11.1"></script>
+<script src="modules/tuyensinh/script/kehoachtuyensinhnew.js?v=1.0.12.1"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['KeHoachTuyenSinhNew'] = new KeHoachTuyenSinhNew();
