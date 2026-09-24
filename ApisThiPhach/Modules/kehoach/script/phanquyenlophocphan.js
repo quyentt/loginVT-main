@@ -1755,8 +1755,8 @@ LopHocPhan.prototype = {
     saveHuyTaoDanhSachNhapDiem: function (strDaoTao_LopHocPhan_Id) {
         var me = this;
         var obj_save = {
-            'action': 'D_PhanQuyen_MH/FSAuBTQNKCQ0DykgMQUoJCwP',
-            'func': 'PKG_DIEM_PHANQUYEN.HuyTaoDuLieuNhapDiem',
+			'action': 'D_PhanQuyen_MH/CTQ4FSAuBTQNKCQ0DykgMQUoJCwP',
+			'func': 'PKG_DIEM_PHANQUYEN.HuyTaoDuLieuNhapDiem',
             'iM': edu.system.iM,
             'strDaoTao_LopHocPhan_Id': strDaoTao_LopHocPhan_Id,
             'strNguoiThucHien_Id': edu.system.userId,
