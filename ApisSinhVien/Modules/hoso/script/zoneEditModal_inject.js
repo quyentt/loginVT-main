@@ -1795,9 +1795,17 @@ if (typeof edu !== 'undefined' && edu.system && edu.system.makeRequest && !edu.s
                                                 if (dx2 && d2.Id && /Them_/.test(f)) dx2._currentInvoiceId = d2.Id;
                                                 if (typeof window._zeXoaLoiLuu === 'function') window._zeXoaLoiLuu();
                                             } else {
-                                                _zeHienLoi('Chưa lưu được Thông tin hoá đơn: '
-                                                    + (((d2 && d2.Message) || '').trim() || 'máy chủ từ chối, không kèm lý do')
-                                                    + '  (đã thử cả hai kiểu giá trị cho Đối tượng xuất hoá đơn)', null);
+                                                /*------------------------------------------
+                                                -- Cả hai kiểu đều bị từ chối = máy chủ không biết mục
+                                                -- đang chọn trong danh mục Đối tượng xuất hoá đơn. Ghi rõ
+                                                -- mục nào để người dùng đổi sang mục khác, và để bên máy
+                                                -- chủ biết cần bổ sung mã nào (23/09/2026).
+                                                -------------------------------------------*/
+                                                _zeHienLoi('Chưa lưu được Thông tin hoá đơn: máy chủ không chấp nhận mục'
+                                                    + ' "' + (_zeDoiTuongTheoKieu('ma') || dangGui) + '"'
+                                                    + ' ở ô Đối tượng xuất hoá đơn (đã thử cả mã chữ lẫn mã danh mục).'
+                                                    + ' Vui lòng chọn mục khác — thường chỉ CA_NHAN và TO_CHUC được chấp nhận.'
+                                                    + '  [' + (((d2 && d2.Message) || '').trim() || 'không kèm lý do') + ']', null);
                                             }
                                         },
                                         error: function (er) { console.warn('[ZE Hoá đơn] thử lại lỗi:', er); },
