@@ -1,9 +1,11 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="index.aspx.cs" Inherits="Apis.LoginVT.Index" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="index.aspx.cs" Inherits="Apis.LoginVT.Index" ResponseEncoding="utf-8" ContentType="text/html" %>
+<% Response.Charset = "utf-8"; Response.ContentEncoding = System.Text.Encoding.UTF8; %>
   <!DOCTYPE html>
   <html lang="en">
 
   <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Force light color scheme — chan browser tu dong invert / doi mau khi user OS o
@@ -20,21 +22,32 @@
       /* Force light color scheme — bao hiem tren nhung browser bo qua meta color-scheme.
          Ep form controls (input/select/scrollbar) render theo light theme + tat outline
          mac dinh mau do/hong tren dark OS. */
-      html, :root {
+      html,
+      :root {
         color-scheme: light only !important;
         forced-color-adjust: none;
       }
+
       /* Ap dung forced-color-adjust cho MOI element de chan Windows High Contrast Mode +
          Chrome dark theme adjustments tu do bien viet ve tren border/outline. */
-      *, *::before, *::after {
+      *,
+      *::before,
+      *::after {
         forced-color-adjust: none !important;
       }
-      input, select, textarea, button {
+
+      input,
+      select,
+      textarea,
+      button {
         color-scheme: light !important;
       }
-      *:focus, *:focus-visible {
+
+      *:focus,
+      *:focus-visible {
         outline-color: #223771 !important;
       }
+
       /* Sidebar: bulletproof — chan MOI kha nang browser inject vien do (High Contrast
          Mode, Chrome dark focus outline, extensions, autofill highlight...). Force outline
          va box-shadow ve 0/tone chinh, khong cho browser tu quyet dinh mau focus. */
@@ -47,6 +60,7 @@
         forced-color-adjust: none !important;
         -webkit-tap-highlight-color: transparent !important;
       }
+
       .left-sidebar *:focus,
       .left-sidebar *:focus-visible,
       .left-sidebar *:active,
@@ -62,11 +76,13 @@
         box-shadow: none !important;
         border-color: transparent !important;
       }
+
       /* Focus visible: khong dung outline vien cam (xau) — chi doi mau chu */
       .sidebar-menu-sub a:focus-visible {
         outline: none !important;
         color: #f8843d !important;
       }
+
       /* FCM header notifications: layout only (no new colors) */
       #fcm-noti-button {
         position: relative;
@@ -90,7 +106,10 @@
         font-weight: 600;
       }
 
-      .head-search-box { position: relative; }
+      .head-search-box {
+        position: relative;
+      }
+
       .search-suggestions {
         position: absolute;
         top: 100%;
@@ -99,7 +118,7 @@
         background: #fff;
         border: 1px solid #e3e6ef;
         border-radius: 6px;
-        box-shadow: 0 6px 20px rgba(0,0,0,.12);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, .12);
         margin-top: 4px;
         max-height: 360px;
         overflow-y: auto;
@@ -108,7 +127,11 @@
         padding: 4px 0;
         list-style: none;
       }
-      .search-suggestions.show { display: block; }
+
+      .search-suggestions.show {
+        display: block;
+      }
+
       .search-suggestions li {
         padding: 8px 14px;
         cursor: pointer;
@@ -118,14 +141,25 @@
         align-items: center;
         gap: 8px;
       }
+
       .search-suggestions li:hover,
-      .search-suggestions li.active { background: #f1f5ff; color: #1967d2; }
-      .search-suggestions li i { color: #1967d2; width: 16px; text-align: center; }
+      .search-suggestions li.active {
+        background: #f1f5ff;
+        color: #1967d2;
+      }
+
+      .search-suggestions li i {
+        color: #1967d2;
+        width: 16px;
+        text-align: center;
+      }
+
       .search-suggestions li .parent {
         margin-left: auto;
         font-size: 12px;
         color: #8a8f99;
       }
+
       .search-suggestions .empty {
         padding: 10px 14px;
         color: #8a8f99;
@@ -140,17 +174,20 @@
         margin-top: 0 !important;
         padding: 20px 25px 25px;
       }
+
       .dashboard-content .quick-action .welcome {
         color: #64748b;
         font-style: italic;
         font-size: 14px;
         padding-top: 0;
       }
+
       .dashboard-content .quick-action .welcome strong {
         font-weight: 700;
         font-style: normal;
         color: #223771;
       }
+
       .dashboard-content .quick-action .quick-acction-title {
         color: #0f172a !important;
         font-size: 22px;
@@ -164,6 +201,7 @@
         gap: 16px;
         margin-bottom: 12px;
       }
+
       .role-picker-search {
         position: relative;
         flex: 1;
@@ -175,9 +213,11 @@
         align-items: center;
         transition: border-color .2s ease, box-shadow .2s ease;
       }
+
       .role-picker-search:focus-within {
         border-color: #cbd5e1;
       }
+
       /* Ghi đè global input:focus trong all.css/bootstrap để không vẽ viền màu quanh input */
       .role-picker-search input,
       .role-picker-search input:focus,
@@ -188,7 +228,8 @@
         box-shadow: none !important;
         border-color: transparent !important;
       }
-      .role-picker-search > .fa-search {
+
+      .role-picker-search>.fa-search {
         position: absolute;
         left: 16px;
         top: 50%;
@@ -197,6 +238,7 @@
         font-size: 14px;
         pointer-events: none;
       }
+
       .role-picker-search input {
         flex: 1;
         height: 100%;
@@ -207,7 +249,11 @@
         font-size: 14px;
         color: #0f172a;
       }
-      .role-picker-search input::placeholder { color: #94a3b8; }
+
+      .role-picker-search input::placeholder {
+        color: #94a3b8;
+      }
+
       .role-picker-clear {
         position: absolute;
         right: 8px;
@@ -224,8 +270,16 @@
         justify-content: center;
         cursor: pointer;
       }
-      .role-picker-clear.show { display: flex; }
-      .role-picker-clear:hover { background: #e2e8f0; color: #0f172a; }
+
+      .role-picker-clear.show {
+        display: flex;
+      }
+
+      .role-picker-clear:hover {
+        background: #e2e8f0;
+        color: #0f172a;
+      }
+
       .role-picker-counter {
         font-size: 13px;
         font-weight: 600;
@@ -239,6 +293,7 @@
         gap: 8px;
         margin-bottom: 20px;
       }
+
       .role-chip {
         display: inline-flex;
         align-items: center;
@@ -253,13 +308,18 @@
         cursor: pointer;
         transition: all .15s ease;
       }
-      .role-chip:hover { border-color:var(--color-blue); 
-      color:var(--color-blue) ;}
+
+      .role-chip:hover {
+        border-color: var(--color-blue);
+        color: var(--color-blue);
+      }
+
       .role-chip.active {
-        background:var(--color-blue);
-        border-color:var(--color-blue);
+        background: var(--color-blue);
+        border-color: var(--color-blue);
         color: #fff;
       }
+
       .role-chip-count {
         display: inline-flex;
         align-items: center;
@@ -274,6 +334,7 @@
         font-weight: 600;
         line-height: 1;
       }
+
       .role-chip.active .role-chip-count {
         background: rgba(255, 255, 255, .2);
         color: #fff;
@@ -285,10 +346,16 @@
         margin: 0 !important;
         gap: 0;
       }
-      /* Ẩn cho tới khi role picker render xong (tránh flash tile cũ) */
-      #zonedashbroad:not(.role-picker-ready) { visibility: hidden; }
 
-      .role-group + .role-group { margin-top: 22px; }
+      /* Ẩn cho tới khi role picker render xong (tránh flash tile cũ) */
+      #zonedashbroad:not(.role-picker-ready) {
+        visibility: hidden;
+      }
+
+      .role-group+.role-group {
+        margin-top: 22px;
+      }
+
       .role-group-title {
         font-family: Arial, Helvetica, sans-serif !important;
         display: flex;
@@ -299,71 +366,92 @@
         font-weight: 700;
         color: #0f172a;
       }
+
       .role-group-count {
         font-weight: 600;
         color: #64748b;
         font-size: 13px;
       }
+
+      /* ─── Role grid: auto-fill min 200px → tự co số cột theo màn hình ─── */
       .role-grid {
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
         gap: 12px;
       }
-      @media (min-width: 640px)  { .role-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-      @media (min-width: 1024px) { .role-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-      @media (min-width: 1280px) { .role-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
 
+      /* ─── Role card: layout ngang chuyên nghiệp ─── */
       .role-card {
         display: flex !important;
-        flex-direction: column;
-        gap: 12px;
-        padding: 14px;
-        border: 1px solid #e2e8f0;
-        background: #fff;
-        border-radius: 12px;
-        transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
-        min-height: 90px;
+        flex-direction: row;
+        align-items: center;
+        gap: 13px;
+        padding: 14px 16px;
+        border: 1px solid #e8edf5;
+        background: #ffffff;
+        border-radius: 14px;
+        box-shadow: 0 1px 4px rgba(15, 23, 42, .06), 0 0 0 0 transparent;
+        transition: transform .22s cubic-bezier(.4,0,.2,1),
+                    box-shadow .22s ease,
+                    border-color .18s ease;
+        min-height: 76px;
         width: auto !important;
         height: auto !important;
         cursor: pointer;
       }
+
       .role-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 18px rgba(15, 23, 42, .08);
-        border-color: #cbd5e1;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 28px rgba(34, 55, 113, .13), 0 2px 6px rgba(15, 23, 42, .05);
+        border-color: #c7d2fe;
       }
+
       .role-card-head {
         display: flex;
-        align-items: flex-start;
-        /* justify-content: space-between; */
-        gap: 10px;
+        align-items: center;
+        gap: 13px;
+        width: 100%;
       }
+
       .role-card-icon {
         display: grid;
         place-items: center;
-        width: 60px;
-        height: 60px;
-        border-radius: 12px;
-        font-size: 28px;
+        width: 46px;
+        height: 46px;
+        min-width: 46px;
+        border-radius: 11px;
+        font-size: 20px;
         flex-shrink: 0;
-        font-weight: 700 !important;
       }
-      .role-card-icon i{
-        font-size: 28px;
-        /* font-weight: 700 !important; */
+
+      .role-card-icon i {
+        font-size: 20px;
       }
+
+      /* Vùng text bên phải icon */
+      .role-card-right {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
       .role-card-badge {
-        padding: 3px 8px;
+        padding: 2px 8px;
         border-radius: 999px;
-        font-size: 11px;
-        font-weight: 700;
+        font-size: 10.5px;
+        font-weight: 600;
         white-space: nowrap;
+        display: inline-block;
+        width: fit-content;
       }
+
       .role-card-name {
-        font-size: 15px;
+        font-size: 13.5px;
         font-weight: 700;
         color: #0f172a;
-        line-height: 1.35;
+        line-height: 1.42;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         line-clamp: 2;
@@ -371,6 +459,7 @@
         overflow: hidden;
         margin: 0;
       }
+
       .role-empty {
         padding: 40px 20px;
         text-align: center;
@@ -384,34 +473,47 @@
 
       /* ─── Reskin header + sidebar theo tone NewUI (dask-blue #223771 + orange #f8843d) ─── */
       /* Header top nav dùng --color-link (#2563EB) mặc định → đổi sang dask-blue */
-      .top-nav { background: #223771 !important; }
+      .top-nav {
+        background: #223771 !important;
+      }
 
       /* Sidebar: nền dask-blue, chữ light-blue, active/hover accent orange */
       .left-sidebar {
         background: #223771 !important;
         box-shadow: none !important;
       }
-      .left-sidebar a:hover { color: #ffffff !important; background: rgba(255, 255, 255, 0.1) !important;}
-      .left-sidebar a:hover .item-icon { color: #ffffff !important; }
+
+      .left-sidebar a:hover {
+        color: #ffffff !important;
+        background: rgba(255, 255, 255, 0.1) !important;
+      }
+
+      .left-sidebar a:hover .item-icon {
+        color: #ffffff !important;
+      }
 
       .sidebar-menu-header {
         color: #ffffff !important;
         background: transparent !important;
         font-weight: 500 !important;
       }
+
       .sidebar-menu-header .item-icon,
       .sidebar-menu-item.sidebar-menu-home .sidebar-menu-header i {
         color: #ffffff !important;
       }
+
       .sidebar-menu-item.sidebar-menu-home .sidebar-menu-header {
         color: #ffffff !important;
       }
+
       .sidebar-menu-header:not(.collapsed):hover,
       .sidebar-menu-item.sidebar-menu-home .sidebar-menu-header:hover {
         color: #ffffff !important;
         /* background: rgba(255, 255, 255, 0.1) !important; */
         background-color: var(--color-blue);
       }
+
       .sidebar-menu-header:not(.collapsed):hover i,
       .sidebar-menu-header:not(.collapsed):hover .item-icon {
         color: #ffffff !important;
@@ -422,6 +524,7 @@
         color: #fff !important;
         font-weight: 700 !important;
       }
+
       .sidebar-menu-item.active .sidebar-menu-header .item-icon,
       .sidebar-menu-item.active .sidebar-menu-header i {
         color: #fff !important;
@@ -439,6 +542,7 @@
         color-scheme: light only !important;
         forced-color-adjust: none !important;
       }
+
       html body #sidebar-menu .sidebar-menu-item .sidebar-menu-sub,
       html body #sidebar-menu .sidebar-menu-item .sidebar-menu-sub.collapse,
       html body #sidebar-menu .sidebar-menu-item .sidebar-menu-sub.show,
@@ -458,18 +562,20 @@
         margin-top: 5px !important;
         box-shadow: none !important;
       }
+
       html body #sidebar-menu .sidebar-menu-sub a,
       html body #sidebar-menu .sidebar-menu-sub a:link,
       html body #sidebar-menu .sidebar-menu-sub a:visited,
       html body #sidebar-menu .sidebar-menu-sub a span,
       .sidebar-menu-sub a {
-        color: #ffffff ;
+        color: #ffffff;
         font-weight: 500 !important;
         background: transparent !important;
         background-color: transparent !important;
         border-left-color: #5a7adb !important;
         text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
       }
+
       .sidebar-menu-sub a:hover,
       .sidebar-menu-sub a.active {
         color: #f8843d !important;
@@ -478,10 +584,12 @@
         outline: none !important;
         box-shadow: none !important;
       }
+
       .sidebar-menu-sub a::before,
       .sidebar-menu-sub a::after {
         background-color: #5a7adb !important;
       }
+
       .sidebar-menu-sub a:hover::before,
       .sidebar-menu-sub a:hover::after,
       .sidebar-menu-sub a.active::before,
@@ -494,6 +602,7 @@
       .main-wrap {
         background-color: #223771 !important;
       }
+
       /* Main content: nền light-gray + bo góc trái trên tiếp giáp sidebar.
          overflow-y auto để scroll dọc được (main-wrap = 100vh, content dài hơn thì scroll).
          overflow-x hidden để nội dung không tràn ra ngoài góc bo top-left 16px. */
@@ -506,7 +615,9 @@
 
       /* Header controls: chữ menu + bell trắng, tránh bị var(--color-*) đè */
       .top-nav .sidebar-bars,
-      .top-nav .sidebar-bars span { color: #ffffff !important; }
+      .top-nav .sidebar-bars span {
+        color: #ffffff !important;
+      }
 
       /* ─── [SPA-MODULE-TONE] Đồng bộ tone module SPA-native (load trong index.aspx)
          với reskin dask-blue + orange. Không đụng assets/css-new (file share). ─── */
@@ -520,6 +631,7 @@
         box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06) !important;
         background: #ffffff !important;
       }
+
       /* Bỏ hiệu ứng "double layer" ::before của .today-card (nhìn dơ trên UI mới) */
       #main-content-wrapper .card.today-card::before,
       #main-content-wrapper .today-card::before {
@@ -527,8 +639,8 @@
       }
 
       /* Card body có padding rõ + tách khối với header */
-      #main-content-wrapper .card.today-card > .card-body,
-      #main-content-wrapper .today-card > .card-body {
+      #main-content-wrapper .card.today-card>.card-body,
+      #main-content-wrapper .today-card>.card-body {
         padding: 16px 18px !important;
         background: #ffffff !important;
         border-bottom-right-radius: 12px;
@@ -537,43 +649,49 @@
 
       /* Card header: css-new/main.css:329 set background: var(--color-link) = #2563EB xanh
          Bootstrap. Override về dask-blue để khớp header shell + reskin indexi. */
-      #main-content-wrapper .card.today-card > .card-header,
-      #main-content-wrapper .today-card-1 > .card-header,
-      #main-content-wrapper .today-card-2 > .card-header,
-      #main-content-wrapper .today-card-3 > .card-header {
-        background: #223771 ;
+      #main-content-wrapper .card.today-card>.card-header,
+      #main-content-wrapper .today-card-1>.card-header,
+      #main-content-wrapper .today-card-2>.card-header,
+      #main-content-wrapper .today-card-3>.card-header {
+        background: #223771;
         border: 0 !important;
         border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         padding: 0 18px !important;
         margin-bottom: -1px;
       }
+
       /* Card title (không phải tab) → trắng */
-      #main-content-wrapper .today-card > .card-header .title .feature-name {
+      #main-content-wrapper .today-card>.card-header .title .feature-name {
         color: #ffffff !important;
       }
+
       /* Tab inactive (chưa chọn): text trắng mờ trên nền dask-blue */
-      #main-content-wrapper .today-card > .card-header .myTab-header-link,
-      #main-content-wrapper .today-card > .card-header .myTab-header-link i {
+      #main-content-wrapper .today-card>.card-header .myTab-header-link,
+      #main-content-wrapper .today-card>.card-header .myTab-header-link i {
         color: rgba(255, 255, 255, 0.85);
       }
-      #main-content-wrapper .today-card > .card-header .myTab-header-link:hover,
-      #main-content-wrapper .today-card > .card-header .myTab-header-link:hover i {
+
+      #main-content-wrapper .today-card>.card-header .myTab-header-link:hover,
+      #main-content-wrapper .today-card>.card-header .myTab-header-link:hover i {
         color: #ffffff;
       }
+
       /* Tab active: pill trắng bg (giữ design gốc css-new/main.css:1650) + text
          dask-blue + icon cam accent */
-      #main-content-wrapper .today-card > .card-header .myTab-header-link.active {
+      #main-content-wrapper .today-card>.card-header .myTab-header-link.active {
         background: #ffffff !important;
         color: #223771;
         font-weight: 700 !important;
       }
-      #main-content-wrapper .today-card > .card-header .myTab-header-link.active i {
+
+      #main-content-wrapper .today-card>.card-header .myTab-header-link.active i {
         color: #223771;
         font-weight: 700;
       }
+
       /* Icon frame trong card header (today-card-1 gradient xanh) → tone dask-blue */
-      #main-content-wrapper .today-card-1 > .card-header .icon,
-      #main-content-wrapper .today-card > .card-header .title .icon {
+      #main-content-wrapper .today-card-1>.card-header .icon,
+      #main-content-wrapper .today-card>.card-header .title .icon {
         background: rgba(255, 255, 255, 0.18) !important;
         background-image: none !important;
         color: #ffffff !important;
@@ -596,6 +714,7 @@
         color: #ffffff !important;
         font-weight: 500 !important;
       }
+
       #main-content-wrapper .btn.btn-view:hover,
       #main-content-wrapper .btn.btn-link:hover,
       #main-content-wrapper .btn.btn-save:hover,
@@ -612,6 +731,7 @@
         border-color: #223771 !important;
         background: transparent !important;
       }
+
       #main-content-wrapper .btn.btn-outline-primary:hover {
         background: #223771 !important;
         color: #ffffff !important;
@@ -619,7 +739,7 @@
       }
 
       /* Table header .bg-th trong SPA-native → nền tím nhạt khớp indexi reskin */
-      #main-content-wrapper .table > thead > tr > th.bg-th,
+      #main-content-wrapper .table>thead>tr>th.bg-th,
       #main-content-wrapper .table .bg-th {
         background: #f0f3fd !important;
         color: #222 !important;
@@ -631,6 +751,7 @@
       #main-content-wrapper .content-tab .nav-content-left .link a {
         color: #64748b !important;
       }
+
       #main-content-wrapper .content-tab .nav-content-left .link i {
         color: #94a3b8 !important;
         margin: 5px 0px;
@@ -650,16 +771,19 @@
         transition: border-color .15s ease, box-shadow .15s ease !important;
         box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
       }
+
       /* Focus state: viền dask-blue + shadow ring xanh nhạt */
       #main-content-wrapper .select2-container--focus .select2-selection--single,
       #main-content-wrapper .select2-container--open .select2-selection--single {
         border-color: #d1d1d1 !important;
         box-shadow: 0 0 0 3px rgba(34, 55, 113, 0.12) !important;
       }
+
       /* Hover state: viền đậm hơn 1 chút */
       #main-content-wrapper .select2-container .select2-selection--single:hover {
         border-color: #94a3b8 !important;
       }
+
       /* Text render — center dọc bằng flex, KHÔNG dùng line-height (gây lệch) */
       #main-content-wrapper .select2-container--default .select2-selection--single .select2-selection__rendered {
         line-height: 1 !important;
@@ -673,6 +797,7 @@
         height: 100% !important;
         margin: 0 !important;
       }
+
       /* Placeholder select2 — đậm hơn cho dễ nhìn (user global request) */
       #main-content-wrapper .select2-container--default .select2-selection--single .select2-selection__placeholder {
         color: #64748b !important;
@@ -680,6 +805,7 @@
         font-style: normal !important;
         opacity: 1 !important;
       }
+
       /* Placeholder input/textarea — global đậm hơn */
       #main-content-wrapper input.form-control::placeholder,
       #main-content-wrapper input::placeholder,
@@ -688,6 +814,7 @@
         color: #64748b !important;
         opacity: 1 !important;
       }
+
       /* Text đã nhập trong input/select đậm hơn */
       #main-content-wrapper input.form-control,
       #main-content-wrapper select.form-control,
@@ -695,6 +822,7 @@
         color: #0f172a !important;
         font-weight: 500 !important;
       }
+
       /* Mũi tên: căn giữa dọc, cách viền phải 8px */
       #main-content-wrapper .select2-container--default .select2-selection--single .select2-selection__arrow {
         height: 100% !important;
@@ -705,23 +833,27 @@
         align-items: center !important;
         justify-content: center !important;
       }
+
       #main-content-wrapper .select2-container--default .select2-selection--single .select2-selection__arrow b {
         border-color: #d1d1d1 transparent transparent transparent !important;
         border-width: 5px 5px 0 5px !important;
         position: static !important;
         margin: 0 !important;
       }
+
       #main-content-wrapper .select2-container--open .select2-selection__arrow b {
         border-color: transparent transparent #d1d1d1 transparent !important;
         border-width: 0 5px 6px 5px !important;
       }
+
       /* Dropdown khi mở — max spec + shadow to + border đậm để dropdown "nhảy ra"
          hoàn toàn khỏi container. Bố cục shadow 3 lớp cho depth chuẩn. */
       html body .select2-container,
-      html body > .select2-container,
+      html body>.select2-container,
       html body .select2-container--default .select2-dropdown {
         z-index: 99999 !important;
       }
+
       html body .select2-container--default .select2-dropdown {
         border: 2px solid #223771 !important;
         border-radius: 10px !important;
@@ -734,6 +866,7 @@
         padding: 6px 0 !important;
         overflow: hidden !important;
       }
+
       html body .select2-container--default .select2-dropdown--above {
         margin-top: 0 !important;
         margin-bottom: 8px !important;
@@ -742,9 +875,11 @@
           0 -4px 12px rgba(15, 23, 42, 0.12),
           0 -20px 40px rgba(15, 23, 42, 0.25) !important;
       }
+
       .select2-container--default .select2-search--dropdown {
         padding: 6px 8px !important;
       }
+
       .select2-container--default .select2-search--dropdown .select2-search__field {
         border: 1px solid #cbd5e1 !important;
         border-radius: 6px !important;
@@ -752,23 +887,28 @@
         font-size: 13px !important;
         outline: none !important;
       }
+
       .select2-container--default .select2-search--dropdown .select2-search__field:focus {
         border-color: #223771 !important;
         box-shadow: 0 0 0 2px rgba(34, 55, 113, 0.1) !important;
       }
+
       .select2-container--default .select2-results__options {
         max-height: 250px !important;
       }
+
       .select2-container--default .select2-results__option {
         padding: 8px 14px !important;
         font-size: 14px !important;
         color: #0f172a !important;
         transition: background .1s ease;
       }
+
       .select2-container--default .select2-results__option--highlighted[aria-selected] {
         background: #223771 !important;
         color: #ffffff !important;
       }
+
       .select2-container--default .select2-results__option[aria-selected="true"] {
         background: #f0f3fd !important;
         color: #223771 !important;
@@ -792,11 +932,13 @@
       #main-content-wrapper .filter-4-item {
         align-items: flex-end !important;
       }
+
       #main-content-wrapper .filter-4-item .flex-shrink-0 {
         display: flex;
         align-items: flex-end;
         padding-bottom: 10px;
       }
+
       #main-content-wrapper .filter-4-item .flex-shrink-0 .btn {
         height: 38px !important;
         display: inline-flex !important;
@@ -824,7 +966,7 @@
       /* Modal riêng — dùng cho .modal.register-wish, .modal.modaldangky, v.v...
          Ép proper Bootstrap 5 modal style + backdrop */
       #main-content-wrapper .modal,
-      body > .modal {
+      body>.modal {
         /* background: transparent !important; */
         border: 0 !important;
         border-radius: 0 !important;
@@ -832,15 +974,17 @@
         padding: 0 !important;
         margin: 0 !important;
       }
+
       #main-content-wrapper .modal .modal-content,
-      body > .modal .modal-content {
+      body>.modal .modal-content {
         background: #ffffff !important;
         border: 1px solid #e2e8f0 !important;
         border-radius: 10px !important;
         box-shadow: 0 10px 30px rgba(15, 23, 42, 0.2) !important;
       }
+
       #main-content-wrapper .modal .modal-header,
-      body > .modal .modal-header {
+      body>.modal .modal-header {
         background: #223771 !important;
         color: #ffffff !important;
         border-bottom: 0 !important;
@@ -848,31 +992,36 @@
         border-top-right-radius: 10px !important;
         padding: 12px 18px !important;
       }
+
       #main-content-wrapper .modal .modal-header .modal-title,
       #main-content-wrapper .modal .modal-header p,
       #main-content-wrapper .modal .modal-header i,
-      body > .modal .modal-header .modal-title,
-      body > .modal .modal-header p,
-      body > .modal .modal-header i {
+      body>.modal .modal-header .modal-title,
+      body>.modal .modal-header p,
+      body>.modal .modal-header i {
         color: #ffffff !important;
         font-weight: 500 !important;
       }
+
       #main-content-wrapper .modal .modal-header .btn-close,
-      body > .modal .modal-header .btn-close {
+      body>.modal .modal-header .btn-close {
         filter: invert(1) brightness(2) !important;
         opacity: 0.8 !important;
       }
+
       #main-content-wrapper .modal .modal-header .btn-close:hover,
-      body > .modal .modal-header .btn-close:hover {
+      body>.modal .modal-header .btn-close:hover {
         opacity: 1 !important;
       }
+
       #main-content-wrapper .modal .modal-body,
-      body > .modal .modal-body {
+      body>.modal .modal-body {
         padding: 16px 18px;
         background: #ffffff !important;
       }
+
       #main-content-wrapper .modal .modal-footer,
-      body > .modal .modal-footer {
+      body>.modal .modal-footer {
         padding: 15px 18px !important;
         border-top: 1px solid #e2e8f0 !important;
       }
@@ -881,6 +1030,7 @@
       #main-content-wrapper .form-top {
         margin-bottom: 15px;
       }
+
       #main-content-wrapper .form-top .form-item .form-control,
       #main-content-wrapper .form-top .input-group input.form-control {
         height: 38px !important;
@@ -888,6 +1038,7 @@
         border-radius: 8px !important;
         font-size: 14px !important;
       }
+
       #main-content-wrapper .form-top .form-control:focus {
         border-color: #cbd5e1 !important;
         box-shadow: none !important;
@@ -898,6 +1049,7 @@
       #main-content-wrapper .group-title.pl0 {
         margin-bottom: 8px;
       }
+
       #main-content-wrapper .group-title p,
       #main-content-wrapper .group-title.pl0 p {
         color: var(--color-blue) !important;
@@ -908,6 +1060,7 @@
         gap: 6px !important;
         margin: 0 !important;
       }
+
       #main-content-wrapper .group-title p i,
       #main-content-wrapper .group-title.pl0 p i {
         color: var(--color-blue-dark) !important;
@@ -932,11 +1085,13 @@
         cursor: pointer !important;
         font-weight: 500 !important;
       }
+
       #main-content-wrapper .btn.btn-search:hover,
       #main-content-wrapper .btn.btn-search.btn-default:hover {
         background: #1c2e5f !important;
         border-color: #1c2e5f !important;
       }
+
       #main-content-wrapper .btn.btn-search i,
       #main-content-wrapper .btn.btn-search span,
       #main-content-wrapper .btn.btn-search .lang,
@@ -954,8 +1109,8 @@
 
       /* Bump toàn bộ table header trong SPA scope — cover cả các bảng không có
          class .bg-th (vd tblPhieu). Nền tím nhạt + chữ đậm + border dày dưới. */
-      #main-content-wrapper .table > thead > tr > th,
-      #main-content-wrapper table.table > thead > tr > th {
+      #main-content-wrapper .table>thead>tr>th,
+      #main-content-wrapper table.table>thead>tr>th {
         background: #f0f3fd !important;
         color: #0f172a !important;
         font-weight: 700 !important;
@@ -964,17 +1119,20 @@
         border-bottom: 1px solid #d1d1d1 !important;
         vertical-align: middle !important;
       }
+
       /* Body row có border + hover nhẹ để tách khối */
-      #main-content-wrapper .table > tbody > tr > td {
+      #main-content-wrapper .table>tbody>tr>td {
         padding: 10px !important;
         color: #0f172a;
         vertical-align: middle !important;
       }
-      #main-content-wrapper .table-hover > tbody > tr:hover,
-      #main-content-wrapper .table-hover > tbody > tr:hover > td {
+
+      #main-content-wrapper .table-hover>tbody>tr:hover,
+      #main-content-wrapper .table-hover>tbody>tr:hover>td {
         background: #f8fafc !important;
         color: #0f172a !important;
       }
+
       /* Bảng có class .table-noborder — bo góc + shadow nhẹ để thấy khối */
       #main-content-wrapper .table.table-noborder {
         border-collapse: separate !important;
@@ -995,8 +1153,15 @@
         margin-bottom: 14px !important;
         box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
       }
-      #main-content-wrapper .box.box-solid { border-top: 1px solid #e2e8f0 !important; }
-      #main-content-wrapper .box.box-shadow { box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06) !important; }
+
+      #main-content-wrapper .box.box-solid {
+        border-top: 1px solid #e2e8f0 !important;
+      }
+
+      #main-content-wrapper .box.box-shadow {
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06) !important;
+      }
+
       #main-content-wrapper .box-header {
         padding: 10px 15px 5px 15px;
         /* border-bottom: 1px solid #e2e8f0 !important; */
@@ -1005,58 +1170,139 @@
         justify-content: space-between !important;
         flex-wrap: wrap !important;
       }
+
       #main-content-wrapper .box-body {
         padding: 15px 0 !important;
         overflow: visible !important;
         max-height: none !important;
       }
+
       #main-content-wrapper .box-footer {
         padding: 12px 16px !important;
         border-top: 1px solid #e2e8f0 !important;
       }
+
       #main-content-wrapper .box-title {
         font-weight: 700 !important;
         /* font-size: 15px !important; */
         color: var(--color-blue) !important;
         margin: 0 !important;
       }
-      #main-content-wrapper .box-title.color-blue { color: #223771 !important; }
+
+      #main-content-wrapper .box-title.color-blue {
+        color: #223771 !important;
+      }
+
       /* Badge dem so luong khi chua co du lieu -> an han, tranh "cuc xanh" trong
          nam canh tieu de box (vd "Danh sach [ ]"). */
       #main-content-wrapper .box-title .badge:empty {
         display: none !important;
       }
+
       /* Badge boc 1 span con rong (<span class="badge"><span id="..."></span></span>):
          badge khong match :empty vi con text node xuong dong -> dung :has().
          Tach rule rieng de browser khong ho tro :has() van giu duoc rule :empty o tren. */
       #main-content-wrapper .box-title .badge:has(> span:only-child:empty) {
         display: none !important;
       }
+
       /* Padding/margin helpers module AdminLTE */
-      #main-content-wrapper .pd0 { padding: 0 !important; }
-      #main-content-wrapper .pd10 { padding: 10px !important; }
-      #main-content-wrapper .pd15 { padding: 15px !important; }
-      #main-content-wrapper .pd20 { padding: 20px; }
-      #main-content-wrapper .pt10 { padding-top: 10px !important; }
-      #main-content-wrapper .pt15 { padding-top: 15px !important; }
-      #main-content-wrapper .pt20 { padding-top: 20px !important; }
-      #main-content-wrapper .pb10 { padding-bottom: 10px !important; }
-      #main-content-wrapper .pb15 { padding-bottom: 15px !important; }
-      #main-content-wrapper .pl0 { padding-left: 0 !important; }
-      #main-content-wrapper .pl15 { padding-left: 15px !important; }
-      #main-content-wrapper .pl20 { padding-left: 20px !important; }
-      #main-content-wrapper .pr10 { padding-right: 10px !important; }
-      #main-content-wrapper .pr20 { padding-right: 20px !important; }
-      #main-content-wrapper .mt-10 { margin-top: 10px !important; }
-      #main-content-wrapper .mt-20 { margin-top: 20px !important; }
-      #main-content-wrapper .ml-10 { margin-left: 10px !important; }
-      #main-content-wrapper .ml-20 { margin-left: 20px !important; }
-      #main-content-wrapper .mb-10 { margin-bottom: 10px !important; }
-      #main-content-wrapper .mb-20 { margin-bottom: 20px !important; }
-      #main-content-wrapper .item-search { padding: 6px 10px; }
-      #main-content-wrapper .table-noborder { border: 0 !important; }
-      #main-content-wrapper .pull-right { float: right !important; }
-      #main-content-wrapper .pull-left { float: left !important; }
+      #main-content-wrapper .pd0 {
+        padding: 0 !important;
+      }
+
+      #main-content-wrapper .pd10 {
+        padding: 10px !important;
+      }
+
+      #main-content-wrapper .pd15 {
+        padding: 15px !important;
+      }
+
+      #main-content-wrapper .pd20 {
+        padding: 20px;
+      }
+
+      #main-content-wrapper .pt10 {
+        padding-top: 10px !important;
+      }
+
+      #main-content-wrapper .pt15 {
+        padding-top: 15px !important;
+      }
+
+      #main-content-wrapper .pt20 {
+        padding-top: 20px !important;
+      }
+
+      #main-content-wrapper .pb10 {
+        padding-bottom: 10px !important;
+      }
+
+      #main-content-wrapper .pb15 {
+        padding-bottom: 15px !important;
+      }
+
+      #main-content-wrapper .pl0 {
+        padding-left: 0 !important;
+      }
+
+      #main-content-wrapper .pl15 {
+        padding-left: 15px !important;
+      }
+
+      #main-content-wrapper .pl20 {
+        padding-left: 20px !important;
+      }
+
+      #main-content-wrapper .pr10 {
+        padding-right: 10px !important;
+      }
+
+      #main-content-wrapper .pr20 {
+        padding-right: 20px !important;
+      }
+
+      #main-content-wrapper .mt-10 {
+        margin-top: 10px !important;
+      }
+
+      #main-content-wrapper .mt-20 {
+        margin-top: 20px !important;
+      }
+
+      #main-content-wrapper .ml-10 {
+        margin-left: 10px !important;
+      }
+
+      #main-content-wrapper .ml-20 {
+        margin-left: 20px !important;
+      }
+
+      #main-content-wrapper .mb-10 {
+        margin-bottom: 10px !important;
+      }
+
+      #main-content-wrapper .mb-20 {
+        margin-bottom: 20px !important;
+      }
+
+      #main-content-wrapper .item-search {
+        padding: 6px 10px;
+      }
+
+      #main-content-wrapper .table-noborder {
+        border: 0 !important;
+      }
+
+      #main-content-wrapper .pull-right {
+        float: right !important;
+      }
+
+      #main-content-wrapper .pull-left {
+        float: left !important;
+      }
+
       /* Multi-table float layout (vd phancongphamvi.html: 6 table float:left width:300px)
          → khi row counts khác nhau, table thấp/cao lệch. Align top + gap giữa các table. */
       #main-content-wrapper .scroll-table-x {
@@ -1066,13 +1312,15 @@
         align-items: flex-start !important;
         overflow-x: auto;
       }
-      #main-content-wrapper .scroll-table-x > table {
+
+      #main-content-wrapper .scroll-table-x>table {
         float: none !important;
         margin: 0 !important;
         vertical-align: top !important;
       }
-      #main-content-wrapper .scroll-table-x > table td,
-      #main-content-wrapper .scroll-table-x > table th {
+
+      #main-content-wrapper .scroll-table-x>table td,
+      #main-content-wrapper .scroll-table-x>table th {
         vertical-align: middle !important;
       }
 
@@ -1082,12 +1330,12 @@
          chữ trắng, kích thước nhỏ gọn khớp cell. */
       #main-content-wrapper .table td .btn.btn-default,
       #main-content-wrapper .table td a.btn.btn-default,
-      #main-content-wrapper .table td span > a.btn.btn-default,
-      #main-content-wrapper .table-hover > tbody > tr:hover > td .btn.btn-default,
-      #main-content-wrapper .table-hover > tbody > tr:hover > td a.btn.btn-default {
+      #main-content-wrapper .table td span>a.btn.btn-default,
+      #main-content-wrapper .table-hover>tbody>tr:hover>td .btn.btn-default,
+      #main-content-wrapper .table-hover>tbody>tr:hover>td a.btn.btn-default {
         background: rgba(13, 110, 253, 0.1) !important;
         background-image: none !important;
-        color: var(--color-blue)  !important;
+        color: var(--color-blue) !important;
         border: 1px solid rgba(13, 110, 253, 0.3) !important;
         border-radius: 4px !important;
         padding: 6px 10px !important;
@@ -1099,16 +1347,18 @@
         text-decoration: none !important;
         line-height: 18px !important;
       }
+
       #main-content-wrapper .table td .btn.btn-default:hover,
       #main-content-wrapper .table td a.btn.btn-default:hover {
-        background:var(--color-blue)  !important;
-        border-color:var(--color-blue)  !important;
+        background: var(--color-blue) !important;
+        border-color: var(--color-blue) !important;
         color: #ffffff !important;
       }
+
       /* Đảm bảo text/icon bên trong button trong cell luôn trắng — không bị inherit
          từ row hover color rule */
       #main-content-wrapper .table td .btn.btn-default *,
-      #main-content-wrapper .table-hover > tbody > tr:hover > td .btn.btn-default * {
+      #main-content-wrapper .table-hover>tbody>tr:hover>td .btn.btn-default * {
         color: var(--color-blue) !important;
         font-weight: 700;
       }
@@ -1135,40 +1385,46 @@
       body:has(.modal.in) .modal-backdrop {
         visibility: visible !important;
       }
+
       /* Select2 dropdown khi open (append vao body) — z-index cao hon modal (BS default 1055) */
       .select2-container--open {
         z-index: 20000 !important;
       }
+
       /* Modal & backdrop z-index cao de dam bao che het */
-      .modal.show, .modal.in {
+      .modal.show,
+      .modal.in {
         z-index: 10055 !important;
       }
-      .modal-backdrop.show, .modal-backdrop.in {
+
+      .modal-backdrop.show,
+      .modal-backdrop.in {
         z-index: 10050 !important;
         opacity: 0.5 !important;
         background-color: #0f172a !important;
       }
+
       /* ═══ [FIX 2026-08-12] Khi modal open, select2-container base (line 680) o
          z-index 99999 cao hon backdrop (10050) -> user van chon duoc dropdown xuyen
          qua modal. Reset ve auto khi modal open de backdrop chan pointer events. ═══ */
       body.modal-open .select2-container,
-      body.modal-open > .select2-container,
+      body.modal-open>.select2-container,
       body:has(.modal.show) .select2-container,
-      body:has(.modal.show) > .select2-container,
+      body:has(.modal.show)>.select2-container,
       body:has(.modal.in) .select2-container,
-      body:has(.modal.in) > .select2-container,
+      body:has(.modal.in)>.select2-container,
       body:has(.cke_dialog_container) .select2-container,
-      body:has(.cke_dialog_container) > .select2-container,
+      body:has(.cke_dialog_container)>.select2-container,
       body:has(.cke_dialog_background_cover) .select2-container,
-      body:has(.cke_dialog_background_cover) > .select2-container {
+      body:has(.cke_dialog_background_cover)>.select2-container {
         z-index: auto !important;
       }
-
     </style>
   </head>
 
   <body>
-    <div id="overlay" style="position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); z-index:2051; display:none; background:#fff; padding:30px 55px; border-radius:12px; box-shadow:0 8px 30px rgba(0,0,0,0.15); text-align:center; min-width:220px;">
+    <div id="overlay"
+      style="position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); z-index:2051; display:none; background:#fff; padding:30px 55px; border-radius:12px; box-shadow:0 8px 30px rgba(0,0,0,0.15); text-align:center; min-width:220px;">
       <i class="fas fa-spinner fa-spin fa-3x text-primary" style="color:#223771;"></i>
       <h5 style="margin:18px 0 0; color:#223771; font-weight:600; font-size:15px;">Đang tải dữ liệu...</h5>
     </div>
@@ -1189,7 +1445,8 @@
           </div>
           <div class="head-search-box">
             <div class="form">
-              <input type="text" id="global-search-input" class="search-imput" placeholder="Tìm kiếm thông tin" autocomplete="off" />
+              <input type="text" id="global-search-input" class="search-imput" placeholder="Tìm kiếm thông tin"
+                autocomplete="off" />
               <button class="search-btn">
                 <i class="fal fa-search"></i>
               </button>
@@ -1262,8 +1519,11 @@
           </div>
           <ul class="dropdown-menu dropdown-menu-end p-0" id="fcm-noti-menu">
             <li class="dropdown-header py-2 px-3">Thông báo</li>
-            <li><hr class="dropdown-divider my-0"></li>
-            <li><a class="dropdown-item py-3 text-center" href="javascript:void(0)" id="fcm-noti-empty">Chưa có thông báo</a></li>
+            <li>
+              <hr class="dropdown-divider my-0">
+            </li>
+            <li><a class="dropdown-item py-3 text-center" href="javascript:void(0)" id="fcm-noti-empty">Chưa có thông
+                báo</a></li>
           </ul>
         </div>
         <div class="dropdown box-acc-user">
@@ -1326,12 +1586,15 @@
       <div class="main-content" id="main-content-wrapper">
         <div class="dashboard-content">
           <div class="quick-action">
-            <div class="welcome"><span id="welcome-greeting">Chào mừng</span>, <strong id="welcome-name"><%=fullname %></strong>!</div>
+            <div class="welcome"><span id="welcome-greeting">Chào mừng</span>, <strong id="welcome-name">
+                <%=fullname %>
+              </strong>!</div>
             <div class="quick-acction-title">Danh sách vai trò</div>
             <div class="role-picker-toolbar">
               <div class="role-picker-search">
                 <i class="fal fa-search"></i>
-                <input type="text" id="role-search-input" placeholder="Tìm vai trò theo tên hoặc mã..." autocomplete="off" />
+                <input type="text" id="role-search-input" placeholder="Tìm vai trò theo tên hoặc mã..."
+                  autocomplete="off" />
                 <button type="button" class="role-picker-clear" id="role-search-clear" aria-label="Xoá tìm kiếm">
                   <i class="fal fa-times"></i>
                 </button>
@@ -1556,14 +1819,14 @@
   <script src="assets/js/jquery-ui.min.js" type="text/javascript"></script>
   <script src="assets/js/select2.min.js"></script>
   <script type="text/javascript">
-    // [SELECT2-DROPDOWN-PARENT] Force mọi Select2 append dropdown vào <body>,
-    // tránh bị clip bởi container cha có overflow hoặc positioning issues.
-    // Set default NGAY khi library load, trước khi module JS gọi .select2().
-    (function () {
-      if (typeof $ !== 'undefined' && $.fn && $.fn.select2 && $.fn.select2.defaults) {
-        try { $.fn.select2.defaults.set('dropdownParent', $(document.body)); } catch (e) {}
-      }
-    })();
+      // [SELECT2-DROPDOWN-PARENT] Force mọi Select2 append dropdown vào <body>,
+      // tránh bị clip bởi container cha có overflow hoặc positioning issues.
+      // Set default NGAY khi library load, trước khi module JS gọi .select2().
+      (function () {
+        if (typeof $ !== 'undefined' && $.fn && $.fn.select2 && $.fn.select2.defaults) {
+          try { $.fn.select2.defaults.set('dropdownParent', $(document.body)); } catch (e) { }
+        }
+      })();
   </script>
   <script src="assets/js/swiper-bundle.min.js"></script>
   <script src="assets/js/slick.js"></script>
@@ -1578,7 +1841,8 @@
   <!-- Firebase Web Push (FCM) -->
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
-  <script type="text/javascript">window.FCM_VAPID_KEY = "BAaMGqYzL8EbC8cBXgEPwzgTwtF-4fTJ2x7XyusAxZuEyrCGKpIuij6VanSwjLQWRetpgpM32y98zlUZo-ZVuEE";</script>
+  <script
+    type="text/javascript">window.FCM_VAPID_KEY = "BAaMGqYzL8EbC8cBXgEPwzgTwtF-4fTJ2x7XyusAxZuEyrCGKpIuij6VanSwjLQWRetpgpM32y98zlUZo-ZVuEE";</script>
   <script src="assets/js/fcm-notify.js?v=<%= Guid.NewGuid().ToString() %>"></script>
   <script type="text/javascript" src="App_Themes/Plugins/jstree/dist/jstree.min.js"></script><!--Plugin jstree-->
 
@@ -1607,8 +1871,7 @@
 
           try {
 
-            if (edu.fcm && typeof edu.fcm.init === 'function')
-            {
+            if (edu.fcm && typeof edu.fcm.init === 'function') {
               edu.fcm.init();
             }
           } catch (e) {
@@ -1626,11 +1889,11 @@
           if (!$g.length) return;
           var h = (new Date().getUTCHours() + 7) % 24;
           var text;
-          if      (h >= 5  && h < 11) text = 'Chào buổi sáng';
+          if (h >= 5 && h < 11) text = 'Chào buổi sáng';
           else if (h >= 11 && h < 13) text = 'Chào buổi trưa';
           else if (h >= 13 && h < 18) text = 'Chào buổi chiều';
           else if (h >= 18 && h < 22) text = 'Chào buổi tối';
-          else                        text = 'Chào buổi khuya';
+          else text = 'Chào buổi khuya';
           $g.text(text);
         }
 
@@ -1644,7 +1907,7 @@
 
           function normalizeHash() {
             var raw = (window.location.hash || '').replace(/^#/, '');
-            try { raw = decodeURIComponent(raw); } catch (e) {}
+            try { raw = decodeURIComponent(raw); } catch (e) { }
             return raw;
           }
           function matchByHash(list, key) {
@@ -1666,7 +1929,7 @@
                 var obj = matchByHash(data, key);
                 if (obj) {
                   sys.strChucNang_Id = obj.ID;
-                  try { sessionStorage.setItem('strChucNang_Id', obj.ID); } catch (e) {}
+                  try { sessionStorage.setItem('strChucNang_Id', obj.ID); } catch (e) { }
                 }
                 return _origGenMenu.call(this, data);
               };
@@ -1702,7 +1965,7 @@
                     var app = apps.find(function (a) { return a.ID === appId; });
                     if (app && !sys.appId) {
                       clearInterval(timer);
-                      try { sessionStorage.setItem('strChucNang_Id', obj.ID); } catch (e) {}
+                      try { sessionStorage.setItem('strChucNang_Id', obj.ID); } catch (e) { }
                       sys.strChucNang_Id = obj.ID;
                       sys.setUngDung(app);
                     } else if (!app || sys.appId) {
@@ -1712,7 +1975,7 @@
                   if (tries > 100) clearInterval(timer);
                 }, 150);
               },
-              error: function () {},
+              error: function () { },
               fakedb: []
             }, false, false, false, null);
           }
@@ -1724,7 +1987,7 @@
               // Back về state không hash (vd browser back từ deep-link) -> reset về dashboard
               // của app đang chọn. Clear strChucNang_Id để triggerChucNang_Id fallback #dashboard.
               if (sys.strChucNang_Id) {
-                try { sessionStorage.removeItem('strChucNang_Id'); } catch (e) {}
+                try { sessionStorage.removeItem('strChucNang_Id'); } catch (e) { }
                 sys.strChucNang_Id = '';
                 var dash = (sys.dtChucNang || []).find(function (e) {
                   return e && e.DUONGDANHIENTHI === '#dashboard';
@@ -1777,7 +2040,7 @@
                   console.log('[global-search] loaded', _allApps.length, 'apps. Sample:', _allApps[0]);
                 }
               },
-              error: function () {},
+              error: function () { },
               fakedb: []
             }, false, false, false, null);
           }
@@ -1880,7 +2143,7 @@
             }
             var matches = list.filter(function (e) {
               return removeDiacritics(e.TENCHUCNANG).indexOf(nKw) >= 0
-                  || removeDiacritics(e.MACHUCNANG).indexOf(nKw) >= 0;
+                || removeDiacritics(e.MACHUCNANG).indexOf(nKw) >= 0;
             }).slice(0, 15);
             render(matches, kw);
           }
@@ -1956,7 +2219,7 @@
               sessionStorage.setItem('strChucNang_Id', obj.ID);
 
               var _origInitMain = sys.initMain;
-              sys.initMain = function () {};
+              sys.initMain = function () { };
               try {
                 if (typeof sys.genHTML_MenuVertical === 'function') {
                   sys.genHTML_MenuVertical(sys.dtChucNang);
@@ -1979,7 +2242,7 @@
               }
 
               if (obj.DUONGDANHIENTHI) {
-                try { window.location.hash = obj.DUONGDANHIENTHI.replace(/^#/, ''); } catch (e) {}
+                try { window.location.hash = obj.DUONGDANHIENTHI.replace(/^#/, ''); } catch (e) { }
               }
               if (typeof sys.loadFunctionPath === 'function') {
                 sys.loadFunctionPath(obj.DUONGDANFILE);
@@ -2012,19 +2275,19 @@
           var $clear = $('#role-search-clear');
 
           var GROUPS = {
-            cong:     { label: 'Cổng người dùng', bg: '#dbeafe', fg: '#1d4ed8', chipBg: '#eff6ff', chipFg: '#1d4ed8' },
-            hocvu:    { label: 'Học vụ',          bg: '#d1fae5', fg: '#047857', chipBg: '#ecfdf5', chipFg: '#047857' },
-            daotao:   { label: 'Đào tạo',         bg: '#ede9fe', fg: '#6d28d9', chipBg: '#f5f3ff', chipFg: '#6d28d9' },
-            taichinh: { label: 'Tài chính',       bg: '#fef3c7', fg: '#b45309', chipBg: '#fffbeb', chipFg: '#b45309' },
-            nhansu:   { label: 'Nhân sự',         bg: '#ffe4e6', fg: '#be123c', chipBg: '#fff1f2', chipFg: '#be123c' },
-            quantri:  { label: 'Quản trị',        bg: '#f1f5f9', fg: '#475569', chipBg: '#f8fafc', chipFg: '#475569' },
-            khac:     { label: 'Khác',            bg: '#f3f4f6', fg: '#6b7280', chipBg: '#f9fafb', chipFg: '#6b7280' }
+            cong: { label: 'Cổng người dùng', bg: '#dbeafe', fg: '#1d4ed8', chipBg: '#eff6ff', chipFg: '#1d4ed8' },
+            hocvu: { label: 'Học vụ', bg: '#d1fae5', fg: '#047857', chipBg: '#ecfdf5', chipFg: '#047857' },
+            daotao: { label: 'Đào tạo', bg: '#ede9fe', fg: '#6d28d9', chipBg: '#f5f3ff', chipFg: '#6d28d9' },
+            taichinh: { label: 'Tài chính', bg: '#fef3c7', fg: '#b45309', chipBg: '#fffbeb', chipFg: '#b45309' },
+            nhansu: { label: 'Nhân sự', bg: '#ffe4e6', fg: '#be123c', chipBg: '#fff1f2', chipFg: '#be123c' },
+            quantri: { label: 'Quản trị', bg: '#f1f5f9', fg: '#475569', chipBg: '#f8fafc', chipFg: '#475569' },
+            khac: { label: 'Khác', bg: '#f3f4f6', fg: '#6b7280', chipBg: '#f9fafb', chipFg: '#6b7280' }
           };
           var GROUP_ORDER = ['cong', 'hocvu', 'daotao', 'taichinh', 'nhansu', 'quantri', 'khac'];
 
           function stripDiacritics(s) {
             return (s || '').toString().toLowerCase()
-              .normalize('NFD').replace(/[̀-ͯ]/g, '')
+              .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
               .replace(/đ/g, 'd').replace(/Đ/g, 'd');
           }
 
@@ -2034,76 +2297,76 @@
           // trước 'chuong trinh'). Duyệt tuần tự, hit đầu tiên thắng.
           var RULES = [
             // Ưu tiên đặc biệt (tránh bị rule chung bên dưới nuốt mất)
-            { kw: 'phan quyen',              group: 'quantri',  icon: 'fa-shield-halved' },
+            { kw: 'phan quyen', group: 'quantri', icon: 'fa-shield-halved' },
             { kw: 'tra cuu ket qua dang ky', group: 'taichinh', icon: 'fa-receipt' },
-            { kw: 'tra cuu chuong trinh',    group: 'daotao',   icon: 'fa-magnifying-glass' },
+            { kw: 'tra cuu chuong trinh', group: 'daotao', icon: 'fa-magnifying-glass' },
 
             // Cổng người dùng
             { kw: 'cong can bo(admin)', group: 'cong', icon: 'fa-user-shield' },
-            { kw: 'cong can bo',        group: 'cong', icon: 'fa-briefcase' },
-            { kw: 'cong sinh vien',     group: 'cong', icon: 'fa-circle-user' },
-            { kw: 'cong thong tin',     group: 'cong', icon: 'fa-globe' },
-            { kw: 'app sinh vien',      group: 'cong', icon: 'fa-mobile-screen' },
-            { kw: 'dashboard',          group: 'cong', icon: 'fa-gauge-high' },
+            { kw: 'cong can bo', group: 'cong', icon: 'fa-briefcase' },
+            { kw: 'cong sinh vien', group: 'cong', icon: 'fa-circle-user' },
+            { kw: 'cong thong tin', group: 'cong', icon: 'fa-globe' },
+            { kw: 'app sinh vien', group: 'cong', icon: 'fa-mobile-screen' },
+            { kw: 'dashboard', group: 'cong', icon: 'fa-gauge-high' },
 
             // Học vụ
-            { kw: 'chuyen can',            group: 'hocvu', icon: 'fa-calendar-check' },
-            { kw: 'hoc lai',               group: 'hocvu', icon: 'fa-rotate-right' },
-            { kw: 'thi lai',               group: 'hocvu', icon: 'fa-rotate-right' },
-            { kw: 'thi trac nghiem',       group: 'hocvu', icon: 'fa-list-check' },
-            { kw: 'thi phach',             group: 'hocvu', icon: 'fa-hashtag' },
-            { kw: 'quyet dinh nguoi hoc',  group: 'hocvu', icon: 'fa-file-signature' },
-            { kw: 'quan ly diem',          group: 'hocvu', icon: 'fa-pen-to-square' },
-            { kw: 'tien do nhap diem',     group: 'hocvu', icon: 'fa-chart-line' },
-            { kw: 'nhap diem',             group: 'hocvu', icon: 'fa-pen-to-square' },
-            { kw: 'xu ly hoc vu',          group: 'hocvu', icon: 'fa-triangle-exclamation' },
-            { kw: 'ren luyen',             group: 'hocvu', icon: 'fa-star' },
-            { kw: 'dang ky hoc',           group: 'hocvu', icon: 'fa-pen-line' },
-            { kw: 'dang ky thi',           group: 'hocvu', icon: 'fa-clipboard-list' },
-            { kw: 'tot nghiep',            group: 'hocvu', icon: 'fa-circle-check' },
-            { kw: 'vbc',                   group: 'hocvu', icon: 'fa-certificate' },
-            { kw: 'chung chi',             group: 'hocvu', icon: 'fa-certificate' },
-            { kw: 'bang cap',              group: 'hocvu', icon: 'fa-certificate' },
-            { kw: 'chot so luong',         group: 'hocvu', icon: 'fa-clipboard-check' },
+            { kw: 'chuyen can', group: 'hocvu', icon: 'fa-calendar-check' },
+            { kw: 'hoc lai', group: 'hocvu', icon: 'fa-rotate-right' },
+            { kw: 'thi lai', group: 'hocvu', icon: 'fa-rotate-right' },
+            { kw: 'thi trac nghiem', group: 'hocvu', icon: 'fa-list-check' },
+            { kw: 'thi phach', group: 'hocvu', icon: 'fa-hashtag' },
+            { kw: 'quyet dinh nguoi hoc', group: 'hocvu', icon: 'fa-file-signature' },
+            { kw: 'quan ly diem', group: 'hocvu', icon: 'fa-pen-to-square' },
+            { kw: 'tien do nhap diem', group: 'hocvu', icon: 'fa-chart-line' },
+            { kw: 'nhap diem', group: 'hocvu', icon: 'fa-pen-to-square' },
+            { kw: 'xu ly hoc vu', group: 'hocvu', icon: 'fa-triangle-exclamation' },
+            { kw: 'ren luyen', group: 'hocvu', icon: 'fa-star' },
+            { kw: 'dang ky hoc', group: 'hocvu', icon: 'fa-pen-line' },
+            { kw: 'dang ky thi', group: 'hocvu', icon: 'fa-clipboard-list' },
+            { kw: 'tot nghiep', group: 'hocvu', icon: 'fa-circle-check' },
+            { kw: 'vbc', group: 'hocvu', icon: 'fa-certificate' },
+            { kw: 'chung chi', group: 'hocvu', icon: 'fa-certificate' },
+            { kw: 'bang cap', group: 'hocvu', icon: 'fa-certificate' },
+            { kw: 'chot so luong', group: 'hocvu', icon: 'fa-clipboard-check' },
 
             // Đào tạo
-            { kw: 'ke hoach nhap hoc',     group: 'daotao', icon: 'fa-calendar-plus' },
-            { kw: 'ke hoach tuyen sinh',   group: 'daotao', icon: 'fa-calendar-days' },
+            { kw: 'ke hoach nhap hoc', group: 'daotao', icon: 'fa-calendar-plus' },
+            { kw: 'ke hoach tuyen sinh', group: 'daotao', icon: 'fa-calendar-days' },
             { kw: 'ke hoach chuong trinh', group: 'daotao', icon: 'fa-calendar' },
-            { kw: 'chuong trinh dao tao',  group: 'daotao', icon: 'fa-book-open' },
-            { kw: 'chuong trinh',          group: 'daotao', icon: 'fa-book-open' },
-            { kw: 'luan van',              group: 'daotao', icon: 'fa-scroll' },
-            { kw: 'luan an',               group: 'daotao', icon: 'fa-scroll' },
-            { kw: 'nghien cuu khoa hoc',   group: 'daotao', icon: 'fa-flask' },
-            { kw: 'nckh',                  group: 'daotao', icon: 'fa-flask' },
-            { kw: 'tuyen sinh',            group: 'daotao', icon: 'fa-graduation-cap' },
-            { kw: 'nhap hoc',              group: 'daotao', icon: 'fa-user-plus' },
+            { kw: 'chuong trinh dao tao', group: 'daotao', icon: 'fa-book-open' },
+            { kw: 'chuong trinh', group: 'daotao', icon: 'fa-book-open' },
+            { kw: 'luan van', group: 'daotao', icon: 'fa-scroll' },
+            { kw: 'luan an', group: 'daotao', icon: 'fa-scroll' },
+            { kw: 'nghien cuu khoa hoc', group: 'daotao', icon: 'fa-flask' },
+            { kw: 'nckh', group: 'daotao', icon: 'fa-flask' },
+            { kw: 'tuyen sinh', group: 'daotao', icon: 'fa-graduation-cap' },
+            { kw: 'nhap hoc', group: 'daotao', icon: 'fa-user-plus' },
 
             // Tài chính
-            { kw: 'ky tuc xa',             group: 'taichinh', icon: 'fa-building' },
-            { kw: 'hoc bong',              group: 'taichinh', icon: 'fa-award' },
-            { kw: 'hoc phi',               group: 'taichinh', icon: 'fa-wallet' },
-            { kw: 'tai chinh',             group: 'taichinh', icon: 'fa-wallet' },
-            { kw: 'muc phi',               group: 'taichinh', icon: 'fa-money-bill' },
+            { kw: 'ky tuc xa', group: 'taichinh', icon: 'fa-building' },
+            { kw: 'hoc bong', group: 'taichinh', icon: 'fa-award' },
+            { kw: 'hoc phi', group: 'taichinh', icon: 'fa-wallet' },
+            { kw: 'tai chinh', group: 'taichinh', icon: 'fa-wallet' },
+            { kw: 'muc phi', group: 'taichinh', icon: 'fa-money-bill' },
 
             // Nhân sự
-            { kw: 'nhan su',               group: 'nhansu', icon: 'fa-users' },
-            { kw: 'gio giang',             group: 'nhansu', icon: 'fa-clock' },
-            { kw: 'thong ke gio',          group: 'nhansu', icon: 'fa-clock' },
-            { kw: 'sinh vien',             group: 'nhansu', icon: 'fa-graduation-cap' },
+            { kw: 'nhan su', group: 'nhansu', icon: 'fa-users' },
+            { kw: 'gio giang', group: 'nhansu', icon: 'fa-clock' },
+            { kw: 'thong ke gio', group: 'nhansu', icon: 'fa-clock' },
+            { kw: 'sinh vien', group: 'nhansu', icon: 'fa-graduation-cap' },
 
             // Quản trị
-            { kw: 'khao sat',              group: 'quantri', icon: 'fa-clipboard-list' },
-            { kw: 'he thong thong tin',    group: 'quantri', icon: 'fa-server' },
-            { kw: 'he thong',              group: 'quantri', icon: 'fa-server' },
-            { kw: 'khoa quan ly',          group: 'quantri', icon: 'fa-network-wired' },
-            { kw: 'tin tuc',               group: 'quantri', icon: 'fa-newspaper' },
-            { kw: 'sms',                   group: 'quantri', icon: 'fa-comment-dots' },
-            { kw: 'cms',                   group: 'quantri', icon: 'fa-gear' },
-            { kw: 'chinh sach',            group: 'quantri', icon: 'fa-scale-balanced' },
-            { kw: 'mien giam',             group: 'quantri', icon: 'fa-percent' },
-            { kw: 'doi tuong',             group: 'quantri', icon: 'fa-user-tag' },
-            { kw: 'tra cuu',               group: 'quantri', icon: 'fa-magnifying-glass' }
+            { kw: 'khao sat', group: 'quantri', icon: 'fa-clipboard-list' },
+            { kw: 'he thong thong tin', group: 'quantri', icon: 'fa-server' },
+            { kw: 'he thong', group: 'quantri', icon: 'fa-server' },
+            { kw: 'khoa quan ly', group: 'quantri', icon: 'fa-network-wired' },
+            { kw: 'tin tuc', group: 'quantri', icon: 'fa-newspaper' },
+            { kw: 'sms', group: 'quantri', icon: 'fa-comment-dots' },
+            { kw: 'cms', group: 'quantri', icon: 'fa-gear' },
+            { kw: 'chinh sach', group: 'quantri', icon: 'fa-scale-balanced' },
+            { kw: 'mien giam', group: 'quantri', icon: 'fa-percent' },
+            { kw: 'doi tuong', group: 'quantri', icon: 'fa-user-tag' },
+            { kw: 'tra cuu', group: 'quantri', icon: 'fa-magnifying-glass' }
           ];
           var FALLBACK = { group: 'khac', icon: 'fa-cube' };
 
@@ -2157,7 +2420,7 @@
             return '<button type="button" class="role-chip' + (active ? ' active' : '') + '" data-key="' + key + '">' +
               '<span>' + label + '</span>' +
               '<span class="role-chip-count">' + count + '</span>' +
-            '</button>';
+              '</button>';
           }
 
           function renderChips() {
@@ -2173,16 +2436,16 @@
             var meta = GROUPS[it.group];
             return '<div class="role-card ungdung" id="' + it.id + '">' +
               '<div class="role-card-head">' +
-                '<span class="role-card-icon" style="background:' + meta.bg + ';color:' + meta.fg + '">' +
-                  '<i class="' + it.icon + '"></i>' +
-                '</span>' +
-                '<div class="role-card-right">' +
-                '<div class="role-card-name" title="' + escapeHtml(it.name) + '">' + escapeHtml(it.name) + '</div>' +
-                '<span class="role-card-badge" style="background:' + meta.chipBg + ';color:' + meta.chipFg + '">' + meta.label + '</span>' +
-                '</div>' +
+              '<span class="role-card-icon" style="background:' + meta.bg + ';color:' + meta.fg + '">' +
+              '<i class="' + it.icon + '"></i>' +
+              '</span>' +
+              '<div class="role-card-right">' +
+              '<div class="role-card-name" title="' + escapeHtml(it.name) + '">' + escapeHtml(it.name) + '</div>' +
+              '<span class="role-card-badge" style="background:' + meta.chipBg + ';color:' + meta.chipFg + '">' + meta.label + '</span>' +
               '</div>' +
-              
-            '</div>';
+              '</div>' +
+
+              '</div>';
           }
 
           function renderGrid(items) {
@@ -2200,9 +2463,9 @@
                 if (!arr || !arr.length) return;
                 html += '<section class="role-group">' +
                   '<h3 class="role-group-title"><span>' + GROUPS[g].label + '</span>' +
-                    '<span class="role-group-count">(' + arr.length + ')</span></h3>' +
+                  '<span class="role-group-count">(' + arr.length + ')</span></h3>' +
                   '<div class="role-grid">' + arr.map(cardHtml).join('') + '</div>' +
-                '</section>';
+                  '</section>';
               });
             } else {
               html = '<div class="role-grid">' + items.map(cardHtml).join('') + '</div>';
