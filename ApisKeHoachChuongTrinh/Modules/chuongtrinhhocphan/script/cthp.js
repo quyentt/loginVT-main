@@ -245,6 +245,12 @@ ChuongTrinhHocPhan.prototype = {
                 me.delete_QuanHeTuongDuong(id);
             });
         });
+        $("#tblInput_HocPhan_QuanHeTT").delegate('.btnPhamViApDung', 'click', function (e) {
+            e.preventDefault();
+            var strId = $(this).attr('data-id');
+            var strTitle = $(this).attr('data-title');
+            me.open_PhamViApDung('TD', strId, strTitle);
+        });
         
         /*------------------------------------------
         --Discription: Zone quan hệ tương đương
@@ -259,6 +265,27 @@ ChuongTrinhHocPhan.prototype = {
             $("#btnYes").click(function (e) {
                 me.delete_QuanHeThayThe(id);
             });
+        });
+        $("#tblInput_HocPhan_ThayThe").delegate('.btnPhamViApDung', 'click', function (e) {
+            e.preventDefault();
+            var strId = $(this).attr('data-id');
+            var strTitle = $(this).attr('data-title');
+            me.open_PhamViApDung('TT', strId, strTitle);
+        });
+        $("#tblChuaGanPhamVi").delegate('.btnGanPhamVi', 'click', function (e) {
+            e.preventDefault();
+            var strId = $(this).attr('data-id');
+            me.save_PhamViSinhVien(strId);
+        });
+        $("#tblDaGanPhamVi").delegate('.btnHuyPhamVi', 'click', function (e) {
+            e.preventDefault();
+            var strId = $(this).attr('data-id');
+            if (edu.util.checkValue(strId)) {
+                edu.system.confirm('Bạn có muốn hủy phạm vi cho sinh viên này không?');
+                $("#btnYes").click(function () {
+                    me.delete_PhamViSinhVien(strId);
+                });
+            }
         });
 
         /*------------------------------------------
@@ -2150,11 +2177,18 @@ ChuongTrinhHocPhan.prototype = {
             row += '<td>';
             row += data[i].DAOTAO_HOCPHAN_TD_TEN;
             row += '</td>';
+            row += '<td>Số tín chỉ<span class="title-colon">:</span></td>';
+            row += '<td class="td-center">';
+            row += edu.util.returnEmpty(data[i].SOTIN || data[i].SOTINCHI || data[i].SO_TIN_CHI);
+            row += '</td>';
             row += '<td>';
             row += 'Nhóm<span class="title-colon">:</span>';
             row += '</td>';
             row += '<td>';
             row += edu.util.returnEmpty(data[i].NHOM);
+            row += '</td>';
+            row += '<td class="td-fixed td-center">';
+            row += '<a class="btnPhamViApDung poiter" data-type="TD" data-id="' + (data[i].ID || '') + '" data-title="' + (data[i].DAOTAO_HOCPHAN_TD_TEN || '') + '" href="#">Phạm vi áp dụng</a>';
             row += '</td>';
             row += '<td class="td-fixed td-center">';
             row += '<a id="' + data[i].ID + '" class="btnDeletePoiter poiter">';
@@ -2165,7 +2199,200 @@ ChuongTrinhHocPhan.prototype = {
         }
         $("#tblInput_HocPhan_QuanHeTT tbody").append(row);
     },
+    open_PhamViApDung: function (strType, strId, strTitle) {
+        var me = this;
+        if (!edu.util.checkValue(strId)) {
+            return;
+        }
+        me.strPhamViType = strType || 'TD';
+        me.strPhamViId = strId;
+        me.strPhamViTitle = strTitle || '';
+        var sTypeText = (me.strPhamViType === 'TT') ? 'thay thế' : 'tương đương';
+        var sMonText = (me.strPhamViType === 'TT') ? 'thay thế' : 'tương đương';
+        $("#lblTitle_PhamViApDung").html('Tiêu đề - hiện thông tin quan hệ ' + sTypeText + ' - Môn gốc (Môn phía trên chỗ chỉnh sửa) - Môn ' + sMonText + ' (Môn chọn)');
+        $("#myModal_PhamViApDung").modal('show');
+        me.getList_PhamViApDung();
+    },
+    getList_PhamViApDung: function () {
+        var me = this;
+        if (!edu.util.checkValue(me.strPhamViId)) {
+            return;
+        }
+        var isThayThe = me.strPhamViType === 'TT';
+        var obj_un = {
+            'action': isThayThe ? 'KHCT_ThongTin2_MH/DSA4BRICKTQgBiAvHgkuIhEpIC8VFQPP' : 'KHCT_ThongTin2_MH/DSA4BRICKTQgBiAvHgkuIhEpIC8VBQPP',
+            'func': isThayThe ? 'PKG_KEHOACH_THONGTIN2.LayDSChuaGan_HocPhanTT' : 'PKG_KEHOACH_THONGTIN2.LayDSChuaGan_HocPhanTD',
+            'iM': edu.system.iM,
+            'strHocPhanTT_Id': isThayThe ? me.strPhamViId : undefined,
+            'strHocPhanTD_Id': isThayThe ? undefined : me.strPhamViId,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        var obj_da = {
+            'action': isThayThe ? 'KHCT_ThongTin2_MH/DSA4BRIFIAYgLx4JLiIRKSAvFRUP' : 'KHCT_ThongTin2_MH/DSA4BRIFIAYgLx4JLiIRKSAvFQUP',
+            'func': isThayThe ? 'PKG_KEHOACH_THONGTIN2.LayDSDaGan_HocPhanTT' : 'PKG_KEHOACH_THONGTIN2.LayDSDaGan_HocPhanTD',
+            'iM': edu.system.iM,
+            'strHocPhanTT_Id': isThayThe ? me.strPhamViId : undefined,
+            'strHocPhanTD_Id': isThayThe ? undefined : me.strPhamViId,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        if (isThayThe) {
+            delete obj_un.strHocPhanTD_Id;
+            delete obj_da.strHocPhanTD_Id;
+        }
+        else {
+            delete obj_un.strHocPhanTT_Id;
+            delete obj_da.strHocPhanTT_Id;
+        }
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    me.genTable_ChuaGanPhamVi(data.Data || []);
+                }
+                else {
+                    me.genTable_ChuaGanPhamVi([]);
+                    edu.system.alert(obj_un.action + ': ' + data.Message, 'w');
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_un.action + ' (er): ' + JSON.stringify(er), 'w');
+            },
+            type: 'POST',
+            action: obj_un.action,
+            contentType: true,
+            data: obj_un,
+            fakedb: []
+        }, false, false, false, null);
 
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    me.genTable_DaGanPhamVi(data.Data || []);
+                }
+                else {
+                    me.genTable_DaGanPhamVi([]);
+                    edu.system.alert(obj_da.action + ': ' + data.Message, 'w');
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_da.action + ' (er): ' + JSON.stringify(er), 'w');
+            },
+            type: 'POST',
+            action: obj_da.action,
+            contentType: true,
+            data: obj_da,
+            fakedb: []
+        }, false, false, false, null);
+    },
+    genTable_ChuaGanPhamVi: function (data) {
+        var row = '';
+        $("#tblChuaGanPhamVi tbody").html('');
+        for (var i = 0; i < data.length; i++) {
+            var obj = data[i];
+            var strId = obj.QLSV_NGUOIHOC_ID || obj.QLSV_NGUOIHOC_ID || obj.ID || '';
+            var strMa = edu.util.returnEmpty(obj.QLSV_NGUOIHOC_MASO || obj.MASO || obj.MANGUOIHOC || '');
+            var strHoTen = edu.util.returnEmpty(obj.QLSV_NGUOIHOC_HOTEN || obj.HOTEN || obj.TEN || '');
+            var strLop = edu.util.returnEmpty(obj.LOP || obj.TENLOP || obj.LOPHOC || '');
+            row += '<tr>';
+            row += '<td class="text-center">' + (i + 1) + '</td>';
+            row += '<td>' + strMa + '</td>';
+            row += '<td>' + strHoTen + '</td>';
+            row += '<td>' + strLop + '</td>';
+            row += '<td class="td-center"><a class="btnGanPhamVi poiter" data-id="' + strId + '" href="#">Gán phạm vi</a></td>';
+            row += '</tr>';
+        }
+        $("#tblChuaGanPhamVi tbody").append(row);
+    },
+    genTable_DaGanPhamVi: function (data) {
+        var row = '';
+        $("#tblDaGanPhamVi tbody").html('');
+        for (var i = 0; i < data.length; i++) {
+            var obj = data[i];
+            var strId = obj.ID || obj.QLSV_NGUOIHOC_ID || obj.QLSV_NGUOIHOC_ID || '';
+            var strMa = edu.util.returnEmpty(obj.QLSV_NGUOIHOC_MASO || obj.MASO || obj.MANGUOIHOC || '');
+            var strHoTen = edu.util.returnEmpty(obj.QLSV_NGUOIHOC_HOTEN || obj.HOTEN || obj.TEN || '');
+            var strLop = edu.util.returnEmpty(obj.LOP || obj.TENLOP || obj.LOPHOC || '');
+            row += '<tr>';
+            row += '<td class="text-center">' + (i + 1) + '</td>';
+            row += '<td>' + strMa + '</td>';
+            row += '<td>' + strHoTen + '</td>';
+            row += '<td>' + strLop + '</td>';
+            row += '<td class="td-center"><a class="btnHuyPhamVi poiter" data-id="' + strId + '" href="#">Hủy phạm vi</a></td>';
+            row += '</tr>';
+        }
+        $("#tblDaGanPhamVi tbody").append(row);
+    },
+    save_PhamViSinhVien: function (strQLSV_NguoiHoc_Id) {
+        var me = this;
+        if (!edu.util.checkValue(strQLSV_NguoiHoc_Id)) {
+            return;
+        }
+        var isThayThe = me.strPhamViType === 'TT';
+        var obj_save = {
+            'action': isThayThe ? 'KHCT_ThongTin2_MH/FSkkLB4JLiIRKSAvFRUeEigvKRcoJC8P' : 'KHCT_ThongTin2_MH/FSkkLB4JLiIRKSAvFQUeEigvKRcoJC8P',
+            'func': isThayThe ? 'PKG_KEHOACH_THONGTIN2.Them_HocPhanTT_SinhVien' : 'PKG_KEHOACH_THONGTIN2.Them_HocPhanTD_SinhVien',
+            'iM': edu.system.iM,
+            'strHocPhanTT_Id': isThayThe ? me.strPhamViId : undefined,
+            'strHocPhanTD_Id': isThayThe ? undefined : me.strPhamViId,
+            'strQLSV_NguoiHoc_Id': strQLSV_NguoiHoc_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        if (isThayThe) {
+            delete obj_save.strHocPhanTD_Id;
+        }
+        else {
+            delete obj_save.strHocPhanTT_Id;
+        }
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    me.getList_PhamViApDung();
+                }
+                else {
+                    edu.system.alert(obj_save.action + ': ' + data.Message, 'w');
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_save.action + ' (er): ' + JSON.stringify(er), 'w');
+            },
+            type: 'POST',
+            action: obj_save.action,
+            contentType: true,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
+    },
+    delete_PhamViSinhVien: function (strIds) {
+        var me = this;
+        if (!edu.util.checkValue(strIds)) {
+            return;
+        }
+        var isThayThe = me.strPhamViType === 'TT';
+        var obj_delete = {
+            'action': isThayThe ? 'KHCT_ThongTin2_MH/GS4gHgkuIhEpIC8VFR4SKC8pFygkLwPP' : 'KHCT_ThongTin2_MH/GS4gHgkuIhEpIC8VBR4SKC8pFygkLwPP',
+            'func': isThayThe ? 'PKG_KEHOACH_THONGTIN2.Xoa_HocPhanTT_SinhVien' : 'PKG_KEHOACH_THONGTIN2.Xoa_HocPhanTD_SinhVien',
+            'iM': edu.system.iM,
+            'strIds': strIds,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    me.getList_PhamViApDung();
+                }
+                else {
+                    edu.system.alert(obj_delete.action + ': ' + data.Message, 'w');
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_delete.action + ' (er): ' + JSON.stringify(er), 'w');
+            },
+            type: 'POST',
+            action: obj_delete.action,
+            contentType: true,
+            data: obj_delete,
+            fakedb: []
+        }, false, false, false, null);
+    },
     
     /*------------------------------------------
     --Discription: [3] AccessDB DonViHopTac
@@ -2344,16 +2571,23 @@ ChuongTrinhHocPhan.prototype = {
             row += data[i].DAOTAO_CHUONGTRINH_TT_TEN;
             row += '</td>';
             row += '<td>';
-            row += 'Học phần tương đương<span class="title-colon">:</span>';
+            row += 'Học phần thay thế<span class="title-colon">:</span>';
             row += '</td>';
             row += '<td>';
             row += data[i].DAOTAO_HOCPHAN_TT_TEN;
+            row += '</td>';
+            row += '<td>Số tín chỉ<span class="title-colon">:</span></td>';
+            row += '<td class="td-center">';
+            row += edu.util.returnEmpty(data[i].SOTIN || data[i].SOTINCHI || data[i].SO_TIN_CHI);
             row += '</td>';
             row += '<td>';
             row += 'Nhóm<span class="title-colon">:</span>';
             row += '</td>';
             row += '<td>';
             row += edu.util.returnEmpty(data[i].NHOM);
+            row += '</td>';
+            row += '<td class="td-fixed td-center">';
+            row += '<a class="btnPhamViApDung poiter" data-type="TT" data-id="' + (data[i].ID || '') + '" data-title="' + (data[i].DAOTAO_HOCPHAN_TT_TEN || '') + '" href="#">Phạm vi áp dụng</a>';
             row += '</td>';
             row += '<td class="td-fixed td-center">';
             row += '<a id="' + data[i].ID + '" class="btnDeletePoiter poiter">';
