@@ -4263,23 +4263,28 @@ ChuongTrinhHocPhan.prototype = {
         var strId = strPhanBo_Id;
         var strLoaiPhanBo_Id = edu.util.getValById('dropHocPhan_PhanBo' + strPhanBo_Id);
         var dSoTiet = edu.util.getValById('txtHocPhan_PhanBo_SoTiet' + strPhanBo_Id);
+        var dSoTin = edu.util.getValById('txtHocPhan_PhanBo_SoTin' + strPhanBo_Id);
         if (!edu.util.checkValue(strPhanBo_Id)) {
             return;
         }
         if (strId.length == 30) strId = "";
         var obj_notify;
         var obj_save = {
-            'action': 'KHCT_HocPhan_TietHoc/ThemMoi',
+            'action': 'KHCT_ThongTin_MH/FSkkLB4FIC4VIC4eCS4iESkgLx4CFR4RKSAvAy4P',
+            'func': 'pkg_kehoach_thongtin.Them_DaoTao_HocPhan_CT_PhanBo',
+            'iM': edu.system.iM,
 
             'strId': strId,
             'strDaoTao_HocPhan_Id': me.strHocPhan_Id,
             'strDaoTao_ToChucCT_Id': me.strChuongTrinh_Id,
             'strLoaiPhanBo_Id': strLoaiPhanBo_Id,
             'dSoTiet': dSoTiet,
+            'dSoTin': dSoTin,
             'strNguoiThucHien_Id': edu.system.userId
         };
         if (edu.util.checkValue(strId)) {
-            obj_save.action = 'KHCT_HocPhan_TietHoc/CapNhat';
+            obj_save.action = 'KHCT_ThongTin_MH/EjQgHgUgLhUgLh4JLiIRKSAvHgIVHhEpIC8DLgPP';
+            obj_save.func = 'pkg_kehoach_thongtin.Sua_DaoTao_HocPhan_CT_PhanBo';
         }
         //default
         
@@ -4360,6 +4365,7 @@ ChuongTrinhHocPhan.prototype = {
             row += '<td style="text-align: center"><label id="txtStt' + strPhanBo_Id + '">' + (i + 1) + '</label></td>';
             row += '<td><select id="dropHocPhan_PhanBo' + strPhanBo_Id + '" class="select-opt"><option value=""> --- Chọn loại phân bổ--</option ></select ></td>';
             row += '<td><input type="text" id="txtHocPhan_PhanBo_SoTiet' + strPhanBo_Id + '" value="' + edu.util.returnEmpty(data[i].SOTIET) + '" class="form-control"/></td>';
+            row += '<td><input type="text" id="txtHocPhan_PhanBo_SoTin' + strPhanBo_Id + '" value="' + edu.util.returnEmpty(data[i].SOTIN) + '" class="form-control"/></td>';
             row += '<td style="text-align: center"><a title="Xóa" class="deletePhanBo" id="' + strPhanBo_Id + '" href="javascript:void(0)" style="color: red">Xóa</a></td>';
             row += '</tr>';
             $("#tblHocPhan_PhanBo tbody").append(row);
@@ -4379,6 +4385,7 @@ ChuongTrinhHocPhan.prototype = {
         row += '<td style="text-align: center"><label id="txtStt' + strPhanBo_Id + '">' + iViTri + '</label></td>';
         row += '<td><select id="dropHocPhan_PhanBo' + strPhanBo_Id + '" class="select-opt"><option value=""> --- Chọn loại phân bổ--</option ></select ></td>';
         row += '<td><input type="text" id="txtHocPhan_PhanBo_SoTiet' + strPhanBo_Id + '"  class="form-control"/></td>';
+        row += '<td><input type="text" id="txtHocPhan_PhanBo_SoTin' + strPhanBo_Id + '"  class="form-control"/></td>';
         row += '<td style="text-align: center"><a title="Xóa dòng" class="deleteRowButton" id="' + strPhanBo_Id + '" href="javascript:void(0)">Xóa dòng</a></td>';
         row += '</tr>';
         $("#tblHocPhan_PhanBo tbody").append(row);
@@ -4409,7 +4416,9 @@ ChuongTrinhHocPhan.prototype = {
         var me = this;
         //--Edit
         var obj_delete = {
-            'action': 'KHCT_HocPhan_TietHoc/Xoa',
+            'action': 'KHCT_ThongTin_MH/GS4gHgUgLhUgLh4JLiIRKSAvHgIVHhEpIC8DLgPP',
+            'func': 'pkg_kehoach_thongtin.Xoa_DaoTao_HocPhan_CT_PhanBo',
+            'iM': edu.system.iM,
             
             'strIds': strId,
             'strNguoiThucHien_Id': edu.system.userId,
