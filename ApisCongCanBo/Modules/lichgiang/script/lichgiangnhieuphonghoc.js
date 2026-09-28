@@ -43,6 +43,7 @@ LichGiangNhieuPhong.prototype = {
     objDichDoi: null,           // Ô trống đích { IDPHONGHOC, TENPHONG, SUCCHUA, KIEUPHONG, NGAYHOC, TU, DEN }
     dtGiangVienThayDoi: [],     // rsGiangVien của lần khởi tạo đổi lịch
     bSangDoiLich: false,        // Đang chuyển từ modal chọn buổi sang modal đổi lịch (giữ tô ô đang chọn)
+    strLoaiPhongDoi: '',        // Loại phòng hiện tại của buổi đang đổi (LT/TH) → chỉ cho đổi sang phòng cùng loại
     iTokenChiTiet: 0,           // Chống lệch khi bấm liên tiếp nhiều thẻ lịch
 
     // Module 3 tiết theo lịch xếp thường gặp. Sáng/Chiều mỗi buổi 2 module (trên/dưới), Tối 1 module.
@@ -1402,6 +1403,20 @@ LichGiangNhieuPhong.prototype = {
         }) || null;
     },
 
+    // Loại phòng (LT/TH) theo ID — tra danh sách phòng đã cache từ LayDSPhongHoc. '' nếu không rõ.
+    getKieuPhong: function (strPhongId) {
+        var me = this;
+        var arrNguon = (me.objCachePhong[''] || []).concat(me.dtPhongHocOriginal || []);
+        var room = arrNguon.find(function (x) { return String(x.ID) === String(strPhongId); });
+        return room ? String(room.KIEUPHONG || '').toUpperCase() : '';
+    },
+
+    getTenLoaiPhong: function (strLoai) {
+        if (strLoai === 'TH') return 'thực hành (TH)';
+        if (strLoai === 'LT') return 'lý thuyết (LT)';
+        return strLoai;
+    },
+
     getThu: function (strNgay) {
         var d = this.toDate(strNgay);
         return d ? ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'][d.getDay()] : '';
@@ -1427,7 +1442,7 @@ LichGiangNhieuPhong.prototype = {
             IDPHONGHOC: strRoomId,
             TENPHONG: me.getTenPhong(room),
             SUCCHUA: me.getSucChua(room),
-            KIEUPHONG: room.KIEUPHONG || '',
+            KIEUPHONG: String(room.KIEUPHONG || '').toUpperCase(),
             NGAYHOC: $o.attr("data-date"),
             TU: parseInt($o.attr("data-tu"), 10),
             DEN: parseInt($o.attr("data-den"), 10)
@@ -1461,15 +1476,19 @@ LichGiangNhieuPhong.prototype = {
         var arr = dtLich.map(function (x) {
             var k = me.getKhoangTiet(x) || { tu: 0, den: 0 };
             var dNgay = me.toDate(x.NGAYHOC);
+            var strLoai = me.getKieuPhong(x.IDPHONGHOC);
             return {
                 x: x,
                 k: k,
+                strLoai: strLoai,
+                // Chỉ đổi sang phòng cùng loại: lớp TH (phòng máy) không vào phòng LT và ngược lại
+                bSaiLoai: !!(strLoai && d.KIEUPHONG && strLoai !== d.KIEUPHONG),
                 bCungGio: x.NGAYHOC === d.NGAYHOC && k.tu >= d.TU && k.den <= d.DEN,
                 iNgay: dNgay ? dNgay.getTime() : 0
             };
         });
         arr.sort(function (a, b) {
-            return (b.bCungGio - a.bCungGio) || (a.iNgay - b.iNgay) || (a.k.tu - b.k.tu);
+            return (a.bSaiLoai - b.bSaiLoai) || (b.bCungGio - a.bCungGio) || (a.iNgay - b.iNgay) || (a.k.tu - b.k.tu);
         });
         me.dtLopCuaToiDangChon = arr.map(function (a) { return a.x; });
 
@@ -1477,16 +1496,17 @@ LichGiangNhieuPhong.prototype = {
         arr.forEach(function (a, i) {
             var x = a.x;
             var iSoTiet = a.k.den - a.k.tu + 1;
-            html += '<button type="button" class="lgnp-lop-item" data-idx="' + i + '">';
+            html += '<button type="button" class="lgnp-lop-item' + (a.bSaiLoai ? ' khoa' : '') + '" data-idx="' + i + '"' + (a.bSaiLoai ? ' disabled' : '') + '>';
             html += '<span class="ngay"><b>' + me.getThu(x.NGAYHOC) + '</b><span>' + (x.NGAYHOC || '').substr(0, 5) + '</span></span>';
             html += '<span class="noidung">';
             html += '<span class="ten">' + (x.TENHOCPHAN || '') + '</span>';
             html += '<span class="mota">Tiết ' + a.k.tu + '-' + a.k.den + ' · ' + me.returnTwo(x.GIOBATDAU) + ':' + me.returnTwo(x.PHUTBATDAU)
                 + ' · Phòng ' + (x.TENPHONGHOC || '?') + (x.TENLOPHOCPHAN ? ' · ' + x.TENLOPHOCPHAN : '') + '</span>';
-            if (a.bCungGio) html += '<span class="lgnp-tag cung-gio">Cùng giờ — chỉ đổi phòng</span>';
+            if (a.bSaiLoai) html += '<span class="lgnp-tag sai-loai">Lớp học phòng ' + me.getTenLoaiPhong(a.strLoai) + ' — không đổi sang phòng ' + d.KIEUPHONG + '</span>';
+            else if (a.bCungGio) html += '<span class="lgnp-tag cung-gio">Cùng giờ — chỉ đổi phòng</span>';
             else if (iSoTiet > d.DEN - d.TU + 1) html += '<span class="lgnp-tag dai">' + iSoTiet + ' tiết — dài hơn ô trống</span>';
             html += '</span>';
-            html += '<span class="chon">Chọn <i class="fa-solid fa-chevron-right"></i></span>';
+            html += a.bSaiLoai ? '<span class="chon"><i class="fa-solid fa-lock"></i></span>' : '<span class="chon">Chọn <i class="fa-solid fa-chevron-right"></i></span>';
             html += '</button>';
         });
         $("#zoneDoi_DSLop").html(html);
@@ -1499,6 +1519,8 @@ LichGiangNhieuPhong.prototype = {
         me.objLopDoi = objLop;
         me.objDichDoi = objDich;
         me.dtGiangVienThayDoi = [];
+        me.strLoaiPhongDoi = '';
+        $("#lblDL_GoiYPhong").text('');
 
         var k = me.getKhoangTiet(objLop) || { tu: objLop.TIETBATDAU, den: objLop.TIETKETTHUC };
         $("#lblDL_TieuDe").text((objLop.TENHOCPHAN || '') + (objLop.TENLOPHOCPHAN ? ' · Lớp: ' + objLop.TENLOPHOCPHAN : ''));
@@ -1559,10 +1581,22 @@ LichGiangNhieuPhong.prototype = {
         var iDen = parseInt(aData.TIETKETTHUC_THAYDOI || objLop.TIETKETTHUC, 10);
         var strPhong = aData.IDPHONGHOC_THAYDOI || objLop.IDPHONGHOC;
         var arrCanhBao = [];
-        var bCoPhongDich = false;
-        (data.rsDanhMucPhong || []).forEach(function (p) {
-            if (objDich && String(p.ID) === String(objDich.IDPHONGHOC)) bCoPhongDich = true;
-        });
+
+        // Chỉ cho đổi sang phòng CÙNG LOẠI với phòng hiện tại: lớp TH (phòng máy) → phòng TH, lớp LT → phòng LT
+        var strLoaiCu = me.getKieuPhong(objLop.IDPHONGHOC);
+        var dtPhongDM = data.rsDanhMucPhong || [];
+        var dtPhongHopLe = dtPhongDM;
+        me.strLoaiPhongDoi = strLoaiCu;
+        if (strLoaiCu) {
+            dtPhongHopLe = dtPhongDM.filter(function (p) { return me.getKieuPhong(p.ID) === strLoaiCu; });
+            if (dtPhongHopLe.length === 0) {
+                // Không tra được loại phòng nào trong danh mục → không lọc, chỉ nhắc
+                dtPhongHopLe = dtPhongDM;
+                me.strLoaiPhongDoi = '';
+                arrCanhBao.push('Chưa xác định được loại phòng trong danh mục — hãy chọn phòng cùng loại ' + me.getTenLoaiPhong(strLoaiCu) + '.');
+            }
+        }
+        var bCoPhongDich = !!objDich && dtPhongHopLe.some(function (p) { return String(p.ID) === String(objDich.IDPHONGHOC); });
         if (objDich) {
             var k = me.getKhoangTiet(objLop) || { tu: iTu, den: iDen };
             var bCungGio = objLop.NGAYHOC === objDich.NGAYHOC && k.tu >= objDich.TU && k.den <= objDich.DEN;
@@ -1570,17 +1604,21 @@ LichGiangNhieuPhong.prototype = {
             iTu = bCungGio ? k.tu : objDich.TU;
             iDen = iTu + (k.den - k.tu);
             if (bCoPhongDich) strPhong = objDich.IDPHONGHOC;
+            else if (me.strLoaiPhongDoi && objDich.KIEUPHONG && objDich.KIEUPHONG !== me.strLoaiPhongDoi) {
+                arrCanhBao.push('Lớp đang học phòng ' + me.getTenLoaiPhong(me.strLoaiPhongDoi) + ', không đổi sang phòng ' + objDich.TENPHONG + ' (' + objDich.KIEUPHONG + ') được — hãy chọn phòng cùng loại.');
+            }
             else arrCanhBao.push('Phòng ' + objDich.TENPHONG + ' không có trong danh mục phòng được đổi — hãy chọn phòng khác.');
             if (iDen > objDich.DEN) arrCanhBao.push('Buổi học dài ' + (k.den - k.tu + 1) + ' tiết, vượt ô trống T' + objDich.TU + '-' + objDich.DEN + ' — nên bấm "Kiểm tra trùng lịch" trước khi gửi.');
         }
         $("#txtDL_Ngay").val(me.vnToIso(strNgay));
         $("#txtDL_TietBatDau").val(isNaN(iTu) ? '' : iTu);
         $("#txtDL_TietKetThuc").val(isNaN(iDen) ? '' : iDen);
+        $("#lblDL_GoiYPhong").text(me.strLoaiPhongDoi ? '— chỉ hiện phòng ' + me.getTenLoaiPhong(me.strLoaiPhongDoi) + ', cùng loại phòng hiện tại' : '');
 
-        // Phòng: danh mục của BE, ghi thêm sức chứa / loại phòng từ danh sách phòng đã cache (trùng ID)
+        // Phòng: danh mục của BE (đã lọc cùng loại), ghi thêm sức chứa / loại phòng từ danh sách phòng đã cache (trùng ID)
         var dtPhongCache = me.objCachePhong[''] || [];
         var htmlPhong = '<option value="">Chọn phòng học</option>';
-        (data.rsDanhMucPhong || []).forEach(function (p) {
+        dtPhongHopLe.forEach(function (p) {
             var r = dtPhongCache.find(function (x) { return String(x.ID) === String(p.ID); });
             var strThem = '';
             if (r) {
@@ -1667,8 +1705,15 @@ LichGiangNhieuPhong.prototype = {
     },
 
     kiemTraNhapDoiLich: function () {
+        var me = this;
         if (!$("#txtDL_Ngay").val() || !$("#txtDL_TietBatDau").val() || !$("#txtDL_TietKetThuc").val()) {
-            this.hienKetQuaDoiLich('loi', 'Nhập đủ ngày học, tiết bắt đầu và tiết kết thúc mới.');
+            me.hienKetQuaDoiLich('loi', 'Nhập đủ ngày học, tiết bắt đầu và tiết kết thúc mới.');
+            return false;
+        }
+        // Chốt chặn: không cho đổi sang phòng khác loại (TH ↔ LT)
+        var strLoaiMoi = me.getKieuPhong($("#dropDL_PhongHoc").val());
+        if (me.strLoaiPhongDoi && strLoaiMoi && strLoaiMoi !== me.strLoaiPhongDoi) {
+            me.hienKetQuaDoiLich('loi', 'Lớp đang học phòng ' + me.getTenLoaiPhong(me.strLoaiPhongDoi) + ' — không đổi sang phòng ' + me.getTenLoaiPhong(strLoaiMoi) + ' được.');
             return false;
         }
         return true;

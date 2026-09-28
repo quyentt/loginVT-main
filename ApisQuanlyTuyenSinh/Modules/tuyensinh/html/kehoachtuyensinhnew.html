@@ -1700,6 +1700,19 @@
     /* Dòng in lại ngày đã chọn theo dd/mm/yyyy, đặt dưới ô lịch.
        Cần vì ô <input type="date"> hiển thị theo ngôn ngữ trình duyệt: máy cài Chrome
        tiếng Anh thì ra mm/dd/yyyy dù Windows đã để dd/MM/yyyy. */
+    /* Thanh công cụ danh sách Kết quả đăng ký — ghim lại khi cuộn.
+       - top:0 bám theo vùng cuộn của modal (.modal-body).
+       - margin/padding âm-dương để nền trắng phủ hết bề ngang, không hở 20px hai mép
+         cho dòng dữ liệu lòi lên khi cuộn.
+       - z-index 20: phải cao hơn 3 cột dính trái của bảng (đang dùng 4–5), nếu không
+         cột STT/Thao tác sẽ đè lên thanh công cụ. */
+    #kqdk_list .kqdk-toolbar-sticky {
+        position: sticky; top: 0; z-index: 20;
+        background: #fff;
+        margin: -16px -20px 0; padding: 16px 20px 0;
+        box-shadow: 0 6px 14px -12px rgba(15, 23, 42, .45);
+    }
+
     /* Ô lịch + chữ nhắc ngày nằm CÙNG MỘT HÀNG. Để chữ xuống dòng là ô này cao hơn
        các ô cùng hàng, kéo lệch cả lưới — chỗ trống theo chiều ngang thì còn nhiều. */
     .kq-ngay-wrap { display:flex; align-items:center; gap:8px; min-width:0; }
@@ -1887,6 +1900,11 @@
                 <!-- List screen: danh sách hồ sơ đã đăng ký (default khi bấm nút "Xem" ở row) -->
                 <div id="kqdk_list" class="d-none">
                     <div style="padding:16px 20px 0;">
+                        <!-- Thanh công cụ GHIM LẠI khi cuộn (sếp Khoa 28/09/2026: "cuộn xuống
+                             nó mất cái này"). Danh sách dài cả trăm dòng, cuộn giữa chừng mà
+                             muốn Tìm / Xuất kết quả / Báo cáo thì phải cuộn ngược lên đầu.
+                             Nền trắng + đổ bóng để dòng dữ liệu chạy dưới không lem lên. -->
+                        <div class="kqdk-toolbar-sticky">
                         <div class="d-flex align-items-center flex-wrap mb-15" style="gap:12px;">
                             <!-- flex:1 = bề rộng cơ sở 0 → khi hàng nút bên phải chiếm hết chỗ
                                  (màn hẹp, thu nhỏ cửa sổ, phóng to chữ) thì ô này co về gần bằng 0,
@@ -1931,6 +1949,7 @@
 
                         <!-- Các bộ lọc cột đang áp — bấm x để bỏ từng cái (JS: _kqVeChipLoc) -->
                         <div id="kqdk_chip_loc" class="d-none" style="display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-bottom:10px;"></div>
+                        </div><!-- /.kqdk-toolbar-sticky -->
 
                         <!-- Sticky 3 cột đầu (STT 50, checkbox 50, Thao tác 130) — width cứng để left offset match chính xác -->
                         <style>

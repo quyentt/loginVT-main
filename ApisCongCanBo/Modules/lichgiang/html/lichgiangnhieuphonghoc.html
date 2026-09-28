@@ -2753,6 +2753,24 @@
         color: #c2410c;
     }
 
+    /* Buổi học ở phòng khác loại với ô trống (TH ↔ LT) → khóa, không chọn được */
+    #modal_chon_lop_doi .lgnp-lop-item.khoa,
+    #modal_chon_lop_doi .lgnp-lop-item.khoa:hover {
+        border-color: #e2e8f0;
+        background: #f8fafc;
+        cursor: not-allowed;
+        opacity: 0.65;
+    }
+
+    #modal_chon_lop_doi .lgnp-lop-item.khoa .chon {
+        color: #94a3b8;
+    }
+
+    #modal_chon_lop_doi .lgnp-tag.sai-loai {
+        background: #fdecec;
+        color: #b42318;
+    }
+
     #modal_chon_lop_doi .lgnp-ds-trong {
         display: flex;
         flex-direction: column;
@@ -2864,6 +2882,11 @@
 
     #modal_doilich .select2-container--default .select2-selection--single .select2-selection__arrow {
         height: 36px !important;
+    }
+
+    #modal_doilich .lgnp-dl-goiy {
+        font-weight: 500;
+        color: #64748b;
     }
 
     #modal_doilich .lgnp-dl-gv {
@@ -3454,7 +3477,7 @@
                                 <input type="number" min="1" max="15" class="form-control" id="txtDL_TietKetThuc">
                             </div>
                             <div class="col-12">
-                                <label>Phòng học</label>
+                                <label>Phòng học <span class="lgnp-dl-goiy" id="lblDL_GoiYPhong"></span></label>
                                 <select class="form-select" id="dropDL_PhongHoc"></select>
                             </div>
                         </div>
@@ -3485,7 +3508,7 @@
 </div>
 
 <!-- CDN không hoạt động, bỏ qua và dùng XLSX fallback trực tiếp -->
-<script src="modules/lichgiang/script/lichgiangnhieuphonghoc.js?v=3.8.1.0"></script>
+<script src="modules/lichgiang/script/lichgiangnhieuphonghoc.js?v=3.8.2.0"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         // Check if XLSX library is loaded
