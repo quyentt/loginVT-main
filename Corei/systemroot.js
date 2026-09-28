@@ -234,24 +234,27 @@ systemroot.prototype = {
             e.preventDefault();
             edu.system.showImportChungV2($(this).attr("title"), $(this).attr("name"));
         });
-        if (localStorage.getItem("reload") == "true") {
-            me["isActive"] = true;
-            window.onblur = function () {
-                me["isActive"] = false;
-            };
-            window.onfocus = function () {
+        
+        setTimeout(function () {
+            if (me.strhost.indexOf("https") == 0) {
                 me["isActive"] = true;
-                me.versionMainJS();
-                me.versionPageJS();
-            };
-            checkChangeversionJS();
-            function checkChangeversionJS() {
-                setTimeout(function () {
+                window.onblur = function () {
+                    me["isActive"] = false;
+                };
+                window.onfocus = function () {
+                    me["isActive"] = true;
                     me.versionMainJS();
-                    checkChangeversionJS();
-                }, 300000)
+                    // me.versionPageJS();
+                };
+                checkChangeversionJS();
+                function checkChangeversionJS() {
+                    setTimeout(function () {
+                        me.versionMainJS();
+                        // checkChangeversionJS();
+                    }, 300000)
+                }
             }
-        }
+        }, 1000);
         $(document).delegate(".btnEdit_MauBaoCao", "click", function (e) {
             e.preventDefault();
             var strBaoCao_Id = this.id;
@@ -448,7 +451,7 @@ systemroot.prototype = {
         }).done(function (responseText) {
             if (me["versionJS"] && responseText.length != me.versionJS) {
                 console.log("versionJS: " + responseText.length + ":" + me.versionJS)
-                //location.reload();
+                location.reload();
             } else {
                 me["versionJS"] = responseText.length;
             }
@@ -598,10 +601,10 @@ systemroot.prototype = {
                         // Log mọi request/response — TẮT theo yêu cầu 11/09/2026.
                         // Bật lại: bỏ comment 3 dòng dưới (điều kiện gốc giữ nguyên,
                         // gồm localStorage "iShk" = "true" và IP 14.232.210.131).
-                        // if ((me["iShk"] || me.clientIP =="14.232.210.131") && dtShow.iM) {
-                        //     dtShow["data"] = result;
-                        //     console.log(dtShow)
-                        // }
+                        if ((me["iShk"] || me.clientIP =="14.232.210.131") && dtShow.iM) {
+                            dtShow["data"] = result;
+                            console.log(dtShow)
+                        }
                     } catch (ex) {
                         onSuccess(result);
                     }
