@@ -34,6 +34,37 @@ LichGiangNhieuPhong.prototype = {
             .replace(/,\s*$/, '');           // Remove trailing comma
     },
 
+    // Sức chứa phòng — LayDSPhongHoc chưa rõ tên cột nên dò theo danh sách key hay dùng,
+    // fallback: số trong ngoặc cuối TEN (VD "A1-101(154)" → 154). Trả null nếu không xác định được.
+    arrSucChuaKeys: ['SUCCHUAHOC', 'SUCCHUA', 'SUC_CHUA', 'SUCCHUA_HOC', 'SOCHOHOC', 'SOCHO', 'SOCHONGOI', 'SOLUONGCHO', 'SOLUONG'],
+    getSucChua: function(room) {
+        var me = this;
+        for (var i = 0; i < me.arrSucChuaKeys.length; i++) {
+            var v = room[me.arrSucChuaKeys[i]];
+            if (v !== undefined && v !== null && v !== '' && !isNaN(v)) return parseInt(v, 10);
+        }
+        var m = /\((\d+)\)\s*$/.exec(room.TEN || '');
+        return m ? parseInt(m[1], 10) : null;
+    },
+
+    // Tên phòng + nhãn sức chứa. Nếu sức chứa lấy từ "(N)" cuối TEN thì bỏ phần đó khỏi tên cho gọn.
+    genHtml_RoomName: function(room) {
+        var me = this;
+        var ten = room.TEN || '';
+        var sucChua = me.getSucChua(room);
+        if (sucChua !== null) {
+            ten = ten.replace(/\s*\(\d+\)\s*$/, '');
+        }
+        var html = '<div style="font-weight: 600; margin-bottom: 3px;">' + ten + '</div>';
+        if (sucChua !== null) {
+            html += '<div style="margin-bottom: 3px;">';
+            html += '<span title="Sức chứa" style="display: inline-block; background: #fff3e0; color: #e65100; border: 1px solid #ffcc80; padding: 1px 6px; border-radius: 10px; font-size: 11px; font-weight: 600; white-space: nowrap;">';
+            html += '<i class="fa-solid fa-users" style="margin-right: 4px;"></i>' + sucChua + ' chỗ</span>';
+            html += '</div>';
+        }
+        return html;
+    },
+
     // Phân loại buổi (sang/chieu/toi) — ưu tiên TIETBATDAU, fallback theo GIOBATDAU khi API không trả tiết
     getSession: function(event) {
         var tiet = event.TIETBATDAU;
@@ -268,9 +299,10 @@ LichGiangNhieuPhong.prototype = {
         // Search button
         $("#btnSearch").click(function () {
             var arrMulti = $("#dropSearch_PhongHocMulti").val() || [];
-            var hasFilter = $("#dropSearch_ToaNha").val() || arrMulti.length > 0;
+            var hasFilter = $("#dropSearch_ToaNha").val() || arrMulti.length > 0
+                || $("#txtSucChua_Tu").val() || $("#txtSucChua_Den").val();
             if (!hasFilter) {
-                edu.system.alert("Vui lòng chọn tòa nhà hoặc phòng học");
+                edu.system.alert("Vui lòng chọn tòa nhà, phòng học hoặc sức chứa");
                 return;
             }
             if (!me.strNgayBatDau || !me.strNgayKetThuc) {
@@ -284,6 +316,7 @@ LichGiangNhieuPhong.prototype = {
         $("#btnViewAll").click(function () {
             $("#dropSearch_ToaNha").val('').trigger('change');
             $("#dropSearch_PhongHocMulti").val(null).trigger('change.select2');
+            $("#txtSucChua_Tu, #txtSucChua_Den").val('');
             $(".days .active").trigger("click");
         });
 
@@ -315,6 +348,11 @@ LichGiangNhieuPhong.prototype = {
             me.strSelectedRoomType = $(this).val();
             console.log("Room type filter changed to:", me.strSelectedRoomType);
             // Refresh display if data is loaded
+            $(".days .active").trigger("click");
+        });
+
+        // Sức chứa filter change
+        $("#txtSucChua_Tu, #txtSucChua_Den").change(function () {
             $(".days .active").trigger("click");
         });
 
@@ -535,7 +573,7 @@ LichGiangNhieuPhong.prototype = {
                 efficiencyLabel = 'Trung bình';
             }
             
-            var roomInfo = '<div style="font-weight: 600; margin-bottom: 3px;">' + room.TEN + '</div>';
+            var roomInfo = me.genHtml_RoomName(room);
             
             // Thêm kiểu phòng nếu có
             if (room.KIEUPHONG) {
@@ -553,7 +591,7 @@ LichGiangNhieuPhong.prototype = {
                 roomInfo += '<div style="font-size: 9px; color: #888; font-style: italic;">' + moTa + '</div>';
             }
             
-            html += '<div class="schedule-cell room-name" style="grid-column: 1; grid-row: ' + currentRow + ';">' + roomInfo + '</div>';
+            html += '<div class="schedule-cell room-name" style="grid-column: 1; grid-row: ' + currentRow + ';"><div>' + roomInfo + '</div></div>';
             
             // Cột hiệu suất
             var modeLabel = me.getEfficiencyModeLabel();
@@ -705,7 +743,24 @@ LichGiangNhieuPhong.prototype = {
                         
                         console.log("Lọc loại phòng:", beforeFilter, "→", me.dtPhongHocFull.length, "phòng");
                     }
-                    
+
+                    // Lọc theo sức chứa (Từ - Đến)
+                    if (me.dtPhongHocOriginal.length > 0) {
+                        console.log("Các cột phòng học từ API:", Object.keys(me.dtPhongHocOriginal[0]));
+                    }
+                    var sucChuaTu = parseInt($("#txtSucChua_Tu").val(), 10);
+                    var sucChuaDen = parseInt($("#txtSucChua_Den").val(), 10);
+                    if (!isNaN(sucChuaTu) || !isNaN(sucChuaDen)) {
+                        me.dtPhongHocFull = me.dtPhongHocFull.filter(function(room) {
+                            var sucChua = me.getSucChua(room);
+                            if (sucChua === null) return false;
+                            if (!isNaN(sucChuaTu) && sucChua < sucChuaTu) return false;
+                            if (!isNaN(sucChuaDen) && sucChua > sucChuaDen) return false;
+                            return true;
+                        });
+                        console.log("Lọc sức chứa", sucChuaTu, "-", sucChuaDen, "→", me.dtPhongHocFull.length, "phòng");
+                    }
+
                     if (typeof callback === 'function') callback();
                 } else {
                     console.error("API failed:", data.Message);
@@ -1013,7 +1068,7 @@ LichGiangNhieuPhong.prototype = {
             }
             
             // Tên phòng
-            var roomInfo = '<div style="font-weight: 600; margin-bottom: 3px;">' + room.TEN + '</div>';
+            var roomInfo = me.genHtml_RoomName(room);
             
             // Thêm kiểu phòng nếu có
             if (room.KIEUPHONG) {
@@ -1031,7 +1086,7 @@ LichGiangNhieuPhong.prototype = {
                 roomInfo += '<div style="font-size: 9px; color: #888; font-style: italic;">' + moTa + '</div>';
             }
             
-            html += '<div class="schedule-cell room-name" style="grid-column: 1; grid-row: ' + currentRow + ';">' + roomInfo + '</div>';
+            html += '<div class="schedule-cell room-name" style="grid-column: 1; grid-row: ' + currentRow + ';"><div>' + roomInfo + '</div></div>';
             
             // Cột hiệu suất
             var modeLabel = me.getEfficiencyModeLabel();
