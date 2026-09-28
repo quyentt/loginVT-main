@@ -74,6 +74,11 @@ NhapDiem.prototype = {
                 $btn.attr('data-expanded', '1').html('<i class="fal fa-angle-up"></i> Thu gọn');
             }
         });
+        $("#tblNhapDiem").delegate('.btnExportDST', 'click', function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+            me.exportExcel_DST(edu.util.cutPrefixId(/export/g, this.id), $(this));
+        });
         $("#tblNhapDiem").delegate('.btnEdit', 'click', function (e) {
             var strId = this.id;
             me.toggle_edit();
@@ -368,6 +373,11 @@ NhapDiem.prototype = {
                     "mRender": function (nRow, aData) {
                         return aData.XACNHANHOANTHANHDIEMTHI == 1 ? "Đã xác nhận" : "";
                     }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return me.genHTML_BtnExportDST(aData);
+                    }
                 }
                 , {
                     "mRender": function (nRow, aData) {
@@ -411,6 +421,11 @@ NhapDiem.prototype = {
                         "mDataProp": "TEN",
                         "mRender": function (nRow, aData) {
                             return aData.XACNHANHOANTHANHDIEMTHI == 1 ? "Đã xác nhận" : "";
+                        }
+                    },
+                    {
+                        "mRender": function (nRow, aData) {
+                            return me.genHTML_BtnExportDST(aData);
                         }
                     }
                     , {
@@ -633,7 +648,133 @@ NhapDiem.prototype = {
         var me = this;
         //View - Thong tin
         $("#lblTenDot").html(edu.util.returnEmpty(data.MADANHSACHTHI) + " - " + edu.util.returnEmpty(data.NGAYTHI) + " - " + edu.util.returnEmpty(data.THI_CATHI_TEN) + " - " + edu.util.returnEmpty(data.TKB_PHONGTHI_TEN));
-        
+
+    },
+
+    /*------------------------------------------
+    --Discription: Xuất Excel người học theo từng danh sách thi (nút trên mỗi dòng tblNhapDiem)
+    --Nguồn: TP_Chung/LayDSNguoiHocTheoDST (gọi riêng, không đụng me.dtNhapDiem / me.strTuiBai_Id)
+    --Lib: XLSX (SheetJS) - load lazy từ CDN khi bấm lần đầu
+    -------------------------------------------*/
+    genHTML_BtnExportDST: function (aData) {
+        return '<div class="text-center"><a class="btnExportDST" id="export' + aData.ID + '" title="Xuất Excel danh sách thi" style="color: #1d6f42; cursor: pointer; font-size: 18px"><i class="fa-solid fa-file-excel"></i></a></div>';
+    },
+    loadLib_XLSX: function (callback) {
+        if (typeof XLSX !== 'undefined') { callback(); return; }
+        var cdnList = [
+            'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',
+            'https://unpkg.com/xlsx@0.18.5/dist/xlsx.full.min.js',
+            'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js'
+        ];
+        var i = 0;
+        function tryNext() {
+            if (i >= cdnList.length) {
+                edu.system.alert('Không tải được thư viện Excel. Vui lòng kiểm tra kết nối mạng và thử lại.', 'w');
+                return;
+            }
+            var s = document.createElement('script');
+            s.src = cdnList[i]; s.crossOrigin = 'anonymous';
+            s.onload = function () { callback(); };
+            s.onerror = function () { i++; tryNext(); };
+            document.head.appendChild(s);
+        }
+        tryNext();
+    },
+    exportExcel_DST: function (strDanhSachThi_Id, $btn) {
+        var me = this;
+        var objDST = edu.util.objGetDataInData(strDanhSachThi_Id, me.dtTuiBai, "ID")[0];
+        if (!objDST) {
+            edu.system.alert(edu.constant.getting("NOTIFY", "SELECT_F"));
+            return;
+        }
+        if ($btn.attr("data-loading") === "1") return;
+        var strIconOld = $btn.html();
+        $btn.attr("data-loading", "1").html('<i class="fa-solid fa-spinner fa-spin"></i>');
+        var done = function () { $btn.attr("data-loading", "0").html(strIconOld); };
+
+        me.loadLib_XLSX(function () {
+            var obj_list = {
+                'action': 'TP_Chung/LayDSNguoiHocTheoDST',
+                'type': 'GET',
+                'strDanhSachThi_Id': strDanhSachThi_Id,
+                'strNguoiThucHien_Id': edu.system.userId,
+            };
+            edu.system.makeRequest({
+                success: function (data) {
+                    if (data.Success) {
+                        var dtNguoiHoc = data.Data || [];
+                        if (!dtNguoiHoc.length) {
+                            edu.system.alert("Danh sách thi chưa có người học.", "w");
+                            return;
+                        }
+                        me.writeExcel_DST(objDST, dtNguoiHoc);
+                    }
+                    else {
+                        edu.system.alert(data.Message, "w");
+                    }
+                },
+                error: function (er) {
+                    edu.system.alert(JSON.stringify(er), "w");
+                },
+                complete: done,
+                type: obj_list.type,
+                action: obj_list.action,
+
+                contentType: true,
+                data: obj_list,
+                fakedb: [
+
+                ]
+            }, false, false, false, null);
+        });
+    },
+    writeExcel_DST: function (objDST, dtNguoiHoc) {
+        var v = edu.util.returnEmpty;
+        var arrHeader = ['STT', 'Mã số', 'Họ đệm', 'Tên', 'Lớp quản lý', 'Điểm thành phần', 'Lần học', 'Lần thi', 'Số báo danh', 'Điểm', 'Lớp đăng ký học', 'Tình trạng'];
+        var aoa = [
+            ['DANH SÁCH THI: ' + v(objDST.MADANHSACHTHI)],
+            ['Lớp học phần: ' + v(objDST.THONGTINLOPHOCPHAN)],
+            ['Ngày thi: ' + v(objDST.NGAYTHI) + '    Ca thi: ' + v(objDST.THI_CATHI_TEN) + '    Phòng thi: ' + v(objDST.TKB_PHONGTHI_TEN)],
+            [],
+            arrHeader
+        ];
+        var iHeaderRow = aoa.length - 1;
+        dtNguoiHoc.forEach(function (e, i) {
+            aoa.push([
+                i + 1,
+                v(e.QLSV_NGUOIHOC_MASO),
+                v(e.QLSV_NGUOIHOC_HODEM),
+                v(e.QLSV_NGUOIHOC_TEN),
+                v(e.DAOTAO_LOPQUANLY_TEN),
+                v(e.DIEM_THANHPHANDIEM_TEN),
+                v(e.LANHOC),
+                v(e.LANTHI),
+                v(e.SOBAODANH),
+                v(e.DIEMBANDAU),
+                v(e.DIEM_DANHSACHHOC_TEN),
+                v(e.TRANGTHAI)
+            ]);
+        });
+
+        var ws = XLSX.utils.aoa_to_sheet(aoa);
+        // Các dòng thông tin trộn ngang bằng bề rộng bảng
+        ws['!merges'] = [0, 1, 2].map(function (r) {
+            return { s: { r: r, c: 0 }, e: { r: r, c: arrHeader.length - 1 } };
+        });
+        ws['!cols'] = arrHeader.map(function (h, c) {
+            var maxLen = h.length;
+            for (var r = iHeaderRow + 1; r < aoa.length; r++) {
+                var l = String(aoa[r][c] == null ? '' : aoa[r][c]).length;
+                if (l > maxLen) maxLen = l;
+            }
+            return { wch: Math.min(maxLen + 2, 50) };
+        });
+
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Danh sách thi');
+        // MADANHSACHTHI có dấu "/" (VD AET3283_28/09/2026_1_1_154954) → thay ký tự cấm trong tên file
+        var strTen = v(objDST.MADANHSACHTHI).replace(/[\\\/:*?"<>|]/g, '-') || 'DanhSachThi';
+        XLSX.writeFile(wb, 'DSThi_' + strTen + '.xlsx');
     },
     /*------------------------------------------
     --Discription: [0] GEN HTML ==> Systemroot
