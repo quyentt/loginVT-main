@@ -12,7 +12,7 @@
          dark mode (gay ra vien do/hong la tren sidebar submenu, form controls...). -->
     <meta name="color-scheme" content="light only">
     <title>Education management</title>
-    <link rel="stylesheet" href="assets/css/styles.css?v=<%= Guid.NewGuid().ToString() %>">
+    <link rel="stylesheet" href="assets/css/styles.css?v=601">
     <link href="assets/select2/css/select2.min.css" rel="stylesheet" />
     <link href="assets/pagination/simplePagination.min.css" rel="stylesheet" />
     <link href="App_Themes/Plugins/jstree/dist/themes/default/style.min.css" rel="stylesheet" /><!-- editor -->
