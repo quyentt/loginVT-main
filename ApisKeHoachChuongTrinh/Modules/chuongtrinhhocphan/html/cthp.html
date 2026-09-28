@@ -466,6 +466,139 @@
     .aps-chuongtrinhhocphan #badgeTongHocPhan:empty {
         display: none;
     }
+    /* ═══ Header cột trái: 2 hàng gọn (tiêu đề + mô hình | thanh nút) ═══ */
+    .aps-chuongtrinhhocphan .cthp-left-box {
+        padding: 12px 16px 16px !important;
+        margin-bottom: 0 !important;
+    }
+    .aps-chuongtrinhhocphan .cthp-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px 16px;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    .aps-chuongtrinhhocphan .cthp-head-title {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0 !important;
+        padding: 0 !important;
+        font-size: 18px;
+        font-weight: 600;
+        color: #223771;
+        white-space: nowrap;
+    }
+    .aps-chuongtrinhhocphan .cthp-head-title #badgeTongHocPhan {
+        margin-left: 2px;
+    }
+    .aps-chuongtrinhhocphan .cthp-mohinh-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .aps-chuongtrinhhocphan .cthp-mohinh-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin: 0;
+        padding: 5px 12px;
+        font-size: 13px;
+        font-weight: 500;
+        color: #0f172a;
+        background: #f8fafc;
+        border: 1px solid #cbd5e1;
+        border-radius: 999px;
+        cursor: pointer;
+        transition: background .15s ease, border-color .15s ease;
+    }
+    .aps-chuongtrinhhocphan .cthp-mohinh-item:hover {
+        border-color: #223771;
+    }
+    .aps-chuongtrinhhocphan .cthp-mohinh-item:has(input:checked) {
+        background: #e0e7ff;
+        border-color: #223771;
+    }
+    .aps-chuongtrinhhocphan .cthp-mohinh-item input[type="checkbox"] {
+        width: 15px;
+        height: 15px;
+        margin: 0;
+        cursor: pointer;
+        accent-color: #223771;
+    }
+    .aps-chuongtrinhhocphan .cthp-mohinh-item b {
+        color: #64748b;
+    }
+    .aps-chuongtrinhhocphan .cthp-mohinh-item:has(input:checked) b {
+        color: #223771;
+    }
+    .aps-chuongtrinhhocphan .cthp-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px 10px;
+    }
+    .aps-chuongtrinhhocphan .cthp-tb-group {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    .aps-chuongtrinhhocphan .cthp-tb-right {
+        justify-content: flex-end;
+    }
+    .aps-chuongtrinhhocphan .cthp-toolbar .btn {
+        display: inline-flex !important;
+        align-items: center;
+        height: 34px;
+        margin: 0 !important;
+        padding: 0 12px !important;
+        font-size: 13px;
+        border-radius: 6px;
+        white-space: nowrap;
+        float: none !important;
+    }
+    .aps-chuongtrinhhocphan .cthp-toolbar .btn i {
+        margin-right: 6px;
+    }
+    .aps-chuongtrinhhocphan .cthp-toolbar .btn .lang,
+    .aps-chuongtrinhhocphan .cthp-toolbar .btn i {
+        padding-right: 0 !important;
+    }
+    .aps-chuongtrinhhocphan .cthp-toolbar .btn .caret {
+        margin-left: 6px;
+    }
+    .aps-chuongtrinhhocphan .cthp-toolbar .cthp-tb-cta {
+        font-weight: 600;
+        padding: 0 16px !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    }
+    .aps-chuongtrinhhocphan .cthp-tb-ky {
+        width: 180px;
+    }
+    .aps-chuongtrinhhocphan .cthp-tb-ky .select2-container .select2-selection--single {
+        height: 34px !important;
+    }
+    .aps-chuongtrinhhocphan .cthp-tb-ky .select2-container .select2-selection__rendered {
+        line-height: 32px !important;
+    }
+    .aps-chuongtrinhhocphan .cthp-tb-ky .select2-container .select2-selection__arrow {
+        height: 32px !important;
+    }
+    .aps-chuongtrinhhocphan .cthp-tb-sep {
+        width: 1px;
+        height: 22px;
+        margin: 0 4px;
+        background: #cbd5e1;
+    }
+    .aps-chuongtrinhhocphan .cthp-left-box .tblHocPhan-filter-bar {
+        margin-top: 10px;
+        padding: 6px 10px;
+    }
 </style>
 <section class="content aps-KeHoachChuongTrinh">
     <div class="row aps-chuongtrinhhocphan">
@@ -537,19 +670,38 @@
                         <i class="fa fa-angle-double-left"></i>
                     </a>
                     <div class="col-sm-9 bg-white pr0 zone_chuongtrinhhocphan-left">
-                        <div class="box box-solid pd20">
-                            <div class="box-header pl0 pr0 mb-5">
-                                <h3 class="box-title color-blue line-38"
-                                    style="padding-top: 0 !important;margin-bottom: 0 !important;"
-                                    title="Danh sách học phần">
-                                    <i class="fa-solid fa-book-open-reader line-38"></i> Danh sách học phần
+                        <div class="box box-solid cthp-left-box">
+                            <div class="cthp-head">
+                                <h3 class="cthp-head-title" title="Danh sách học phần">
+                                    <i class="fa-solid fa-book-open-reader"></i> Danh sách học phần
                                     <span id="badgeTongHocPhan" title="Tổng số học phần trong chương trình"></span>
                                 </h3>
-                                <span class="pull-right d-flex">
-                                    <div class="dropdown" id="zonebtnHPCT_Import" style="float: left;">
-                                        <div style="width: 200px; float: left; padding-right: 5px">
-                                            <select id="dropSearch_HocKyDuKien" class="select-opt" style="width:100% !important"></select>
-                                        </div>
+                                <div class="cthp-mohinh-bar">
+                                    <label class="cthp-mohinh-item">
+                                        <input type="checkbox" id="chkMoHinhTD_PhamVi" />
+                                        Có áp dụng khai tương đương theo từng sinh viên:
+                                        <b id="lblMoHinhTD_PhamVi">Không</b>
+                                    </label>
+                                    <label class="cthp-mohinh-item">
+                                        <input type="checkbox" id="chkMoHinhTT_PhamVi" />
+                                        Có áp dụng khai thay thế theo từng sinh viên:
+                                        <b id="lblMoHinhTT_PhamVi">Không</b>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="cthp-toolbar">
+                                <div class="cthp-tb-group">
+                                    <a class="btn btn-soft-danger" id="btnDelete_HocPhan_ChuongTrinh">
+                                        <i class="fa fa-trash"></i><span class="lang" key="">Xóa học phần</span>
+                                    </a>
+                                </div>
+                                <div class="cthp-tb-group cthp-tb-right">
+                                    <div class="cthp-tb-ky">
+                                        <select id="dropSearch_HocKyDuKien" class="select-opt" style="width:100% !important"></select>
+                                    </div>
+                                    <a class="btn btn-primary" id="btnEditKyDuKien"><i class="fa fa-edit"></i><span class="lang" key="lb_luu">Cập nhật kỳ dự kiến</span></a>
+                                    <span class="cthp-tb-sep"></span>
+                                    <div class="dropdown" id="zonebtnHPCT_Import">
                                         <a class="btn btn-soft-success dropdown-toggle" type="button"
                                            data-toggle="dropdown">
                                             <i class="fa fa-cloud-upload"></i>Import <span class="caret"></span>
@@ -574,30 +726,18 @@
                                         </ul>
                                     </div>
                                     <a class="btn btn-soft-primary" id="btnAdd_KeThua">
-                                        <i class="fa-regular fa-files"></i><span class="lang" key="lb_luu">
-                                            Kế thừa học
-                                            phần
-                                        </span>
+                                        <i class="fa-regular fa-files"></i><span class="lang" key="lb_luu">Kế thừa học phần</span>
                                     </a>
-
+                                    <a class="btn btn-soft-primary btnEdit" id="btnEditThuTu">
+                                        <i class="fa fa-edit"></i><span class="lang" key="lb_luu">Chỉnh sửa thứ tự</span>
+                                    </a>
                                     <a class="btn btn-soft-warning" id="btnTaiLai">
                                         <i class="fa fa-refresh"></i><span class="lang" key="lb_luu">Tải lại</span>
                                     </a>
-                                    <a class="btn btn-soft-danger" id="btnDelete_HocPhan_ChuongTrinh">
-                                        <i class="fa fa-trash"></i><span class="lang" key="">Xóa học phần</span>
-                                    </a>
-                                    <a class="btn btn-soft-primary btnEdit" id="btnEditThuTu">
-                                        <i class="fa fa-edit"></i><span class="lang" key="lb_luu">
-                                            Chỉnh sửa thứ
-                                            tự
-                                        </span>
-                                    </a>
-
-                                    <a class="btn btn-primary" id="btnEditKyDuKien"><i class="fa fa-edit"></i> <span class="lang" key="lb_luu"> Cập nhật kỳ dự kiến</span></a>
-                                    <a class="btn btn-success" id="btnAdd_HocPhan">
+                                    <a class="btn btn-success cthp-tb-cta" id="btnAdd_HocPhan">
                                         <i class="fa fa-plus"></i><span class="lang" key="lb_luu">Thêm học phần</span>
                                     </a>
-                                </span>
+                                </div>
                             </div>
                             <!-- Ô lọc nhanh trong bảng: search theo mã/tên HP để user không phải scroll qua 90+ dòng -->
                             <div class="tblHocPhan-filter-bar">

@@ -56,6 +56,9 @@ ChuongTrinhHocPhan.prototype = {
         $("#btnSearchChuongTrinh").click(function () {
             me.getList_ChuongTrinh();
         });
+        $("#chkMoHinhTD_PhamVi, #chkMoHinhTT_PhamVi").change(function () {
+            me.save_MoHinhChuongTrinh(this);
+        });
         $("#txtSearch_TuKhoa").keypress(function (e) {
             if (e.which === 13) {
                 e.preventDefault();
@@ -1183,6 +1186,7 @@ ChuongTrinhHocPhan.prototype = {
         edu.util.viewHTMLById("lblInputHocPhan", data[0].TENCHUONGTRINH);
         edu.util.viewHTMLById("lblInputHocPhan", data[0].TENCHUONGTRINH);
         $(".lblChuongTrinh").html(data[0].TENCHUONGTRINH)
+        me.viewMoHinhChuongTrinh(data[0]);
         me.getList_HocPhan_ChuongTrinh();
         me.getList_KhoiBatBuoc();
         me.getList_KhoiTuChonDon();
@@ -6430,6 +6434,77 @@ ChuongTrinhHocPhan.prototype = {
             data: obj_save,
             fakedb: [
             ]
+        }, false, false, false, null);
+    },
+
+    getFieldNoCase: function (obj, strField) {
+        if (!obj) return undefined;
+        var strKey = Object.keys(obj).find(function (k) { return k.toLowerCase() === strField; });
+        return strKey ? obj[strKey] : undefined;
+    },
+    setMoHinhCheck: function (strType, bChecked) {
+        $("#chkMoHinh" + strType + "_PhamVi").prop("checked", bChecked);
+        $("#lblMoHinh" + strType + "_PhamVi").text(bChecked ? "Có" : "Không");
+    },
+    viewMoHinhChuongTrinh: function (objCT) {
+        var me = this;
+        var dTD = parseInt(me.getFieldNoCase(objCT, "mohinhtuongduongtheophamvi"), 10);
+        var dTT = parseInt(me.getFieldNoCase(objCT, "mohinhthaythetheophamvi"), 10);
+        me.setMoHinhCheck("TD", dTD === 1);
+        // Spec ghi "= 2 thì Có" nhưng lúc lưu lại gửi 1 → chấp nhận cả 1 và 2 để lưu xong mở lại vẫn đúng
+        me.setMoHinhCheck("TT", dTT === 1 || dTT === 2);
+    },
+    save_MoHinhChuongTrinh: function (elChanged) {
+        var me = this;
+        var $chk = $(elChanged);
+        var bChecked = $chk.is(":checked");
+        var strType = elChanged.id === "chkMoHinhTD_PhamVi" ? "TD" : "TT";
+        if (!me.strChuongTrinh_Id) {
+            me.setMoHinhCheck(strType, !bChecked);
+            return;
+        }
+        var dTD = $("#chkMoHinhTD_PhamVi").is(":checked") ? 1 : 0;
+        var dTT = $("#chkMoHinhTT_PhamVi").is(":checked") ? 1 : 0;
+        var obj_save = {
+            'action': 'KHCT_ThongTin2_MH/AiAxDykgNR4MLgkoLykeAik0Li8mFTMoLykP',
+            'func': 'PKG_KEHOACH_THONGTIN2.CapNhat_MoHinh_ChuongTrinh',
+            'iM': edu.system.iM,
+            'strDaoTao_ChuongTrinh_Id': me.strChuongTrinh_Id,
+            'dMoHinhTD_PhamVi': dTD,
+            'dMoHinhTT_PhamVi': dTT,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        $("#chkMoHinhTD_PhamVi, #chkMoHinhTT_PhamVi").prop("disabled", true);
+        edu.system.makeRequest({
+            success: function (data) {
+                $("#chkMoHinhTD_PhamVi, #chkMoHinhTT_PhamVi").prop("disabled", false);
+                if (data.Success) {
+                    me.setMoHinhCheck(strType, bChecked);
+                    var objCT = edu.util.objGetDataInData(me.strChuongTrinh_Id, me.dtChuongTrinh, "ID")[0];
+                    if (objCT) {
+                        Object.keys(objCT).forEach(function (k) {
+                            var kl = k.toLowerCase();
+                            if (kl === "mohinhtuongduongtheophamvi") objCT[k] = dTD;
+                            if (kl === "mohinhthaythetheophamvi") objCT[k] = dTT;
+                        });
+                    }
+                    edu.system.alert("Cập nhật thành công");
+                }
+                else {
+                    me.setMoHinhCheck(strType, !bChecked);
+                    edu.system.alert(obj_save.action + ": " + data.Message, "w");
+                }
+            },
+            error: function (er) {
+                $("#chkMoHinhTD_PhamVi, #chkMoHinhTT_PhamVi").prop("disabled", false);
+                me.setMoHinhCheck(strType, !bChecked);
+                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: "POST",
+            action: obj_save.action,
+            contentType: true,
+            data: obj_save,
+            fakedb: []
         }, false, false, false, null);
     },
 

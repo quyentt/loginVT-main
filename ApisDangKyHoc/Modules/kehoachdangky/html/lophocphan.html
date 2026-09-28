@@ -168,6 +168,14 @@
         font-weight: 800 !important;
     }
 
+    /* FIX: indexi.aspx ep `.scroll-table-x { display:flex !important }` → jQuery .hide()
+       (inline display:none) bi de → bam nut xem thu 2 van hien ca bang cu.
+       Ton trong display:none inline cua .tblHidden (specificity cao hon rule global). */
+    html body #main-content-wrapper .aps-lophocphan .tblHidden[style*="display: none"],
+    html body #main-content-wrapper .aps-lophocphan .tblHidden[style*="display:none"] {
+        display: none !important;
+    }
+
     /* Find-in-table widget (Ctrl+F-style) */
     .aps-find-in-table-bar {
         display: flex;
