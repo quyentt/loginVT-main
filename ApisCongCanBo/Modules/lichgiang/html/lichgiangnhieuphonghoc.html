@@ -570,37 +570,33 @@
         transform: scale(0.98);
     }
 
-    /* Thẻ lịch màu nhạt cho dịu mắt (sếp Phenikaa góp ý): nền pha nhạt + viền trái đậm để phân biệt lớp + chữ tối.
-       Không dùng tông xanh lá (lẫn với ô hiệu suất / nhãn "Trống").
-       Bảng màu cũ (đậm, chữ trắng): color-1 var(--color-link), color-2 #ff6b35, color-3 #ec4c00, color-4 #5a7adb, color-5 #3c5398 */
-    .schedule-event.color-1 {
-        background-color: #e8efff;
-        border-left: 3px solid #3b6fd8;
-        color: #1e3a8a;
+    /* Thẻ lịch kiểu trang Thời khóa biểu cá nhân: ĐẦU THẺ đổ màu + chữ trắng (giờ, học phần), THÂN THẺ trắng (giảng viên).
+       Bảng màu = arrMau của lichgiang.js để 2 trang đồng bộ.
+       Các phương án đã dùng trước (để đổi lại nhanh):
+       - Pastel cả thẻ + viền trái: #e8efff/#3b6fd8, #fff0e6/#f08a4b, #f2ecff/#8b6fd6, #fdebf3/#e0679a, #e3f4f8/#3aa0bd
+       - Đậm cả thẻ chữ trắng: var(--color-link), #ff6b35, #ec4c00, #5a7adb, #3c5398 */
+    .schedule-event.color-1 .event-head {
+        background-color: #223771;
     }
 
-    .schedule-event.color-2 {
-        background-color: #fff0e6;
-        border-left: 3px solid #f08a4b;
-        color: #9a3412;
+    .schedule-event.color-2 .event-head {
+        background-color: #d49f3a;
     }
 
-    .schedule-event.color-3 {
-        background-color: #f2ecff;
-        border-left: 3px solid #8b6fd6;
-        color: #4c1d95;
+    .schedule-event.color-3 .event-head {
+        background-color: #ec4c00;
     }
 
-    .schedule-event.color-4 {
-        background-color: #fdebf3;
-        border-left: 3px solid #e0679a;
-        color: #9d174d;
+    .schedule-event.color-4 .event-head {
+        background-color: #5a7adb;
     }
 
-    .schedule-event.color-5 {
-        background-color: #e3f4f8;
-        border-left: 3px solid #3aa0bd;
-        color: #155e75;
+    .schedule-event.color-5 .event-head {
+        background-color: #3c5398;
+    }
+
+    .schedule-event .event-head {
+        color: #ffffff;
     }
 
     .event-time {
@@ -2054,8 +2050,7 @@
     }
 
     .lgnp-legend .lgnp-legend-busy {
-        background: #e8efff;
-        border-left: 3px solid #3b6fd8;
+        background: linear-gradient(to bottom, #5a7adb 0 50%, #ffffff 50% 100%);
     }
 
     /* Nút tuần + popup lịch tháng để chọn tuần */
@@ -2209,8 +2204,15 @@
 
     /* Thẻ lịch trong ô hẹp: chữ nhỏ lại + cắt dòng (xem đủ ở tooltip / bấm mở chi tiết) để hàng không bị kéo quá cao */
     .schedule-module .schedule-event {
-        padding: 4px 5px;
+        padding: 0;
         line-height: 1.3;
+        background: #ffffff;
+        border: 1px solid #dfe5ef;
+        color: #334155;
+    }
+
+    .schedule-module .schedule-event .event-head {
+        padding: 4px 5px 3px;
     }
 
     /* Thẻ màu nhạt: bỏ brightness khi rê chuột (làm nhạt thêm), chỉ nhấc nhẹ + bóng */
@@ -2240,7 +2242,12 @@
     }
 
     .schedule-module .event-teacher {
+        /* Đệm dưới đặt bằng margin: padding nằm trong vùng cắt dòng sẽ lộ mép dòng thứ 3 */
+        margin: 0 0 4px;
+        padding: 3px 5px 0;
         font-size: 10.5px;
+        color: #475569;
+        opacity: 1;
         -webkit-line-clamp: 2;
         line-clamp: 2;
     }
@@ -3508,7 +3515,7 @@
 </div>
 
 <!-- CDN không hoạt động, bỏ qua và dùng XLSX fallback trực tiếp -->
-<script src="modules/lichgiang/script/lichgiangnhieuphonghoc.js?v=3.8.2.0"></script>
+<script src="modules/lichgiang/script/lichgiangnhieuphonghoc.js?v=3.8.3.0"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         // Check if XLSX library is loaded

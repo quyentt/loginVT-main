@@ -1234,8 +1234,11 @@ LichGiangNhieuPhong.prototype = {
             + (event.TIETBATDAU ? ' (Tiết ' + event.TIETBATDAU + '-' + event.TIETKETTHUC + ')' : '')
             + (giangVien ? '\n' + giangVien : '');
         var html = '<div class="schedule-event ' + colorClass + '" data-event-id="' + uniqueId + '" data-room-id="' + room.ID + '" data-date="' + day.date + '" data-lophocphan="' + event.IDLOPHOCPHAN + '" title="' + me.escAttr(strTooltip) + '">';
+        // Đầu thẻ đổ màu chữ trắng (giờ + học phần), thân thẻ trắng (giảng viên) — giống thẻ trang Thời khóa biểu cá nhân
+        html += '<div class="event-head">';
         html += '<div class="event-time">' + me.returnTwo(event.GIOBATDAU) + ':' + me.returnTwo(event.PHUTBATDAU) + (event.TIETBATDAU ? ' (T' + event.TIETBATDAU + '-' + event.TIETKETTHUC + ')' : '') + '</div>';
         html += '<div class="event-subject">' + event.TENHOCPHAN + '</div>';
+        html += '</div>';
         if (giangVien) {
             html += '<div class="event-teacher">' + giangVien + '</div>';
         }

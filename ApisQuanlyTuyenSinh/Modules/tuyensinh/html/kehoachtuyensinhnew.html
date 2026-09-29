@@ -1712,6 +1712,14 @@
         margin: -16px -20px 0; padding: 16px 20px 0;
         box-shadow: 0 6px 14px -12px rgba(15, 23, 42, .45);
     }
+    /* Khoảng hở phía TRÊN thanh công cụ (lề trên của vùng cuộn) vẫn để dòng dữ liệu
+       chạy xuyên qua, nhìn như thanh công cụ bị trong suốt (sếp Khoa 28/09/2026).
+       Vá bằng một mảng trắng kéo ngược lên, ăn liền vào thanh tiêu đề xanh phía trên.
+       Mảng này nằm TRONG vùng cuộn nên không bao giờ che mất thanh tiêu đề. */
+    #kqdk_list .kqdk-toolbar-sticky::before {
+        content: ""; position: absolute; left: 0; right: 0; bottom: 100%;
+        height: 120px; background: #fff;
+    }
 
     /* Ô lịch + chữ nhắc ngày nằm CÙNG MỘT HÀNG. Để chữ xuống dòng là ô này cao hơn
        các ô cùng hàng, kéo lệch cả lưới — chỗ trống theo chiều ngang thì còn nhiều. */

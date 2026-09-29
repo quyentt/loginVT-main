@@ -352,32 +352,43 @@
         visibility: hidden;
       }
 
+      /* Gọn chiều cao để thấy hết các nhóm trong 1 màn hình (sếp: chữ to + không bị che nhóm cuối) */
       .role-group+.role-group {
-        margin-top: 22px;
+        margin-top: 14px;
       }
 
       .role-group-title {
         font-family: Arial, Helvetica, sans-serif !important;
         display: flex;
-        align-items: baseline;
+        align-items: center;
         gap: 6px;
-        margin: 0 0 12px;
+        margin: 0 0 8px;
         font-size: 16px;
         font-weight: 700;
         color: #0f172a;
       }
 
+      /* Vạch màu theo tone nhóm trước tiêu đề — thay điểm nhấn màu của badge đã ẩn */
+      .role-group-title::before {
+        content: '';
+        width: 4px;
+        height: 16px;
+        border-radius: 2px;
+        background: var(--g, #94a3b8);
+        margin-right: 2px;
+      }
+
       .role-group-count {
         font-weight: 600;
         color: #64748b;
-        font-size: 13px;
+        font-size: 14px;
       }
 
       /* ─── Role grid: auto-fill min 200px → tự co số cột theo màn hình ─── */
       .role-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 12px;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 10px;
       }
 
       /* ─── Role card: layout ngang chuyên nghiệp ─── */
@@ -385,16 +396,16 @@
         display: flex !important;
         flex-direction: row;
         align-items: center;
-        gap: 13px;
-        padding: 14px 16px;
+        gap: 12px;
+        padding: 10px 14px;
         border: 1px solid #e8edf5;
         background: #ffffff;
-        border-radius: 14px;
+        border-radius: 12px;
         box-shadow: 0 1px 4px rgba(15, 23, 42, .06), 0 0 0 0 transparent;
         transition: transform .22s cubic-bezier(.4,0,.2,1),
                     box-shadow .22s ease,
                     border-color .18s ease;
-        min-height: 76px;
+        min-height: 60px;
         width: auto !important;
         height: auto !important;
         cursor: pointer;
@@ -409,16 +420,16 @@
       .role-card-head {
         display: flex;
         align-items: center;
-        gap: 13px;
+        gap: 12px;
         width: 100%;
       }
 
       .role-card-icon {
         display: grid;
         place-items: center;
-        width: 46px;
-        height: 46px;
-        min-width: 46px;
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
         border-radius: 11px;
         font-size: 20px;
         flex-shrink: 0;
@@ -448,10 +459,10 @@
       }
 
       .role-card-name {
-        font-size: 13.5px;
-        font-weight: 700;
-        color: #0f172a;
-        line-height: 1.42;
+        font-size: 15px;
+        font-weight: 600;
+        color: #1e293b;
+        line-height: 1.35;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         line-clamp: 2;
@@ -2441,7 +2452,8 @@
               '</span>' +
               '<div class="role-card-right">' +
               '<div class="role-card-name" title="' + escapeHtml(it.name) + '">' + escapeHtml(it.name) + '</div>' +
-              '<span class="role-card-badge" style="background:' + meta.chipBg + ';color:' + meta.chipFg + '">' + meta.label + '</span>' +
+              // Ẩn badge nhóm (trùng với tiêu đề nhóm, tốn chiều cao card) — mở lại nếu cần
+              // '<span class="role-card-badge" style="background:' + meta.chipBg + ';color:' + meta.chipFg + '">' + meta.label + '</span>' +
               '</div>' +
               '</div>' +
 
@@ -2462,7 +2474,7 @@
                 var arr = byGroup[g];
                 if (!arr || !arr.length) return;
                 html += '<section class="role-group">' +
-                  '<h3 class="role-group-title"><span>' + GROUPS[g].label + '</span>' +
+                  '<h3 class="role-group-title" style="--g:' + GROUPS[g].fg + '"><span>' + GROUPS[g].label + '</span>' +
                   '<span class="role-group-count">(' + arr.length + ')</span></h3>' +
                   '<div class="role-grid">' + arr.map(cardHtml).join('') + '</div>' +
                   '</section>';
