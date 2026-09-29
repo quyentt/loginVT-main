@@ -2054,6 +2054,11 @@
                                         <th class="td-center" colspan="6" style="background:#f5d0fe;color:#701a75;">Thông tin trúng tuyển</th>
                                         <th class="td-center" colspan="5" style="background:#fed7aa;color:#9a3412;">Thông tin xuất hóa đơn</th>
                                         <th class="td-center" colspan="1" style="background:#cffafe;color:#155e75;">Nguồn khai thác</th>
+                                        <!-- ⚠ Thêm nhóm ở CUỐI cho khớp 17 giá trị bổ sung cuối _kqRowToArray.
+                                             Số ô ở đây phải bằng đúng số giá trị, lệch một ô là cả bảng
+                                             chế độ "Đầy đủ" xô cột. -->
+                                        <th class="td-center" colspan="14" style="background:#e2e8f0;color:#334155;">Hồ sơ &amp; kế hoạch</th>
+                                        <th class="td-center" colspan="3" style="background:#fed7aa;color:#9a3412;">Hóa đơn (bổ sung)</th>
                                     </tr>
                                     <tr>
                                         <th class="td-center" style="min-width:130px;">Số CCCD</th>
@@ -2097,6 +2102,25 @@
                                         <th class="td-left" style="min-width:200px;">Địa chỉ cơ quan</th>
                                         <th class="td-center" style="min-width:130px;">MST</th>
                                         <th class="td-left" style="min-width:170px;">Đối tác / nguồn</th>
+                                        <!-- 14 cột nhóm "Hồ sơ & kế hoạch" -->
+                                        <th class="td-left" style="min-width:190px;">Kế hoạch tuyển sinh</th>
+                                        <th class="td-left" style="min-width:170px;">Đợt tuyển sinh</th>
+                                        <th class="td-center" style="min-width:120px;">Mã hồ sơ</th>
+                                        <th class="td-center" style="min-width:110px;">Số báo danh</th>
+                                        <th class="td-left" style="min-width:200px;">Nguyện vọng đầu ra</th>
+                                        <th class="td-left" style="min-width:150px;">Hệ đào tạo</th>
+                                        <th class="td-left" style="min-width:190px;">Chương trình đào tạo</th>
+                                        <th class="td-left" style="min-width:170px;">Ngành tuyển sinh</th>
+                                        <th class="td-center" style="min-width:130px;">Trạng thái hồ sơ</th>
+                                        <th class="td-center" style="min-width:130px;">Kết quả xét tuyển</th>
+                                        <th class="td-center" style="min-width:140px;">Ngày nộp hồ sơ</th>
+                                        <th class="td-center" style="min-width:140px;">Ngày có kết quả</th>
+                                        <th class="td-center" style="min-width:140px;">Ngày tiếp nhận</th>
+                                        <th class="td-center" style="min-width:120px;">Đã tạo HS học tập</th>
+                                        <!-- 3 cột nhóm "Hóa đơn (bổ sung)" -->
+                                        <th class="td-left" style="min-width:170px;">Người mua HĐ</th>
+                                        <th class="td-left" style="min-width:180px;">Email nhận HĐ</th>
+                                        <th class="td-center" style="min-width:120px;">SĐT nhận HĐ</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -3569,7 +3593,7 @@
         tryNext();
     })();
 </script>
-<script src="modules/tuyensinh/script/kehoachtuyensinhnew.js?v=1.0.12.6"></script>
+<script src="modules/tuyensinh/script/kehoachtuyensinhnew.js?v=1.0.13.0"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['KeHoachTuyenSinhNew'] = new KeHoachTuyenSinhNew();

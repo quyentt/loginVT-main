@@ -3132,8 +3132,12 @@ KeHoachTuyenSinhNew.prototype = {
                         // response hồ sơ (cả list lẫn detail) KHÔNG có 2 khóa này, đây là
                         // đường duy nhất suy ra được đợt của một hồ sơ.
                         khId: r.TS_KEHOACH_TUYENSINH_ID || '',
+                        khTen: r.TS_KEHOACH_TUYENSINH_TEN || '',
                         dotId: r.TS_KEHOACH_TUYENSINH_DOT_ID || '',
                         dotTen: r.TS_KEHOACH_TUYENSINH_DOT_TEN || '',
+                        // Tên + mã của chính nguyện vọng đầu ra — file xuất cần cột này
+                        ten: r.TEN_HIENTHI || r.TEN || '',
+                        ma: r.MA_HIENTHI || r.MA || '',
                         nganhId: r.DAOTAO_NGANH_TS_ID || r.DAOTAO_NGANH_DT_ID || '',
                         nganhTen: r.DAOTAO_NGANH_TS_TEN || r.DAOTAO_NGANH_DT_TEN || '',
                         ctTen: r.DAOTAO_TOCHUCCHUONGTRINH_TEN || '',
@@ -4924,7 +4928,59 @@ KeHoachTuyenSinhNew.prototype = {
             (function () {
                 var pid = pick(d, ['COREPERSON_ID', 'CORE_PERSON_ID', 'PERSON_ID']);
                 return (me._nguonMap || {})[pid] || '';
-            })()
+            })(),
+
+            /* ===== [52..68] BỔ SUNG cho file xuất (khách báo 29/09/2026 "xuất ra thiếu
+               rất nhiều thông tin"). PHẢI THÊM Ở CUỐI: _KQ_COT_GON và mã cột bộ lọc
+               tham chiếu theo CHỈ SỐ, chèn vào giữa là lệch hết bảng.
+               Kế hoạch / đợt / hệ / ngành suy từ nguyện vọng đầu ra, vì response hồ sơ
+               không có mấy khóa đó (xem _ensureKQDK_DauRaMap). ===== */
+            (function () {
+                var dr = (me._kqDauRaMap || {})[pick(d, ['NGUYENVONG_DAURA_ID'])] || {};
+                var tenKH = dr.khTen || '';
+                if (!tenKH) {
+                    // Danh sách mở theo 1 kế hoạch → lấy tên kế hoạch đang mở
+                    (me.dtKeHoachTuyenSinh || []).forEach(function (k) {
+                        if (String(k.ID || k.Id || '') === String(me.strKeHoachTuyenSinh_Id)) {
+                            tenKH = k.TEN || k.Ten || '';
+                        }
+                    });
+                }
+                return tenKH;
+            })(),
+            (function () {
+                var dr = (me._kqDauRaMap || {})[pick(d, ['NGUYENVONG_DAURA_ID'])] || {};
+                return dr.dotTen || '';
+            })(),
+            pick(d, ['HOSO_MAHOSO', 'HoSo_MaHoSo', 'MA_HOSO']),
+            pick(d, ['HOSO_SOBAODANH', 'HoSo_SoBaoDanh', 'SOBAODANH']),
+            (function () {
+                var dr = (me._kqDauRaMap || {})[pick(d, ['NGUYENVONG_DAURA_ID'])] || {};
+                return dr.ten ? (dr.ma ? (dr.ten + ' (' + dr.ma + ')') : dr.ten) : '';
+            })(),
+            (function () {
+                var dr = (me._kqDauRaMap || {})[pick(d, ['NGUYENVONG_DAURA_ID'])] || {};
+                return dr.heTen || '';
+            })(),
+            (function () {
+                var dr = (me._kqDauRaMap || {})[pick(d, ['NGUYENVONG_DAURA_ID'])] || {};
+                return dr.ctTen || '';
+            })(),
+            (function () {
+                var dr = (me._kqDauRaMap || {})[pick(d, ['NGUYENVONG_DAURA_ID'])] || {};
+                return dr.nganhTen || '';
+            })(),
+            // Mã trạng thái đổi sang chữ đọc được; mã lạ thì giữ nguyên, không đoán
+            me._tcTenTrangThai(pick(d, ['HOSO_STATUS'])),
+            me._tcTenTrangThai(pick(d, ['HOSO_KETQUA'])),
+            pick(d, ['HOSO_NGAYNOP']),
+            pick(d, ['HOSO_NGAYKETQUA']),
+            bu(pick(d, ['INTAKE_NGAYTIEPNHAN']), 'INTAKE_NGAYTIEPNHAN'),
+            (String(pick(d, ['INTAKE_ISSTUDYCREATED'])) === '1' ? 'Có' : ''),
+            // 3 cột hóa đơn còn thiếu (chỉ có dữ liệu ở chế độ Đầy đủ, như 5 cột hóa đơn trên)
+            me._pickLoose(hd, ['BUYER_NAME_TENNM', 'BUYER_NAME']) || '',
+            me._pickLoose(hd, ['BUYER_EMAIL']) || '',
+            me._pickLoose(hd, ['BUYER_PHONE_SDT', 'BUYER_PHONE']) || ''
         ];
     },
 
@@ -5165,7 +5221,17 @@ KeHoachTuyenSinhNew.prototype = {
             + '</div></div>');
 
         $pop.data('giatri', dsGiaTri).data('key', key);
-        $('body').append($pop);
+
+        /* ⚠ PHẢI gắn vào TRONG modal, KHÔNG gắn ra <body>.
+           Bootstrap khoá con trỏ trong modal đang mở: hễ focus nhảy ra thẻ nằm ngoài
+           modal là nó kéo về ngay. Ô "Tìm trong danh sách" nằm ngoài nên vừa bấm vào
+           đã bị cướp focus → gõ không ăn chữ nào, trong khi tick chọn vẫn bình thường
+           (tick không cần giữ focus) — đúng hiện tượng sếp Khoa báo 29/09/2026.
+           Popup dùng position:fixed nên nằm trong modal vẫn định vị theo màn hình như cũ
+           (đã soát: không thẻ cha nào có transform để phá containing block). */
+        var $noiChua = $(elAnchor).closest('.modal');
+        if (!$noiChua.length) $noiChua = $('body');
+        $noiChua.append($pop);
 
         // Định vị dưới nút phễu, tự lùi vào trong nếu chạm mép phải/dưới màn hình
         var r = elAnchor.getBoundingClientRect();
@@ -5208,7 +5274,11 @@ KeHoachTuyenSinhNew.prototype = {
             edu.system.alert("Thư viện Excel chưa load xong, vui lòng thử lại", "w");
             return;
         }
-        var src = me.dtKQDK_HoSo || [];
+        /* Xuất ĐÚNG NHỮNG GÌ ĐANG NHÌN THẤY: _kqViewData là danh sách sau khi áp ô tìm
+           nhanh + bộ lọc cột + sắp xếp. Không lọc gì thì nó bằng cả danh sách, nên
+           không mất dữ liệu. Trước đây luôn xuất me.dtKQDK_HoSo → lọc xong xuất vẫn ra
+           đủ mọi dòng, trái với cái người dùng đang thấy trên màn hình. */
+        var src = (me._kqViewData && me._kqViewData.length) ? me._kqViewData : (me.dtKQDK_HoSo || []);
         if (!src.length) {
             edu.system.alert("Không có dữ liệu để xuất", "w");
             return;
@@ -5224,7 +5294,13 @@ KeHoachTuyenSinhNew.prototype = {
             'Mẹ - Họ tên', 'Mẹ - Năm sinh', 'Mẹ - Nơi ở', 'Mẹ - SĐT',
             'Số QĐ TT', 'Ngày ban hành QĐ', 'Khóa ĐT', 'Mã ngành', 'Mã lớp QL', 'Mã SV',
             'Đối tượng HĐ', 'Tên đơn vị HĐ', 'Mã QHNS', 'Địa chỉ cơ quan HĐ', 'MST',
-            'Nguồn khai thác'
+            'Nguồn khai thác',
+            // Bổ sung 29/09/2026 — phải khớp ĐÚNG THỨ TỰ 17 giá trị thêm ở cuối _kqRowToArray
+            'Kế hoạch tuyển sinh', 'Đợt tuyển sinh', 'Mã hồ sơ', 'Số báo danh',
+            'Nguyện vọng đầu ra', 'Hệ đào tạo', 'Chương trình đào tạo', 'Ngành tuyển sinh',
+            'Trạng thái hồ sơ', 'Kết quả xét tuyển', 'Ngày nộp hồ sơ', 'Ngày có kết quả',
+            'Ngày tiếp nhận', 'Đã tạo hồ sơ học tập',
+            'Người mua HĐ', 'Email nhận HĐ', 'SĐT nhận HĐ'
         ];
         var ws_data = [headerCols];
         for (var i = 0; i < src.length; i++) {
