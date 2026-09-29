@@ -3555,3 +3555,65 @@ if (typeof edu !== 'undefined' && edu.system && edu.system.makeRequest
         return _mrTrungMinh.apply(this, arguments);
     };
 }
+
+/*==============================================================================
+== TỰ CẮT KHOẢNG TRẮNG THỪA Ở MỌI Ô NHẬP  (29/09/2026)
+==
+== Người dùng thường dán dữ liệu từ Excel/Word nên hay dính khoảng trắng đầu/cuối
+== và cả khoảng trắng không ngắt dòng (U+00A0) — nhìn y hệt dấu cách thường nhưng
+== máy chủ coi là ký tự khác, gây báo lỗi hoặc lưu sai mà không hiểu vì sao.
+==
+== Xử lý ở hai thời điểm:
+==   1) Rời khỏi ô  → cắt ngay, người dùng nhìn thấy kết quả;
+==   2) Bấm Lưu     → quét lại toàn bộ, bắt ở pha capture nên chạy TRƯỚC mọi
+==                    xử lý lưu khác, đảm bảo thứ gửi đi luôn là bản đã cắt.
+==
+== Cắt gì: bỏ khoảng trắng hai đầu và gom nhiều khoảng trắng liên tiếp thành một.
+== Không đụng ô chọn ngày, ô tick, ô chỉ đọc, và ô nào gắn data-ze-khong-trim.
+== Gán bằng .value nên không bắn sự kiện gõ — các cơ chế "người dùng vừa sửa ô
+== nào" ở trên không bị tính nhầm.
+==============================================================================*/
+if (typeof document !== 'undefined' && !window._zeTrimHooked) {
+    window._zeTrimHooked = true;
+
+    var _ZE_BO_QUA = ['checkbox', 'radio', 'file', 'hidden', 'button', 'submit',
+        'image', 'reset', 'date', 'datetime-local', 'time', 'month', 'week', 'color', 'range'];
+
+    var _zeTrimMotO = function (el) {
+        if (!el || el.disabled || el.readOnly) return;
+        if (el.getAttribute && el.getAttribute('data-ze-khong-trim')) return;
+        var loai = ((el.type || '') + '').toLowerCase();
+        if (loai && _ZE_BO_QUA.indexOf(loai) > -1) return;
+        var v = el.value;
+        if (typeof v !== 'string' || !v) return;
+        // \u00A0 là khoảng trắng không ngắt dòng — thủ phạm quen thuộc khi dán từ Word
+        var moi = v.replace(/[\s\u00A0]+/g, ' ').trim();
+        if (moi !== v) el.value = moi;
+    };
+
+    window._zeTrimTatCaO = function () {
+        var goc = document.getElementById('zoneEdit');
+        if (!goc) return;
+        var ds = goc.querySelectorAll('input, textarea');
+        for (var i = 0; i < ds.length; i++) _zeTrimMotO(ds[i]);
+    };
+
+    // 1) Rời khỏi ô thì cắt ngay
+    document.addEventListener('focusout', function (e) {
+        var el = e.target;
+        if (!el || !el.closest) return;
+        if (!el.closest('#zoneEdit')) return;
+        var the = (el.tagName || '').toUpperCase();
+        if (the !== 'INPUT' && the !== 'TEXTAREA') return;
+        _zeTrimMotO(el);
+    }, true);
+
+    // 2) Bấm Lưu: quét sạch trước khi bất kỳ xử lý lưu nào đọc tới các ô
+    //    (pha capture nên đứng trước toàn bộ handler jQuery)
+    document.addEventListener('mousedown', function (e) {
+        var el = e.target;
+        if (!el || !el.closest) return;
+        if (!el.closest('#btnSave_DeXuatHoSo')) return;
+        try { window._zeTrimTatCaO(); } catch (er) { }
+    }, true);
+}
