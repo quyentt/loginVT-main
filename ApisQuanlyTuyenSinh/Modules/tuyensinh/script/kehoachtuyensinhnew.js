@@ -580,10 +580,19 @@ KeHoachTuyenSinhNew.prototype = {
         $(document).on('input', '#kqdk_f_tim', function () {
             var kw = ($(this).val() || '').toLowerCase().trim();
             var $pop = $('#kqdk_filter_pop');
+            var soHien = 0;
             $pop.find('.kqdk-f-list .kqdk-f-item').each(function () {
                 var v = (($(this).attr('data-v') || '') + '').toLowerCase();
-                $(this).toggle(!kw || v.indexOf(kw) >= 0);
+                var khop = !kw || v.indexOf(kw) >= 0;
+                $(this).toggle(khop);
+                if (khop) soHien++;
             });
+            /* Đổi luôn nhãn + số đếm của ô "(Chọn tất cả)" cho khớp phạm vi đang thấy.
+               Không đổi thì nó vẫn ghi 127 trong khi chỉ còn 1 dòng hiện, người dùng
+               tưởng bấm Đồng ý là lọc cả 127. */
+            var $all = $pop.find('#kqdk_f_all').closest('.kqdk-f-item');
+            $all.find('.kqdk-f-txt').html('<b>' + (kw ? '(Chọn tất cả kết quả tìm)' : '(Chọn tất cả)') + '</b>');
+            $all.find('.kqdk-f-dem').text(soHien);
             me._kqDongBoTickAll($pop);
         });
         $(document).on('change', '#kqdk_f_all', function () {
@@ -611,17 +620,28 @@ KeHoachTuyenSinhNew.prototype = {
             var $pop = $('#kqdk_filter_pop');
             var key = $pop.data('key');
             var dsGiaTri = $pop.data('giatri') || [];
+            /* ⚠ Gõ tìm thì các dòng KHÔNG khớp chỉ bị ẩn đi chứ VẪN CÒN TICK.
+               Nếu vơ hết ô đang tick (kể cả dòng ẩn) thì số lượng bằng đúng cả danh sách
+               → rơi vào nhánh "chọn hết = bỏ lọc" → bấm Đồng ý xong bảng y nguyên,
+               đúng hiện tượng khách báo 29/09/2026. Bỏ tick "(Chọn tất cả)" cũng không ăn
+               thua vì nó cũng chỉ bỏ tick các dòng ĐANG HIỆN.
+               → Đang gõ tìm thì chỉ tính các dòng ĐANG HIỆN, giống Excel. */
+            var $items = $pop.find('.kqdk-f-list .kqdk-f-item');
+            var $hien = $items.filter(':visible');
+            var dangTim = $hien.length !== $items.length;
             var chon = [];
-            $pop.find('.kqdk-f-list .kqdk-f-cb:checked').each(function () {
-                var idx = parseInt($(this).attr('data-idx'), 10);
-                if (!isNaN(idx)) chon.push(dsGiaTri[idx]);
-            });
+            ($.trim($pop.find('#kqdk_f_tim').val() || '') ? $hien : $items)
+                .find('.kqdk-f-cb:checked').each(function () {
+                    var idx = parseInt($(this).attr('data-idx'), 10);
+                    if (!isNaN(idx)) chon.push(dsGiaTri[idx]);
+                });
             if (!chon.length) {
                 edu.system.alert('Phải chọn ít nhất 1 giá trị, nếu không bảng sẽ trống trơn.', 'w');
                 return;
             }
-            // Chọn hết = không lọc gì → bỏ luôn cho thanh chip khỏi rác
-            if (chon.length === dsGiaTri.length) delete me._kqFilters[key];
+            // Chọn hết = không lọc gì → bỏ luôn cho thanh chip khỏi rác.
+            // Đang gõ tìm thì KHÔNG áp luật này: chọn hết kết quả tìm vẫn là một bộ lọc thật.
+            if (!dangTim && chon.length === dsGiaTri.length) delete me._kqFilters[key];
             else me._kqFilters[key] = chon;
             me._kqDongFilter();
             me._kqApplyAllFilters();
