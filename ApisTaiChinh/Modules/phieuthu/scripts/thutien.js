@@ -407,10 +407,9 @@ PhieuThu.prototype = {
             me.strPhieuThu_Id = strPhieuThu_Id;
             me.bActiveRutTien = false;
             $(".beforeActive").hide();
-            $("#zoneBienLaiHoaDon").stop(true, true).hide();
+            $("#zoneBienLaiHoaDon").stop(true, true).slideDown();
             $("#zoneTimKiemSinhVien").slideUp();
             edu.extend.getData_Phieu(strPhieuThu_Id, "BIENLAI", 'MauInPhieuThu', function () {
-                $("#zoneBienLaiHoaDon").stop(true, true).slideDown();
                 main_doc.PhieuThu.changeWidthPrint();
             });
         });
@@ -420,10 +419,9 @@ PhieuThu.prototype = {
             me.strPhieuThu_Id = strPhieuThu_Id;
             me.bActiveRutTien = true;
             $(".beforeActive").hide();
-            $("#zoneBienLaiHoaDon").stop(true, true).hide();
+            $("#zoneBienLaiHoaDon").stop(true, true).slideDown();
             $("#zoneTimKiemSinhVien").slideUp();
             edu.extend.getData_Phieu(strPhieuThu_Id, "BIENLAI", "MauInPhieuThu", function () {
-                $("#zoneBienLaiHoaDon").stop(true, true).slideDown();
                 main_doc.PhieuThu.genHTML_PhieuRut();
             });
         });
@@ -433,10 +431,9 @@ PhieuThu.prototype = {
             me.strPhieuThu_Id = strPhieuThu_Id;
             me.bActiveRutTien = true;
             $(".beforeActive").hide();
-            $("#zoneBienLaiHoaDon").stop(true, true).hide();
+            $("#zoneBienLaiHoaDon").stop(true, true).slideDown();
             $("#zoneTimKiemSinhVien").slideUp();
             edu.extend.getData_Phieu(strPhieuThu_Id, "HOADON", "MauInPhieuThu", function () {
-                $("#zoneBienLaiHoaDon").stop(true, true).slideDown();
                 main_doc.PhieuThu.changeWidthPrint();
             });
         });
