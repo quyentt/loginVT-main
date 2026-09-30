@@ -19,15 +19,19 @@ quanlynganhangcauhoi.prototype = {
     strMove_CauHoi_GroupQuestionDetailId: '',
     strMove_CauHoi_GroupQuestionDetailText: '',
     strMucPheDuyetId: '',
+     
     
     
     init: function () {
         var me = this;        
         me.page_load(); 
-     
+         
          //#region zoneGroupQuestion
         $(".btnSearch_GroupQuestion").click(function () {
             me.getList_GroupQuestion();
+        });
+        $(".btnSearch_PhanQuyenGroupQuestion").click(function () {
+            me.getList_PhanQuyenGroupQuestion();
         });
         $(".btnClose").click(function () {
             me.toggle_batdau();
@@ -56,6 +60,22 @@ quanlynganhangcauhoi.prototype = {
             }
             if (edu.util.getValById("drpTacVu") == "PREVIEWCAUHOI") {
                 me.toggle_edit_PreviewCauHoi(); 
+            }
+            if (edu.util.getValById("drpTacVu") == "KIEMTRACAUHOI") {
+                var arrChecked_Id = edu.util.getArrCheckedIds("tblCauHoi", "checkX");
+                if (arrChecked_Id.length == 0) {
+                    edu.system.alert("Vui lòng chọn đối tượng cần kiểm tra?");
+                    return;
+                }
+                var strId = "";
+                for (var i = 0; i < arrChecked_Id.length; i++) {
+                    strId += arrChecked_Id[i] + ",";
+                }
+                strId = strId.substr(0, strId.length - 1);
+                me.getList_CheckCauHoi(
+                    strId,
+                    "zonePreviewTableQuestion"
+                );
             }
             if (edu.util.getValById("drpTacVu") == "IMPORTCAUHOITAM") {
 
@@ -129,13 +149,18 @@ quanlynganhangcauhoi.prototype = {
             e.stopImmediatePropagation();
             me.printPhieu('zonePrintPreview');
         });
+        $("#btnImport_DMIP_LaTeX").click(function () {
+            me.import_DMIP_Latex();
+        });
         $("#btnIn_PreviewTemp").click(function (e) {
             e.stopImmediatePropagation();
             me.printPhieu('zonePrintPreviewTemp');
         });
         $("#drpDonVi").on("select2:select", function () {
-
-            me.getList_GroupQuestion();
+            if (edu.util.getValById('filehtml') == 'viewquanlynganhangcauhoi')
+                me.getList_PhanQuyenGroupQuestion();
+            else
+                me.getList_GroupQuestion();
         });
         $("#drpStatus").on("select2:select", function () {
 
@@ -302,6 +327,7 @@ quanlynganhangcauhoi.prototype = {
                 me.rewrite_CauHoi();
 
                 me.getList_DapAn(me.strQuestionId);
+                me.getList_QuestionAudioFiles();
                 me.toggle_edit_CauHoi();
                 me.viewEdit_CauHoi(dt[0]);  
                 
@@ -513,7 +539,14 @@ quanlynganhangcauhoi.prototype = {
             }, 2000);
         }); 
         $("[id$=chkSelectAll_CauHoi]").on("click", function () {
-            edu.util.checkedAll_BgRow(this, { table_id: "tblCauHoi" });
+            
+            me.checkedCol_BgRow("tblCauHoi");
+
+        });
+        $("[id$=chkSelectAll_Temp_TheoSoY]").on("click", function () {
+
+            me.checkedCol_BgRow("tblCauHoi_Temp");
+
         });
         $("#btnXoa_DapAn").click(function () {
             var arrChecked_Id = edu.util.getArrCheckedIds("tblDapAn", "checkX");
@@ -558,6 +591,8 @@ quanlynganhangcauhoi.prototype = {
             edu.util.checkedAll_BgRow(this, { table_id: "tblDapAn_Ve2" });
         }); 
         me.checkedCol_BgRow("tblDapAn");
+        me.checkedCol_BgRow("tblDapAn");
+
         me.checkedCol_BgRow("tblDapAn_Temp");
         $("#btnSave_DapAn").click(function () {   
             var arrChecked_Id =  edu.util.getAllArrCheckBoxIds("tblDapAn", "checkX"); 
@@ -672,7 +707,11 @@ quanlynganhangcauhoi.prototype = {
             me.import_DMIP_Doc();
         });
         $("[id$=chkSelectAll_CauHoi_Temp]").on("click", function () {
-            edu.util.checkedAll_BgRow(this, { table_id: "tblCauHoi_Temp" });
+            
+            me.checkedCol_BgRow("tblCauHoi_Temp");
+        });
+        $("[id$=chkSelectAll_TheoSoY]").on("click", function () {
+            me.checkedCol_BgRow("tblCauHoi");
         });
         $("#btnDelete_CauHoi_Temp").click(function () {
             
@@ -692,6 +731,23 @@ quanlynganhangcauhoi.prototype = {
                 me.getList_CauHoi_Temp();
             }, 2000);
         }); 
+        $("#btnKiemTra_CauHoi_Temp").click(function () {
+
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblCauHoi_Temp", "checkX");
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng chọn đối tượng cần kiểm tra?");
+                return;
+            }
+            var strId = "";
+            for (var i = 0; i < arrChecked_Id.length; i++) {
+                strId += arrChecked_Id[i] + ",";
+            }
+            strId = strId.substr(0, strId.length - 1);
+            me.getList_CheckCauHoi(
+                strId,
+                "zonePreviewTableQuestion_Temp"
+            );
+        }); 
         $("#btnUpdate_CauHoi_Temp_STT").click(function () {
             var arrChecked_Id = edu.util.getAllArrCheckBoxIds("tblCauHoi_Temp", "checkX");
             edu.system.confirm("Bạn có chắc chắn cập nhật liệu không?");
@@ -700,7 +756,13 @@ quanlynganhangcauhoi.prototype = {
                     
                     var strId = arrChecked_Id[i];
                     var strOrderNumber = edu.util.getValById("txtCauHoi_Temp_STT" + strId);
-                    me.Update_Question_Temp_STT(strId, strOrderNumber);
+                    var strTinhDiemTheoSoY = "0";
+                    if ($("#chkTINHDIEMTHEOSOY" + strId).is(":checked"))
+                        strTinhDiemTheoSoY = "1";
+                    var dt = edu.util.objGetDataInData(strId, me.dtCauHoi_Temp, "ID");
+                    if (strTinhDiemTheoSoY != edu.util.returnEmpty(dt[0].TINHDIEMTHEOSOY)
+                        || strOrderNumber != edu.util.returnEmpty(dt[0].ORDERNUMBER))
+                        me.Update_Question_Temp_STT(strId, strOrderNumber, strTinhDiemTheoSoY);
                 }
             });
             setTimeout(function () {
@@ -716,7 +778,14 @@ quanlynganhangcauhoi.prototype = {
 
                     var strId = arrChecked_Id[i];
                     var strOrderNumber = edu.util.getValById("txtCauHoi_STT" + strId);
-                    me.Update_Question_STT(strId, strOrderNumber);
+                    var strTinhDiemTheoSoY = "0"; 
+                    if ($("#chkTINHDIEMTHEOSOY" + strId).is(":checked"))
+                        strTinhDiemTheoSoY = "1";                   
+                    var dt = edu.util.objGetDataInData(strId, me.dtCauHoi, "ID");
+                    
+                    if (strTinhDiemTheoSoY != edu.util.returnEmpty(dt[0].TINHDIEMTHEOSOY)
+                        || strOrderNumber != edu.util.returnEmpty(dt[0].ORDERNUMBER))
+                        me.Update_Question_STT(strId, strOrderNumber, strTinhDiemTheoSoY);
                 }
             });
             setTimeout(function () {
@@ -775,6 +844,24 @@ quanlynganhangcauhoi.prototype = {
             edu.system.confirm("Bạn có chắc chắn xóa dữ liệu không?");
             $("#btnYes").click(function (e) {
                 me.Xoa_AudioFiles(strId);
+                
+
+                setTimeout(function () {
+                    me.getList_AudioFiles();
+
+                }, 500);
+            });
+
+        });
+        $("#tblQuestionAudioFiles").delegate(".btnDelete_QuestionAudionFiles", "click", function () {
+            var strId = this.id;
+            edu.system.confirm("Bạn có chắc chắn xóa dữ liệu không?");
+            $("#btnYes").click(function (e) {
+                me.Xoa_AudioFiles(strId);
+                setTimeout(function () {
+                    me.getList_QuestionAudioFiles();
+
+                }, 500);
             });
 
         });
@@ -1050,7 +1137,8 @@ quanlynganhangcauhoi.prototype = {
         var me = this;
         
         edu.system.page_load();        
-        CKEDITOR.replace('editor_nhomcauhoi');
+         CKEDITOR.replace('editor_nhomcauhoi');
+        
         CKEDITOR.replace('editor_nhomcauhoi_Temp');
         CKEDITOR.replace('editor_GroupQuestionDetailContent');
         CKEDITOR.replace('editor_txtContent');
@@ -1063,9 +1151,11 @@ quanlynganhangcauhoi.prototype = {
         me.getList_GroupQuestion();
         me.getList_drpLoaiCauHoi_Imp();
         edu.system.uploadFiles(["txt_File_Audio"], "Audio");
+        edu.system.uploadFiles(["txt_Question_Audio"], "QuestionAudio");
         me.getList_drpNamHoc();
         me.getList_drpHocKy();
         me.getList_drpDotThi();
+        
         //$("#test1").html('<p><strong>Thiết bị n&agrave;o trong m&aacute;y t&iacute;nh c&oacute; nhiệm&nbsp;&nbsp;<math xmlns="http://www.w3.org/1998/Math/MathML"><msqrt><mn>333</mn></msqrt></math>&nbsp;vụ tải file hệ thống khi khởi động m&aacute;y t&iacute;nh?</strong></p><p><strong><math xmlns="http://www.w3.org/1998/Math/MathML" class="wrs_chemistry"><msubsup><mi>HC</mi><mn>3</mn><mn>3</mn></msubsup></math></strong></p>')
         // Hien thi cong thuc
         //MathJax.Hub.Queue(['Typeset', MathJax.Hub, 'test1']);
@@ -1474,8 +1564,8 @@ quanlynganhangcauhoi.prototype = {
 
     genTable_AudioFiles: function (data) {       
         var me = this;                          
-        var pConfig = Init_Prammater();
-        var rootPathUploadFile = pConfig.rootPathUpload;     
+        
+        var rootPathUploadFile = edu.system.rootPathUpload;
         
         var jsonForm = {
             strTable_Id: "tblAudioFiles",
@@ -1618,6 +1708,14 @@ quanlynganhangcauhoi.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
+                        var strReturn = "<input type='checkbox' id='chkTINHDIEMTHEOSOY" + aData.ID + "' class='optcheckbox' name='chkTINHDIEMTHEOSOY" + aData.ID + " ' />";
+                        if (aData.TINHDIEMTHEOSOY == "1")
+                            strReturn = "<input type='checkbox'    id='chkTINHDIEMTHEOSOY" + aData.ID + "' checked class='optcheckbox' name='chkTINHDIEMTHEOSOY" + aData.ID + " ' />";
+                        return strReturn;
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
                         var SOLUOTDATHI = aData.SOLUOTDATHI_CHUALUU + aData.SOLUOTDATHI_DALUU;
                         return '<span style="color:chocolate;">' + SOLUOTDATHI + '</span> </br>' +
                             '<span><a class="btn btn-default btnViewChiTiet" id="' + aData.ID + '" title="Đã dùng"><i class="fa fa-eye color-active"></i>Đã dùng</a></span> </br> ' + 
@@ -1639,7 +1737,9 @@ quanlynganhangcauhoi.prototype = {
         };
         edu.system.loadToTable_data(jsonForm);
         /*III. Callback*/
-        MathJax.Hub.Queue(['Typeset', MathJax.Hub, 'tblCauHoi']);
+        //MathJax.Hub.Queue(['Typeset', MathJax.Hub, 'tblCauHoi']);
+        MathJax.typesetPromise([document.getElementById('tblCauHoi')]);
+
     },
     getList_DapAn_All: function () {
         var me = this;
@@ -2178,6 +2278,7 @@ quanlynganhangcauhoi.prototype = {
         edu.util.viewValById("txtDiemCong", "");
         edu.util.viewValById("txtDiemTru", "");
         edu.util.viewValById("txtThoiGian", "");
+        $('#chkCachTinhDiemTheoSoY').prop('checked', false);
 
         
         edu.util.viewValById("txtOrder", "");
@@ -2206,6 +2307,9 @@ quanlynganhangcauhoi.prototype = {
         edu.util.viewValById("txtDiemCong", data.PLUSMARK);
         edu.util.viewValById("txtDiemTru", data.MINUSMARK);
         edu.util.viewValById("txtThoiGian", data.THOIGIAN);
+        $('#chkCachTinhDiemTheoSoY').prop('checked', false);
+        if (data.TINHDIEMTHEOSOY =="1")
+            $('#chkCachTinhDiemTheoSoY').prop('checked', true);
 
         edu.util.viewValById("txtOrderNumber", data.ORDERNUMBER);
         $("#drpDaoDapAn").val(data.DAODAPAN).trigger("change");
@@ -2224,7 +2328,7 @@ quanlynganhangcauhoi.prototype = {
             $("#zoneDapAn_Ve2").show();
             me.getList_DapAn_Ve2(me.strQuestionId);
         }
-        if (me.strQuestionTypeCode == "FILLTHEBLANK") {
+        if (me.strQuestionTypeCode == "FILLTHEBLANK" || me.strQuestionTypeCode == "KEOTHAXUONGDAPAN") {
             $("#txtContent2").show();
         }
         
@@ -2237,13 +2341,13 @@ quanlynganhangcauhoi.prototype = {
             strcolHidden = "4,6,7,8";
         }
         
-        if (me.strQuestionTypeCode == "FREETEXT") {
+        if (me.strQuestionTypeCode == "FREETEXT"   ) {
             strcolHidden = "2,3,4,6,7";
         }
         if (me.strQuestionTypeCode == "CROSSLINK") {
             strcolHidden = "3,4,7,8";
         }
-        if (me.strQuestionTypeCode == "FILLTHEBLANK") {
+        if (me.strQuestionTypeCode == "FILLTHEBLANK" || me.strQuestionTypeCode == "KEOTHAXUONGDAPAN") {
             strcolHidden = "3,4,6,8";
         }
 
@@ -2271,7 +2375,9 @@ quanlynganhangcauhoi.prototype = {
                     }
                 }
             }
-            MathJax.Hub.Queue(['Typeset', MathJax.Hub, 'tblDapAn']);
+           // MathJax.Hub.Queue(['Typeset', MathJax.Hub, 'tblDapAn']);
+            MathJax.typesetPromise([document.getElementById('tblDapAn')]);
+
         }, 100);
         
     },
@@ -2528,8 +2634,10 @@ quanlynganhangcauhoi.prototype = {
     },
     save_Question: function () {
         var me = this;
-        
-        var obj_save = {
+        var strTinhDiemTheoSoY = "0";
+        if ($("#chkCachTinhDiemTheoSoY").is(":checked"))
+            strTinhDiemTheoSoY = "1";
+         var obj_save = {
             'action': 'QLTTN_QuanLyNganHangCauHoi/ThemMoi_Question',
             'versionAPI': 'v1.0',
             'strId': "",    
@@ -2543,6 +2651,7 @@ quanlynganhangcauhoi.prototype = {
             'strDaoDapAn': edu.util.getValById('drpDaoDapAn'),
             'strTile': '',
             'strOrderNumber': edu.util.getValById('txtOrderNumber'),
+            'strTinhDiemTheoSoY': strTinhDiemTheoSoY,
             'strThoiGian': edu.util.getValById('txtThoiGian'),
             'strNguoiThucHien_Id': edu.system.userId
         };
@@ -2561,7 +2670,12 @@ quanlynganhangcauhoi.prototype = {
                     me.strQuestionTypeCode = $("#drpLoaiCauHoi").find('option:selected').attr("name");  
                     //QuestionTypeCode = $("#drpLoaiCauHoi").find('option:selected').val()
                     me.getList_DapAn(me.strQuestionId);
-                  
+                    edu.system.saveFiles("txt_Question_Audio", me.strQuestionId, "QLTTN_Files");
+                    
+                    setTimeout(function () {
+                        me.getList_QuestionAudioFiles();
+
+                    }, 500);
                     edu.system.alert("Thực hiện thành công");
                 }
                 else {
@@ -2942,7 +3056,8 @@ quanlynganhangcauhoi.prototype = {
         if (strLoaiBaoCao == "MAUTEMPLATEIMPORT") {            
             var dt1 = edu.util.objGetDataInData($("#drpLoaiCauHoi_Imp").find('option:selected').val(), me.dtLoaiCauHoi, "ID");                     
 
-            var strUrl = "ApisQuanLyThiTracNghiem/Modules/Template/Template" + dt1[0].CODE +".docx" ;
+            var strUrl = "ApisQuanLyThiTracNghiem/Modules/Template/Template" + dt1[0].CODE + ".docx";
+            
             window.open(strUrl );
             return;
         }
@@ -3154,6 +3269,14 @@ quanlynganhangcauhoi.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
+                        var strReturn = "<input type='checkbox' id='chkTINHDIEMTHEOSOY" + aData.ID + "' class='optcheckbox' name='chkTINHDIEMTHEOSOY" + aData.ID + " ' />";
+                        if (aData.TINHDIEMTHEOSOY == "1")
+                            strReturn = "<input type='checkbox'    id='chkTINHDIEMTHEOSOY" + aData.ID + "' checked class='optcheckbox' name='chkTINHDIEMTHEOSOY" + aData.ID + " ' />";
+                        return strReturn;
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
                         return '<span><a class="btn btn-default btnEdit_Question_Temp" id="' + aData.ID + '" title="Sửa"><i class="fa fa-edit color-active"></i></a></span>';
                     }
                 },
@@ -3166,7 +3289,8 @@ quanlynganhangcauhoi.prototype = {
         };
         edu.system.loadToTable_data(jsonForm);
         /*III. Callback*/
-        MathJax.Hub.Queue(['Typeset', MathJax.Hub, 'tblCauHoi_Temp']);
+        //MathJax.Hub.Queue(['Typeset', MathJax.Hub, 'tblCauHoi_Temp']);
+        MathJax.typesetPromise([document.getElementById('tblCauHoi_Temp')]);
 
     },
     import_DMIP_Doc: function (a, strPath) {
@@ -3337,7 +3461,9 @@ quanlynganhangcauhoi.prototype = {
         edu.util.viewValById("txtThoiGian_Temp", data.THOIGIAN);
         edu.util.viewValById("txtOrderNumber_Temp", data.ORDERNUMBER);
         $("#drpDaoDapAn_Temp").val(data.DAODAPAN).trigger("change"); 
-
+        $('#chkCachTinhDiemTheoSoY_Temp').prop('checked', false);
+        if (data.TINHDIEMTHEOSOY == "1")
+            $('#chkCachTinhDiemTheoSoY_Temp').prop('checked', true);
         me.getList_drpMucDoCauHoi_Temp(data.QUESTIONLEVELID);
         me.getList_drpLoaiCauHoi_Temp(data.QUESTIONTYPEID); 
     },
@@ -3464,7 +3590,8 @@ quanlynganhangcauhoi.prototype = {
             me.getList_lstVe2Temp(me.strQuestionTempId, 'lstVe2_Temp' + data[i].ID, strSelectId);
         }
         me.getandGenList_Answer_Temp();
-        MathJax.Hub.Queue(['Typeset', MathJax.Hub, 'tblDapAn_Temp']);
+        //MathJax.Hub.Queue(['Typeset', MathJax.Hub, 'tblDapAn_Temp']);
+        MathJax.typesetPromise([document.getElementById('tblDapAn_Temp')]);
     },
     getList_drpMucDoCauHoi_Temp: function (strLevelQuestionId) {
         var me = this;
@@ -3572,7 +3699,9 @@ quanlynganhangcauhoi.prototype = {
     },
     save_Question_Temp: function () {
         var me = this;
-
+        var strTinhDiemTheoSoY = "0";
+        if ($("#chkCachTinhDiemTheoSoY_Temp").is(":checked"))
+            strTinhDiemTheoSoY = "1";
         var obj_save = {
             'action': 'QLTTN_QuanLyNganHangCauHoi/ThemMoi_QuestionTemp',
             'versionAPI': 'v1.0',
@@ -3589,6 +3718,7 @@ quanlynganhangcauhoi.prototype = {
             'strOrderNumber': edu.util.getValById("txtOrderNumber_Temp"),
             'strMucPheDuyetId': me.strMucPheDuyetId,
             'strThoiGian': edu.util.getValById('txtThoiGian_Temp'),
+            'strTinhDiemTheoSoY': strTinhDiemTheoSoY,
             'strNguoiThucHien_Id': edu.system.userId
         };
         if (me.strQuestionId != "") {
@@ -3635,7 +3765,7 @@ quanlynganhangcauhoi.prototype = {
             $("#zoneDapAn_Ve2_Temp").show();
             me.getList_DapAn_Ve2_Temp(me.strQuestionTempId);
         }
-        if (me.strQuestionTypeCodeTemp == "FILLTHEBLANK") {
+        if (me.strQuestionTypeCodeTemp == "FILLTHEBLANK" || me.strQuestionTypeCodeTemp == "KEOTHAXUONGDAPAN") {
             $("#txtContent2_Temp").show();
         }
        
@@ -3647,13 +3777,13 @@ quanlynganhangcauhoi.prototype = {
             strcolHidden = "4,6,7,8";
         }
 
-        if (me.strQuestionTypeCodeTemp == "FREETEXT") {
+        if (me.strQuestionTypeCodeTemp == "FREETEXT" ) {
             strcolHidden = "2,3,4,6,7";
         }
         if (me.strQuestionTypeCodeTemp == "CROSSLINK") {
             strcolHidden = "3,4,7,8";
         }
-        if (me.strQuestionTypeCodeTemp == "FILLTHEBLANK") {
+        if (me.strQuestionTypeCodeTemp == "FILLTHEBLANK" || me.strQuestionTypeCodeTemp == "KEOTHAXUONGDAPAN") {
             strcolHidden = "3,4,6,8";
         }
          
@@ -4091,7 +4221,13 @@ quanlynganhangcauhoi.prototype = {
                 if (data.Success) {
                     me.getList_GroupQuestionDetail();
                     edu.system.saveFiles("txt_File_Audio", me.strGroupQuestionDetailId, "QLTTN_Files");
-                    me.getList_AudioFiles();
+                    
+
+                    setTimeout(function () {
+                        me.getList_AudioFiles();
+
+                    }, 500);
+
                     edu.system.alert("Thực hiện thành công");
                 }
                 else {
@@ -4124,7 +4260,7 @@ quanlynganhangcauhoi.prototype = {
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    me.getList_AudioFiles();
+                   
                     edu.system.alert("Xóa dữ liệu thành công!");
                 }
                 else {
@@ -4301,7 +4437,7 @@ quanlynganhangcauhoi.prototype = {
                     strContentQuestion += "<div class='textbox'>"
                         + "<label for='" + dataTraLoi[j].ANSWERID + "' class='lbdapan' onmouseover=''>"
                         + dataTraLoi[j].ORDERABC + dataTraLoi[j].CONTENT
-                        + "<input type='textbox' id='" + dataTraLoi[j].ANSWERID + "' " + "class='opttextbox' name='opttextbox" + me.dtQuestion[i].QUESTIONID
+                        + "<input type='textbox' id='" + dataTraLoi[j].ANSWERID + "' " + "class='opttextbox' name='opttextbox" + dtQuestion[i].QUESTIONID
                         + "' value='" + edu.util.returnEmpty(dataTraLoi[j].STUDENTANSWERCONTENT2) + "' /> "
                         + "</label>"
                         + "</div >"
@@ -4317,7 +4453,18 @@ quanlynganhangcauhoi.prototype = {
                         + "<div class='clearQuestion' style='margin-bottom: 10px'></div>";
                     
                 }
+                if (dtQuestion[i].QUESTIONTYPECODE == "KEOTHAXUONGDAPAN") {
+                    
+                    strContentQuestion += "<div class='textbox'>"
+                        + "<label for='" + dataTraLoi[j].ANSWERID + "' class='lbdapan' onmouseover=''>"
+                        + dataTraLoi[j].ORDERABC + dataTraLoi[j].CONTENT
+                        + "<input type='textbox' id='" + dataTraLoi[j].ANSWERID + "' " + "class='opttextbox' name='opttextbox" + dtQuestion[i].QUESTIONID
+                        + "' value='" + edu.util.returnEmpty(dataTraLoi[j].CONTENT2) + "' /> "
+                        + "</label>"
+                        + "</div >"
+                        + "<div class='clearQuestion' style='margin-bottom: 10px'></div>";
 
+                }
 
             }
             //#endregioin Dap An
@@ -4330,7 +4477,13 @@ quanlynganhangcauhoi.prototype = {
 
 
         $("#" + strZone + "").html(strContentQuestion); 
-        MathJax.Hub.Queue(['Typeset', MathJax.Hub, strZone]);
+       // MathJax.Hub.Queue(['Typeset', MathJax.Hub, strZone]);
+        console.log(MathJax.version); // ví dụ: "3.2.2"
+        //MathJax.typesetPromise([document.getElementById(strZone)])
+        //    .then(() => console.log("MathJax done"))
+        //    .catch(err => console.error("MathJax error", err));
+       
+        MathJax.typesetPromise([document.getElementById(strZone)]);
         
     },
     toggle_edit_PreviewCauHoi_Temp: function () {
@@ -4544,13 +4697,14 @@ quanlynganhangcauhoi.prototype = {
             ]
         };
         edu.system.loadToTable_data(jsonForm);
-        MathJax.Hub.Queue(['Typeset', MathJax.Hub, 'tblCauHoi_DaTaoDe']);
+        //MathJax.Hub.Queue(['Typeset', MathJax.Hub, 'tblCauHoi_DaTaoDe']);
+        MathJax.typesetPromise([document.getElementById('tblCauHoi_DaTaoDe')]);
         /*III. Callback*/
 
 
          
     },
-    Update_Question_Temp_STT: function (strId, strOrderNumber) {
+    Update_Question_Temp_STT: function (strId, strOrderNumber, strTinhDiemTheoSoY) {
         var me = this;
 
         var obj_save = {
@@ -4558,6 +4712,7 @@ quanlynganhangcauhoi.prototype = {
             'versionAPI': 'v1.0',
             'strId': strId,             
             'strOrderNumber': strOrderNumber,
+            'strTinhDiemTheoSoY': strTinhDiemTheoSoY,
             'strNguoiThucHien_Id': edu.system.userId
         };
         
@@ -4586,7 +4741,7 @@ quanlynganhangcauhoi.prototype = {
             ]
         }, false, false, false, null);
     },
-    Update_Question_STT: function (strId, strOrderNumber) {
+    Update_Question_STT: function (strId, strOrderNumber, strTinhDiemTheoSoY) {
         var me = this;
 
         var obj_save = {
@@ -4594,6 +4749,7 @@ quanlynganhangcauhoi.prototype = {
             'versionAPI': 'v1.0',
             'strId': strId,
             'strOrderNumber': strOrderNumber,
+            'strTinhDiemTheoSoY': strTinhDiemTheoSoY,
             'strNguoiThucHien_Id': edu.system.userId
         };
 
@@ -5202,6 +5358,465 @@ quanlynganhangcauhoi.prototype = {
         edu.system.loadToTable_data(jsonForm);
         /*III. Callback*/
     },
+    getList_CheckCauHoi: function (strId, strZone) {
+
+        var me = this;
+
+        var obj_list = {
+            'action': 'QLTTN_QuanLyNganHangCauHoi/LayDS_PreviewCauHoi',
+            'versionAPI': 'v1.0',
+            'strId': strId,
+            'strZone': strZone,
+        };
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    dtQuestion = data.Data.rsQuestion;
+                    dtAnswer = data.Data.rsAnswer;
+                    dtAnswer_Sencond = data.Data.rsAnswerSecond;
+
+
+                    me.genTable_CheckCauHoi(dtQuestion, dtAnswer, dtAnswer_Sencond, strZone);
+                }
+                else {
+                    edu.system.alert(obj_list.action + " (er): " + JSON.stringify(data.Message), "w");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_list.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: "POST",
+            action: obj_list.action,
+            versionAPI: obj_list.versionAPI,
+            contentType: true,
+            authen: true,
+            data: obj_list,
+            fakedb: [
+
+            ]
+        }, false, false, false, null);
+    },
+    genTable_CheckCauHoi: function (dtQuestion, dtAnswer, dtAnswer_Sencond, strZone) {
+
+        $("#" + strZone + "").html('');
+
+        //#region gen table  noi dung cau hoi
+        var strContentQuestion = "";
+        var table = document.getElementById('tblCauHoi_Temp');
+        if (strZone == "zonePreviewTableQuestion")
+            table = document.getElementById('tblCauHoi');
+
+        for (i = 0; i < dtQuestion.length; i++) {
+            var ChiTietCauHoi = "";
+            if (i < 9) {
+                ChiTietCauHoi = "<b>Câu 0" + (i + 1) + "</b>";
+            }
+            else {
+                ChiTietCauHoi = "<b>Câu " + (i + 1) + "</b>";
+            }
+            var dataTraLoi = edu.util.objGetDataInData(dtQuestion[i].QUESTIONID, dtAnswer, "QUESTIONID");
+
+            strContentQuestion +=
+                "<div class='bix-div-container' id='zoneContentQuestion" + dtQuestion[i].QUESTIONID + "' style = 'display:\"\"'  >"
+                + "<label class='lbcauhoi' id='" + dtQuestion[i].QUESTIONID + "' style = 'font-size: 16pt; color:Red' > <u><b>" + ChiTietCauHoi + ": </b></u></label >"
+                + "<span style='font-size: 16pt; color:Blue;'>" + dtQuestion[i].GUIDE + "</span>"
+                + "<input type ='text'   id='QUESTIONTYPECODE" + dtQuestion[i].QUESTIONID + "'  value='" + dtQuestion[i].QUESTIONTYPECODE + "' style = 'display:none' >"
+                + "<div class='clearQuestion'></div>"
+                + "<div class='clearQuestion'></div>"
+                + "<label class='lbcauhoi'><span style='font-size: 18pt; margin-top:10px'>" + dtQuestion[i].CONTENT + "</span></label>"
+                + "<div class='clearQuestion'></div>"
+                + "<div class='clearQuestion' style='margin-bottom:0px'></div>"
+                + "<label class='lbcauhoi' style='font-size: 16pt; color:#0066FF'><b>Câu trả lời:</b></label>"
+                + "<div class='clearQuestion' style='margin-bottom:5px'></div>";
+
+            //#region Dap An
+            var iDapAnCheck = 0;
+            var bKiemTraKeoTha = true;
+            // Dùng CSS.escape để tránh lỗi với ký tự đặc biệt
+            if (dataTraLoi.length == 0) {
+                const tr = table.querySelector(`tr#${CSS.escape(dtQuestion[i].QUESTIONID)}`);
+                tr.classList.add('flash-red'); 
+            }
+            for (var j = 0; j < dataTraLoi.length; j++) {
+                var ischecked = "";
+                if (dataTraLoi[j].CORRECT == "1") {
+                    ischecked = "checked";
+                    iDapAnCheck++;
+                }
+                else {
+                    ischecked = "";
+                }
+                if (dtQuestion[i].QUESTIONTYPECODE == "BESTANSWER" || dtQuestion[i].QUESTIONTYPECODE == "TRUEFALSEONE") {
+                   
+                    strContentQuestion += "<div class='radio'>"
+                        + "<label for='" + dataTraLoi[j].ANSWERID + "' class='lbdapan' onmouseover=''>"
+                        + "<input type='radio' id='" + dataTraLoi[j].ANSWERID + "' " + " class='optradio' name='optradio" + dtQuestion[i].QUESTIONID
+                        + "' value='" + dtQuestion[i].QUESTIONID + "' " + ischecked + " /> "
+                        + dataTraLoi[j].ORDERABC + dataTraLoi[j].CONTENT
+                        + "</label>"
+                        + "</div >"
+                        + "<div class='clearQuestion' style='margin-bottom: 10px'></div>";
+                }
+                if (dtQuestion[i].QUESTIONTYPECODE == "MULTICHOICE") {
+                    
+                    strContentQuestion += "<div class='checkbox'>"
+                        + "<label for='" + dataTraLoi[j].ANSWERID + "' class='lbdapan' onmouseover=''>"
+                        + "<input type='checkbox' id='" + dataTraLoi[j].ANSWERID + "' " + "class='optcheckbox' name='optcheckbox" + dtQuestion[i].QUESTIONID
+                        + "' value='" + dtQuestion[i].QUESTIONID + "' " + ischecked + " /> "
+                        + dataTraLoi[j].ORDERABC + dataTraLoi[j].CONTENT
+                        + "</label>"
+                        + "</div >"
+                        + "<div class='clearQuestion' style='margin-bottom: 10px'></div>";
+
+                }
+                if (dtQuestion[i].QUESTIONTYPECODE == "CROSSLINK") {
+                    var dataTraLoi_Ve2 = edu.util.objGetDataInData(dataTraLoi[j].QUESTIONID, dtAnswer_Sencond, "QUESTIONID");
+
+                    var optValues = '<select id="' + dataTraLoi[j].ANSWERID + '" name="' + dataTraLoi[j].QUESTIONID + '" class="select-opt">' +
+                        '<option id="" value="' + dataTraLoi[j].ANSWERID + '">--Chọn--</option>';
+                    for (var iSTTCauVe2 = 0; iSTTCauVe2 < dataTraLoi_Ve2.length; iSTTCauVe2++) {
+                        if (dataTraLoi[j].STUDENTANSWER_SENCOND_ID != "" &&
+                            dataTraLoi_Ve2[iSTTCauVe2].ANSWER_SENCONDID == dataTraLoi[j].STUDENTANSWER_SENCOND_ID
+                        )
+                            optValues += '<option id="' + dataTraLoi_Ve2[iSTTCauVe2].ANSWER_SENCONDID + '" name="' + dataTraLoi[j].QUESTIONID + '"  value="' + dataTraLoi_Ve2[iSTTCauVe2].ANSWER_SENCONDID + '" selected="' + dataTraLoi[j].STUDENTANSWER_SENCOND_ID + '">' + dataTraLoi_Ve2[iSTTCauVe2].CONTENT + '</option>';
+                        else
+                            optValues += '<option id="' + dataTraLoi_Ve2[iSTTCauVe2].ANSWER_SENCONDID + '" name="' + dataTraLoi[j].QUESTIONID + '"  value="' + dataTraLoi_Ve2[iSTTCauVe2].ANSWER_SENCONDID + '" >' + dataTraLoi_Ve2[iSTTCauVe2].CONTENT + '</option>';
+                    }
+                    optValues += '</select>';
+
+                    strContentQuestion += "<div class='radio'>"
+                        + "<label for='" + dataTraLoi[j].ANSWERID + "' id='" + dataTraLoi[j].ANSWERID + "' class='lbdapan' onmouseover=''>"
+                        + dataTraLoi[j].ORDERABC + dataTraLoi[j].CONTENT
+                        + optValues
+                        + "</label>"
+                        + "</div >"
+                        + "<div class='clearQuestion' style='margin-bottom: 10px'></div>";
+                }
+                if (dtQuestion[i].QUESTIONTYPECODE == "TRUEFALSE") {
+
+                    var strSelectTrueFalse = "";
+                    var strSelectTrue = "";
+                    var strSelectFalse = "";
+                    if (dataTraLoi[j].CORRECT == "1")
+                        strSelectTrue = "selected";
+                    else if (dataTraLoi[j].CORRECT == "0")
+                        strSelectFalse = "selected";
+                    else
+                        strSelectTrueFalse = "selected";
+                    // cau hoi true/false mac dinh khi khoi tao la 2
+                    var optValues = "";
+                    optValues = '<select id="' + dataTraLoi[j].ANSWERID + '" name="' + dataTraLoi[j].QUESTIONID + '" class="select-opt-truefalse">';
+                    optValues += '<option id="CHON' + dataTraLoi[j].ANSWERID + '" name="' + dataTraLoi[j].QUESTIONID + '"  value="2" ' + strSelectTrueFalse + ' >Chọn</option>';
+                    optValues += '<option id="DUNG' + dataTraLoi[j].ANSWERID + '" name="' + dataTraLoi[j].QUESTIONID + '"  value="1" ' + strSelectTrue + ' >Đúng</option>';
+                    optValues += '<option id="SAI' + dataTraLoi[j].ANSWERID + '" name="' + dataTraLoi[j].QUESTIONID + '"  value="0" ' + strSelectFalse + '>Sai</option>';
+                    optValues += "</select>";
+
+
+                    strContentQuestion += "<div class='radio'>"
+                        + "<label for='" + dataTraLoi[j].ANSWERID + "' id='" + dataTraLoi[j].ANSWERID + "' class='lbdapan' onmouseover=''>"
+                        + dataTraLoi[j].ORDERABC + optValues + dataTraLoi[j].CONTENT
+                        + "</label>"
+                        + "</div >"
+                        + "<div class='clearQuestion' style='margin-bottom: 10px'></div>";
+                }
+                if (dtQuestion[i].QUESTIONTYPECODE == "FILLTHEBLANK") {
+                    strContentQuestion += "<div class='textbox'>"
+                        + "<label for='" + dataTraLoi[j].ANSWERID + "' class='lbdapan' onmouseover=''>"
+                        + dataTraLoi[j].ORDERABC + dataTraLoi[j].CONTENT
+                        + "<input type='textbox' id='" + dataTraLoi[j].ANSWERID + "' " + "class='opttextbox' name='opttextbox" + dtQuestion[i].QUESTIONID
+                        + "' value='" + edu.util.returnEmpty(dataTraLoi[j].STUDENTANSWERCONTENT2) + "' /> "
+                        + "</label>"
+                        + "</div >"
+                        + "<div class='clearQuestion' style='margin-bottom: 10px'></div>";
+
+                }
+                if (dtQuestion[i].QUESTIONTYPECODE == "FREETEXT") {
+                    strContentQuestion += "<div class='radio'>"
+                        + "<label for='" + dataTraLoi[j].ANSWERID + "' class='lbdapan' onmouseover=''>"
+                        + dataTraLoi[j].ORDERABC + dataTraLoi[j].CONTENT
+                        + "</label>"
+                        + "</div >"
+                        + "<div class='clearQuestion' style='margin-bottom: 10px'></div>";
+
+                }
+                if (dtQuestion[i].QUESTIONTYPECODE == "KEOTHAXUONGDAPAN") {
+                    var text = dataTraLoi[j].CONTENT2;
+                    // Dùng regex để lấy tất cả các đoạn giữa ký tự $ ... $
+                    var matches = text.match(/\$([^$]+)\$/g); 
+                    // Lấy ra nội dung đáp án  bên trong, loại bỏ dấu $
+                    var results = text.split('$').filter(x => x.trim() !== "");
+                    var temp = document.createElement('div');
+                    temp.innerHTML = dtQuestion[i].CONTENT;
+                    const dragWords = Array.from(temp.querySelectorAll('.draggable-word'))
+                        .map(e => e.textContent.replace(/\s+/g, ' ').trim());
+
+                    // Kiểm tra từng phần tử trong results có nằm trong dragWords không
+                    if (!results.every(word => dragWords.includes(word)))
+                        bKiemTraKeoTha = false;
+
+                    console.log("results:", results);
+                    console.log("dragWords:", dragWords);
+                    console.log("bKiemTraKeoTha:", bKiemTraKeoTha);
+
+
+                    console.log(results); // ['researcher', 'researcher1111']
+                    strContentQuestion += "<div class='textbox'>"
+                        + "<label for='" + dataTraLoi[j].ANSWERID + "' class='lbdapan' onmouseover=''>"
+                        + dataTraLoi[j].ORDERABC + dataTraLoi[j].CONTENT
+                        + "<input type='textbox' id='" + dataTraLoi[j].ANSWERID + "' " + "class='opttextbox' name='opttextbox" + dtQuestion[i].QUESTIONID
+                        + "' value='" + edu.util.returnEmpty(dataTraLoi[j].CONTENT2) + "' /> "
+                        + "</label>"
+                        + "</div >"
+                        + "<div class='clearQuestion' style='margin-bottom: 10px'></div>";
+
+                }
+
+            }
+            if (iDapAnCheck == 0 && dtQuestion[i].QUESTIONTYPECODE != "KEOTHAXUONGDAPAN"
+                && dtQuestion[i].QUESTIONTYPECODE != "FILLTHEBLANK") {
+                const tr = table.querySelector(`tr#${CSS.escape(dtQuestion[i].QUESTIONID)}`);
+                tr.classList.add('flash-red'); // thêm class (tùy ý)
+            }
+             
+            if (!bKiemTraKeoTha  && (dtQuestion[i].QUESTIONTYPECODE == "KEOTHAXUONGDAPAN"
+                || dtQuestion[i].QUESTIONTYPECODE == "FILLTHEBLANK")) {
+
+                const tr = table.querySelector(`tr#${CSS.escape(dtQuestion[i].QUESTIONID)}`);
+                tr.classList.add('flash-red'); // thêm class (tùy ý)
+            }
+            //#endregioin Dap An
+
+            strContentQuestion += "<hr style='border-color:#2a2727; width:98%; margin-bottom:20px; margin-top:30px;' />";
+            strContentQuestion += "</div>";
+
+        }
+
+
+
+         
+        // MathJax.Hub.Queue(['Typeset', MathJax.Hub, strZone]);
+        console.log(MathJax.version); // ví dụ: "3.2.2"
+        //MathJax.typesetPromise([document.getElementById(strZone)])
+        //    .then(() => console.log("MathJax done"))
+        //    .catch(err => console.error("MathJax error", err));
+        MathJax.typesetPromise([document.getElementById(strZone)]);
+        edu.system.alert("Đã kiểm tra xong");
+
+    },
+    import_DMIP_Latex: function (a, strPath) {
+        var me = this;
+
+        var obj_list = {
+            'action': 'QLTTN_QuanLyNganHangCauHoi/ImportNganHangCauHoi_Temp_LaTeX',
+            'versionAPI': 'v1.0',
+            'GroupQuestionDetailId': me.strGroupQuestionDetailId,
+            'strQuestionTypeId': edu.util.getValById('drpLoaiCauHoi_Imp'),
+            'MucPheDuyetId': me.strMucPheDuyetId,
+            'NguoiThucHien_Id': edu.system.userId,
+            'strPath': $("#txtFile_DMIP").val()
+        };
+        //
+        edu.system.beginLoading();
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+
+                    $("#notify_import").html("Đã import dữ liệu: " + data.Message);
+                    me.genTable_Import_View(data.Data.Table1, "tblImport_ThatBai");
+                    me.genTable_Import_View(data.Data.Table2, "tblImport_ThanhCong");
+                    me.toggle_import();
+                    me.getList_DapAn_All_Temp();
+                    setTimeout(function () {
+                        me.getList_CauHoi_Temp();
+                    }, 100);
+
+                    edu.system.viewFiles("txtFile_DMIP", "");
+
+
+                    //if (me.dtErr.length > 0)
+                    //  me.report("DANHSACHCAUHOIIMPORTLOI");
+                }
+                else {
+                    $("#notify_import").html("Lỗi: " + data.Message);
+                }
+                edu.system.endLoading();
+
+            },
+            error: function (er) {
+                edu.system.endLoading();
+                edu.system.alert("QLTTN_QuanLyNganHangCauHoi/ImportNganHangCauHoi_Temp(er): " + JSON.stringify(er), "w");
+            },
+            type: 'GET',
+            action: obj_list.action,
+            versionAPI: obj_list.versionAPI,
+            contentType: true,
+            authen: true,
+            data: obj_list,
+            fakedb: [
+
+            ]
+        }, false, false, false, null);
+    },
+    getList_QuestionAudioFiles: function () {
+        var me = this;
+
+        var obj_list = {
+            'action': 'QLTTN_Files/LayDanhSach',
+            'versionAPI': 'v1.0',
+            'strDuLieu_Id': me.strQuestionId,
+        };
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    edu.system.viewFiles("txt_Question_Audio", "", "QLTTN_Files");
+                    edu.system.viewFiles("txt_Question_Audio", me.strQuestionId, "QLTTN_Files");
+
+                    me.genTable_QuestionAudioFiles(data.Data);
+                }
+                else {
+                    edu.system.alert(obj_list.action + " (er): " + JSON.stringify(data.Message), "w");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_list.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: "GET",
+            action: obj_list.action,
+            versionAPI: obj_list.versionAPI,
+            contentType: true,
+            authen: true,
+            data: obj_list,
+            fakedb: [
+
+            ]
+        }, false, false, false, null);
+    },
+
+    genTable_QuestionAudioFiles: function (data) {
+        var me = this;
+
+        var rootPathUploadFile = edu.system.rootPathUpload;
+
+        var jsonForm = {
+            strTable_Id: "tblQuestionAudioFiles",
+            aaData: data,
+            sort: true,
+            colPos: {
+                left: [1, 2],
+            },
+            aoColumns: [
+                {
+                    "mRender": function (nRow, aData) {
+                        return '<audio controls title="' + aData.TENHIENTHI + '"> ' +
+                            '    <source src="' + rootPathUploadFile + '/' + aData.DUONGDAN + '" type="audio/mp3"> ' +
+
+                            '</audio> ';
+                    }
+                },
+                {
+                    "mDataProp": "TENHIENTHI"
+                },
+                {
+                    "mRender": function (nRow, aData) {
+
+                        return '<a id="' + aData.ID + '" class="btn btn-default btnDelete_QuestionAudionFiles"><i class="fa fa-trash"></i> Xóa</a>';
+                    }
+                }
+            ]
+        };
+        edu.system.loadToTable_data(jsonForm);
+    },
+
+    getList_PhanQuyenGroupQuestion: function () {
+        var me = this;
+        //--Edit
+        var obj_list = {
+            'action': 'QLTTN_QuanLyNganHangCauHoi/LayDS_PhanQuyenGroupQuestion',
+            'versionAPI': 'v1.0',
+            'strDepartorganId': edu.util.getValById('drpDonVi'),
+            'strStatus': edu.util.getValById('drpStatus'),
+            'strTuKhoa': '',
+            'strNguoiDung_Id': edu.system.userId,
+            'PageNumber': edu.system.pageIndex_default,
+            'ItemPerPage': edu.system.pageSize_default,
+        };
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    me.dtGroupQuestion = data.Data;
+                    me.genTable_PhanQuyenGroupQuestion(data.Data, data.Pager);
+                }
+                else {
+                    edu.system.alert(obj_list.action + " (er): " + JSON.stringify(data.Message), "w");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_list.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: "GET",
+            action: obj_list.action,
+            versionAPI: obj_list.versionAPI,
+            contentType: true,
+            authen: true,
+            data: obj_list,
+            fakedb: [
+
+            ]
+        }, false, false, false, null);
+    },
+    genTable_PhanQuyenGroupQuestion: function (data, iPager) {
+        var me = this;
+        $("#lblGroupQuestion_Tong").html(iPager);
+        var jsonForm = {
+            strTable_Id: "tblGroupQuestion",
+            aaData: data,
+            bPaginate: {
+                strFuntionName: "main_doc.quanlynganhangcauhoi.getList_GroupQuestion()",
+                iDataRow: iPager,
+                bInfo: false,
+                bLeft: false
+            },
+            sort: true,
+            colPos: {
+                center: [0,],
+            },
+            aoColumns: [
+                {
+                    "mDataProp": "GROUPQUESTIONCODE"
+                },
+                {
+                    "mDataProp": "GROUPQUESTIONNAME"
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return aData.GROUPQUESTIONSTATUS == "0" ? "Ẩn" : "Hiện";
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return '<span><a class="btn btn-default btnGroupQuestion_Edit" id="' + aData.ID + '" title="Sửa"><i class="fa fa-edit color-active"></i> Sửa</a></span>';
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return '<span><a class="btn btn-default btnGroupQuestion_Detail" id="' + aData.ID + '" title="Chi tiết"><i class="fa fa-eye color-active"></i>Chi tiết</a></span>';
+                    }
+
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return '<input type="checkbox" id="checkX' + aData.ID + '"/>';
+                    }
+                }
+            ]
+        };
+        edu.system.loadToTable_data(jsonForm);
+        /*III. Callback*/
+    },
+
 }
 
 

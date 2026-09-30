@@ -308,7 +308,7 @@ nhapnganhangcauhoi.prototype = {
             me.toggle_edit_PreviewCauHoi_Temp();
         }); 
         $("[id$=chkSelectAll_CauHoi_Temp]").on("click", function () {
-            edu.util.checkedAll_BgRow(this, { table_id: "tblCauHoi_Temp" });
+            me.checkedCol_BgRow("tblCauHoi_Temp");
         });
         $("#btnDelete_CauHoi_Temp").click(function () {
 
@@ -347,6 +347,9 @@ nhapnganhangcauhoi.prototype = {
         $("#btnImport_DMIP_Doc").click(function () {
             me.import_DMIP_Doc();
         });
+        $("#btnImport_DMIP_LaTeX").click(function () {
+            me.import_DMIP_Doc();
+        });
         $(".btnCloseImport").click(function () {
             me.toggle_batdau_Temp();
         });
@@ -370,6 +373,11 @@ nhapnganhangcauhoi.prototype = {
         $("#btnIn_PreviewTemp").click(function (e) {
             e.stopImmediatePropagation();
             me.printPhieu('zonePrintPreviewTemp');
+        });
+        $("[id$=chkSelectAll_Temp_TheoSoY]").on("click", function () {
+
+            me.checkedCol_BgRow("tblCauHoi_Temp");
+
         });
          
     },
@@ -945,13 +953,21 @@ nhapnganhangcauhoi.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return '<span>' + aData.PLUSMARK + '/' + aData.MINUSMARK + '</span>';
+                        return '<span>' + edu.util.returnEmpty(aData.PLUSMARK) + '/' + edu.util.returnEmpty(aData.MINUSMARK) + '</span>';
                     }
                 },
                 {
                     "mRender": function (nRow, aData) {
                         var vDapAn = aData.DAODAPAN == "1" ? "Có" : "Không";
                         return '<span>' + vDapAn + '</span>';
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        var strReturn = "<input type='checkbox' id='chkTINHDIEMTHEOSOY" + aData.ID + "' class='optcheckbox' name='chkTINHDIEMTHEOSOY" + aData.ID + " ' />";
+                        if (aData.TINHDIEMTHEOSOY == "1")
+                            strReturn = "<input type='checkbox'    id='chkTINHDIEMTHEOSOY" + aData.ID + "' checked class='optcheckbox' name='chkTINHDIEMTHEOSOY" + aData.ID + " ' />";
+                        return strReturn;
                     }
                 },
                 {
@@ -1398,7 +1414,9 @@ nhapnganhangcauhoi.prototype = {
     },
     save_Question_Temp: function () {
         var me = this;
-
+        var strTinhDiemTheoSoY = "0";
+        if ($("#chkCachTinhDiemTheoSoY_Temp").is(":checked"))
+            strTinhDiemTheoSoY = "1"
         var obj_save = {
             'action': 'QLTTN_QuanLyNganHangCauHoi/ThemMoi_QuestionTemp',
             'versionAPI': 'v1.0',
@@ -1415,6 +1433,7 @@ nhapnganhangcauhoi.prototype = {
             'strOrderNumber': edu.util.getValById("txtOrderNumber_Temp"),
             'strMucPheDuyetId': edu.util.getValById('drpMucPheDuyet'),
             'strThoiGian': edu.util.getValById('txtThoiGian_Temp'),
+            'strTinhDiemTheoSoY': strTinhDiemTheoSoY,
             'strNguoiThucHien_Id': edu.system.userId
         };
         if (me.strQuestionTempId != "") {
