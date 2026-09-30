@@ -12,6 +12,26 @@ HoanTotNghiep.prototype = {
     dtKeHoach: [],
     strKeHoach_Id: '',
     strMinhChung_Id: '',
+    showEmptyState: function (tableId, message, icon) {
+        var $table = $("#" + tableId);
+        if ($table.length === 0) return;
+        if ($table.find("tbody tr").not(".empty-state-row").length > 0) {
+            $table.find("tbody tr.empty-state-row").remove();
+            return;
+        }
+        var colCount = $table.find("thead th").length || 1;
+        var iconClass = icon || "fal fa-inbox";
+        var html = ''
+            + '<tr class="empty-state-row">'
+            + '<td colspan="' + colCount + '" style="text-align:center; padding:36px 16px; border:none;">'
+            + '<div style="display:inline-block; padding:18px 28px; background:#fafbff; border:1px dashed #d9deeb; border-radius:14px; color:#7a8499;">'
+            + '<i class="' + iconClass + '" style="font-size:42px; color:#b8c0d4; display:block; margin-bottom:8px;"></i>'
+            + '<div style="font-size:14px;">' + message + '</div>'
+            + '</div>'
+            + '</td>'
+            + '</tr>';
+        $table.find("tbody").html(html);
+    },
     init: function () {
         var me = this;
         /*------------------------------------------
@@ -207,6 +227,7 @@ HoanTotNghiep.prototype = {
             ]
         };
         edu.system.loadToTable_data(jsonForm);
+        me.showEmptyState("tblKetQua", "Hiện tại chưa có đợt xét - hoãn xét tốt nghiệp nào", "fal fa-graduation-cap");
         /*III. Callback*/
     },
 
@@ -465,9 +486,10 @@ HoanTotNghiep.prototype = {
             ]
         };
         edu.system.loadToTable_data(jsonForm);
+        me.showEmptyState("tblChungChi", "Hiện tại chưa có chứng chỉ nào", "fal fa-file-certificate");
         /*III. Callback*/
     },
-    
+
     getList_ChungChiCanCongNhan: function () {
         var me = this;
         //--Edit
@@ -818,6 +840,7 @@ HoanTotNghiep.prototype = {
             ]
         };
         edu.system.loadToTable_data(jsonForm);
+        me.showEmptyState("tblTieuChi", "Chưa có tiêu chí xét", "fal fa-clipboard-check");
     },
 
 

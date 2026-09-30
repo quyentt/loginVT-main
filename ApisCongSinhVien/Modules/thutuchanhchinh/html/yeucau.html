@@ -4,7 +4,7 @@
             padding: 10px;
         }
 
-        #tblGiayXacNhan>input{
+        #tblGiayXacNhan>input {
             width: 100%
         }
 </style>
@@ -20,26 +20,27 @@
                         <h1 class="title-h1 color-dask-blue text-uppercase">HỆ THỐNG MỘT CỬA</h1>
                     </div>
                     <div class="form">
-
                         <div class="form-item form-add-info mb-15">
                             <div class="input-group">
-                                <select class="form-select ps-2" id="dropSearch_ChuongTrinh" aria-label="Default select example"></select>
+                                <select class="form-select ps-2" id="dropSearch_ChuongTrinh"
+                                    aria-label="Default select example"></select>
                             </div>
                         </div>
                         <div class="form-item d-flex form-add-info mb-15">
                             <div class="input-group">
-                                <select class="form-select ps-2" id="dropSearch_YeuCau" aria-label="Default select example"></select>
+                                <select class="form-select ps-2" id="dropSearch_YeuCau"
+                                    aria-label="Default select example"></select>
                             </div>
                         </div>
                         <div class="p-btn">
                             <p class="m-0 ">
                                 <i class="fas fa-phone-alt me-2"></i>
-                                <!--Hotline: <b>0912711829</b>  -  0915711829-->
+                                <!-- Hotline: <b>0912711829</b> - 0915711829 -->
                             </p>
                             <div class="btn btn-orange btnAdd" id="btnAddYeuCau">
                                 <i class="fal fa-plus me-1"></i>
                                 <span>Tạo mới</span>
-                            </div> 
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -86,7 +87,8 @@
                     <p class="m-0" style="color: #4d9dda;">
                         Tổng số yêu cầu đang xử lý
                     </p>
-                    <button class="btn btn-info text-white" style="background-color: #4d9dda;" id="btnDangXuLy"></button>
+                    <button class="btn btn-info text-white" style="background-color: #4d9dda;"
+                        id="btnDangXuLy"></button>
 
                 </div>
                 <div class="item btnTinhTrang" name="TongSoYeuCauCanHoanThien">
@@ -104,10 +106,11 @@
     <div class="sv-add-info live-doc zone-bus" id="zoneEdit" style="display: none">
         <div class="sv-lable">
             <h3 class="lblGiayXacNhan"></h3>
-            
+
         </div>
         <div class="live-doc-alert">
-            <i class="fas fa-exclamation-triangle"></i> Giữ liệu nhập cần đúng thông tin, viết đúng chính tả, không viết tắt. Thông tin không đúng yêu cầu đều không hợp lệ
+            <i class="fas fa-exclamation-triangle"></i> Giữ liệu nhập cần đúng thông tin, viết đúng chính tả, không viết
+            tắt. Thông tin không đúng yêu cầu đều không hợp lệ
         </div>
         <div class="live-doc-content live-doc-content-2 pt-5" id="tblGiayXacNhan">
 
@@ -120,7 +123,8 @@
                 </div>
                 <div class="form">
                     <div class="row">
-                        <label class=" text-66 fs-14 mb-1 col-12 col-lg-3 col-md-4 mt-2 color-66" for="">Địa chỉ trả thông tin</label>
+                        <label class=" text-66 fs-14 mb-1 col-12 col-lg-3 col-md-4 mt-2 color-66" for="">Địa chỉ trả
+                            thông tin</label>
                         <div class="form-item d-flex mb-15 form-add-info col-12 col-lg-9 col-md-8">
                             <div class="input-group">
                                 <i class="fal fa-globe"></i>
@@ -129,7 +133,8 @@
                         </div>
                     </div>
                     <div class="row">
-                        <label class=" text-66 fs-14 mb-1 col-12 col-lg-3 col-md-4 mt-2 color-66" for="">Địa chỉ nhận mong muốn</label>
+                        <label class=" text-66 fs-14 mb-1 col-12 col-lg-3 col-md-4 mt-2 color-66" for="">Địa chỉ nhận
+                            mong muốn</label>
                         <div class="form-item d-flex mb-15 form-add-info col-12 col-lg-9 col-md-8">
                             <div class="input-group">
                                 <i class="fal fa-globe"></i>
@@ -138,11 +143,13 @@
                         </div>
                     </div>
                     <div class="row">
-                        <label class=" text-66 fs-14 mb-1 col-12 col-lg-3 col-md-4 mt-2 color-66" for="">Thời gian nhận dự kiến</label>
+                        <label class=" text-66 fs-14 mb-1 col-12 col-lg-3 col-md-4 mt-2 color-66" for="">Thời gian nhận
+                            dự kiến</label>
                         <div class="form-item d-flex mb-15 form-add-info col-12 col-lg-9 col-md-8">
                             <div class="input-group">
                                 <i class="fal fa-calendar-alt"></i>
-                                <input class="form-control" id="txtThoiGianNhan" readonly style="background-color: #808080">
+                                <input class="form-control" id="txtThoiGianNhan" readonly
+                                    style="background-color: #808080">
                             </div>
                         </div>
                     </div>
@@ -159,7 +166,8 @@
                     <button class="btn btn-come-back btnClose">
                         <i class="fal fa-arrow-left "></i> Quay lại
                     </button>
-                    <button class="btn btn-dask-blue zoneOpenNew" id="btnSave_YeuCau"><i class="fal fa-share-all me-2"></i><span>Gửi yêu cầu</span></button>
+                    <button class="btn btn-dask-blue zoneOpenNew" id="btnSave_YeuCau"><i
+                            class="fal fa-share-all me-2"></i><span>Gửi yêu cầu</span></button>
                 </div>
             </div>
         </div>
@@ -167,7 +175,8 @@
 </div>
 
 <!-- modal danh sách yêu càu -->
-<div class="modal fade register-wish xlts" id="modalTinhTrang" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade register-wish xlts" id="modalTinhTrang" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-1800">
         <div class="modal-content">
             <div class="modal-header">
@@ -204,7 +213,8 @@
     </div>
 </div>
 <!-- modal tạo yêu cầu -->
-<div class="modal fade register-wish xlts" id="modalYeuCau" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade register-wish xlts" id="modalYeuCau" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-680">
         <div class="modal-content">
             <div class="modal-header">

@@ -22,8 +22,65 @@
         background: var(--dask-blue);
         color: #fff;
     }
-    .classroom-section-item{
+
+    .classroom-section-item {
         padding-bottom: 5px
+    }
+
+    #btnViewDaDangKy.highlight-dadangky {
+        display: inline-block;
+        border-radius: 6px;
+        padding: 4px 8px;
+        font-weight: 600;
+        color: #856404;
+        animation: pulseHighlightDaDangKy 1.2s ease-in-out 3;
+    }
+
+    /* Tăng độ tương phản chữ trên nền xanh */
+    .term-list .active a,
+    .term-list li.btn-dachon-primary a {
+        color: #ffffff !important;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);
+    }
+
+    .term-list .active a i,
+    .term-list li.btn-dachon-primary a i,
+    .term-list .active a .fa-check-circle,
+    .term-list li.btn-dachon-primary a .fa-check-circle {
+        color: #ffffff !important;
+    }
+
+    .btn-regis,
+    .btn-choose-2,
+    a.btn-regis,
+    a.btn-choose-2 {
+        color: #ffffff !important;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    }
+
+    .box-classroom-section .lable a {
+        font-weight: 700 !important;
+        color: #1a1a1a !important;
+    }
+
+    /* Học phần đã đăng ký (có icon check) - đổi màu icon rõ hơn */
+    .term-list li a .fa-check-circle {
+        color: #2e7d32;
+    }
+
+    @keyframes pulseHighlightDaDangKy {
+        0%, 100% {
+            background: transparent;
+            box-shadow: none;
+        }
+        50% {
+            background: #fff3cd;
+            box-shadow: 0 0 0 2px #ffc107;
+        }
     }
 </style>
 <div class="content-tab no-tab">
@@ -38,12 +95,12 @@
     <div class="col-12 col-md-3 register-school-left">
         <!--Thông các khoản tiền và đang ký học-->
         <div class="reg-money box-shadow pd-15">
-            <div class="avata-name d-flex ">
+            <div class="avata-name">
                 <div class="avata-img">
                     <img src="assets/images/avata-form.jpg" id="txtAnhCaNhan">
                 </div>
-                <div class="name-tt">
-                    <p class="name"><b id="lblTenSinhVien"></b></p>
+                <div class="name-tt text-center">
+                    <p class="name fz18 mt-0"><b id="lblTenSinhVien"></b></p>
                     <p>Mã số: <span id="lblMaSo"></span></p>
                 </div>
             </div>
@@ -52,12 +109,12 @@
                     <li class="">
                         <!-- Nếu có tiền thì màu xanh, âm tiền màu vàng-->
                         <a style="cursor: pointer" class="btnViewTaiChinh">
-
-                            <i class="fal fa-sack-dollar"></i>Số dư tài khoản hiện tại:<span class="color-blue" id="lblSoDuTaiKhoan"></span>
+                            <i class="fal fa-sack-dollar"></i>Số dư tài khoản hiện tại:<span class="color-blue"
+                                id="lblSoDuTaiKhoan"></span>
                         </a>
                         <div class="money-class-detail box-shadow pd-15">
                             <p><b>Khoản còn nợ</b></p>
-                            <table class="table" id="tableKhoanConNo">
+                            <table class="table table-noborder tableKhoanConNo" id="tableKhoanConNo">
                                 <thead>
                                     <tr>
                                         <th scope="col">Số tiền</th>
@@ -68,7 +125,7 @@
                                 <tbody></tbody>
                             </table>
                             <p><b>Khoản còn dư</b></p>
-                            <table class="table" id="tableKhoanConDu">
+                            <table class="table table-noborder tableKhoanConDu" id="tableKhoanConDu">
                                 <thead>
                                     <tr>
                                         <th scope="col">Số tiền</th>
@@ -83,52 +140,55 @@
                     </li>
                     <li>
                         <a style="cursor: pointer" class="btnViewTaiChinh">
-                            <i class="fal fa-money-check-edit-alt" ></i>Số phát sinh thêm trong
+                            <i class="fal fa-money-check-edit-alt"></i>Số phát sinh thêm trong
                             đợt:<span class="color-orange" id="lblSoDuPhatSinh">-</span>
                         </a>
-                            <div class="money-class-detail box-shadow pd-15">
-                                <table class="table" style="min-width: 800px" id="tblSoDuPhatSinh">
-                                    <thead>
-                                        <tr style="background: #f1f1f1">
-                                            <th scope="col">Lớp học phần</th>
-                                            <th scope="col">Học phần</th>
-                                            <th scope="col">Khoản thu</th>
-                                            <th scope="col">Số tín chỉ</th>
-                                            <th scope="col">Kiểu học</th>
-                                            <th scope="col">Số tiền</th>
-                                            <th scope="col">Phần trăm miễn</th>
-                                            <th scope="col">Số tiền miễn</th>
-                                            <th scope="col">Số tiền phải nộp</th>
-                                            <th scope="col">Kế toán</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
-                            </div>
+                        <div class="money-class-detail box-shadow pd-15">
+                            <table class="table table-noborder tblSoDuPhatSinh" style="min-width: 1000px"
+                                id="tblSoDuPhatSinh">
+                                <thead>
+                                    <tr style="background: #f1f1f1">
+                                        <th scope="col">Lớp học phần</th>
+                                        <th scope="col">Học phần</th>
+                                        <th scope="col">Khoản thu</th>
+                                        <th scope="col">Số tín chỉ</th>
+                                        <th scope="col">Kiểu học</th>
+                                        <th scope="col">Số tiền</th>
+                                        <th scope="col">Phần trăm miễn</th>
+                                        <th scope="col">Số tiền miễn</th>
+                                        <th scope="col">Số tiền phải nộp</th>
+                                        <th scope="col">Kế toán</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
                     </li>
                     <li>
-                        <a style="cursor: pointer" id="btnViewDaDangKy"><i class="fal fa-users-class"></i>Tổng lớp đã đăng ký:<span id="lblSoNguoiDangKy"></span></a>
+                        <a style="cursor: pointer" id="btnViewDaDangKy">
+                            <i class="fal fa-users-class"></i>Xem và xóa, đổi lớp:<span id="lblSoNguoiDangKy"></span>
+                        </a>
                         <div class="money-class-detail box-shadow pd-15">
                             <ul class="show-detail" style="min-width: 400px" id="zoneDaDangKy"></ul>
                         </div>
                     </li>
-                    <li><i class="fal fa-file-signature"></i>Số tín chỉ đã đăng ký:<span id="lblSoTinDaDangKy"></span></li>
+                    <li><i class="fal fa-file-signature"></i>Số tín chỉ đã đăng ký:<span id="lblSoTinDaDangKy"></span>
+                    </li>
                     <li><i class="fal fa-file-upload"></i>Số tín chỉ tối đa:<span id="lblSoTinToiDa"></span></li>
-                    <li><i class="fal fa-file-download"></i>Số tín chỉ tối thiểu:<span id="lblSoTinToiThieu"></span></li>
+                    <li><i class="fal fa-file-download"></i>Số tín chỉ tối thiểu:<span id="lblSoTinToiThieu"></span>
+                    </li>
                 </ul>
             </div>
         </div>
         <!--                    Box bộ lọc-->
         <div class="box-filter box-shadow">
-            <div class="lable" id="lable">
+            <div class="lable bg-f1" id="lable">
                 <i class="fal fa-filter"></i> <span>Bộ lọc tìm kiếm </span><i class="fal fa-sort-down"></i>
             </div>
             <div class="box-filter-detail" id="show">
                 <div class="filter-detail pd-15">
                     <h5>Giảng viên</h5>
-                    <div id="DSGiangVien">
-
-                    </div>
+                    <div id="DSGiangVien"></div>
                 </div>
                 <div class="filter-detail pd-15 filter-class">
                     <h5>Thứ học</h5>
@@ -168,13 +228,12 @@
                 </div>
                 <p class="search pd-15">
                     <a href="#" class="filter-search" id="btnSearch">
-                        <i class="fal fa-search"></i> Tìm
-                        kiếm
+                        <i class="fal fa-search"></i>Tìm kiếm
                     </a>
                 </p>
                 <p class="search pd-15">
-                    <div class="dropdown" id="zonebtnBaoCao_DangKyHoc" style="float: right">
-                    </div>
+                <div class="dropdown" id="zonebtnBaoCao_DangKyHoc" style="float: right">
+                </div>
                 </p>
             </div>
         </div>
@@ -230,14 +289,36 @@
         </div>
     </div>
 </div>
-
+<!-- ------------ -->
+<div class="aps-all-button ml-20 aps-gap-10" style="display: none !important;">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-choose-2">
+        Chọn thêm 2 -MEM703002 - Chi tiết máy - N01</button>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-class-registration">
+        Xác nhận đăng ký</button>
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#myModalChiTietLich">
+        Chi tiết</button>
+    <button type="button" class="btn btn-dask-blue" data-bs-toggle="modal" data-bs-target="#zoneketquahocphan">
+        KẾT QUẢ ĐĂNG KÝ HỌC</button>
+    <button type="button" class="btn btn-dask-blue" data-bs-toggle="modal" data-bs-target="#modal-change-calendar">
+        Danh sách học phần</button>
+    <button type="button" class="btn btn-dask-blue" data-bs-toggle="modal" data-bs-target="#modal-cancel">
+        Xác nhận hủy</button>
+    <button type="button" class="btn btn-dask-blue" data-bs-toggle="modal" data-bs-target="#diem_danh">
+        Xác nhận hủy</button>
+    <button type="button" class="btn btn-dask-blue" data-bs-toggle="modal" data-bs-target="#diem_qua_trinh">
+        Kết quả điểm danh</button>
+    <button type="button" class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#phuongan_dangky">
+        Phương án đăng ký</button>
+</div>
+<!-- -------------- -->
 <!-- Phenikaa-4-Dang-ky-m2-chọn-them-2-->
 <div class="modal fade modal-choose-2" id="modal-choose-2" tabindex="-1" aria-labelledby="modal-choose-2"
-     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" style="max-width: 95vw;">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="lblHocPhanDaChon">Chọn thêm 2 -MEM703002 - Chi tiết máy - N01</h5>
+                <h5 class="modal-title" id="lblHocPhanDaChon"><i class="fas fa-users-class mr-10"></i>Chọn thêm 2
+                    -MEM703002 - Chi tiết máy - N01</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" style="padding: 0px">
@@ -261,10 +342,11 @@
 
                 <div class="modal-button text-center" style="margin-top: 10px">
                     <button type="button" class="btn btn-come-back" data-toggle="modal" data-bs-dismiss="modal">
-                        <i class="fal fa-arrow-left"></i> Quay lại
+                        <i class="fal fa-arrow-left"></i>Quay lại
                     </button>
-                    <button type="button" class="btn btn-agree" data-toggle="modal" data-bs-dismiss="modal" id="btnDangKyNhomLop">
-                        Đăng ký <i class="fal fa-pen-square"></i>
+                    <button type="button" class="btn btn-agree" data-toggle="modal" data-bs-dismiss="modal"
+                        id="btnDangKyNhomLop">
+                        Đăng ký <i class="far fa-edit ml-10"></i>
                     </button>
                 </div>
             </div>
@@ -273,13 +355,13 @@
     </div>
 </div>
 
-
 <!-- Modal Xác nhận đăng ký -->
-<div class="modal fade class-registration" id="modal-class-registration" tabindex="-1" aria-labelledby="modal-class-registration" aria-hidden="true">
+<div class="modal fade class-registration" id="modal-class-registration" tabindex="-1"
+    aria-labelledby="modal-class-registration" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Xác nhận đăng ký</h5>
+                <h5 class="modal-title" id="exampleModalLabel"><i class="far fa-user-edit"></i> Xác nhận đăng ký</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body text-center">
@@ -291,7 +373,8 @@
                     <button type="button" class="btn btn-come-back" data-toggle="modal" data-bs-dismiss="modal">
                         <i class="fal fa-arrow-left"></i> Quay lại
                     </button>
-                    <button type="button" class="btn btn-agree" data-toggle="modal" data-bs-dismiss="modal" id="btnDangKyLopHocPhanDaChon">
+                    <button type="button" class="btn btn-agree" data-toggle="modal" data-bs-dismiss="modal"
+                        id="btnDangKyLopHocPhanDaChon">
                         Đồng ý <i class="fal fa-check"></i>
                     </button>
                 </div>
@@ -301,8 +384,9 @@
 </div>
 
 <!-- Modal Phenikaa-4-Dang-ky-m2-xem-chi-thiet-->
-<div class="modal fade detail-classroom" id="myModalChiTietLich" tabindex="-1" aria-labelledby="myModalChiTietLich" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+<div class="modal fade detail-classroom myModalChiTietLich" id="myModalChiTietLich" tabindex="-1"
+    aria-labelledby="myModalChiTietLich" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-1120">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="zoomfileLabel">
@@ -311,38 +395,40 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <table class="table table-classroom tabs-scores" id="tblLichHoc">
-                    <thead>
-                        <tr style="background: #f1f1f1">
-                            <th class="text-center">STT</th>
-                            <th class="">Buổi học</th>
-                            <th class="">Ngày bắt đầu</th>
-                            <th>Ngày kết thúc</th>
-                            <th>Thứ</th>
-                            <th class="text-center">Số tiết</th>
-                            <th class="text-center">Tiết bắt đầu</th>
-                            <th class="text-center">Tiết kết thúc</th>
-                            <th class="td-center"><span class="lang" key="">Giờ, phút bắt đầu</span></th>
-                            <th class="td-center"><span class="lang" key="">Giờ, phút kết thúc</span></th>
-                            <th>Phòng học</th>
-                            <th>Giảng viên</th>
-                            <th>Kiểu học</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+                <div class="aps-table-select scroll-table-x">
+                    <table class="table table-classroom tabs-scores table-noborder tblLichHoc" id="tblLichHoc">
+                        <thead>
+                            <tr style="background: #f1f1f1">
+                                <th class="text-center w-50px">STT</th>
+                                <th class="">Buổi học</th>
+                                <th class="">Ngày bắt đầu</th>
+                                <th>Ngày kết thúc</th>
+                                <th>Thứ</th>
+                                <th class="text-center">Số tiết</th>
+                                <th class="text-center">Tiết bắt đầu</th>
+                                <th class="text-center">Tiết kết thúc</th>
+                                <th class="td-center"><span class="lang" key="">Giờ, phút bắt đầu</span></th>
+                                <th class="td-center"><span class="lang" key="">Giờ, phút kết thúc</span></th>
+                                <th>Phòng học</th>
+                                <th>Giảng viên</th>
+                                <th>Kiểu học</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-back" data-toggle="modal" data-bs-dismiss="modal">
-                    <i class="fal fa-arrow-left"></i> Quay
-                    lại
+                    <i class="fal fa-arrow-left"></i>Quay lại
                 </button>
             </div>
         </div>
     </div>
 </div>
 <!-- Total class-->
-<div class="modal fade modal-total-class" id="zoneketquahocphan" tabindex="-1" aria-labelledby="modal-total-class" aria-hidden="true">
+<div class="modal fade modal-total-class zoneketquahocphan" id="zoneketquahocphan" tabindex="-1"
+    aria-labelledby="modal-total-class" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -359,11 +445,12 @@
 </div>
 
 <!-- Đổi lịch-->
-<div class="modal fade modal-change-calendar" id="modal-change-calendar" tabindex="-1" aria-labelledby="modal-change-calendar" aria-hidden="true">
+<div class="modal fade modal-change-calendar" id="modal-change-calendar" tabindex="-1"
+    aria-labelledby="modal-change-calendar" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Danh sách học phần</h5>
+                <h5 class="modal-title"><i class="fas fa-chalkboard-teacher mr-10"></i>Danh sách học phần</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -380,16 +467,16 @@
                 </div>
             </div>
         </div>
-
     </div>
 </div>
 
 <!-- Modal thông báo hủy -->
-<div class="modal fade class-registration" id="modal-cancel" tabindex="-1" aria-labelledby="modal-cancel" aria-hidden="true">
+<div class="modal fade class-registration" id="modal-cancel" tabindex="-1" aria-labelledby="modal-cancel"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Xác nhận hủy</h5>
+                <h5 class="modal-title"><i class="fas fa-check-circle mr-10"></i>Xác nhận hủy</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body text-center">
@@ -400,8 +487,9 @@
                     <button type="button" class="btn btn-come-back" data-toggle="modal" data-bs-dismiss="modal">
                         <i class="fal fa-arrow-left"></i> Quay lại
                     </button>
-                    <button type="button" class="btn btn-agree" data-toggle="modal" data-bs-dismiss="modal" id="btnHuyLopHocPhan">
-                        Đồng ý <i class="fal fa-check"></i>
+                    <button type="button" class="btn btn-agree" data-toggle="modal" data-bs-dismiss="modal"
+                        id="btnHuyLopHocPhan">
+                        Đồng ý <i class="fal fa-check ml-10"></i>
                     </button>
                 </div>
             </div>
@@ -410,18 +498,19 @@
 </div>
 
 <!-- Modal Phenikaa-4-Dang-ky-m2-diem-danh-->
-<div class="modal fade detail-classroom" id="diem_danh" tabindex="-1" aria-labelledby="zoomfileLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-700">
+<div class="modal fade detail-classroom modal-diem_danh" id="diem_danh" tabindex="-1" aria-labelledby="zoomfileLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-680">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title zoomfileLabel" id="zoomfileLabel"></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <table class="table table-classroom tabs-scores" id="tblDiemDanh">
+                <table class="table table-classroom tabs-scores table-noborder tblDiemDanh" id="tblDiemDanh">
                     <thead>
                         <tr style="background: #f1f1f1">
-                            <th class="text-center">STT</th>
+                            <th class="text-center w-50px">STT</th>
                             <th class="">Loại điểm</th>
                             <th class="">Kết quả</th>
                         </tr>
@@ -434,32 +523,38 @@
 </div>
 
 <!-- Modal Phenikaa-4-Dang-ky-m2-diem-qua-trinh-->
-<div class="modal fade detail-classroom" id="diem_qua_trinh" tabindex="-1" aria-labelledby="zoomfileLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-700">
+<div class="modal fade detail-classroom modal-diem_qua_trinh" id="diem_qua_trinh" tabindex="-1"
+    aria-labelledby="zoomfileLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-860">
         <div class="modal-content">
             <div class="modal-header">
-                <span>Kết quả điểm danh: </span><span class="zoomfileLabel"></span> - <span class="zoomTinhTrangLabel" style="color: orange"></span>
+                <span><i class="fas fa-user-check mr-10"></i>Kết quả điểm danh: </span><span
+                    class="zoomfileLabel"></span> - <span class="zoomTinhTrangLabel" style="color: orange"></span>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <table class="table table-classroom tabs-scores" id="tblDiemQuaTrinh">
-                    <thead>
-                        <tr style="background: #f1f1f1">
-                            <th class="text-center">STT</th>
-                            <th class="">Ngày học</th>
-                            <th class="">Tiết bắt đầu <i class="fas fa-arrow-right"></i>Tiết kết thúc</th>
-                            <th class="">Trạng thái</th>
-                            <th class="">Số tiết</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+                <div class="aps-table-select scroll-table-x">
+                    <table class="table table-classroom tabs-scores table-noborder tblDiemQuaTrinh"
+                        id="tblDiemQuaTrinh">
+                        <thead>
+                            <tr style="background: #f1f1f1">
+                                <th class="text-center">STT</th>
+                                <th class="">Ngày học</th>
+                                <th class="">Tiết bắt đầu <i class="fas fa-arrow-right"></i>Tiết kết thúc</th>
+                                <th class="">Trạng thái</th>
+                                <th class="">Số tiết</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade register-wish" id="phuongan_dangky" tabindex="-1" aria-labelledby="zoomfileLabel" aria-hidden="true">
+<div class="modal fade register-wish modal-phuongan_dangky" id="phuongan_dangky" tabindex="-1"
+    aria-labelledby="zoomfileLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-1120">
         <div class="modal-content">
             <div class="modal-header">
@@ -469,19 +564,22 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <table class="table tabs-scores  transcrip-table border-l-0 border-right-0" id="tblPhuongAnDangKy">
-                    <thead>
-                        <tr>
-                            <th class="text-center" scope="col">STT</th>
-                            <th class="text-center" scope="col">Mã lớp</th>
-                            <th class="text-center" scope="col">Tên lớp</th>
-                            <th class="text-center" scope="col">Số dự kiến</th>
-                            <th class="text-center" scope="col">Số đã đăng ký</th>
-
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+                <div class="aps-table-select scroll-table-x">
+                    <table
+                        class="table tabs-scores  transcrip-table border-l-0 border-right-0 table-noborder tblPhuongAnDangKy"
+                        id="tblPhuongAnDangKy">
+                        <thead>
+                            <tr>
+                                <th class="text-center w-50px" scope="col">STT</th>
+                                <th class="text-left" scope="col">Mã lớp</th>
+                                <th class="text-left" scope="col">Tên lớp</th>
+                                <th class="text-center" scope="col">Số dự kiến</th>
+                                <th class="text-center" scope="col">Số đã đăng ký</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-back" data-toggle="modal">
@@ -493,7 +591,7 @@
 </div>
 
 <!-- page script -->
-<script src="modules/dangkyhoc/script/dangky.js?v=1.0.3.2"></script>
+<script src="modules/dangkyhoc/script/dangky.js?v=1.0.3.3"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['DangKy'] = new DangKy();

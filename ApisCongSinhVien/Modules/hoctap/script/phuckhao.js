@@ -286,7 +286,7 @@ PhucKhao.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return 'Đăng ký <a class="is-fixed btnEdit pointer" id="' + aData.ID + '" ><i class="fal fa-money-check-edit"></i></a>';
+                        return 'ĐK <a class="is-fixed btnEdit pointer" id="' + aData.ID + '" ><i class="fal fa-money-check-edit"></i></a>';
                     }
                 }
             ]

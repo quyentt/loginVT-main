@@ -15,6 +15,7 @@ NguyenVong.prototype = {
     dtChuaDangKy: [],
     dtDaDangKy: [],
     dtMoHinh: [],
+    dtChuongTrinh: [],
 
     init: function () {
         var me = this;
@@ -47,6 +48,7 @@ NguyenVong.prototype = {
         //    me.save_NguyenVong();
         //});
         $("#btnDangKy").click(function () {
+            if (!me.kiemTraBatBuoc()) return;
             var arrChecked_Id = edu.util.getArrCheckedIds("tblHocPhanChuaDangKy", "checkX");
             if (arrChecked_Id.length == 0) {
                 edu.system.alert("Vui lòng chọn đối tượng cần lưu?");
@@ -78,6 +80,7 @@ NguyenVong.prototype = {
         });
 
         $("#btnSearch").click(function () {
+            if (!me.kiemTraBatBuoc()) return;
             me.getList_ChuaDangKy();
             me.getList_DaDangKy();
         });
@@ -98,6 +101,7 @@ NguyenVong.prototype = {
         });
 
         $('#dropSearch_KeHoachDangKy').on('select2:select', function (e) {
+            $('#wrapKeHoach').removeClass('field-error');
             me.getList_KieuHoc();
             me.getList_ChuaDangKy();
             me.getList_QuyMo();
@@ -108,12 +112,48 @@ NguyenVong.prototype = {
             $("#txtSoTinToiDa").val(strId)
         });
         $('#dropSearch_KieuHoc').on('select2:select', function (e) {
+            $('#wrapKieuHoc').removeClass('field-error');
+            me.getList_ChuaDangKy();
+            me.getList_DaDangKy();
+        });
+        $('#dropSearch_KeHoachDangKy, #dropSearch_KieuHoc').on('change', function () {
+            if ($(this).val()) {
+                $(this).closest('.aps-form-item').removeClass('field-error');
+            }
+        });
+        $('#dropSearch_NganhDaoTao').on('select2:select', function (e) {
+            var strId = $('#dropSearch_NganhDaoTao').val();
+            var aData = me.dtChuongTrinh.find(x => x.DAOTAO_TOCHUCCHUONGTRINH_ID == strId);
+            if (!aData) return;
+            me.aDataSinhVien = aData;
+            me.strChuongTrinh_Id = aData.DAOTAO_TOCHUCCHUONGTRINH_ID;
+            $('#dropSearch_KeHoachDangKy').empty().trigger('change');
+            $('#dropSearch_KieuHoc').empty().trigger('change');
+            $('#txtSoTinToiDa').val('');
+            me.getList_KeHoach();
             me.getList_ChuaDangKy();
             me.getList_DaDangKy();
         });
         setTimeout(function () {
             me.getDetail_SinhVien();
         }, 1000)
+    },
+    kiemTraBatBuoc: function () {
+        $('#wrapKeHoach, #wrapKieuHoc').removeClass('field-error');
+        var arrThieu = [];
+        if (!edu.util.checkValue(edu.util.getValById('dropSearch_KeHoachDangKy'))) {
+            $('#wrapKeHoach').addClass('field-error');
+            arrThieu.push("Kế hoạch");
+        }
+        if (!edu.util.checkValue(edu.util.getValById('dropSearch_KieuHoc'))) {
+            $('#wrapKieuHoc').addClass('field-error');
+            arrThieu.push("Kiểu học");
+        }
+        if (arrThieu.length > 0) {
+            edu.system.alert("Vui lòng chọn: " + arrThieu.join(", ") + "!", "w");
+            return false;
+        }
+        return true;
     },
     popup: function () {
         //show
@@ -739,9 +779,9 @@ NguyenVong.prototype = {
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    var dtResult = [];
-                    var iPager = 0;
                     if (data.Data.length > 0) {
+                        me.dtChuongTrinh = data.Data;
+                        me.cbGenCombo_NganhDaoTao(data.Data);
                         me.aDataSinhVien = data.Data[0];
                         me.viewForm_SinhVien(data.Data[0]);
                     }
@@ -766,12 +806,28 @@ NguyenVong.prototype = {
             ]
         }, false, false, false, null);
     },
+    cbGenCombo_NganhDaoTao: function (data) {
+        var me = this;
+        var obj = {
+            data: data,
+            renderInfor: {
+                id: "DAOTAO_TOCHUCCHUONGTRINH_ID",
+                parentId: "",
+                name: "DAOTAO_TOCHUCCHUONGTRINH_TEN",
+                code: "",
+                avatar: "",
+                selectOne: true,
+            },
+            renderPlace: ["dropSearch_NganhDaoTao"],
+            type: "",
+            title: "Chọn ngành học",
+        };
+        edu.system.loadToCombo_data(obj);
+    },
     viewForm_SinhVien: function (aData) {
         var me = this;
         $("#lblHoTen").html(edu.util.returnEmpty(aData.QLSV_NGUOIHOC_HODEM) + " " + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_TEN));
         $("#lblMaSinhVien").html(edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO));
-        $("#txtNganhDaoTao").val(edu.util.returnEmpty(aData.DAOTAO_TOCHUCCHUONGTRINH_TEN));
-        //$("#txtLop").val(edu.util.returnEmpty(aData.DAOTAO_TOCHUCCHUONGTRINH_TEN));
         me.strChuongTrinh_Id = aData.DAOTAO_TOCHUCCHUONGTRINH_ID;
 
         me.getList_KeHoach();

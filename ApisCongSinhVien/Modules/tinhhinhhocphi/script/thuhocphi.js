@@ -88,7 +88,7 @@ TinhHinhHocPhi.prototype = {
         var me = this;
 
         var obj_save = {
-            'action': 'SV_Custom/DSA4FSkuLyYVKC8CKSgVKCQ1CS4SLgPP',
+            'action': 'SV_HoSoHocVien_MH/DSA4FSkuLyYVKC8CKSgVKCQ1CS4SLgPP',
             'func': 'pkg_hosohocvien.LayThongTinChiTietHoSo',
             'iM': edu.system.iM,
             'strId': edu.system.userId,

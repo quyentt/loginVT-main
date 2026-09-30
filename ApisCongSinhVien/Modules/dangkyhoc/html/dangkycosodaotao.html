@@ -45,16 +45,12 @@
     }
 
     /* CSS nền (styles.css) ép mọi icon FA về font-weight 300 → trả lại đúng độ đậm */
-    .aps-dkcs .fa-solid,
     .aps-dkcs .fas,
-    .modal-dkcs .fa-solid,
     .modal-dkcs .fas {
         font-weight: 900;
     }
 
-    .aps-dkcs .fa-regular,
     .aps-dkcs .far,
-    .modal-dkcs .fa-regular,
     .modal-dkcs .far {
         font-weight: 400;
     }
@@ -978,39 +974,9 @@
         min-width: 180px;
     }
 
-    /* Modal dạng popover góc phải: không che nội dung trang */
-    .modal-dkcs.popover-tr,
-    .modal-dkcs.popover-br {
-        pointer-events: none;
-        background: transparent !important;
-    }
-
-    .modal-dkcs.popover-tr .modal-dialog,
-    .modal-dkcs.popover-br .modal-dialog {
-        position: fixed;
-        right: 20px;
-        margin: 0;
-        width: 360px;
-        max-width: calc(100vw - 32px);
-        min-height: 0 !important;
-        height: auto !important;
-        display: block !important;
-    }
-
-    .modal-dkcs.popover-tr .modal-dialog {
-        top: 76px !important;
-        bottom: auto !important;
-    }
-
-    .modal-dkcs.popover-br .modal-dialog {
-        top: auto !important;
-        bottom: 84px !important;
-        width: 400px;
-    }
-
-    .modal-dkcs.popover-tr .modal-content,
-    .modal-dkcs.popover-br .modal-content {
-        pointer-events: auto;
+    /* Hộp xác nhận: bề ngang vừa phải, luôn nằm giữa màn hình */
+    .modal-dkcs .modal-dialog {
+        max-width: 440px;
     }
 
     /* Backdrop dịu hơn để vẫn nhìn thấy form phía sau (BS3 dùng .in, BS5 dùng .show) */
@@ -1087,11 +1053,9 @@
             flex-wrap: wrap;
         }
 
-        .modal-dkcs.popover-tr .modal-dialog,
-        .modal-dkcs.popover-br .modal-dialog {
-            right: 16px;
-            left: 16px;
-            width: auto;
+        .modal-dkcs .modal-dialog {
+            margin-left: 16px;
+            margin-right: 16px;
         }
     }
 </style>
@@ -1125,25 +1089,25 @@
         <div class="dkcs-cols">
             <div class="min-w-0">
                 <div class="plan-head">
-                    <i class="fa-solid fa-bullhorn"></i>
+                    <i class="fas fa-bullhorn"></i>
                     <span class="plan-name" id="lblTenKeHoach_DKCS">Kế hoạch đăng ký cơ sở đào tạo</span>
                     <span class="dkcs-pill green" id="lblHieuLuc_DKCS">Kế hoạch còn hiệu lực</span>
                     <span class="dkcs-pill orange dkcs-hide" id="lblPhamVi_DKCS">Bạn thuộc phạm vi được đăng ký</span>
                 </div>
                 <div class="plan-row">
-                    <i class="fa-regular fa-calendar"></i>
+                    <i class="far fa-calendar"></i>
                     <span class="dk-lbl">Thời gian đăng ký:</span>
                     <b id="lblThoiGianDangKy_DKCS">--/--/---- - --/--/----</b>
                 </div>
                 <div class="plan-row">
-                    <i class="fa-regular fa-circle-info"></i>
+                    <i class="far fa-info-circle"></i>
                     <span class="dk-lbl">Đối tượng áp dụng:</span>
                     <span id="lblDoiTuong_DKCS">-</span>
                 </div>
             </div>
             <div class="min-w-0">
                 <div class="plan-learner">
-                    <i class="fa-regular fa-user"></i>
+                    <i class="far fa-user"></i>
                     <div>
                         <div class="cap">Thông tin người học</div>
                         <div class="dk-name" id="lblHoTen_DKCS">-</div>
@@ -1164,7 +1128,7 @@
         <div class="min-w-0">
             <!-- Chưa đăng ký -->
             <div id="boxChuaDangKy_DKCS" class="dkcs-alert al-info al-top al-full">
-                <i class="fa-solid fa-circle-info"></i>
+                <i class="fas fa-info-circle"></i>
                 <p>
                     <b class="t">Bạn chưa đăng ký cơ sở đào tạo.</b><br />
                     <span class="s">Vui lòng chọn một trong các cơ sở đào tạo bên dưới trước khi kết thúc thời gian
@@ -1173,19 +1137,19 @@
             </div>
             <!-- Đã đăng ký -->
             <div id="boxDaDangKy_DKCS" class="dkcs-alert al-warn al-top al-full dkcs-hide">
-                <i class="fa-solid fa-circle-info"></i>
+                <i class="fas fa-info-circle"></i>
                 <p>
                     <b class="t">Bạn đã đăng ký cơ sở đào tạo.</b><br />
                     <span class="s">Hiện tại bạn đang đăng ký <b id="lblCoSoHienTai_DKCS">-</b>. Bạn có thể thay đổi
                         hoặc hủy lựa chọn khi kế hoạch còn hạn.</span>
                 </p>
                 <button type="button" id="btnHuyDangKy_DKCS" class="btn-dkcs danger-outline sm al-action">
-                    <i class="fa-regular fa-trash-can"></i><span>Hủy lựa chọn</span>
+                    <i class="far fa-trash-alt"></i><span>Hủy lựa chọn</span>
                 </button>
             </div>
             <!-- Đã hủy -->
             <div id="boxDaHuy_DKCS" class="dkcs-alert al-danger al-top al-full dkcs-hide">
-                <i class="fa-solid fa-triangle-exclamation"></i>
+                <i class="fas fa-exclamation-triangle"></i>
                 <p>
                     <b class="t">Bạn đã hủy lựa chọn cơ sở đào tạo.</b><br />
                     <span class="s">Lựa chọn trước đó đã được ghi lịch sử với hành động "Hủy". Vui lòng chọn lại cơ sở
@@ -1195,7 +1159,7 @@
         </div>
         <div class="min-w-0">
             <div class="dkcs-alert al-plain al-top al-full">
-                <i class="fa-regular fa-clock"></i>
+                <i class="far fa-clock"></i>
                 <p>
                     Lần xác nhận gần nhất:<br />
                     <b class="t" id="lblLanXacNhan_DKCS">Chưa có</b>
@@ -1211,11 +1175,11 @@
         <div class="min-w-0">
             <div class="dkcs-card">
                 <div class="dkcs-section-title">
-                    <i class="fa-solid fa-building-columns"></i>Lựa chọn cơ sở đào tạo
+                    <i class="fas fa-university"></i>Lựa chọn cơ sở đào tạo
                 </div>
 
                 <div id="boxCanhBaoChuaChon_DKCS" class="dkcs-alert al-danger al-top dkcs-hide">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <i class="fas fa-exclamation-triangle"></i>
                     <p>
                         <b class="t">Hiện tại bạn chưa chọn cơ sở đào tạo.</b><br />
                         <span class="s">Nếu không chọn cơ sở nào trước khi hết hạn, hệ thống sẽ ghi nhận trạng thái
@@ -1227,7 +1191,7 @@
                 <div id="zoneDSCoSo_DKCS" class="dkcs-campus-grid"></div>
 
                 <div class="dkcs-alert al-warn al-top mb0">
-                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <i class="fas fa-exclamation-circle"></i>
                     <p>
                         <b class="t">Bạn chỉ được chọn 01 cơ sở đào tạo.</b><br />
                         <span class="s">Lựa chọn có thể thay đổi nhiều lần trong thời hạn đăng ký; mỗi lần thay đổi
@@ -1238,19 +1202,19 @@
                 <!-- Hàng nút: destructive tách trái, nhóm còn lại dồn phải -->
                 <div class="dkcs-actions dkcs-bar">
                     <div class="act-left">
-                        <button type="button" id="btnXoaLuaChon_DKCS" class="btn-dkcs danger-outline" disabled>
-                            <i class="fa-regular fa-trash-can"></i><span>Xóa lựa chọn</span>
+                        <button type="button" id="btnXoaLuaChon_DKCS" class="btn-dkcs outline" disabled>
+                            <i class="far fa-times"></i><span>Bỏ chọn</span>
                         </button>
                     </div>
                     <div class="act-right">
                         <button type="button" id="btnHoanTac_DKCS" class="btn-dkcs outline" disabled>
-                            <i class="fa-regular fa-rotate-left"></i><span>Hoàn tác</span>
+                            <i class="far fa-undo"></i><span>Hoàn tác</span>
                         </button>
                         <button type="button" id="btnDong_DKCS" class="btn-dkcs outline">
                             <span>Đóng</span>
                         </button>
                         <button type="button" id="btnXacNhan_DKCS" class="btn-dkcs primary" disabled>
-                            <i class="fa-regular fa-check"></i><span>Xác nhận lựa chọn</span>
+                            <i class="far fa-check"></i><span>Xác nhận lựa chọn</span>
                         </button>
                     </div>
                 </div>
@@ -1264,7 +1228,7 @@
                  trong dangkycosodaotao.js và gọi nó trong chonKeHoach().
             <div class="dkcs-card">
                 <div class="dkcs-section-title">
-                    <i class="fa-solid fa-clock-rotate-left"></i>Lịch sử thay đổi lựa chọn
+                    <i class="fas fa-history"></i>Lịch sử thay đổi lựa chọn
                 </div>
                 <div class="dkcs-history">
                     <table id="tblLichSu_DKCS">
@@ -1294,7 +1258,7 @@
         <div class="min-w-0">
             <div class="dkcs-card">
                 <div class="dkcs-section-title">
-                    <i class="fa-solid fa-user"></i>Thông tin lựa chọn của bạn
+                    <i class="fas fa-user"></i>Thông tin lựa chọn của bạn
                 </div>
                 <dl class="dkcs-kv">
                     <dt>Họ và tên</dt>
@@ -1309,7 +1273,7 @@
                     <dd id="lblKV_Lop_DKCS">-</dd>
                 </dl>
                 <div class="dkcs-current-head" style="margin-top:16px">
-                    <i class="fa-solid fa-graduation-cap"></i>
+                    <i class="fas fa-graduation-cap"></i>
                     <b>Cơ sở hiện tại</b>
                     <span id="lblPillCoSoHienTai_DKCS" class="dkcs-pill red">Chưa đăng ký</span>
                 </div>
@@ -1317,18 +1281,18 @@
 
             <div class="dkcs-card dkcs-change-panel">
                 <div class="dkcs-section-title">
-                    <i class="fa-solid fa-arrow-right-arrow-left"></i>Thay đổi lựa chọn cơ sở
+                    <i class="fas fa-exchange-alt"></i>Thay đổi lựa chọn cơ sở
                 </div>
                 <div class="row-from-to">
                     <span class="dk-lbl">Thay đổi từ</span>
                     <span><span id="lblTu_DKCS" class="dkcs-pill gray-strong">Chưa đăng ký</span></span>
-                    <span class="dkcs-arrow"><span><i class="fa-regular fa-arrow-down"></i></span></span>
+                    <span class="dkcs-arrow"><span><i class="far fa-arrow-down"></i></span></span>
                     <span class="dk-lbl">Sang</span>
                     <span><span id="lblSang_DKCS" class="dkcs-pill blue">Chưa chọn</span></span>
                 </div>
                 <hr />
                 <div class="last-time">
-                    <i class="fa-regular fa-clock"></i>
+                    <i class="far fa-clock"></i>
                     <div>
                         <div>Thời gian xác nhận gần nhất</div>
                         <b id="lblThoiGianXacNhan_DKCS">Chưa có</b>
@@ -1345,16 +1309,16 @@
 <!-- ═══════════════ MODAL ═══════════════ -->
 
     <!-- Modal 1: Xác nhận đăng ký (popover góc trên phải, không che trang) -->
-    <div class="modal fade modal-dkcs popover-tr" id="modal-XacNhanDangKy_DKCS" tabindex="-1" aria-hidden="true"
-         data-backdrop="false" data-bs-backdrop="false" data-bs-focus="false">
-        <div class="modal-dialog">
+    <div class="modal fade modal-dkcs" id="modal-XacNhanDangKy_DKCS" tabindex="-1" aria-hidden="true"
+         data-bs-focus="false">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <button type="button" class="btn-close-x" data-dismiss="modal" data-bs-dismiss="modal"
                         aria-label="Đóng">
-                    <i class="fa-light fa-xmark"></i>
+                    <i class="fal fa-times"></i>
                 </button>
                 <div class="m-center">
-                    <div class="m-icon"><i class="fa-solid fa-question"></i></div>
+                    <div class="m-icon"><i class="fas fa-question"></i></div>
                     <p class="m-title">Xác nhận đăng ký</p>
                     <p class="m-text">
                         Bạn có chắc chắn muốn đăng ký<br />
@@ -1376,15 +1340,15 @@
     <!-- Modal 2: Xác nhận hủy đăng ký -->
     <div class="modal fade modal-dkcs m-side" id="modal-XacNhanHuy_DKCS" tabindex="-1" aria-hidden="true"
          data-bs-focus="false">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <button type="button" class="btn-close-x" data-dismiss="modal" data-bs-dismiss="modal"
                         aria-label="Đóng">
-                    <i class="fa-light fa-xmark"></i>
+                    <i class="fal fa-times"></i>
                 </button>
                 <div class="m-side-body">
                     <div class="m-side-head">
-                        <div class="m-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                        <div class="m-icon"><i class="fas fa-exclamation-triangle"></i></div>
                         <div>
                             <p class="m-title">Xác nhận hủy lựa chọn</p>
                             <p class="m-sub">Hành động này sẽ được ghi vào lịch sử đăng ký.</p>
@@ -1401,7 +1365,7 @@
                             <span>Đóng</span>
                         </button>
                         <button type="button" id="btnYes_Huy_DKCS" class="btn-dkcs danger" style="min-width:180px">
-                            <i class="fa-regular fa-trash-can"></i><span>Xác nhận hủy</span>
+                            <i class="far fa-trash-alt"></i><span>Xác nhận hủy</span>
                         </button>
                     </div>
                 </div>
@@ -1410,17 +1374,17 @@
     </div>
 
     <!-- Modal 3: Xác nhận thay đổi cơ sở (popover góc dưới phải) -->
-    <div class="modal fade modal-dkcs popover-br" id="modal-XacNhanThayDoi_DKCS" tabindex="-1" aria-hidden="true"
-         data-backdrop="false" data-bs-backdrop="false" data-bs-focus="false">
-        <div class="modal-dialog">
+    <div class="modal fade modal-dkcs" id="modal-XacNhanThayDoi_DKCS" tabindex="-1" aria-hidden="true"
+         data-bs-focus="false">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <button type="button" class="btn-close-x" data-dismiss="modal" data-bs-dismiss="modal"
                         aria-label="Đóng">
-                    <i class="fa-light fa-xmark"></i>
+                    <i class="fal fa-times"></i>
                 </button>
                 <div class="m-warn-body">
                     <div class="m-warn-head">
-                        <i class="fa-solid fa-circle-exclamation"></i>
+                        <i class="fas fa-exclamation-circle"></i>
                         <p class="m-title">Xác nhận thay đổi cơ sở</p>
                     </div>
                     <p class="m-text">
@@ -1442,7 +1406,7 @@
     </div>
 
 <!-- page script -->
-<script src="modules/dangkyhoc/script/dangkycosodaotao.js?v=1.0.0.3"></script>
+<script src="modules/dangkyhoc/script/dangkycosodaotao.js?v=1.0.1.4"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['DangKyCoSoDaoTao'] = new DangKyCoSoDaoTao();

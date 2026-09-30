@@ -308,7 +308,7 @@ ThiLai.prototype = {
             aaData: data,
 
             colPos: {
-                center: [0, 1, 9, 4, 5, 7, 8],
+                center: [0, 1, 9, 4, 5, 7, 8, 10],
             },
             aoColumns: [
                 {
@@ -337,6 +337,11 @@ ThiLai.prototype = {
                 {
                     "mRender": function (nRow, aData) {
                         return '<em class="show-in-mobi">Mức phí phải nộp:</em><span class="fw-bold color-orange">' + edu.util.formatCurrency(aData.SOTIEN) + '</span>';
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return '<em class="show-in-mobi">Đã nộp:</em><span class="fw-bold color-orange">' + edu.util.formatCurrency(aData.SOTIENDANOP) + '</span>';
                     }
                 }
                 , {

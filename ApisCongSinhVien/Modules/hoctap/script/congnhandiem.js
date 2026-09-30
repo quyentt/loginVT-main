@@ -574,11 +574,15 @@ CongNhanDiem.prototype = {
                 {
                     //"mDataProp": "KETQUA",
                     mRender: function (nRow, aData) {
+                        var tinhTrangTen = edu.util.returnEmpty(aData.TINHTRANG_TEN);
+                        var isHetHieuLuc = tinhTrangTen === "Hết hiệu lực";
+                        var isDaDangKy = !!aData.DADANGKYCONGNHAN && !isHetHieuLuc;
+
                         var html = '';
                         html += '<div class="form-check mb-0 min-h-auto pointer">';
-                        html += aData.DADANGKYCONGNHAN ? "" : '<input class="form-check-input" type="checkbox" value="" id="checkX' + aData.DAOTAO_HOCPHAN_ID + '">';
+                        html += isDaDangKy ? "" : '<input class="form-check-input" type="checkbox" value="" id="checkX' + aData.DAOTAO_HOCPHAN_ID + '">';
                         html += '<a id="' + aData.DAOTAO_HOCPHAN_ID + '" class="btnEdit form-check-label fw-normal" for="chk' + aData.DAOTAO_HOCPHAN_ID + '">';
-                        html += aData.DADANGKYCONGNHAN ? '<span style="color: green">Đã đăng ký</span>': "Đăng ký";
+                        html += isDaDangKy ? '<span style="color: green">Đã đăng ký</span>' : "Đăng ký";
                         html += '</a>';
                         html += '</div>';
                         return html;
@@ -586,7 +590,10 @@ CongNhanDiem.prototype = {
                     }
                 }, 
                 {
-                    "mDataProp": "TINHTRANG_TEN" 
+                    mRender: function (nRow, aData) {
+                        var tinhTrangTen = edu.util.returnEmpty(aData.TINHTRANG_TEN);
+                        return tinhTrangTen === "Hết hiệu lực" ? "" : tinhTrangTen;
+                    }
                 }
             ]
         };

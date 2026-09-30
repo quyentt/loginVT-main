@@ -13,11 +13,15 @@ thanhtoanonline.prototype = {
         $("#tblThanhToan").delegate(".inputsotien", "keyup", function (e) {
             var check = edu.system.checkSoTienInput(this, false);
             if (!check) return;
+            let pointST = this;
+            let strSoTien = pointST.value;
+            if (strSoTien.indexOf(".") != -1) pointST.value = strSoTien.substring(0, strSoTien.indexOf("."));
             me.show_TongTien("tblThanhToan");
+            //var sum = edu.system.countFloat("tblThanhToan", 3, 5);
         });
 
         $("#tblThanhToan").delegate(".checkchange", "click", function (e) {
-            var sum = edu.system.countFloat("tblThanhToan", 3, 5);
+            var sum = edu.system.countFloat("tblThanhToan", 3, 6);
             var strTongThu = "Tổng tiền đã chọn: <span id='lblTongTienDaChon'>" + edu.util.formatCurrency(sum) + "</span>";
             $("#lbSoTienDaChon").html(strTongThu);
         });
@@ -38,7 +42,7 @@ thanhtoanonline.prototype = {
             }
             var strNganHang = edu.util.getValById("drpNganHang");
             if ("#BIDV#SHB#VTB#VIB#VTB2#VCB".indexOf(strNganHang) != -1) {
-                me.save_ThanhToanDonHang(arrChecked_Id.toString());
+                me.save_ThanhToanDonHang(arrChecked_Id);
                 return;
             }
 
@@ -100,14 +104,46 @@ thanhtoanonline.prototype = {
             let temp = $(this).val();
             $(this).val(edu.util.formatCurrencyV2(temp));
         });
+
+        $("#tblThanhToan").delegate(".btnChiTiet", "click", function () {
+            var strId = this.id;
+            me["strXacNhanChiTiet_Id"] = strId;
+            var x = $("#tblThanhToan #checkX" + strId);
+            if (x.length > 0) {
+                $(x).prop('checked', true);
+                $(x).prop('disabled', true);
+            }
+            me.getList_XacNhanChiTiet(strId);
+            $("#modalXacNhanChiTiet").modal("show");
+        });
+        $("#tblXacNhanChiTiet").delegate(".checkchange", "click", function (e) {
+            var sum = edu.system.countFloat("tblXacNhanChiTiet", 5, 8);
+            //edu.system.insertSumAfterTable("tblXacNhanChiTiet", [5]);
+            var strTongThu = "Tổng tiền đã chọn: <span>" + edu.util.formatCurrency(sum) + "</span>";
+            $("#lbSoTienXacNhanChiTiet").html(strTongThu);
+        });
+        $("#btnSave_XacNhanChiTiet").click(function () {
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblXacNhanChiTiet", "checkX");
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng chọn đối tượng cần xóa?");
+                return;
+            }
+            me.save_ThanhToanChiTiet(arrChecked_Id);
+        });
+
+        $('#drpNganHang').on('change', function () {
+            if (!edu.util.getValById('drpNganHang')) return;
+            me.getList_tblThanhToan();
+        });
     },
    
     page_load: function () {
         var me = this;
         edu.system.page_load();
-        me.getList_KhoanNopTruoc();
-        me.getList_CauHinhThanhToan();
         me.getList_drpNganHang();
+        me.getList_KhoanNopTruoc();
+        //me.getList_CauHinhThanhToan();
+        //me.getList_drpNganHang();
     },
     ThucHienThanhToan: function (DonHangChiTietIds, SoTiens, NoiDungs) {
         
@@ -164,12 +200,22 @@ thanhtoanonline.prototype = {
             'MaSinhVien': edu.system.userId,
             'ChuKy': "",
         };
+        var strMaNganHang = edu.util.getValById('drpNganHang');
+    
+        switch (strMaNganHang) {
+            case "VCB": strMaNganHang = "VCB_ONLINE"; break;
+            case "BIDV": strMaNganHang = "BIDV_ONLINE"; break;
+            case "SHB": strMaNganHang = "SHB"; break;
+            case "VTB": strMaNganHang = "VTB_ONLINE"; break;
+            case "VIB": strMaNganHang = "VIB_ONLINE"; break;
+            default: strMaNganHang = "VNPAY"; break;
+        }
         var obj_save = {
             'action': 'TC_ThanhToan_MH/DSA4FSkuLyYVKC8VICgCKSgvKQPP',
             'func': 'pkg_thanhtoan.LayThongTinTaiChinh',
             'iM': edu.system.iM,
             'strMaSinhVien': edu.system.userId,
-            'strMaNganHang': "VNPAY",
+            'strMaNganHang': strMaNganHang,
         }; 
         
 
@@ -199,7 +245,7 @@ thanhtoanonline.prototype = {
                 edu.system.alert(JSON.stringify(er), "w");
                 
             },
-            type: "GET",
+            type: "POST",
             action: obj_save.action,
             contentType: true,
             authen: true,
@@ -236,7 +282,7 @@ thanhtoanonline.prototype = {
                         var strHTML = "";
                         strHTML = '<em class="show-in-mobi">Số tiền:</em><input type="text" disabled id="txtSoTien' + aData.ID + '" name="' + edu.util.formatCurrency(aData.SOTIEN) + '" value="' + edu.util.formatCurrency(aData.SOTIEN) + '" class="inputsotien" style="width: 150px;text-align: right"  />';
 
-                        if (me.strKhongChoPhepSuaSoTien == "0")
+                        if (aData.DUOCSUASOTIENCHITIET == 1)
                             strHTML = '<em class="show-in-mobi">Số tiền:</em><input type="text"  id="txtSoTien' + aData.ID + '" name="' + edu.util.formatCurrency(aData.SOTIEN) + '" value="' + edu.util.formatCurrency(aData.SOTIEN) + '" class="inputsotien" style="width: 150px"  />';
                         return strHTML;
                     }
@@ -245,6 +291,13 @@ thanhtoanonline.prototype = {
                     "mData": "GHICHU",
                     "mRender": function (nrow, aData) {
                         return '<em class="show-in-mobi">Ghi chú:</em><span>' + edu.util.returnEmpty(aData.GHICHU) + '</span>';
+                    }
+                },
+
+                {
+                    "mData": "GHICHU",
+                    "mRender": function (nrow, aData) {
+                        return '<span><a class="btn btn-default btnChiTiet" id="' + aData.ID + '" title="Sửa"><i class="fa fa-edit color-active"></i></a></span>';
                     }
                 },
                 {
@@ -276,7 +329,7 @@ thanhtoanonline.prototype = {
             }
         });
         setTimeout(function () {
-            var sum = edu.system.countFloat("tblThanhToan", 3, 5);
+            var sum = edu.system.countFloat("tblThanhToan", 3, 6);
             var strTongThu = "Tổng tiền đã chọn: <span id='lblTongTienDaChon'>" + edu.util.formatCurrency(sum) + "</span>";
             $("#lbSoTienDaChon").html(strTongThu);
         }, 200);
@@ -287,10 +340,12 @@ thanhtoanonline.prototype = {
     show_TongTien: function (strTableId) {
         //Tìm tất cả checkbox đang check trong bảng loại bỏ phần dư thừa rồi cộng lại để hiện tổng trên cùng cạnh sinh viên
         setTimeout(function () {
-            var sum = edu.system.countFloat(strTableId,3);                     
+            var sum = edu.system.countFloat(strTableId,3,6);                     
             edu.system.insertSumAfterTable(strTableId, [3]);
             $("#tblThanhToan" + " tfoot tr td:eq(3)").attr("style", "text-align: center; font-size: 20px; padding-right: 20px");
             $("#tblThanhToan" + " tfoot tr td:eq(0)").attr("style", "display: none");
+            var strTongThu = "Tổng tiền đã chọn: <span id='lblTongTienDaChon'>" + edu.util.formatCurrency(sum) + "</span>";
+            $("#lbSoTienDaChon").html(strTongThu);
         }, 100);
     },
     getList_drpNganHang: function () {
@@ -320,6 +375,11 @@ thanhtoanonline.prototype = {
         }, false, false, false, null);
     },
     genList_drpNganHang: function (data) {
+        if (data.length && data[0].HESO1) {
+            data.sort(function (a, b) {
+                return Number(a.HESO1) - Number(b.HESO1);
+            });
+        }
         var obj = {
             data: data,
             renderInfor: {
@@ -332,7 +392,7 @@ thanhtoanonline.prototype = {
             },
             renderPlace: ["drpNganHang"],
             type: "",
-            title: "Chọn ngân hàng"
+            title: false
         };
         edu.system.loadToCombo_data(obj);
 
@@ -374,15 +434,28 @@ thanhtoanonline.prototype = {
             data: obj_list,
         }, false, false, false, null);
     },
-    
-    save_ThanhToanDonHang: function (strThanhToan_DonHang_CT_Id) {
+
+    save_ThanhToanDonHang: function (arrDonHang) {
         var me = this;
         var obj_notify = {};
+        let strThanhToan_DonHang_CT_Id = [];
+        let dTongTien = 0;
+        arrDonHang.forEach(e => {
+            let dSoTien = getSoTien(edu.util.getValById("txtSoTien" + e), 0);
+            dTongTien += dSoTien;
+            strThanhToan_DonHang_CT_Id.push(e + "#" + dSoTien);
+        })
+        function getSoTien(dSoTien, dRecovery) {
+            //var dSoTien = $("#lbThanhTien" + strId).html();
+            dSoTien = dSoTien.replace(/ /g, "").replace(/,/g, "");
+            dSoTien = parseFloat(dSoTien);
+            return (typeof (dSoTien) == 'number') ? dSoTien : dRecovery;
+        }
         //--Edit
         var obj_save = {
             'action': 'TC_TCThanhToan/XacNhanThanhToanDonHang',
             'type': 'POST',
-            'strThanhToan_DonHang_CT_Id': strThanhToan_DonHang_CT_Id,
+            'strThanhToan_DonHang_CT_Id': strThanhToan_DonHang_CT_Id.toString("_"),
             'strNguoiThucHien_Id': edu.system.userId,
         };
         //default
@@ -395,7 +468,7 @@ thanhtoanonline.prototype = {
                     //}
                     //edu.system.alertOnModal(obj_notify);
                     me.strMaGiaoDich = data.Data;
-                    me.getList_QRCode(data.Data);
+                    me.getList_QRCode(data.Data, dTongTien);
                 }
                 else {
                     obj_notify = {
@@ -417,16 +490,68 @@ thanhtoanonline.prototype = {
             ]
         }, false, false, false, null);
     },
-    getList_QRCode: function (code) {
+    save_ThanhToanChiTiet: function (arrChecked_Id) {
+        var me = this;
+        var obj_notify = {};
+        let strThanhToan_DonHang_CT_Id = me.strXacNhanChiTiet_Id;
+        let dTongTien = 0;
+        arrChecked_Id.forEach(e => {
+            dTongTien += me.dtXacNhanChiTiet.find(ele => ele.ID == e).SOTIEN;
+        })
+        strThanhToan_DonHang_CT_Id += "#" + dTongTien + "#" + arrChecked_Id.toString();
+        $("#tblThanhToan #txtSoTien" + me.strXacNhanChiTiet_Id).val(edu.util.formatCurrency(dTongTien));
+        var strTongThu = "Tổng tiền đã chọn: <span id='lblTongTienDaChon'>" + edu.util.formatCurrency(dTongTien) + "</span>";
+        $("#lbSoTienDaChon").html(strTongThu);
+        me.show_TongTien("tblThanhToan");
+        //--Edit
+        var obj_save = {
+            'action': 'TC_TCThanhToan/XacNhanThanhToanDonHang',
+            'type': 'POST',
+            'strThanhToan_DonHang_CT_Id': strThanhToan_DonHang_CT_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        //default
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    //obj_notify = {
+                    //    type: "s",
+                    //    content: "Thêm mới thành công!",
+                    //}
+                    //edu.system.alertOnModal(obj_notify);
+                    me.strMaGiaoDich = data.Data;
+                    me.getList_QRCode(data.Data, dTongTien);
+                }
+                else {
+                    obj_notify = {
+                        type: "w",
+                        content: obj_save.action + " (er): " + data.Message,
+                    }
+                    edu.system.alertOnModal(obj_notify);
+                }
+            },
+            error: function (er) {
+                edu.system.alertOnModal(obj_notify);
+            },
+            type: "POST",
+            action: obj_save.action,
+
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
+    getList_QRCode: function (code, dSoTien) {
         var me = this;
         var strMaSinhVien = me.dtVanTin.rs[0].MASINHVIEN;
         var strHoTen = me.dtVanTin.rs[0].HOVATEN;
         var strTkAo = me.dtVanTin.rs[0].TKAO;
-        var dSoTien = 0;
+        //var dSoTien = 0;
         var arrChecked_Id = edu.util.getArrCheckedIds("tblThanhToan", "checkX");
-        arrChecked_Id.forEach(e => {
-            dSoTien += parseFloat(me.dtThanhToan.find(ele => ele.ID == e).SOTIEN);
-        })
+        //arrChecked_Id.forEach(e => {
+        //    dSoTien += parseFloat(me.dtThanhToan.find(ele => ele.ID == e).SOTIEN);
+        //})
         var serviceId = $("#drpNganHang option:selected").attr("name");
         var strName = $("#drpNganHang").val();
         if (strName.indexOf("_") != -1) strName = strName.split('_')[0];
@@ -532,7 +657,7 @@ thanhtoanonline.prototype = {
             success: function (data) {
                 if (data.Success) {
                     if (data.Success) {
-                        me.getList_tblThanhToan();
+                        //me.getList_tblThanhToan();
                         var strQRData = "";
                         var iBase64 = true;
                         switch (strName) {
@@ -682,7 +807,7 @@ thanhtoanonline.prototype = {
                 this.parentNode.parentNode.classList.remove('tr-bg');
             }
 
-            var sum = edu.system.countFloat(strTableId, 3, 5);
+            var sum = edu.system.countFloat(strTableId, 3, 6);
             var strTongThu = "Tổng tiền đã chọn: <span id='lblTongTienDaChon'>" + edu.util.formatCurrency(sum) + "</span>";
             $("#lbSoTienDaChon").html( strTongThu);
             
@@ -813,6 +938,99 @@ thanhtoanonline.prototype = {
             fakedb: [
             ]
         }, false, false, false, null);
+    },
+
+
+    getList_XacNhanChiTiet: function (strTT_DonHang_ChiTiet_Id) {
+        var me = this;
+        var obj_save = {
+            'action': 'TC_ThanhToan_NopTruoc_MH/DSA4AikoFSgkNQ8uKAU0LyYVKSAvKRUuIC8P',
+            'func': 'PKG_THANHTOAN_NOPTRUOC.LayChiTietNoiDungThanhToan',
+            'iM': edu.system.iM,
+            'strTT_DonHang_ChiTiet_Id': strTT_DonHang_ChiTiet_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        //
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+
+                    me["dtXacNhanChiTiet"] = data.Data;
+                    me.genTable_XacNhanChiTiet(data.Data);
+                }
+                else {
+                    edu.system.alert(" : " + data.Message, "s");
+                }
+
+            },
+            error: function (er) {
+
+                edu.system.alert(" (er): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            action: obj_save.action,
+
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+
+            ]
+        }, false, false, false, null);
+    },
+    genTable_XacNhanChiTiet: function (data, iPager) {
+        var jsonForm = {
+            strTable_Id: "tblXacNhanChiTiet",
+            aaData: data,
+            //bPaginate: {
+            //    strFuntionName: "main_doc.DonGia.getList_DMDonGia()",
+            //    iDataRow: iPager
+            //},
+            colPos: {
+                center: [0],
+                //right: [5]
+            },
+            aoColumns: [
+                {
+                    "mDatap": "DAOTAO_HOCPHAN_TEN - DAOTAO_HOCPHAN_MA",
+                    "mRender": function (nRow, aData) {
+                        return edu.util.returnEmpty(aData.DAOTAO_HOCPHAN_TEN) + " - " + edu.util.returnEmpty(aData.DAOTAO_HOCPHAN_MA);
+                    }
+                },
+                {
+                    "mDataProp": "KIEUHOC_TEN"
+                },
+                {
+                    "mDataProp": "DANGKY_LOPHOCPHAN_TEN"
+                },
+                {
+                    "mDataProp": "TAICHINH_CACKHOANTHU_TEN"
+                },
+                {
+                    "mDatap": "SOTIEN",
+                    "mRender": function (nRow, aData) {
+                        return edu.util.formatCurrency(aData.SOTIEN);
+                    }
+                },
+                {
+                    "mDataProp": "SOTINCHI"
+                },
+                {
+                    "mDataProp": "THOIGIAN"
+                }
+                , {
+                    "mRender": function (nRow, aData) {
+                        return '<input type="checkbox" class="checkchange" id="checkX' + aData.ID + '" checked="checked" />';
+                    }
+                }
+            ]
+        };
+        edu.system.loadToTable_data(jsonForm);
+        var sum = edu.system.countFloat("tblXacNhanChiTiet", 5, 8);
+        //edu.system.insertSumAfterTable("tblXacNhanChiTiet", [5]);
+        var strTongThu = "Tổng tiền đã chọn: <span>" + edu.util.formatCurrency(sum) + "</span>";
+        $("#lbSoTienXacNhanChiTiet").html(strTongThu);
+        /*III. Callback*/
     },
 }
 
