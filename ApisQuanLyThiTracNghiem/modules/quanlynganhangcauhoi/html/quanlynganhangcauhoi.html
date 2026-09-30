@@ -1,4 +1,187 @@
 ﻿<section class="content">
+    <style>
+
+        .question {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+
+        .question-text {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .draggable-word {
+            display: inline-block;
+            padding: 6px 10px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            margin: 2px;
+            cursor: move;
+            font-size: 13px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+            .draggable-word:hover {
+                background: #45a049;
+                transform: translateY(-1px);
+            }
+
+            .draggable-word.ui-draggable-dragging {
+                opacity: 0.8;
+                transform: rotate(3deg);
+            }
+
+            .draggable-word.used {
+                background: #9E9E9E;
+                color: #fff;
+                cursor: not-allowed;
+                opacity: 0.6;
+            }
+
+                .draggable-word.used:hover {
+                    background: #9E9E9E;
+                    transform: none;
+                }
+
+        .answer-slot {
+            display: inline-block;
+            min-width: 100px;
+            height: 35px;
+            border: 2px dashed #ccc;
+            border-radius: 4px;
+            margin: 2px;
+            padding: 6px 10px;
+            text-align: center;
+            background: #f0f0f0;
+            vertical-align: middle;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+            .answer-slot.highlight {
+                border-color: #2196F3;
+                background: #E3F2FD;
+            }
+
+            .answer-slot.filled {
+                border-color: #4CAF50;
+                background: #E8F5E8;
+                cursor: move;
+            }
+
+            .answer-slot.correct {
+                border-color: #4CAF50;
+                background: #C8E6C9;
+                color: #2E7D32;
+            }
+
+            .answer-slot.incorrect {
+                border-color: #F44336;
+                background: #FFCDD2;
+                color: #C62828;
+            }
+
+        .answers-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f0f8ff;
+            border-radius: 8px;
+            border-left: 4px solid #2196F3;
+        }
+
+        .answers-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2196F3;
+            font-size: 16px;
+        }
+
+        .answer-item {
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .answer-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .drop-zone {
+            min-height: 50px;
+            border: 2px dashed #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 5px 0;
+            background: #f9f9f9;
+            text-align: center;
+            color: #666;
+        }
+
+            .drop-zone.highlight {
+                border-color: #2196F3;
+                background: #E3F2FD;
+            }
+
+            .drop-zone.filled {
+                border-color: #4CAF50;
+                background: #E8F5E8;
+            }
+
+            .drop-zone.correct {
+                border-color: #4CAF50;
+                background: #C8E6C9;
+                color: #2E7D32;
+            }
+
+            .drop-zone.incorrect {
+                border-color: #F44336;
+                background: #FFCDD2;
+                color: #C62828;
+            }
+
+        .word-in-answer {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #4CAF50;
+            color: white;
+            border-radius: 3px;
+            margin: 2px;
+            cursor: move;
+            font-size: 12px;
+        }
+
+
+  
+    </style>
+    <style>
+        .flash-red {
+            animation: flash-red-anim 0.7s infinite alternate;
+            background-color: #ffcccc !important;
+        }
+
+        @keyframes flash-red-anim {
+            from {
+                background-color: #ffcccc;
+            }
+
+            to {
+                background-color: #ff0000;
+            }
+        }
+    </style>
     <!-- /.left-content -->
     <!-- /.right-content -->
     <div class="col-lg-12">
@@ -187,6 +370,7 @@
                                                                     <option value="TAOMOICAUHOI">Tạo mới câu hỏi</option>
                                                                     <option value="XOACAUHOI">Xóa câu hỏi</option>
                                                                     <option value="PREVIEWCAUHOI">Preview</option>
+                                                                    <option value="KIEMTRACAUHOI">Kiểm tra câu hỏi</option>
                                                                     <option value="CAPNHATKHONGDUNG">Cập nhật tình trạng thành không dùng</option>
                                                                     <option value="CAPNHATDANGGDUNG">Cập nhật tình trạng thành đang dùng</option>
                                                                     <option value="IMPORTCAUHOITAM">Import câu hỏi tạm</option>
@@ -195,6 +379,8 @@
 
                                                         </div>
                                                     </div>
+                                                    <div class="clear"></div>
+
                                                     <div class="row">
                                                         <div class="scroll-table-x">
                                                             <table id="tblCauHoi" class="table table-hover table-bordered">
@@ -210,6 +396,11 @@
                                                                         <th class="td-center">Điểm(+/-)</th>
                                                                         <th class="td-center">Đảo đ/a</th>
                                                                         <th class="td-center">Trạng thái</th>
+                                                                        
+                                                                        <th class="td-center">
+                                                                            Tính theo ý
+                                                                            <input type="checkbox" id="chkSelectAll_TheoSoY">
+                                                                        </th>
                                                                         <th class="td-center">SL đã thi</th>
                                                                         <th class="td-fixed td-center">Sửa</th>
                                                                         <th class="td-fixed td-center">
@@ -250,11 +441,11 @@
                                                     <div class="row">
                                                         <div class="col-sm-2">
                                                             <div class="group-title-name">
-                                                                <span class="lang" key="">Tên nhóm</span>
+                                                                <span class="lang" key="">Mô tả</span>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-10">
-                                                            <input type="text" id="txtTenNhomGroupQuestionDetail" class="form-control " />
+                                                            <textarea  type="text" id="txtTenNhomGroupQuestionDetail" class="form-control" rows="2" />
                                                         </div>
                                                     </div>
                                                     <div class="row">
@@ -405,6 +596,34 @@
                                                                 <option value="0">Không dùng</option>
                                                             </select>
                                                         </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-sm-2">
+                                                            <div class="group-title-name">
+                                                                <span class="lang" accesskey="">Tính điểm theo số ý</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-10">
+                                                            <input type="checkbox" id="chkCachTinhDiemTheoSoY">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div type="text" id="txt_Question_Audio"></div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <table id="tblQuestionAudioFiles" class="table table-hover table-bordered">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th class="td-fixed td-center">Stt</th>
+                                                                    <th class="td-center" style="width:20%">File</th>
+                                                                    <th class="td-center">Tên file</th>
+                                                                    <th class="td-center" style="width:20px">Xóa</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <!-- load from js -->
+                                                            </tbody>
+                                                        </table>
                                                     </div>
                                                     <div class="box-footer">
                                                         <div class="pull-right">
@@ -637,6 +856,7 @@
                                                     <a id="btnAdd_DuaVaoNganHangDe" class="btnAdd btn btn-primary"><i class="fa fa-plus-circle"></i>Đưa vào ngân hàng đề</a>
                                                     <a id="btnMauFileDoc" class="btn btn-default"><i class="fa fa-download"></i> Tải mẫu file doc</a>
                                                     <a id="btnPreview_CauHoi_Temp" class="btnAdd btn btn-primary"><i class="fa fa-eye"></i>Preview</a>
+                                                    <a id="btnKiemTra_CauHoi_Temp" class="btnde btn btn-primary"><i class="fa fa-check"></i>Kiểm tra câu hỏi</a>
                                                     <a id="btnUpdate_CauHoi_Temp_STT" class="btnAdd btn btn-primary"><i class="fa fa-save"></i>Cập nhật</a>
                                                     <a id="btnDelete_CauHoi_Temp" class="btnde btn btn-primary"><i class="fa fa-trash"></i>Xóa câu hỏi tạm</a>
                                                     <a class="btn btn-default btnClose_ThaoTac_GroupQuestionDetail" id=""><i class="fa fa-times"></i> <span class="lang" key="">Đóng</span></a>
@@ -662,6 +882,10 @@
                                                                         <th class="td-center">Mức độ</th>
                                                                         <th class="td-center">Điểm(+/-)</th>
                                                                         <th class="td-center">Đảo đ/a</th>
+                                                                        <th class="td-center">
+                                                                            Tính theo ý
+                                                                            <input type="checkbox" id="chkSelectAll_Temp_TheoSoY">
+                                                                        </th>
                                                                         <th class="td-fixed td-center">Sửa</th>
                                                                         <th class="td-fixed td-center">
                                                                             <input type="checkbox" id="chkSelectAll_CauHoi_Temp">
@@ -821,6 +1045,16 @@
                                                                 <option value="1">Đang dùng</option>
                                                                 <option value="0">Không dùng</option>
                                                             </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-sm-2">
+                                                            <div class="group-title-name">
+                                                                <span class="lang" accesskey="">Tính điểm theo số ý</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-10">
+                                                            <input type="checkbox" id="chkCachTinhDiemTheoSoY_Temp">
                                                         </div>
                                                     </div>
                                                     <div class="box-footer">
@@ -1039,6 +1273,7 @@
                                                     <div class="modal-footer">
 
                                                         <a class="submit btn btn-primary" id="btnImport_DMIP_Doc"><i class="fa fa-cloud-upload"></i><span class="lang" key=""> Import dữ liệu file doc</span></a>
+                                                        <!--<a class="submit btn btn-primary" id="btnImport_DMIP_LaTeX"><i class="fa fa-cloud-upload"></i><span class="lang" key=""> Import dữ liệu file LaTeX</span></a>-->
                                                         <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>
                                                     </div>
 

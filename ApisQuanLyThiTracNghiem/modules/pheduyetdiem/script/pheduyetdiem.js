@@ -1903,6 +1903,8 @@ pheduyetdiem.prototype = {
             'type': 'GET',
             'strThi_DotThi_Id': edu.util.getValById('dropSearch_DotThi'),
             'strDaoTao_HocPhan_Id': edu.util.getValById('dropSearch_MonThi'),
+            'strHinhThucThi_Id': "",
+            'strLoaiDiem_Id': "",
             'strNguoiThucHien_Id': edu.system.userId,
             'PageNumber': edu.system.pageIndex_default,
             'ItemPerPage': edu.system.pageSize_default,

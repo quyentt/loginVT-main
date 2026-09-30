@@ -541,7 +541,7 @@ quanlybode.prototype = {
                     "mDataProp": "NAME"
                 },
                 {
-                    "mDataProp": "GROUPQUESTIONNAME"
+                    "mDataProp": "MAVATENNHOM"
                 },
                 {
                     "mRender": function (nRow, aData) {
