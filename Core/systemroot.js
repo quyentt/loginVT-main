@@ -103,23 +103,45 @@ systemroot.prototype = {
             console.log('[thuvai] saved to sessionStorage:', me.currentThuVai);
         } catch (ex) { console.warn('[thuvai] save fail', ex); }
     },
+    // F5 khi đang thủ vai → KHÔNG restore nữa (restore giữ được thẻ tên nhưng userId
+    // bị ghi đè lại về cán bộ → API báo "Ma sinh vien khong ton tai"). Thay vào đó thoát
+    // vai: xoá phiên thủ vai + chức năng đang mở + hash URL (initHashDeepLink trong
+    // index.aspx đọc hash sẽ tự setUngDung lại) → về màn hình chọn vai trò.
     _restoreThuVaiSession: function () {
         var me = this;
         try {
-            var str = sessionStorage.getItem('thuvai');
-            if (!str) return;
-            var tv = JSON.parse(str);
-            if (tv && tv.userIdVai && tv.info) {
-                me.strNguoiThucVai_Id = tv.userIdGoc;
-                me.userId = tv.userIdVai;
-                me.currentThuVai = tv.info;
-                console.log('[thuvai] restored from sessionStorage:', tv);
+            if (!sessionStorage.getItem('thuvai')) return;
+            sessionStorage.removeItem('thuvai');
+            sessionStorage.removeItem('strChucNang');
+            sessionStorage.removeItem('strChucNang_Id');
+            me.appId = null;
+            me.strNguoiThucVai_Id = undefined;
+            me.currentThuVai = null;
+            if (window.location.hash && window.history && window.history.replaceState) {
+                window.history.replaceState(null, '', window.location.pathname + window.location.search);
             }
-        } catch (ex) { console.warn('[thuvai] restore fail', ex); }
+            console.log('[thuvai] F5 khi đang thủ vai → thoát vai, về màn hình chính');
+        } catch (ex) { console.warn('[thuvai] reset fail', ex); }
+        //try {
+        //    var str = sessionStorage.getItem('thuvai');
+        //    if (!str) return;
+        //    var tv = JSON.parse(str);
+        //    if (tv && tv.userIdVai && tv.info) {
+        //        me.strNguoiThucVai_Id = tv.userIdGoc;
+        //        me.userId = tv.userIdVai;
+        //        me.currentThuVai = tv.info;
+        //        console.log('[thuvai] restored from sessionStorage:', tv);
+        //    }
+        //} catch (ex) { console.warn('[thuvai] restore fail', ex); }
     },
     _thoatThuVai: function () {
-        try { sessionStorage.removeItem('thuvai'); } catch (ex) {}
-        location.reload();
+        try {
+            sessionStorage.removeItem('thuvai');
+            sessionStorage.removeItem('strChucNang');
+            sessionStorage.removeItem('strChucNang_Id');
+        } catch (ex) {}
+        // Bỏ hash để initHashDeepLink không tự vào lại cổng SV
+        window.location.replace(window.location.pathname + window.location.search);
     },
 
     startApp: function () {
