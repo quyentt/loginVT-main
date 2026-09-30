@@ -14,6 +14,9 @@ TinhHinhHocPhi.prototype = {
     dtTinhTrangTaiChinh: [],
     init: function () {
         var me = this;
+        // Chỉ CMCU dùng QR inline (cột "Mã thanh toán định danh" + modal QR trong bảng nợ chung).
+        // Trường khác đã chuyển qua trang "Thanh toán học phí online" riêng.
+        me.bShowQRInline = /(^|\.)cmcu\.edu\.vn$/i.test(window.location.hostname);
         /*------------------------------------------
         --Discription: Initial this
         -------------------------------------------*/
@@ -75,7 +78,13 @@ TinhHinhHocPhi.prototype = {
         $(".btnDetail_KhoanDaNopChuaXuatHoaDon").click(function () {
             $("#myModalKhoanDaNopChuaXuatHoaDon").modal("show");
         });
-        
+
+        // Click bat ky dau tren card -> kich hoat nut Chi tiet ben trong
+        $(document).on("click", ".finance-dashboard .finance-dashboard-item", function (e) {
+            if ($(e.target).closest('button, a').length > 0) return;
+            $(this).find('.finance-dashboard-content button').first().trigger('click');
+        });
+
         $("#tblChiTietKhoan").delegate('.detail_PhieuHoaDon', 'click', function (e) {
             e.stopImmediatePropagation();
             var strPhieuThu_Id = this.id;
@@ -195,8 +204,8 @@ TinhHinhHocPhi.prototype = {
         $("#lblLop").html(data.LOP);
         
         //[2]. TinhTrang
-        var strTrangThai_Ten = edu.util.returnEmpty(data.QLSV_TRANGTHAINGUOIHOC_TEN);
-        var strTrangThai_Ma = edu.util.returnEmpty(data.QLSV_TRANGTHAINGUOIHOC_MA);
+        var strTrangThai_Ten = edu.util.returnEmpty(data.TRANGTHAINGUOIHOC_N1_TEN);
+        var strTrangThai_Ma = edu.util.returnEmpty(data.TRANGTHAINGUOIHOC_N1_MA);
         var colorLable = '';
 
         switch (strTrangThai_Ma) {
@@ -516,6 +525,13 @@ TinhHinhHocPhi.prototype = {
         $("#zoneLoaiKhoanThu").html(row);
         //me.getList_KhoanThu();
     },
+    // Loc bo cac ban ghi KHONGHACHTOAN=1 (chi hien thi cho view sinh vien)
+    filterKhongHachToan: function (data) {
+        if (!Array.isArray(data)) return data;
+        return data.filter(function (item) {
+            return Number(item && item.KHONGHACHTOAN || 0) !== 1;
+        });
+    },
     getList_KhoanPhaiNop: function () {
         var me = this;
         var obj_save = {
@@ -529,7 +545,7 @@ TinhHinhHocPhi.prototype = {
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    me.genDetail_KhoanPhaiNop(data.Data);
+                    me.genDetail_KhoanPhaiNop(me.filterKhongHachToan(data.Data));
                 }
                 else {
                     console.log(data.Message);
@@ -561,7 +577,7 @@ TinhHinhHocPhi.prototype = {
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    me.genDetail_KhoanDuocMien(data.Data);
+                    me.genDetail_KhoanDuocMien(me.filterKhongHachToan(data.Data));
                 }
                 else {
                     console.log(data.Message);
@@ -593,7 +609,7 @@ TinhHinhHocPhi.prototype = {
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    me.genDetail_KhoanDaNop(data.Data);
+                    me.genDetail_KhoanDaNop(me.filterKhongHachToan(data.Data));
                 }
                 else {
                     console.log(data.Message);
@@ -625,7 +641,7 @@ TinhHinhHocPhi.prototype = {
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    me.genDetail_KhoanDaRut(data.Data);
+                    me.genDetail_KhoanDaRut(me.filterKhongHachToan(data.Data));
                 }
                 else {
                     console.log(data.Message);
@@ -1391,7 +1407,7 @@ TinhHinhHocPhi.prototype = {
         thead += '<th class="td-right">Số tiền</th>';
         thead += '<th class="td-center">Ngày tạo</th>';
         thead += '<th class="td-center">Người tạo</th>';
-        thead += '<th class="td-center">Mã thanh toán định danh</th>';
+        if (me.bShowQRInline) thead += '<th class="td-center">Mã thanh toán định danh</th>';
         thead += '</tr>';
         $("#" + $table + " thead").append(thead);
         //2. tbody
@@ -1454,6 +1470,7 @@ TinhHinhHocPhi.prototype = {
                 }
             ]
         };
+        if (!me.bShowQRInline) jsonForm.aoColumns.pop();
         edu.system.loadToTable_data(jsonForm);
 
         if (data != null && data.length > 0) {

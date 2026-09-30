@@ -47,6 +47,20 @@ ChuongTrinh.prototype = {
             $("#khoikienthucchuyennganh").modal("show");
         });
 
+        $('#txtSearch_HocPhan').on('input', function () {
+            var strKeyword = $(this).val().toLowerCase().trim();
+            var dtAll = me.dtHocPhan_ChuongTrinh || [];
+            var dtFilter = dtAll;
+            if (strKeyword) {
+                dtFilter = dtAll.filter(function (e) {
+                    var strMa = (e.DAOTAO_HOCPHAN_MA || '').toString().toLowerCase();
+                    var strTen = (e.DAOTAO_HOCPHAN_TEN || '').toString().toLowerCase();
+                    return strMa.indexOf(strKeyword) !== -1 || strTen.indexOf(strKeyword) !== -1;
+                });
+            }
+            me.genTable_HocPhan_ChuongTrinh(dtFilter, 0);
+        });
+
         $("#tblHocPhan").delegate(".btnEdit", "click", function () {
             var strId = this.id;
             $("#study_program").modal("show");
@@ -236,19 +250,12 @@ ChuongTrinh.prototype = {
         );
         jsonForm.colPos.center.push(j + 7);
         edu.system.loadToTable_data(jsonForm);
-        ////Hiển thị tổng số học phần:
-        //$("#iTongSoHocPhan").html(data.length);
-        //var iTongSoTinChi = 0;
-        //var iTongSoTinChiHocPhi = 0;
-        //for (var i = 0; i < data.length; i++) {
-        //    iTongSoTinChi += data[i].HOCTRINHAPDUNGHOCTAP;
-        //    iTongSoTinChiHocPhi += data[i].HOCTRINHAPDUNGTINHHOCPHI;
-        //}
-        //$("#iTongSoTinChi").html(iTongSoTinChi);
-        //$("#iTongSoTinChiHocPhi").html(iTongSoTinChiHocPhi);
-        //if (data.length > 0) {
-        //    $("#iTongSoTinChiKhoi").html(data[0].TONGSOTINCHITHEOKHOIKT);
-        //}
+        var iTongSoTinChi = 0;
+        for (var i = 0; i < data.length; i++) {
+            var iTin = parseFloat(data[i].HOCTRINHAPDUNGHOCTAP);
+            if (!isNaN(iTin)) iTongSoTinChi += iTin;
+        }
+        $("#iTongSoTinChi").html(iTongSoTinChi);
         for (var i = 0; i < data.length; i++) {
             me.getList_HocPhan_SoTiet(data[i].DAOTAO_TOCHUCCHUONGTRINH_ID, data[i].DAOTAO_HOCPHAN_ID, data[i].ID);
         }

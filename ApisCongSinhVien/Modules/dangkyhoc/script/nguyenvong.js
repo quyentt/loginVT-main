@@ -15,6 +15,7 @@ NguyenVong.prototype = {
     dtChuaDangKy: [],
     dtDaDangKy: [],
     dtMoHinh: [],
+    dtChuongTrinh: [],
 
     init: function () {
         var me = this;
@@ -119,6 +120,19 @@ NguyenVong.prototype = {
             if ($(this).val()) {
                 $(this).closest('.aps-form-item').removeClass('field-error');
             }
+        });
+        $('#dropSearch_NganhDaoTao').on('select2:select', function (e) {
+            var strId = $('#dropSearch_NganhDaoTao').val();
+            var aData = me.dtChuongTrinh.find(x => x.DAOTAO_TOCHUCCHUONGTRINH_ID == strId);
+            if (!aData) return;
+            me.aDataSinhVien = aData;
+            me.strChuongTrinh_Id = aData.DAOTAO_TOCHUCCHUONGTRINH_ID;
+            $('#dropSearch_KeHoachDangKy').empty().trigger('change');
+            $('#dropSearch_KieuHoc').empty().trigger('change');
+            $('#txtSoTinToiDa').val('');
+            me.getList_KeHoach();
+            me.getList_ChuaDangKy();
+            me.getList_DaDangKy();
         });
         setTimeout(function () {
             me.getDetail_SinhVien();
@@ -765,9 +779,9 @@ NguyenVong.prototype = {
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    var dtResult = [];
-                    var iPager = 0;
                     if (data.Data.length > 0) {
+                        me.dtChuongTrinh = data.Data;
+                        me.cbGenCombo_NganhDaoTao(data.Data);
                         me.aDataSinhVien = data.Data[0];
                         me.viewForm_SinhVien(data.Data[0]);
                     }
@@ -792,12 +806,28 @@ NguyenVong.prototype = {
             ]
         }, false, false, false, null);
     },
+    cbGenCombo_NganhDaoTao: function (data) {
+        var me = this;
+        var obj = {
+            data: data,
+            renderInfor: {
+                id: "DAOTAO_TOCHUCCHUONGTRINH_ID",
+                parentId: "",
+                name: "DAOTAO_TOCHUCCHUONGTRINH_TEN",
+                code: "",
+                avatar: "",
+                selectOne: true,
+            },
+            renderPlace: ["dropSearch_NganhDaoTao"],
+            type: "",
+            title: "Chọn ngành học",
+        };
+        edu.system.loadToCombo_data(obj);
+    },
     viewForm_SinhVien: function (aData) {
         var me = this;
         $("#lblHoTen").html(edu.util.returnEmpty(aData.QLSV_NGUOIHOC_HODEM) + " " + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_TEN));
         $("#lblMaSinhVien").html(edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO));
-        $("#txtNganhDaoTao").val(edu.util.returnEmpty(aData.DAOTAO_TOCHUCCHUONGTRINH_TEN));
-        //$("#txtLop").val(edu.util.returnEmpty(aData.DAOTAO_TOCHUCCHUONGTRINH_TEN));
         me.strChuongTrinh_Id = aData.DAOTAO_TOCHUCCHUONGTRINH_ID;
 
         me.getList_KeHoach();

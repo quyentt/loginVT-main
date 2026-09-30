@@ -1895,7 +1895,7 @@
     <script type="text/javascript" src="Corei/util.js?v=1.3.1.17"></script> <!--CORE JS-->
     <script type="text/javascript" src="Corei/systemextend.js?v=<%= Guid.NewGuid().ToString() %>"></script>
     <!--CORE JS-->
-    <script type="text/javascript" src="Config.js?v=1.3.1.6"></script><!--CORE JS-->
+    <script type="text/javascript" src="Config.js?v=<%= Guid.NewGuid().ToString() %>"></script><!--CORE JS-->
     <script type="text/javascript" src="App_Themes/Cms/Custom_V1/customs.js"></script><!-- custom -->
 
     <script type="text/javascript">

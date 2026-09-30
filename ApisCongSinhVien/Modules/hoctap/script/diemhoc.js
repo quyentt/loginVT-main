@@ -12,16 +12,11 @@ DiemHoc.prototype = {
     strNguoiHoc_Id: '',
     resolveNguoiHocId: function () {
         // Only allow viewing another student's data when this page is embedded
-        // inside a staff modal (zoneHTSinhVien/modalHTSinhVien).
+        // inside the staff timetable modal (zoneHTSinhVien/modalHTSinhVien).
         try {
             var isEmbeddedViewer = $("#zoneHTSinhVien").length > 0 || $("#modalHTSinhVien").length > 0;
-            if (isEmbeddedViewer) {
-                if (window._embeddedSinhVien_Id) return window._embeddedSinhVien_Id;
-                if (window.main_doc) {
-                    for (var k in main_doc) {
-                        if (main_doc[k] && main_doc[k].strSinhVien_Id) return main_doc[k].strSinhVien_Id;
-                    }
-                }
+            if (isEmbeddedViewer && window.main_doc && main_doc && main_doc.LichGiang && main_doc.LichGiang.strSinhVien_Id) {
+                return main_doc.LichGiang.strSinhVien_Id;
             }
         } catch (e) {
         }
@@ -42,16 +37,17 @@ DiemHoc.prototype = {
         //    me.popover_DiemThanhPhan(id, point);
         //});
         $("#zone_bangdiem").delegate('.btnXemDiemThanhPhan', 'click', function (e) {
-            // Ngăn <a href="#"> bên trong điều hướng làm hash rỗng -> hashchange trong
-            // index.aspx reset về dashboard/location.reload() -> văng khỏi màn hình.
-            e.preventDefault();
             e.stopPropagation();
             var point = this;
             var id = this.id;
             me.getList_DiemThanhPhan(id, point);
         });
+        $("#zone_bangdiem").delegate('tr.row-diem', 'click', function (e) {
+            var id = $(this).data('id');
+            if (!id) return;
+            me.getList_DiemThanhPhan(id, this);
+        });
         me.strNguoiHoc_Id = me.resolveNguoiHocId();
-        
 
         me.getList_ChuongTrinhHoc();
         me.getList_ThoiGianDangKy(me.strNguoiHoc_Id);
@@ -59,7 +55,7 @@ DiemHoc.prototype = {
         me.getList_VanBang();
         me.getList_DiemRenLuyen();
         // test
-        
+
         //me.dtKetQua = JSON.parse(dtResult).Data;
 
         //me.genHtml_ThongTinCaNhan();
@@ -237,9 +233,10 @@ DiemHoc.prototype = {
         var jsonSV = me.dtKetQua.rsDiemTrungBinhChung;
 
         var temp = jsonSV.find(element => element.DAOTAO_THOIGIANDAOTAO_ID === null && element.LOAIDIEMTRUNGBINH_MA === 'TRUNGBINHCHUNG' && element.THUOCTINHLANTINH === 0 && element.THANGDIEM_MA === '10');
-        
+
+        temp !== undefined ? $("#lblTongTinChiCTDT").html(edu.util.returnEmpty(temp.TONGSOTINCHICTDT)) : $("#lblTongTinChiCTDT").html("");
         temp !== undefined ? $("#lblTongTinChi").html(edu.util.returnEmpty(temp.TONGSOTINCHI)) : $("#lblTongTinChi").html("");
-        
+
         //temp = jsonSV.find(element => element.DAOTAO_THOIGIANDAOTAO_ID === null && element.LOAIDIEMTRUNGBINH_MA === 'TRUNGBINHCHUNG' && element.THUOCTINHLANTINH === 0 && element.THANGDIEM_MA === '10');
         temp !== undefined ? $("#lblTrungBinh10").html(edu.util.returnEmpty(temp.DIEMTRUNGBINH)) : $("#lblTrungBinh10").html("");
 
@@ -302,7 +299,7 @@ DiemHoc.prototype = {
             htmlBangDiem += '<tbody>';
 
             jsonDiem.forEach((e, nRow) => {
-                htmlBangDiem += '<tr>';
+                htmlBangDiem += '<tr class="row-diem" data-id="' + e.ID + '" style="cursor: pointer;" title="Click để xem chi tiết điểm thành phần">';
                 htmlBangDiem += '<th class="text-center" scope="row"><em class="show-in-mobi">STT</em><span>' + (nRow + 1) + '</span></th>';
                 htmlBangDiem += '<td><em class="show-in-mobi">Mã học phần:</em><span>' + edu.util.returnEmpty(e.DAOTAO_HOCPHAN_MA) + '</span></td>';
                 htmlBangDiem += '<td><em class="show-in-mobi">Tên học phần:</em><span>' + edu.util.returnEmpty(e.DAOTAO_HOCPHAN_TEN) + '</span></td>';
@@ -314,11 +311,11 @@ DiemHoc.prototype = {
                 htmlBangDiem += '<td class="text-center"><em class="show-in-mobi">Điểm chữ:</em><span>' + edu.util.returnEmpty(e.DIEMQUYDOI_TEN) + '</span></td>';
                 htmlBangDiem += '<td class="text-center"><em class="show-in-mobi">Đánh giá:</em><span>' + edu.util.returnEmpty(e.DANHGIA_TEN) + '</span></td>';
                 htmlBangDiem += '<td class="text-center"><em class="show-in-mobi">Ghi chú:</em><span>' + edu.util.returnEmpty(e.GHICHU) + '</span></td>';
-                htmlBangDiem += '<td class="btnXemDiemThanhPhan" id="' + e.ID + '" style="cursor:pointer;"><em class="show-in-mobi">Chi tiết:</em><a href="javascript:void(0);">Chi tiết</a></td>';
+                htmlBangDiem += '<td class="btnXemDiemThanhPhan" id="' + e.ID + '"><em class="show-in-mobi">Chi tiết:</em><a href="#">Chi tiết</a></td>';
                 htmlBangDiem += '</tr>';
             });
 
-            htmlBangDiem +='</tbody>';
+            htmlBangDiem += '</tbody>';
             htmlBangDiem += '<tfoot></tfoot>';
             htmlBangDiem += '</table>';
             htmlBangDiem += '<div class="row py-4">';
@@ -330,7 +327,7 @@ DiemHoc.prototype = {
             var diem = temp !== undefined ? edu.util.returnEmpty(temp.TONGSOTINCHI) : "...";
             //console.log("TONGSOTINCHI");
             //console.log(temp);
-            htmlBangDiem += '<span>'+ diem +'</span>';
+            htmlBangDiem += '<span>' + diem + '</span>';
             htmlBangDiem += '</div>';
             htmlBangDiem += '</div>';
             htmlBangDiem += '<div class="col-12 col-md-6">';
@@ -351,7 +348,7 @@ DiemHoc.prototype = {
             htmlBangDiem += '<div class="col-12 col-md-6">';
             htmlBangDiem += '<div class="summary-row">';
             htmlBangDiem += '<span class="color-66">Điểm trung bình hệ 4</span>';
-            temp = me.dtKetQua.rsDiemTrungBinhChung.find(element => element.DAOTAO_THOIGIANDAOTAO_ID !== null && element.LOAIDIEMTRUNGBINH_MA === 'TRUNGBINHCHUNG' && element.THUOCTINHLANTINH === 0 && element.THANGDIEM_MA === '4' && element.NAMHOC === strNamHoc && element.DAOTAO_THOIGIANDAOTAO_KY == strHocKy && element.DOTHOC === null  && element.PHAMVITONGHOPDIEM_TEN == 'HOCKY');
+            temp = me.dtKetQua.rsDiemTrungBinhChung.find(element => element.DAOTAO_THOIGIANDAOTAO_ID !== null && element.LOAIDIEMTRUNGBINH_MA === 'TRUNGBINHCHUNG' && element.THUOCTINHLANTINH === 0 && element.THANGDIEM_MA === '4' && element.NAMHOC === strNamHoc && element.DAOTAO_THOIGIANDAOTAO_KY == strHocKy && element.DOTHOC === null && element.PHAMVITONGHOPDIEM_TEN == 'HOCKY');
             diem = temp !== undefined ? edu.util.returnEmpty(temp.DIEMTRUNGBINH) : "...";
             htmlBangDiem += '<span>' + diem + '</span>';
             htmlBangDiem += '</div>';
@@ -440,7 +437,7 @@ DiemHoc.prototype = {
             });
             $(point).popover('show');
         }
-        
+
     },
     view_DiemThanhPhan: function (data) {
         var me = this;
@@ -504,13 +501,33 @@ DiemHoc.prototype = {
         }
 
     },
+    showEmptyState: function (tableId, message, icon) {
+        var $table = $("#" + tableId);
+        if ($table.length === 0) return;
+        if ($table.find("tbody tr").not(".empty-state-row").length > 0) {
+            $table.find("tbody tr.empty-state-row").remove();
+            return;
+        }
+        var colCount = $table.find("thead th").length || 1;
+        var iconClass = icon || "fal fa-inbox";
+        var html = ''
+            + '<tr class="empty-state-row">'
+            + '<td colspan="' + colCount + '" style="text-align:center; padding:36px 16px; border:none;">'
+            + '<div style="display:inline-block; padding:18px 28px; background:#fafbff; border:1px dashed #d9deeb; border-radius:14px; color:#7a8499;">'
+            + '<i class="' + iconClass + '" style="font-size:42px; color:#b8c0d4; display:block; margin-bottom:8px;"></i>'
+            + '<div style="font-size:14px;">' + message + '</div>'
+            + '</div>'
+            + '</td>'
+            + '</tr>';
+        $table.find("tbody").html(html);
+    },
     genHtml_HocPhanChuaQua: function () {
         var me = this;
         var jsonForm = {
             strTable_Id: "tblHocPhanChuaQua",
             aaData: me.dtKetQua.rsHocPhanChuaHoanThanh,
             colPos: {
-                center: [0,3, 4, 5,6, 7, 8, 9],
+                center: [0, 3, 4, 5, 6, 7, 8, 9],
                 //right: [5]
             },
             aoColumns: [
@@ -544,6 +561,7 @@ DiemHoc.prototype = {
             ]
         };
         edu.system.loadToTable_data(jsonForm);
+        me.showEmptyState("tblHocPhanChuaQua", "Hiện tại chưa có học phần nợ nào", "fal fa-file-times");
     },
     /*------------------------------------------
 	--Discription: [4]  ACESS DB ==> thoi gian dao tao
@@ -678,6 +696,7 @@ DiemHoc.prototype = {
         };
         edu.system.loadToTable_data(jsonForm);
         edu.system.insertSumAfterTable("tblTongHopDiem", [5, 3, 4])
+        me.showEmptyState("tblTongHopDiem", "Hiện tại chưa có khối kiến thức nào", "fal fa-head-side-virus");
     },
     genTable_TongHopDiemHP: function (data) {
         var me = this;
@@ -686,7 +705,7 @@ DiemHoc.prototype = {
 
             aaData: data,
             colPos: {
-                center: [0, 1, 3, 6, 7,8,9,10,11],
+                center: [0, 1, 3, 6, 7, 8, 9, 10, 11],
             },
             bHiddenOrder: true,
             aoColumns: [
@@ -737,6 +756,7 @@ DiemHoc.prototype = {
         };
         edu.system.loadToTable_data(jsonForm);
         edu.system.actionRowSpan("tblTongHopDiemHP", [1, 2]);
+        me.showEmptyState("tblTongHopDiemHP", "Chưa có chi tiết theo khối và học phần", "fal fa-head-side-virus");
     },
 
 
@@ -827,6 +847,7 @@ DiemHoc.prototype = {
         };
         edu.system.loadToTable_data(jsonForm);
         edu.system.insertSumAfterTable("tblKetQuaDangKy", [3])
+        me.showEmptyState("tblKetQuaDangKy", "Hiện tại chưa có kết quả đăng ký học nào", "fal fa-users-class");
     },
     genTable_LichSuDangKy: function (data) {
         var me = this;
@@ -868,6 +889,7 @@ DiemHoc.prototype = {
             ]
         };
         edu.system.loadToTable_data(jsonForm);
+        me.showEmptyState("tblLichSu", "Hiện tại chưa có lịch sử đăng ký học nào", "fal fa-history");
     },
 
     getList_ThoiGianDangKy: function (strQLSV_NguoiHoc_Id) {
@@ -953,7 +975,7 @@ DiemHoc.prototype = {
             ]
         }, false, false, false, null);
     },
-    
+
     getList_QuaTrinhQuyetDinh: function (point) {
         var me = this;
         var obj_save = {
@@ -1010,9 +1032,10 @@ DiemHoc.prototype = {
             ]
         };
         edu.system.loadToTable_data(jsonForm);
+        me.showEmptyState("tblQuyetDinh", "Hiện tại chưa có quyết định nào", "fal fa-info-circle");
         /*III. Callback*/
     },
-    
+
     getList_VanBang: function (point) {
         var me = this;
         var obj_save = {
@@ -1069,6 +1092,7 @@ DiemHoc.prototype = {
             ]
         };
         edu.system.loadToTable_data(jsonForm);
+        me.showEmptyState("tblVangBangChungChi", "Hiện tại chưa có văn bằng - chứng chỉ nào", "fal fa-archive");
         /*III. Callback*/
     },
 
@@ -1126,6 +1150,7 @@ DiemHoc.prototype = {
             ]
         };
         edu.system.loadToTable_data(jsonForm);
+        me.showEmptyState("tblDiemQuaTrinh", "Chưa có điểm quá trình", "fal fa-clipboard-list");
 
         //edu.system.actionRowSpan("tblLichHoc", [1,2,3]);
         /*III. Callback*/
@@ -1199,11 +1224,12 @@ DiemHoc.prototype = {
             ]
         };
         edu.system.loadToTable_data(jsonForm);
+        me.showEmptyState("tblCanhBaoHocVu", "Hiện tại chưa có cảnh báo học vụ nào", "fal fa-bell");
 
         //edu.system.actionRowSpan("tblLichHoc", [1,2,3]);
         /*III. Callback*/
     },
-    
+
     getList_DiemRenLuyen: function (strDangKy_LopHocPhan_Id) {
         var me = this;
         var obj_save = {
@@ -1278,12 +1304,15 @@ DiemHoc.prototype = {
                 return '<em class="show-in-mobi">Thời gian:</em><span>' + edu.util.returnEmpty(aData.THOIGIAN) + '</span>';
             }
         })
+        me.showEmptyState("tblDRL_ToanKhoa", "Hiện tại chưa có điểm rèn luyện toàn khóa", "fal fa-medal");
         jsonForm.strTable_Id = "tblDRL_Nam";
         jsonForm.aaData = data.rsNam;
         edu.system.loadToTable_data(jsonForm);
+        me.showEmptyState("tblDRL_Nam", "Hiện tại chưa có điểm rèn luyện theo năm", "fal fa-medal");
         jsonForm.strTable_Id = "tblDRL_Ky";
         jsonForm.aaData = data.rsKy;
         edu.system.loadToTable_data(jsonForm);
+        me.showEmptyState("tblDRL_Ky", "Hiện tại chưa có điểm rèn luyện theo kỳ", "fal fa-medal");
         //edu.system.actionRowSpan("tblLichHoc", [1,2,3]);
         /*III. Callback*/
     },

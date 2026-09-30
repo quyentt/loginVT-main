@@ -65,12 +65,12 @@ LichGiang.prototype = {
             var todayObj = new Date();
             var todayStr = ('0' + todayObj.getDate()).slice(-2) + '/' + ('0' + (todayObj.getMonth() + 1)).slice(-2) + '/' + todayObj.getFullYear();
             for (var iDay = 0; iDay < 7; iDay++) {
-                var dayTitle = $(strClass[iDay]).attr('title');
+                var dayTitle = $(strClass[iDay]).attr('title') || '';
+                var dayNum = dayTitle.split('/')[0] || '';
                 var isToday = dayTitle === todayStr;
-                html += '<div class="day-of-week' + (isToday ? ' today-col' : '') + '">';
-                html += '<div class="day">' + dayTitle + '</div>';
+                html += '<div class="day-of-week' + (isToday ? ' today-col' : '') + '" title="' + dayTitle + '">';
+                html += '<div class="day">' + dayNum + '</div>';
                 html += '<div class="text">' + arrDayName[iDay] + '</div>';
-                html += '</div>';
                 html += '</div>';
             }
 
@@ -425,20 +425,13 @@ LichGiang.prototype = {
         var html = '';
         for (var i = 0; i < data.length; i++) {
             var a = data[i] || {};
-            var maLop = a.MA_LOP || a.MALOP || a.MA || a.MA_LOPHOCPHAN || a.LOP_MA || '';
-            var tenLop = a.TEN_LOP || a.TENLOP || a.TEN || a.TENLOPHOCPHAN || a.LOP_TEN || '';
-            var hinhThuc = a.HINHTHUC_HOC || a.HINHTHUC || a.HINHTHUCHOC || a.HINH_THUC_HOC || '';
-            var ngayBatDau = a.NGAYBATDAU || a.TU_NGAY || a.TUNGAY || a.NGAY_BAT_DAU || '';
-            var ngayKetThuc = a.NGAYKETTHUC || a.DEN_NGAY || a.DENNGAY || a.NGAY_KET_THUC || '';
-            var ghiChu = a.GHICHU || a.GHI_CHU || a.NOTE || a.GHICHU_TEN || '';
-
             html += '<tr>';
-            html += '<td>' + edu.util.returnEmpty(maLop) + '</td>';
-            html += '<td>' + edu.util.returnEmpty(tenLop) + '</td>';
-            html += '<td>' + edu.util.returnEmpty(hinhThuc) + '</td>';
-            html += '<td>' + edu.util.returnEmpty(ngayBatDau) + '</td>';
-            html += '<td>' + edu.util.returnEmpty(ngayKetThuc) + '</td>';
-            html += '<td>' + edu.util.returnEmpty(ghiChu) + '</td>';
+            html += '<td>' + edu.util.returnEmpty(a.MALOP) + '</td>';
+            html += '<td>' + edu.util.returnEmpty(a.TENLOP) + '</td>';
+            html += '<td>' + edu.util.returnEmpty(a.TENHINHTHUCHOC) + '</td>';
+            html += '<td>' + edu.util.returnEmpty(a.NGAYBATDAU) + '</td>';
+            html += '<td>' + edu.util.returnEmpty(a.NGAYKETTHUC) + '</td>';
+            html += '<td>' + edu.util.returnEmpty(a.GHICHU) + '</td>';
             html += '</tr>';
         }
         $tbody.html(html);
@@ -699,7 +692,7 @@ LichGiang.prototype = {
             var iTop = e.GIOKETTHUC * 60 + e.PHUTKETTHUC - e.GIOBATDAU*60 - e.PHUTBATDAU;
             var temp = e.PHANLOAI == "LICHTHI" ? "btnLichThi" : "btnLichHoc";
             
-            html += '<div class="task task-1 ' + temp + '" id="' + e.ID + '" style="top:' + e.PHUTBATDAU + 'px; height: ' + iTop + 'px; background-color: ' + strMauNen + '; cursor: pointer">';
+            html += '<div class="task task-1 ' + temp + '" id="' + e.ID + '" style="top:' + (30 + e.PHUTBATDAU) + 'px; height: ' + iTop + 'px; background-color: ' + strMauNen + '; cursor: pointer">';
             //html += '<div class="client">';
             html += '<div class="task-header">';
             html += '<div class="text">';

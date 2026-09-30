@@ -124,7 +124,7 @@ HoSo.prototype = {
 
             },
             error: function (er) {
-                edu.system.alert("KHCT_ThoiGianDaoTao/LayDanhSach (ex): " + JSON.stringify(er), "w");
+                edu.system.alert(JSON.stringify(er), "w");
 
             },
             type: 'POST',

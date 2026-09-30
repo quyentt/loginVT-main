@@ -16,6 +16,8 @@ DashBoard.prototype = {
 
     init: function () {
         var me = this;
+        console.log('[DashBoard] init v1.0.0.2');
+        me.genTable_TinTuc_Home([]);
         me.getList_ChucNangTheoPhanLoai();
         me.getList_TinTuc();
         me.getList_CauHinhTuKhoa("_HOME");
@@ -27,10 +29,21 @@ DashBoard.prototype = {
             $(".menu-icon-mobi").trigger("click");
         });
 
-        $("#zonetintuc").delegate('.bantin2', 'click', function () {
+        $("#zonetintuc, #zoneTinTucHome").delegate('.bantin2', 'click', function () {
             var strId = this.id;
             me.objTinTuc = me.dtTinTuc.find(e => e.ID == strId);
             edu.system.triggerChucNang_MaHienThi("#tintuc");
+        });
+        $("#zoneTinTucHome").delegate('.news-group-more', 'click', function (e) {
+            e.preventDefault();
+            edu.system.triggerChucNang_MaHienThi("#tintuc");
+        });
+        $(document).on('click', '#dbQuickAccess .db-quick-card', function (e) {
+            e.preventDefault();
+            var strMa = $(this).data('goto');
+            if (strMa && edu.system.triggerChucNang_MaHienThi) {
+                edu.system.triggerChucNang_MaHienThi(strMa);
+            }
         });
 
         $(".friend-slider").slick({
@@ -134,7 +147,7 @@ DashBoard.prototype = {
                 if (data.Success) {
                     var dtReRult = data.Data;
                     me.dtTinTuc = dtReRult;
-                    me.genTable_TinTuc(dtReRult, data.Pager);
+                    me.genTable_TinTuc_Home(dtReRult);
                 }
                 else {
                     edu.system.alert(" : " + data.Message, "s");
@@ -155,6 +168,72 @@ DashBoard.prototype = {
             ]
         }, false, false, false, null);
     },
+
+    classify_TinTuc: function (item) {
+        var donvi = (item.DAOTAO_COCAUTOCHUC_TEN || '').toLowerCase();
+        var donviAlias = (typeof edu.system.change_alias === 'function')
+            ? edu.system.change_alias(donvi) : donvi;
+        if (/cthssv|cong tac (hoc sinh )?sinh vien|doan thanh nien|hoi sinh vien|sinh vien/.test(donviAlias)) {
+            return 'hoatdongsv';
+        }
+        if (/dao tao|khao thi/.test(donviAlias)) {
+            return 'daotao';
+        }
+        return 'nhatruong';
+    },
+
+    genTable_TinTuc_Home: function (data) {
+        var me = this;
+        var $host = $("#zoneTinTucHome");
+        if (!$host.length) return;
+        $host.html('');
+        var CATEGORIES = [
+            { key: 'nhatruong', ten: 'Tin nhà trường' },
+            { key: 'daotao', ten: 'Tin đào tạo' },
+            { key: 'hoatdongsv', ten: 'Hoạt động sinh viên' }
+        ];
+        var groups = { nhatruong: [], daotao: [], hoatdongsv: [] };
+        (data || []).forEach(function (e) {
+            groups[me.classify_TinTuc(e)].push(e);
+        });
+
+        var PREVIEW = 3;
+        var html = '';
+        CATEGORIES.forEach(function (cat) {
+            var items = groups[cat.key];
+            var shown = items.slice(0, PREVIEW);
+            html += '<div class="news-group">';
+            html += '<div class="news-group-header">';
+            html += '<span class="news-group-title">' + cat.ten + '</span>';
+            if (items.length > 0) {
+                html += '<a href="#" class="news-group-more">Xem tất cả</a>';
+            }
+            html += '</div>';
+            html += '<div class="news-group-body">';
+            if (!shown.length) {
+                html += '<div class="news-group-empty"><i class="fal fa-inbox"></i><span>Chưa có tin nào</span></div>';
+            } else {
+                shown.forEach(function (e) {
+                    var strNgay = (e.NGAYBATDAU || e.NGAYTAO_DD_MM_YYYY || '').toString().trim();
+                    html += '<div class="news-group-item bantin2" id="' + e.ID + '">';
+                    html += '<div class="news-group-item-icon"><i class="fas fa-thumbtack"></i></div>';
+                    html += '<div class="news-group-item-content">';
+                    html += '<div class="news-group-item-title">' + edu.util.returnEmpty(e.TIEUDE) + '</div>';
+                    if (strNgay) {
+                        html += '<div class="news-group-item-meta">';
+                        html += '<span><i class="fal fa-calendar-alt"></i>' + strNgay + '</span>';
+                        html += '</div>';
+                    }
+                    html += '</div>';
+                    html += '</div>';
+                });
+            }
+            html += '</div>';
+            html += '</div>';
+        });
+        $host.append(html);
+    },
+
     genTable_TinTuc: function (data) {
         var me = this;
         var html = '';

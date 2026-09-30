@@ -170,7 +170,7 @@ DangKy.prototype = {
        
         
         
-        $("#zoneLopHocPhan,#zoneKetQuaDangKy,#zoneDoiLichDangKy").delegate('.btnChiTietLopHocPhan', 'click', function (e) {
+        $("#zoneLopHocPhan,#zoneKetQuaDangKy,#zoneDoiLichDangKy,#zoneTHTL,#zoneThuocTinh").delegate('.btnChiTietLopHocPhan', 'click', function (e) {
             $('#myModalChiTietLich').modal('show');
             var strTenLop = $(this).attr("title");
             var strTenLop_Id = $(this).attr("name");
@@ -281,8 +281,13 @@ DangKy.prototype = {
 
         //this.genList_KetQuaDangKy(this.dtKetQuaDK);//11
         this.getList_KetQuaDangKy();//11
-        
+
         $("#zoneketquahocphan").modal("show");
+    },
+    highlightDaDangKy: function () {
+        var $el = $("#btnViewDaDangKy");
+        $el.removeClass("highlight-dadangky");
+        setTimeout(function () { $el.addClass("highlight-dadangky"); }, 50);
     },
     /*------------------------------------------
 	--Discription: Xem ho so sinh vien
@@ -414,8 +419,34 @@ DangKy.prototype = {
     },
     showThoiGianDangKy: function (data) {
         var me = this;
-        var html = "<b>Thời gian đăng ký học phần:</b> " + edu.util.returnEmpty(data.NGAYBATDAU) + " " + edu.util.returnEmpty(data.GIODANGKYTRONGNGAYDAU) + ":" + edu.util.returnEmpty(data.PHUTDANGKYTRONGNGAYDAU) + " - "
-            + edu.util.returnEmpty(data.NGAYKETTHUC) + " " + edu.util.returnEmpty(data.GIOKETTHUCTRONGNGAYCUOI) + ":" + edu.util.returnEmpty(data.PHUTKETTHUCTRONGNGAYCUOI);
+        var fmtNgay = function (s) {
+            s = (s == null ? '' : String(s));
+            if (/^\d{8}$/.test(s)) return s.substr(6, 2) + '/' + s.substr(4, 2) + '/' + s.substr(0, 4);
+            return s;
+        };
+        var pad2 = function (v) { v = (v == null ? '' : String(v)); return v === '' ? '' : (v.length < 2 ? '0' + v : v); };
+        var ghepGioPhut = function (gio, phut, mac_dinh) {
+            var g = pad2(gio), p = pad2(phut);
+            if (g === '' && p === '') return mac_dinh || '';
+            return (g || '00') + ':' + (p || '00');
+        };
+        var pick = function (a, b) { return (a != null && a !== '') ? a : b; };
+        var batDau = fmtNgay(data.NGAYBATDAU);
+        var gpBatDau = ghepGioPhut(
+            pick(data.GIODANGKYTRONGNGAYDAU, data.NGAYBATDAU_GIO),
+            pick(data.PHUTDANGKYTRONGNGAYDAU, data.NGAYBATDAU_PHUT),
+            '00:00'
+        );
+        var ketThuc = fmtNgay(data.NGAYKETTHUC);
+        var gpKetThuc = ghepGioPhut(
+            pick(data.GIOKETTHUCTRONGNGAYCUOI, data.NGAYKETTHUC_GIO),
+            pick(data.PHUTKETTHUCTRONGNGAYCUOI, data.NGAYKETTHUC_PHUT),
+            '23:59'
+        );
+        var html = "<b>Thời gian đăng ký học phần:</b> "
+            + batDau + (gpBatDau ? ' ' + gpBatDau : '')
+            + ' - '
+            + ketThuc + (gpKetThuc ? ' ' + gpKetThuc : '');
         if (data.THONGTINTHOIGIANRUTHP) html += '<br/><b>Thời gian chỉ rút học phần:</b> ' + data.THONGTINTHOIGIANRUTHP;
         $("#zoneThoiGian").html(html);
         $("#lblSoTinDaDangKy").html(edu.util.returnEmpty(data.SOTINCHIDADANGKY));
@@ -612,8 +643,10 @@ DangKy.prototype = {
         }
         $("#zoneLopHocPhan").html(row);
         if (data.length && bCheckOfset) {
-            var x = document.getElementById("zoneLopHocPhan").offsetTop;
-            $("#main-content-wrapper").scrollTop(x);
+            var el = document.getElementById("zoneLopHocPhan");
+            if (el && typeof el.scrollIntoView === 'function') {
+                el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
         }
     },
 
@@ -681,9 +714,10 @@ DangKy.prototype = {
                 if (data.Success) {
                     if (edu.util.checkValue(data.Id)) {
                         edu.system.alert("Đăng ký thành công!");
-                        //12 me.getList_KetQuaDangKy();
+                        me.getList_KetQuaDangKy();
                         me.getList_HocPhan();
-                        //me.getList_TinhTrangTaiChinh();
+                        me.getList_TinhTrangTaiChinh();
+                        me.highlightDaDangKy();
                     }
                 }
                 else {
@@ -740,8 +774,10 @@ DangKy.prototype = {
             success: function (data) {
                 if (data.Success) {
                     edu.system.alert("Hủy thành công!");
-                    //122 me.getList_KetQuaDangKy();
+                    me.getList_KetQuaDangKy();
                     me.getList_HocPhan();
+                    me.getList_TinhTrangTaiChinh();
+                    me.highlightDaDangKy();
                 }
                 else {
                     obj_notify = {
@@ -812,6 +848,20 @@ DangKy.prototype = {
             ]
         }, false, false, false, null);
     },
+    fixThuocTinhTen: function (s) {
+        if (!s) return '';
+        var map = {
+            'thuc hanh': 'Thực hành',
+            'ly thuyet': 'Lý thuyết',
+            'thao luan': 'Thảo luận',
+            'bai tap': 'Bài tập',
+            'thuc tap': 'Thực tập',
+            'thi nghiem': 'Thí nghiệm',
+            'do an': 'Đồ án'
+        };
+        var key = String(s).toLowerCase().trim();
+        return map[key] || s;
+    },
     genList_NhomLopHocPhan: function (data, strMaNhomLop) {
         var me = this;
         var dataThuocTinh = data.rsThuocTinhLopHocPhan.filter(e => e.LOPHOCPHANCHINH !== 1 && e.MANHOMLOP === strMaNhomLop);
@@ -820,11 +870,11 @@ DangKy.prototype = {
             $("#zoneThuocTinh").append(
                 '<div id="btnChonThuocTinh' + e.THUOCTINHLOP_ID + '" name="' + e.THUOCTINHLOP_ID + '" class="col-12 col-md-4 classroom-section-item filterNhomLopHocPhan">'
                 + '<div class="gallery" style="text-align:center">'
-                + '<div class="desc">Chọn lớp ' + e.THUOCTINHLOP_TEN + '</div>'
+                + '<div class="desc">Chọn lớp ' + me.fixThuocTinhTen(e.THUOCTINHLOP_TEN) + '</div>'
                 + '</div>'
                 + '</div>'
             );
-            
+
         });
         var row = '';
         $("#zoneTHTL").html("");
@@ -841,20 +891,20 @@ DangKy.prototype = {
             row += '</div>';
             row += '<div class="classroom-detail">';
             row += '<ul class="classroom-detail-list">';
-            row += '<li>' + edu.util.returnEmpty(aData.THUOCTINHLOP_TEN) +'</li>';
+            row += '<li>' + me.fixThuocTinhTen(edu.util.returnEmpty(aData.THUOCTINHLOP_TEN)) +'</li>';
             row += '<li>Thứ: ' + edu.util.returnEmpty(aData.THUHOC) + '</li>';
             row += '<li>Tổng số: ' + edu.util.returnEmpty(aData.SOLUONGDUKIENHOC) + '</li>';
             row += '<li>Đã đăng ký: ' + edu.util.returnEmpty(aData.SOTHUCTEDANGKYHOC) + '</li>';
             row += '</ul>';
             row += '</div>';
-            row += '<div class="classroom-button d-flex justify-content-between">';
-            row += '<div class="price"><b>' + edu.util.formatCurrency(aData.PHISAUKHITRUMIEN) + '</b> đ</div>';
-            row += '<div class="btn-group">';
+            row += '<div class="classroom-button d-flex justify-content-between flex-wrap" style="gap: 6px; row-gap: 8px;">';
+            row += '<div class="price" style="white-space: nowrap;"><b>' + edu.util.formatCurrency(aData.PHISAUKHITRUMIEN) + '</b> đ</div>';
+            row += '<div class="btn-group" style="flex-wrap: nowrap;">';
             row += '<a class="btn btn-view-detail btnChiTietLopHocPhan"  name="' + aData.ID + '" title="' + edu.util.returnEmpty(aData.TENLOP) + '">';
             row += 'Xem';
             row += '</a>';
-            row += '<a class="btn btn-practice btnChonNhomLopHocPhan" id="' + aData.ID + '" name="' + aData.THUOCTINHLOP_ID + '" title="' + edu.util.returnEmpty(aData.MANHOMLOP) +'">';
-            row += 'Chọn lớp ' + aData.THUOCTINHLOP_TEN;
+            row += '<a class="btn btn-practice btnChonNhomLopHocPhan" style="white-space: nowrap;" id="' + aData.ID + '" name="' + aData.THUOCTINHLOP_ID + '" title="' + edu.util.returnEmpty(aData.MANHOMLOP) +'">';
+            row += 'Chọn lớp ' + me.fixThuocTinhTen(aData.THUOCTINHLOP_TEN);
             row += '</a>';
             row += '</div>';
             row += '</div>';
@@ -1075,7 +1125,7 @@ DangKy.prototype = {
             row += '</div>';
             row += '<div class="classroom-detail d-flex">';
             row += '<div class="classroom-detail-sum">';
-            row += '<p>' + edu.util.returnEmpty(aData.THUOCTINHLOP_TEN) + '</p>';
+            row += '<p>' + me.fixThuocTinhTen(edu.util.returnEmpty(aData.THUOCTINHLOP_TEN)) + '</p>';
             row += '<p>Tổng số: ' + edu.util.returnEmpty(aData.SOLUONGDUKIENHOC) + '</p>';
             row += '<p>Đã đăng ký: ' + edu.util.returnEmpty(aData.SOTHUCTEDANGKYHOC) + '</p>';
             row += '</div>';
@@ -1085,14 +1135,14 @@ DangKy.prototype = {
             row += '<p>' + edu.util.returnEmpty(aData.GIANGVIEN) + '</p>';
             row += '</div>';
             row += '</div>';
-            row += '<div class="classroom-button d-flex justify-content-between">';
-            row += '<div class="price"><b>' + edu.util.returnEmpty(aData.PHISAUKHITRUMIEN) + '</b> đ</div>';
-            row += '<div class="btn-group">';
+            row += '<div class="classroom-button d-flex justify-content-between flex-wrap" style="gap: 6px; row-gap: 8px;">';
+            row += '<div class="price" style="white-space: nowrap;"><b>' + edu.util.returnEmpty(aData.PHISAUKHITRUMIEN) + '</b> đ</div>';
+            row += '<div class="btn-group" style="flex-wrap: nowrap;">';
             row += '<a class="btn btn-view-detail btnChiTietLopHocPhan" name="' + aData.ID + '" title="' + edu.util.returnEmpty(aData.TENLOP) + '">';
             row += 'Xem chi tiết';
             row += '</button>';
-            row += '<a class="btn btn-practice btnDoiNhomLopHocPhan" id="' + aData.ID + '" name="' + aData.THUOCTINHLOP_ID + '">';
-            row += 'Đổi lớp ' + aData.THUOCTINHLOP_TEN;
+            row += '<a class="btn btn-practice btnDoiNhomLopHocPhan" style="white-space: nowrap;" id="' + aData.ID + '" name="' + aData.THUOCTINHLOP_ID + '">';
+            row += 'Đổi lớp ' + me.fixThuocTinhTen(aData.THUOCTINHLOP_TEN);
             row += '</a>';
             row += '</div>';
             row += '</div>';
@@ -1142,7 +1192,6 @@ DangKy.prototype = {
             'strNguoiThucHien_Id': edu.system.userId,
             'strDangKy_LopHocPhan_Cu_Ids': strDangKy_LopHocPhan_Cu_Ids,
             'strDangKy_LopHocPhan_Moi_Ids': strDangKy_LopHocPhan_Moi_Ids,
-            'strNguoiThucVai_Id': edu.system.strNguoiThucVai_Id,
         };
         //default
 
@@ -1151,7 +1200,9 @@ DangKy.prototype = {
                 if (data.Success) {
                     edu.system.alert("Đổi lịch thành công!");
                     $("#zoneDoiLichDangKy").html("");
-                    //12 me.getList_KetQuaDangKy(true);
+                    me.getList_KetQuaDangKy(true);
+                    me.getList_TinhTrangTaiChinh();
+                    me.highlightDaDangKy();
                 }
                 else {
                     obj_notify = {

@@ -8,17 +8,17 @@
         position: relative;
     }
 
-        #Maininfo .form-add-info .input-group > i.fa-credit-card {
-            left: 10px;
-            top: 11px;
-        }
+    #Maininfo .form-add-info .input-group>i.fa-credit-card {
+        left: 10px;
+        top: 11px;
+    }
 
-        #Maininfo .form-add-info .input-group > i.fa-angle-down {
-            left: auto !important;
-            right: 12px !important;
-            top: 11px;
-            pointer-events: none;
-        }
+    #Maininfo .form-add-info .input-group>i.fa-angle-down {
+        left: auto !important;
+        right: 12px !important;
+        top: 11px;
+        pointer-events: none;
+    }
 
     #Maininfo .form-add-info .form-select {
         padding-right: 40px;
@@ -111,7 +111,7 @@
                                 <i class="fal fa-credit-card"></i>
                                 <i class="fal fa-angle-down"></i>
                                 <select class="form-select" aria-label="Default select example"
-                                        id="drpNganHang"></select>
+                                    id="drpNganHang"></select>
                             </div>
                         </div>
 
@@ -125,12 +125,12 @@
             </div>
             <div class="col-12 col-md-9 box-tt-thanhtoan pd20">
                 <p class="color-dask-blue fw-bold mt-3 mb-10">
-                    Thông tin thanh toán<span id="lbSoTienDaChon"
-                                              style="color: red;float:right"></span>
+                    Thông tin thanh toán<span id="lbSoTienDaChon" style="color: red;float:right"></span>
                 </p>
                 <div class="aps-table-select scroll-table-x">
-                    <table class="table transcrip-table tabs-scores table-hover table-bordered table-noborder tblThanhToan"
-                           id="tblThanhToan">
+                    <table
+                        class="table transcrip-table tabs-scores table-hover table-bordered table-noborder tblThanhToan"
+                        id="tblThanhToan">
                         <thead>
                             <tr>
                                 <th class="text-center w-50px" scope="col">STT</th>
@@ -139,8 +139,7 @@
                                 <th scope="col" class="text-left">Ghi chú</th>
                                 <th scope="col" class="text-center">Chi tiết</th>
                                 <th class="text-center w-50px" scope="col">
-                                    <input type="checkbox"
-                                           id="chkSelectAll_ThanhToan" name="chkSelectAll_ThanhToan">
+                                    <input type="checkbox" id="chkSelectAll_ThanhToan" name="chkSelectAll_ThanhToan">
                                 </th>
                             </tr>
                         </thead>
@@ -149,7 +148,7 @@
                     </table>
                 </div>
                 <div class="d-flex justify-content-end" id="zonebtnNopTruoc"
-                     style="display: none !important; margin-top: 10px;">
+                    style="display: none !important; margin-top: 10px;">
                     <div class="btn btn-default" id="btnDelete_NopTruoc">
                         <i class="fal fa-trash me-2"></i>Hủy nộp trước
                     </div>
@@ -163,7 +162,7 @@
 <!-- ------------------- -->
 <div class="aps-gap-10 btn-show pd20" style="display: none !important;">
     <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#modalKhoanNopTruoc"
-            data-loading-text="&lt;i class='fa fa-spinner fa-spin '&gt;&lt;/i&gt;">
+        data-loading-text="&lt;i class='fa fa-spinner fa-spin '&gt;&lt;/i&gt;">
         Thêm khoản Nộp trước
     </button>
 </div>
@@ -226,8 +225,9 @@
     </div>
 </div>
 <!-- Modal chi tiết 1-->
-<div class="modal fade finance-modal" id="modalXacNhanChiTiet" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
+<div class="modal fade finance-modal" id="modalXacNhanChiTiet" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-1280">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal">
@@ -236,24 +236,28 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p class="fw-bold text-dark-blue fs-16p mt-4">Số tiền đã chọn<span id="lbSoTienXacNhanChiTiet" style="color: red; float: right"></span></p>
-                <table class="table transcrip-table tabs-scores" id="tblXacNhanChiTiet">
-                    <thead>
-                        <tr>
-                            <th class="text-center" scope="col">STT</th>
-                            <th scope="col" class="text-center">Học phần</th>
-                            <th scope="col" class="text-center">Kiểu học</th>
-                            <th scope="col" class="text-center">Lớp học phần</th>
-                            <th scope="col" class="text-center">Loại khoản</th>
-                            <th scope="col" class="text-center">Số tiền</th>
-                            <th scope="col" class="text-center">Số tín</th>
-                            <th scope="col" class="text-center">Học kỳ, đợt</th>
-                            <th class="text-center" scope="col"><input type="checkbox" class="chkSelectSystemAll"></th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                    <tfoot></tfoot>
-                </table>
+                <p class="fw-bold text-dark-blue fs-16p mb-5">Số tiền đã chọn<span id="lbSoTienXacNhanChiTiet"
+                        style="color: red; float: right"></span></p>
+                <div class="aps-table-select scroll-table-x">
+                    <table class="table transcrip-table tabs-scores table-noborder" id="tblXacNhanChiTiet">
+                        <thead>
+                            <tr>
+                                <th class="text-center w-50px" scope="col">STT</th>
+                                <th scope="col" class="text-left">Học phần</th>
+                                <th scope="col" class="text-center">Kiểu học</th>
+                                <th scope="col" class="text-center">Lớp học phần</th>
+                                <th scope="col" class="text-center">Loại khoản</th>
+                                <th scope="col" class="text-center">Số tiền</th>
+                                <th scope="col" class="text-center">Số tín</th>
+                                <th scope="col" class="text-center">Học kỳ, đợt</th>
+                                <th class="text-center" scope="col"><input type="checkbox" class="chkSelectSystemAll">
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot></tfoot>
+                    </table>
+                </div>
             </div>
             <div class="modal-footer">
                 <div class="d-flex justify-content-end">
@@ -266,7 +270,7 @@
         </div>
     </div>
 </div>
-<script src="modules/thanhtoanonline/script/thanhtoanonline.js?v=1.0.1.6"></script>
+<script src="modules/thanhtoanonline/script/thanhtoanonline.js?v=1.0.1.7"></script>
 <script src="modules/thanhtoanonline/script/qrcode.min.js"></script>
 <script type="text/javascript">
     var main_doc = {};
@@ -275,32 +279,3 @@
         main_doc.thanhtoanonline.init();
     });
 </script>
-<!-- FIX 2026-08-26: Select2 trong modal — re-init voi dropdownParent = modal
-     de popup nam trong modal, khong lech / che noi dung. Universal handler,
-     an toan khi modal khong co select. -->
-<script>
-(function () {
-    if (typeof jQuery === 'undefined') return;
-    var $ = jQuery;
-    $(document).off('shown.bs.modal.__s2fix').on('shown.bs.modal.__s2fix', '.modal', function () {
-        var $modal = $(this);
-        $modal.find('select.select-opt, select[id^="drop"]').each(function () {
-            var $sel = $(this);
-            try {
-                if ($sel.hasClass('select2-hidden-accessible')) $sel.select2('destroy');
-            } catch (e) {}
-            $sel.select2({ dropdownParent: $modal, width: '100%' });
-        });
-    });
-})();
-</script>
-<style>
-    .modal .select2-container--open,
-    .modal .select2-container--open .select2-dropdown {
-        z-index: 100060 !important;
-    }
-    .modal .select2-results__options {
-        max-height: 220px !important;
-        overflow-y: auto !important;
-    }
-</style>

@@ -26,6 +26,62 @@
     .classroom-section-item {
         padding-bottom: 5px
     }
+
+    #btnViewDaDangKy.highlight-dadangky {
+        display: inline-block;
+        border-radius: 6px;
+        padding: 4px 8px;
+        font-weight: 600;
+        color: #856404;
+        animation: pulseHighlightDaDangKy 1.2s ease-in-out 3;
+    }
+
+    /* Tăng độ tương phản chữ trên nền xanh */
+    .term-list .active a,
+    .term-list li.btn-dachon-primary a {
+        color: #ffffff !important;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);
+    }
+
+    .term-list .active a i,
+    .term-list li.btn-dachon-primary a i,
+    .term-list .active a .fa-check-circle,
+    .term-list li.btn-dachon-primary a .fa-check-circle {
+        color: #ffffff !important;
+    }
+
+    .btn-regis,
+    .btn-choose-2,
+    a.btn-regis,
+    a.btn-choose-2 {
+        color: #ffffff !important;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    }
+
+    .box-classroom-section .lable a {
+        font-weight: 700 !important;
+        color: #1a1a1a !important;
+    }
+
+    /* Học phần đã đăng ký (có icon check) - đổi màu icon rõ hơn */
+    .term-list li a .fa-check-circle {
+        color: #2e7d32;
+    }
+
+    @keyframes pulseHighlightDaDangKy {
+        0%, 100% {
+            background: transparent;
+            box-shadow: none;
+        }
+        50% {
+            background: #fff3cd;
+            box-shadow: 0 0 0 2px #ffc107;
+        }
+    }
 </style>
 <div class="content-tab no-tab">
     <p class="link">
@@ -109,8 +165,9 @@
                         </div>
                     </li>
                     <li>
-                        <a style="cursor: pointer" id="btnViewDaDangKy"><i class="fal fa-users-class"></i>Tổng lớp đã
-                            đăng ký:<span id="lblSoNguoiDangKy"></span></a>
+                        <a style="cursor: pointer" id="btnViewDaDangKy">
+                            <i class="fal fa-users-class"></i>Xem và xóa, đổi lớp:<span id="lblSoNguoiDangKy"></span>
+                        </a>
                         <div class="money-class-detail box-shadow pd-15">
                             <ul class="show-detail" style="min-width: 400px" id="zoneDaDangKy"></ul>
                         </div>
@@ -257,7 +314,7 @@
 <!-- Phenikaa-4-Dang-ky-m2-chọn-them-2-->
 <div class="modal fade modal-choose-2" id="modal-choose-2" tabindex="-1" aria-labelledby="modal-choose-2"
     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-dialog modal-dialog-centered modal-xl" style="max-width: 95vw;">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="lblHocPhanDaChon"><i class="fas fa-users-class mr-10"></i>Chọn thêm 2
@@ -534,7 +591,7 @@
 </div>
 
 <!-- page script -->
-<script src="modules/dangkyhoc/script/dangky.js?v=1.0.3.2"></script>
+<script src="modules/dangkyhoc/script/dangky.js?v=1.0.3.3"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['DangKy'] = new DangKy();

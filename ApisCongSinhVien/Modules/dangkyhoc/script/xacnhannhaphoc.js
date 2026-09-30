@@ -159,12 +159,62 @@ XacNhanNhapHoc.prototype = {
 
     /*------------------------------------------
     --Discription: Lấy lịch sử xác nhận cơ sở của sinh viên
-    --Origin: PKG_CORE_NhapHoc_ThuTien.LayDS_LichSu_XacNhanCoSo (chưa có endpoint C#)
+    --Origin: PKG_CORE_NhapHoc_ThuTien.LayDS_LichSu_XacNhanCoSo
     -------------------------------------------*/
     getList_LichSuXacNhan: function () {
         var me = this;
-        // TODO: nối API khi có endpoint cho LayDS_LichSu_XacNhanCoSo
-        me.render_LichSuXacNhan([]);
+        var strKeHoach_Id = edu.util.getValById('dropSearch_KeHoach');
+        if (!strKeHoach_Id) {
+            me.render_LichSuXacNhan([]);
+            return;
+        }
+        var obj_save = {
+            'action': 'SV_CORE_NhapHoc_ThuTien_MH/DSA4BRIeDSgiKRI0HhkgIg8pIC8CLhIu',
+            'func': 'PKG_CORE_NhapHoc_ThuTien.LayDS_LichSu_XacNhanCoSo',
+            'iM': edu.system.iM,
+            'strNh_KeHoach_NhapHoc_Id': strKeHoach_Id,
+            'strCore_Person_Id': me.strSinhVien_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        console.group('[XacNhanNhapHoc] LayDS_LichSu_XacNhanCoSo → REQUEST');
+        console.log('  strNh_KeHoach_NhapHoc_Id=', obj_save.strNh_KeHoach_NhapHoc_Id);
+        console.log('  strCore_Person_Id       =', obj_save.strCore_Person_Id);
+        console.log('  strNguoiThucHien_Id     =', obj_save.strNguoiThucHien_Id);
+        console.groupEnd();
+        edu.system.makeRequest({
+            success: function (data) {
+                console.group('[XacNhanNhapHoc] LayDS_LichSu_XacNhanCoSo ← RESPONSE');
+                console.log('Success:', data && data.Success);
+                console.log('Message:', data && data.Message);
+                console.log('Data (raw):', data && data.Data);
+                if (data && data.Data && data.Data.length) {
+                    console.log('→ Fields của dòng đầu:', Object.keys(data.Data[0]));
+                    console.table(data.Data);
+                } else {
+                    console.warn('→ Proc trả rỗng cho cặp (KH, Person_Id) ở REQUEST bên trên');
+                }
+                console.groupEnd();
+                if (data.Success) {
+                    var dtResult = [];
+                    if (edu.util.checkValue(data.Data)) {
+                        dtResult = data.Data;
+                    }
+                    me.dtLichSu = dtResult;
+                    me.render_LichSuXacNhan(dtResult);
+                } else {
+                    edu.system.alert(data.Message, "w");
+                }
+            },
+            error: function (er) {
+                console.error('[XacNhanNhapHoc] LayDS_LichSu_XacNhanCoSo ← ERROR', er);
+                edu.system.alert(" (ex): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            action: obj_save.action,
+            contentType: true,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
     },
 
     render_LichSuXacNhan: function (rows) {

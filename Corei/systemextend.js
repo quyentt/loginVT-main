@@ -7014,7 +7014,7 @@ systemextend.prototype = {
                         });
                     }
                     else {
-                        //edu.system.alert("Lỗi: " + data.Message, "w");
+                        edu.system.alert("Lỗi: " + data.Message, "w");
                     }
                     //edu.system.endLoading();
                 },

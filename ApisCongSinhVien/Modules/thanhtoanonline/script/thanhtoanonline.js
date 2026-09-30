@@ -130,14 +130,20 @@ thanhtoanonline.prototype = {
             }
             me.save_ThanhToanChiTiet(arrChecked_Id);
         });
+
+        $('#drpNganHang').on('change', function () {
+            if (!edu.util.getValById('drpNganHang')) return;
+            me.getList_tblThanhToan();
+        });
     },
    
     page_load: function () {
         var me = this;
         edu.system.page_load();
-        me.getList_KhoanNopTruoc();
-        me.getList_CauHinhThanhToan();
         me.getList_drpNganHang();
+        me.getList_KhoanNopTruoc();
+        //me.getList_CauHinhThanhToan();
+        //me.getList_drpNganHang();
     },
     ThucHienThanhToan: function (DonHangChiTietIds, SoTiens, NoiDungs) {
         
@@ -194,12 +200,22 @@ thanhtoanonline.prototype = {
             'MaSinhVien': edu.system.userId,
             'ChuKy': "",
         };
+        var strMaNganHang = edu.util.getValById('drpNganHang');
+    
+        switch (strMaNganHang) {
+            case "VCB": strMaNganHang = "VCB_ONLINE"; break;
+            case "BIDV": strMaNganHang = "BIDV_ONLINE"; break;
+            case "SHB": strMaNganHang = "SHB"; break;
+            case "VTB": strMaNganHang = "VTB_ONLINE"; break;
+            case "VIB": strMaNganHang = "VIB_ONLINE"; break;
+            default: strMaNganHang = "VNPAY"; break;
+        }
         var obj_save = {
             'action': 'TC_ThanhToan_MH/DSA4FSkuLyYVKC8VICgCKSgvKQPP',
             'func': 'pkg_thanhtoan.LayThongTinTaiChinh',
             'iM': edu.system.iM,
             'strMaSinhVien': edu.system.userId,
-            'strMaNganHang': "VNPAY",
+            'strMaNganHang': strMaNganHang,
         }; 
         
 
@@ -229,7 +245,7 @@ thanhtoanonline.prototype = {
                 edu.system.alert(JSON.stringify(er), "w");
                 
             },
-            type: "GET",
+            type: "POST",
             action: obj_save.action,
             contentType: true,
             authen: true,
@@ -359,6 +375,11 @@ thanhtoanonline.prototype = {
         }, false, false, false, null);
     },
     genList_drpNganHang: function (data) {
+        if (data.length && data[0].HESO1) {
+            data.sort(function (a, b) {
+                return Number(a.HESO1) - Number(b.HESO1);
+            });
+        }
         var obj = {
             data: data,
             renderInfor: {
@@ -371,7 +392,7 @@ thanhtoanonline.prototype = {
             },
             renderPlace: ["drpNganHang"],
             type: "",
-            title: "Chọn ngân hàng"
+            title: false
         };
         edu.system.loadToCombo_data(obj);
 

@@ -220,7 +220,7 @@
 
     .calendar-week-table .day-of-week.today-col .day {
         color: #2f55a4;
-        font-weight: 700;
+        font-weight: 800;
     }
 
     .calendar-week-table .day-of-week.today-col .text {
@@ -241,6 +241,28 @@
     <div class="row register-school my-calendar aps-lichhoc">
         <div class="col-12 col-md-9 register-school-right">
             <div class="box-shadow ">
+                <div id="zoneTKBKhongLichChiTiet" class="zoneTKBKhongLichChiTiet mb-3" style="display:none">
+                    <div class="news-search-form">
+                        <p class="me-auto color-dask-blue fw-bold fs-18 mb-10"><i class="far fa-users-class mr-10"></i>Lớp
+                            học phần (không có lịch chi tiết)</p>
+                    </div>
+                    <div class="tkb-khong-lich-chi-tiet aps-table-select scroll-table-x pl20 pr20 pb20">
+                        <table class="table transcrip-table tabs-scores fs-14 table-noborder tblTKBKhongLichChiTiet"
+                            id="tblTKBKhongLichChiTiet">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Mã lớp</th>
+                                    <th scope="col">Tên lớp</th>
+                                    <th scope="col">Hình thức học</th>
+                                    <th scope="col">Ngày bắt đầu</th>
+                                    <th scope="col">Ngày kết thúc</th>
+                                    <th scope="col">Ghi chú</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
                 <div class="news-search-form">
                     <p class="me-auto color-dask-blue fw-bold fs-18 mb-10"><i
                             class="fal fa-calendar-week mr-10"></i>Lịch cá nhân</p>
@@ -286,28 +308,6 @@
                         </div>
 
                     </div>
-                </div>
-            </div>
-            <div class="box-shadow mt-20 zoneTKBKhongLichChiTiet" id="zoneTKBKhongLichChiTiet" style="display:none">
-                <div class="news-search-form">
-                    <p class="me-auto color-dask-blue fw-bold fs-18 mb-10"><i class="far fa-users-class mr-10"></i>Lớp
-                        học phần (không có lịch chi tiết)</p>
-                </div>
-                <div class="tkb-khong-lich-chi-tiet aps-table-select scroll-table-x pl20 pr20 pb20">
-                    <table class="table transcrip-table tabs-scores fs-14 table-noborder tblTKBKhongLichChiTiet"
-                        id="tblTKBKhongLichChiTiet">
-                        <thead>
-                            <tr>
-                                <th scope="col">Mã lớp</th>
-                                <th scope="col">Tên lớp</th>
-                                <th scope="col">Hình thức học</th>
-                                <th scope="col">Ngày bắt đầu</th>
-                                <th scope="col">Ngày kết thúc</th>
-                                <th scope="col">Ghi chú</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
                 </div>
             </div>
         </div>
