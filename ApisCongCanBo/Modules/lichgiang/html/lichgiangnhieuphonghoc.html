@@ -1883,7 +1883,7 @@
     /* Bộ lọc 1 hàng (5 ô) trên màn rộng, tự xuống dòng khi hẹp; nút thao tác nằm trên thanh tiêu đề */
     .search-bar-controls.lgnp-filter {
         display: grid;
-        grid-template-columns: minmax(140px, 1fr) minmax(190px, 1.4fr) minmax(140px, 0.9fr) minmax(150px, 0.8fr) minmax(210px, 1.1fr) minmax(190px, 1.1fr);
+        grid-template-columns: minmax(110px, 1fr) minmax(140px, 1.2fr) minmax(120px, 0.9fr) minmax(120px, 0.6fr) minmax(440px, 2.3fr) minmax(140px, 0.9fr);
         gap: 10px 12px;
         align-items: end;
         margin-top: 0;
@@ -1983,17 +1983,134 @@
         font-size: 13px;
     }
 
-    /* "Phòng trống lúc": 2 select2 chia đôi hàng (ngày rộng hơn khung tiết) */
+    /* "Phòng trống": Từ ngày - Đến ngày + khung tiết trên 1 hàng */
     .lgnp-succhua>.select2-container {
         min-width: 0;
     }
 
-    .lgnp-succhua>.select2-container:nth-of-type(1) {
-        flex: 1.25 1 0;
+    .lgnp-loc-trong input[type="date"] {
+        flex: 1.3 1 0;
+        padding: 6px 8px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #0f172a;
     }
 
-    .lgnp-succhua>.select2-container:nth-of-type(2) {
+    .lgnp-loc-trong>.select2-container {
         flex: 1 1 0;
+        margin-left: 4px;
+    }
+
+    /* Màn 3 cột: ô "Phòng trống" chiếm 2 cột cho đủ chỗ 3 ô nhập */
+    @media (max-width: 1500px) and (min-width: 769px) {
+        .lgnp-filter-item:has(.lgnp-loc-trong) {
+            grid-column: span 2;
+        }
+    }
+
+    /* Bảng phòng trống theo khoảng ngày (JS genTable_KhoangNgay): mỗi phòng 1 dòng, mỗi ngày 1 cột */
+    .schedule-grid.lgnp-khoang {
+        grid-template-columns: minmax(170px, 1.6fr) 96px repeat(var(--so-ngay), minmax(62px, 1fr));
+    }
+
+    .lgnp-khoang .kn-head,
+    .lgnp-khoang .kn-phong,
+    .lgnp-khoang .kn-dem,
+    .lgnp-khoang .kn-o {
+        border-right: 1px solid #e3e7ee;
+        border-bottom: 1px solid #d6dce6;
+        min-width: 0;
+    }
+
+    .lgnp-khoang .kn-head {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        background: #f8f9fa;
+        padding: 8px 4px;
+        text-align: center;
+        font-weight: 700;
+        font-size: 13px;
+        color: #0f172a;
+    }
+
+    .lgnp-khoang .kn-head small {
+        display: block;
+        font-weight: 500;
+        font-size: 12px;
+        color: #475569;
+    }
+
+    .lgnp-khoang .kn-head.kn-cn {
+        background: #fff1e8;
+    }
+
+    .lgnp-khoang .kn-phong {
+        position: sticky;
+        left: 0;
+        z-index: 10;
+        background: #fff;
+        padding: 6px 10px;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 2px 8px;
+        font-weight: 700;
+        font-size: 13px;
+        color: #0f172a;
+    }
+
+    .lgnp-khoang .kn-head.kn-goc {
+        left: 0;
+        z-index: 30;
+    }
+
+    .lgnp-khoang .kn-phong small {
+        font-weight: 600;
+        font-size: 11px;
+        color: #64748b;
+    }
+
+    .lgnp-khoang .kn-dem {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 13px;
+        color: #b45309;
+        background: #fffbeb;
+    }
+
+    .lgnp-khoang .kn-dem.du {
+        color: #1e7a45;
+        background: #ecf9f1;
+    }
+
+    .lgnp-khoang .kn-o {
+        min-height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .lgnp-khoang .kn-o.is-free {
+        background: #ecf9f1;
+        color: #1e7a45;
+        cursor: pointer;
+    }
+
+    .lgnp-khoang .kn-o.is-free:hover,
+    .lgnp-khoang .kn-o.is-free.o-dang-chon {
+        background: #22a35a;
+        color: #fff;
+    }
+
+    .lgnp-khoang .kn-o.is-busy {
+        background: #f1f5f9;
+        color: #94a3b8;
+        font-weight: 500;
     }
 
     /* Ô trống đúng khung đang lọc "Phòng trống lúc" → viền xanh cho dễ thấy */
@@ -3146,10 +3263,26 @@
                         </div>
                     </div>
                     <div class="lgnp-filter-item">
-                        <label>Phòng trống lúc</label>
-                        <div class="lgnp-succhua">
+                        <label>Phòng trống (từ ngày - đến ngày, thứ, tiết)</label>
+                        <div class="lgnp-succhua lgnp-loc-trong">
+                            <!-- Ô chọn 1 ngày trong tuần (bản cũ) — thay bằng Từ ngày / Đến ngày
                             <select class="form-select select-opt" id="dropLoc_NgayTrong">
                                 <option value="">Không lọc</option>
+                            </select>
+                            -->
+                            <input type="date" class="form-control" id="txtLoc_TuNgay" title="Từ ngày (bỏ trống = không lọc)">
+                            <span>-</span>
+                            <input type="date" class="form-control" id="txtLoc_DenNgay" title="Đến ngày (bỏ trống = chỉ 1 ngày)">
+                            <!-- Thứ: value = Date.getDay(). Không nhập ngày mà chọn thứ → thứ đó của tuần đang xem -->
+                            <select class="form-select select-opt" id="dropLoc_ThuTrong" title="Chỉ xét thứ này trong khoảng ngày">
+                                <option value="">Mọi thứ</option>
+                                <option value="1">Thứ 2</option>
+                                <option value="2">Thứ 3</option>
+                                <option value="3">Thứ 4</option>
+                                <option value="4">Thứ 5</option>
+                                <option value="5">Thứ 6</option>
+                                <option value="6">Thứ 7</option>
+                                <option value="0">CN</option>
                             </select>
                             <select class="form-select select-opt" id="dropLoc_TietTrong">
                                 <option value="1-3">T1-3</option>
@@ -3620,7 +3753,7 @@
 </div>
 
 <!-- CDN không hoạt động, bỏ qua và dùng XLSX fallback trực tiếp -->
-<script src="modules/lichgiang/script/lichgiangnhieuphonghoc.js?v=3.11.0.0"></script>
+<script src="modules/lichgiang/script/lichgiangnhieuphonghoc.js?v=3.13.0.0"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         // Check if XLSX library is loaded
