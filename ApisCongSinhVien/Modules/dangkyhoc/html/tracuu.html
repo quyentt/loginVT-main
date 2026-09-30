@@ -7,7 +7,7 @@
     <div class="col-12 col-lg-8">
         <div class="row">
             <div class="col-12 col-md-4 lable te">Kế hoạch đăng ký hoc</div>
-            <div class="col-12 col-md-4 class-reg-search-item">
+            <div class="col-12 col-md-4">
                 <div class="form-item  form-add-info">
                     <div class="input-group">
                         <i class="fal fa-angle-down"></i>
@@ -15,22 +15,21 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-md-4 class-reg-search-item">
+            <div class="col-12 col-md-4">
                 <div class="form-item  form-add-info">
                     <div class="input-group">
                         <i class="fal fa-angle-down"></i>
-                        <select class="form-select" aria-label="Default select example"
-                            id="dropSearch_KeHoach"></select>
+                        <select class="form-select" aria-label="Default select example" id="dropSearch_KeHoach"></select>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-12 col-lg-4 class-reg-search-btn pr-0">
-        <a class="btn btn-dask-blue ml-10" style="cursor: pointer" id="btnXemKetQuaDangKy">
-            <i class="far fa-search"></i> Xem</a>
-        <div class="btn btn-success ml-10" id="btnXacNhanTatCa">
-            <i class="far fa-check-double mr-5"></i>Xác nhận tất cả
+    <div class="col-12 col-lg-4 class-reg-search-btn">
+        <a class="btn btn-dask-blue" style="cursor: pointer" id="btnXemKetQuaDangKy"><i class="fal fa-eye me-2"></i> Xem</a>
+
+        <div class="btn btn-success" id="btnXacNhanTatCa">
+            <i class="fal fa-check me-2"></i> Xác nhận tất cả
         </div>
         <div class="dropdown" id="zonebtnBaoCao_TraCuu">
         </div>
@@ -42,9 +41,8 @@
 </div>
 
 <!-- Modal Phenikaa-4-Dang-ky-m2-xem-chi-thiet-->
-<div class="modal fade detail-classroom modal-myModalChiTietLich" id="myModalChiTietLich" tabindex="-1"
-    aria-labelledby="myModalChiTietLich" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+<div class="modal fade detail-classroom" id="myModalChiTietLich" tabindex="-1" aria-labelledby="myModalChiTietLich" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="zoomfileLabel">
@@ -53,26 +51,24 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="aps-table-select scroll-table-x">
-                    <table class="table table-classroom tblLichHoc table-noborder" id="tblLichHoc">
-                        <thead>
-                            <tr>
-                                <th class="text-center w-50px">STT</th>
-                                <th class="">Buổi học</th>
-                                <th class="">Ngày bắt đầu</th>
-                                <th>Ngày kết thúc</th>
-                                <th>Thứ</th>
-                                <th class="text-center">Số tiết</th>
-                                <th class="text-center">Tiết bắt đầu</th>
-                                <th class="text-center">Tiết kết thúc</th>
-                                <th>Phòng học</th>
-                                <th>Giảng viên</th>
-                                <th>Kiểu học</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
+                <table class="table table-classroom" id="tblLichHoc">
+                    <thead>
+                        <tr style="background: #f1f1f1">
+                            <th class="text-center">STT</th>
+                            <th class="">Buổi học</th>
+                            <th class="">Ngày bắt đầu</th>
+                            <th>Ngày kết thúc</th>
+                            <th>Thứ</th>
+                            <th class="text-center">Số tiết</th>
+                            <th class="text-center">Tiết bắt đầu</th>
+                            <th class="text-center">Tiết kết thúc</th>
+                            <th>Phòng học</th>
+                            <th>Giảng viên</th>
+                            <th>Kiểu học</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-back" data-toggle="modal" data-bs-dismiss="modal">
@@ -86,42 +82,36 @@
 
 
 <!-- Modal Phenikaa-4-Dang-ky-m2-diem-danh-->
-<div class="modal fade detail-classroom modal-diem_danh" id="diem_danh" tabindex="-1" aria-labelledby="zoomfileLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-860 modal-dialog-scrollable">
+<div class="modal fade detail-classroom" id="diem_danh" tabindex="-1" aria-labelledby="zoomfileLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-700">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title " id="zoomfileLabel">
-                    <span>Kết quả điểm danh: </span><span class="zoomfileLabel"></span> - <span
-                        class="zoomTinhTrangLabel" style="color: orange"></span>
+                    <span>Kết quả điểm danh: </span><span class="zoomfileLabel"></span> - <span class="zoomTinhTrangLabel" style="color: orange"></span>
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="aps-table-select scroll-table-x">
-                    <table class="table table-classroom tabs-scores tblDiemDanh table-noborder" id="tblDiemDanh">
-                        <thead>
-                            <tr>
-                                <th class="text-center w-50px">STT</th>
-                                <th class="text-center">Ngày học</th>
-                                <th class="text-center">Tiết bắt đầu <i class="fas fa-arrow-right"></i>Tiết kết thúc
-                                </th>
-                                <th class="text-center">Trạng thái</th>
-                                <th class="text-center">Số tiết</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
+                <table class="table table-classroom tabs-scores" id="tblDiemDanh">
+                    <thead>
+                        <tr style="background: #f1f1f1">
+                            <th class="text-center">STT</th>
+                            <th class="text-center">Ngày học</th>
+                            <th class="text-center">Tiết bắt đầu <i class="fas fa-arrow-right"></i>Tiết kết thúc</th>
+                            <th class="text-center">Trạng thái</th>
+                            <th class="text-center">Số tiết</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Modal Điểm quá trình -->
-<div class="modal fade detail-classroom modal-diem_qua_trinh" id="diem_qua_trinh" tabindex="-1"
-    aria-labelledby="zoomfileLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-680 modal-dialog-scrollable">
+<!-- Modal Phenikaa-4-Dang-ky-m2-diem-qua-trinh-->
+<div class="modal fade detail-classroom" id="diem_qua_trinh" tabindex="-1" aria-labelledby="zoomfileLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="width: 500px">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="zoomfileLabel">
@@ -130,23 +120,21 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="aps-table-select scroll-table-x">
-                    <table class="table table-classroom tabs-scores table-noborder tblDiemQuaTrinh"
-                        id="tblDiemQuaTrinh">
-                        <thead>
-                            <tr>
-                                <th class="text-center w-50px">STT</th>
-                                <th class="">Loại điểm</th>
-                                <th class="text-center">Kết quả</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
+                <table class="table table-classroom tabs-scores" id="tblDiemQuaTrinh">
+                    <thead>
+                        <tr style="background: #f1f1f1">
+                            <th class="text-center">STT</th>
+                            <th class="">Loại điểm</th>
+                            <th class="text-center">Kết quả</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
         </div>
     </div>
 </div>
+
 
 <!--<div class="modal fade" id="modal_XacNhan">
     <div class="modal-dialog modal-dialog-centered modal-680">
@@ -204,58 +192,59 @@
     </div>
 </div>-->
 
-<!-- modal Xác nhận kết quả đăng ký-->
-<div class="modal fade finance-modal my-calendar confirm_scores modal_XacNhan" id="modal_XacNhan" tabindex="-1"
-    aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-680 modal-dialog-scrollable">
+<!-- modal xác nhận-->
+<div class="modal fade finance-modal my-calendar confirm_scores"
+     id="modal_XacNhan"
+     tabindex="-1"
+     aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-700">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal">
                     <p><b>Xác nhận kết quả đăng ký</b></p>
                 </div>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
             </div>
-            <div class="modal-body pd20">
-                <div class="aps-form-xacnhan">
-                    <div class="action-group">
-                        <div class="select-group">
-                            <div class="label">Loại xác nhận</div>
-                            <div class="form-item d-flex form-add-info">
-                                <div class="input-group no-icon">
-                                    <select name="" id="dropLoaiXacNhan" class="form-select select-opt"></select>
-                                </div>
+            <div class="modal-body p-3">
+                <div class="action-group">
+                    <div class="select-group">
+                        <div class="label">Loại xác nhận</div>
+                        <div class="form-item d-flex form-add-info">
+                            <div class="input-group no-icon">
+                                <select name="" id="dropLoaiXacNhan" class="form-select select-opt"></select>
                             </div>
                         </div>
-                    </div>
-                    <div class="action-group">
-                        <div class="select-group">
-                            <div class="label">Trạng thái xác nhận</div>
-                            <div class="form-item d-flex form-add-info">
-                                <div class="input-group no-icon">
-                                    <select name="" id="dropTrangThaiXacNhan" class="form-select select-opt"></select>
-                                </div>
-                            </div>
-                        </div>
-                        <button class="btn btn-success btnSave_XacNhan">
-                            <i class="fal fa-check me-2"></i> <span>Đồng ý</span>
-                        </button>
-                    </div>
-                    <p class="fw-bold mb-2">Lịch sử xác nhận</p>
-                    <div class="aps-table-select scroll-table-x">
-                        <table class="table transcrip-table tabs-scores fs-14 table-noborder tblModal_XacNhan"
-                            id="tblModal_XacNhan">
-                            <thead>
-                                <tr>
-                                    <th class="text-center w-50px" scope="col">STT</th>
-                                    <th scope="col">Trạng thái xác nhận</th>
-                                    <th scope="col">Người xác nhận</th>
-                                    <th class="text-center" scope="col">Thời gian</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
                     </div>
                 </div>
+                <div class="action-group">
+                    <div class="select-group">
+                        <div class="label">Trạng thái xác nhận</div>
+                        <div class="form-item d-flex form-add-info">
+                            <div class="input-group no-icon">
+                                <select name="" id="dropTrangThaiXacNhan" class="form-select select-opt"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-success btnSave_XacNhan">
+                        <i class="fal fa-check me-2"></i> <span>Đồng ý</span>
+                    </button>
+                </div>
+                <p class="fw-bold mb-2">Lịch sử xác nhận</p>
+                <table class="table transcrip-table tabs-scores fs-14" id="tblModal_XacNhan">
+                    <thead>
+                        <tr>
+                            <th class="text-center" scope="col">STT</th>
+                            <th scope="col">Trạng thái xác nhận</th>
+                            <th scope="col">Người xác nhận</th>
+                            <th class="text-center" scope="col">Thời gian</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
         </div>
     </div>

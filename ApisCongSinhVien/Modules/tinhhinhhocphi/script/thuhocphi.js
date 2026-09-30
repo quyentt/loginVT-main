@@ -88,7 +88,7 @@ TinhHinhHocPhi.prototype = {
         var me = this;
 
         var obj_save = {
-            'action': 'SV_HoSoHocVien_MH/DSA4FSkuLyYVKC8CKSgVKCQ1CS4SLgPP',
+            'action': 'SV_Custom/DSA4FSkuLyYVKC8CKSgVKCQ1CS4SLgPP',
             'func': 'pkg_hosohocvien.LayThongTinChiTietHoSo',
             'iM': edu.system.iM,
             'strId': edu.system.userId,
@@ -123,8 +123,8 @@ TinhHinhHocPhi.prototype = {
         $("#lblSDT").html(strSoDienThoai);
         
         //[2]. TinhTrang
-        var strTrangThai_Ten = edu.util.returnEmpty(data.QLSV_TRANGTHAINGUOIHOC_TEN);
-        var strTrangThai_Ma = edu.util.returnEmpty(data.QLSV_TRANGTHAINGUOIHOC_MA);
+        var strTrangThai_Ten = edu.util.returnEmpty(data.TRANGTHAINGUOIHOC_N1_TEN);
+        var strTrangThai_Ma = edu.util.returnEmpty(data.TRANGTHAINGUOIHOC_N1_MA);
         var colorLable = '';
 
         switch (strTrangThai_Ma) {

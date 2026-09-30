@@ -366,9 +366,8 @@ TuNhapHoSo.prototype = {
     -------------------------------------------*/
     genTable_TuNhapHoSo: function (data, iPager) {
         var me = this;
-        $("#lblTuNhapHoSo_Tong").html(iPager);
         var html = '';
-        var strGroup = data.length > 0 ? data[0].THUOCNHOM: "";
+        var strGroup = data.length > 0 ? data[0].THUOCNHOM : "";
         data.forEach((aData, nRow) => {
             var strTempG = aData.THUOCNHOM;
             if (nRow != 0 && strTempG != strGroup) {
@@ -376,24 +375,24 @@ TuNhapHoSo.prototype = {
                 html += '<hr>';
             } else {
                 if (nRow != 0)
-                strTempG = "";
+                    strTempG = "";
             }
+            var iDoRongNhom = strTempG ? 2 : 0;
             html += '<div class="row sv-info-detail-item">';
-            html += '<div class="col-12 col-md-2 text-lable-groud"><b>' + edu.util.returnEmpty(strTempG) + '</b></div>';
-            html += '<div class="col-12 col-md-2 text-lable">' + aData.TEN;
-            html += aData.BATBUOC == 1 ? '<span style="color: red"> *</span>' : '';
+            html += '<div class="col-12 col-md-' + iDoRongNhom + ' text-lable-groud"><b>' + edu.util.returnEmpty(strTempG) + '</b></div>';
+            html += '<div class="col-12 col-md-' + (6 - iDoRongNhom) + ' text-lable">' + aData.TEN;
+            html += aData.BATBUOC == 1 ? '<span>*</span>' : '';
             html += '</div>';
             html += '<div class="col-12 col-md-4">';
             html += '<div class="form-item d-flex mb-15 form-add-info">';
-            html +='<div class="input-group">';
+            html += '<div class="input-group">';
             //html += '<i class="fa-alarm-clock color-dask-blue"></i>';
             html += aData.TENANH ? '<i class="' + aData.TENANH + ' color-dask-blue"></i>' : '';
             html += geninput(nRow, aData);
             html += '</div>';
             html += '</div>';
             html += '</div>';
-            html += '<div class="col-12 col-md-3">' + edu.util.returnEmpty(aData.KETQUAXACNHAN_TEN) + '</div>';
-            //html += '<div class="col-12 col-md-1 col-upload"><div id="txtFileDinhKem' + aData.ID + '" ></div></div>';
+            html += '<div class="col-12 col-md-2">' + edu.util.returnEmpty(aData.KETQUAXACNHAN_TEN) + '</div>';
             html += '</div>';
         });
         $("#tblTuNhapHoSo").html(html);
@@ -407,72 +406,151 @@ TuNhapHoSo.prototype = {
                 var strDoDai = (aData.DORONG) ? 'height: ' + aData.DORONG + 'px' : '';
                 if (aData.DORONG) strLoai = "textarea";
                 switch (aData.KIEUDULIEU.toUpperCase()) {
-                    case "TEXT": return '<' + strLoai + ' id="m' + aData.ID + '"  class="form-control" value="' + me.getGiaTri(aData) + '" style="' + strDoDai + '" ' + strDuocSua + ' />';
-                    case "NUMBER": return '<' + strLoai + ' id="m' + aData.ID + '"  class="form-control input-number" value="' + me.getGiaTri(aData) + '" style="' + strDoDai + '" ' + strDuocSua + ' />';
-                    case "DATE": return '<input id="m' + aData.ID + '"  class="form-control input-datepicker" value="' + me.getGiaTri(aData) + '" ' + strDuocSua + ' />';
+                    case "TEXT":
+                    case "NUMBER":
+                        return '<' + strLoai + ' id="m' + aData.ID + '"  class="form-control" value="' + me.getGiaTri(aData) + '" style="' + strDoDai + '" ' + strDuocSua + ' />';
+                    case "DATE": return '<input id="m' + aData.ID + '"  class="form-control input-datepicker" value="' + me.getGiaTri(aData) + '" ' + strDuocSua + ' placeholder="dd/mm/yyyy" />';
                     case "TINH":
                     case "HUYEN":
                     case "XA":
                     case "LIST":
-                        return '<select id="m' + aData.ID + '" class="form-select select-opt"></select>';
+                        {
+
+                            return '<select id="m' + aData.ID + '" class="form-select select-opt"></select>';
+                        }
                     case "FILE": return '<div id="m' + aData.ID + '"></div>';
                     //case "AVATAR": return '<div id="' + aData.ID + '"></div>';
                 }
             }
         }
-        
+
         var arrFile = [];
         data.forEach(aData => {
             if (aData.KIEUDULIEU) {
                 switch (aData.KIEUDULIEU.toUpperCase()) {
                     case "LIST": {
                         if (aData.MABANGDANHMUC) {
-                            edu.system.loadToCombo_DanhMucDuLieu(aData.MABANGDANHMUC, "m" + aData.ID);
                             $("#m" + aData.ID).select2();
+                            edu.system.loadToCombo_DanhMucDuLieu(aData.MABANGDANHMUC, "", "", dtDanhMuc => {
+                                if (aData.THONGTIN5 || aData.THONGTIN3) {
+                                    me['dt' + aData.ID] = dtDanhMuc;
+                                    dtDanhMuc = dtDanhMuc.filter(e => e.QUANHECHA_ID == null);
+                                }
+                                var obj = {
+                                    data: dtDanhMuc,
+                                    renderInfor: {
+                                        id: "ID",
+                                        parentId: "",
+                                        name: "TEN",
+                                        default_val: aData.TRUONGTHONGTIN_GIATRI
+                                    },
+                                    renderPlace: ["m" + aData.ID],
+                                };
+                                edu.system.loadToCombo_data(obj);
+                            });
+
+                            if (aData.THONGTIN5) {
+                                $('#m' + aData.ID).on('change', function () {
+                                    var strCha_Id = $("#m" + aData.ID).val();
+                                    //console.log(strCha_Id)
+                                    if (strCha_Id == "") {
+                                        var dtReRult = me['dt' + aData.ID];
+                                    } else {
+                                        var dtReRult = me['dt' + aData.ID].filter(e => e.QUANHECHA_ID === strCha_Id);
+                                    }
+                                    var aDataCon = data.find(e => e.ID == aData.THONGTIN5);
+                                    var obj = {
+                                        data: dtReRult,
+                                        renderInfor: {
+                                            id: "ID",
+                                            parentId: "",
+                                            name: "TEN",
+                                            code: "MA",
+                                            default_val: aDataCon.TRUONGTHONGTIN_GIATRI
+                                        },
+                                        renderPlace: ["m" + aData.THONGTIN5],
+                                        type: "",
+                                        title: "Chọn " + edu.util.returnEmpty(aDataCon.TEN)
+                                    };
+                                    edu.system.loadToCombo_data(obj);
+                                });
+                            }
                         }
+
                     }; break;
-                    case "FILE": edu.system.uploadFiles(["m" + aData.ID]); break;
+                    case "FILE": {
+                        edu.system.uploadFiles(["m" + aData.ID]);
+                        edu.system.viewFiles("m" + aData.ID, me.strSinhVien_Id + aData.ID, "SV_Files");
+                        break;
+                    }
                     case "TINH": {
                         var objHuyen = data.find(e => (e.NHOM === aData.NHOM && e.KIEUDULIEU === "HUYEN"));
                         var objXa = data.find(e => (e.NHOM === aData.NHOM && e.KIEUDULIEU === "XA"));
 
                         var strTinh_Id = "m" + aData.ID;
-                        var strHuyen_Id = objHuyen ? "m" + objHuyen.ID: "";
-                        var strXa_Id = objXa ?  "m" + objXa.ID: "";
+                        var strHuyen_Id = "m";
+                        if (objHuyen) strHuyen_Id = strHuyen_Id + objHuyen.ID;
+                        var strXa_Id = "m";
+                        if (objXa) strXa_Id = strXa_Id + objXa.ID;
                         $("#" + strTinh_Id).select2();
-                        if (strHuyen_Id) $("#" + strHuyen_Id).select2();
-                        if (strXa_Id) $("#" + strXa_Id).select2();
-
+                        $("#" + strHuyen_Id).select2();
+                        $("#" + strXa_Id).select2();
+                        console.log("TT:" + strTinh_Id + strHuyen_Id + strXa_Id)
                         var strTinh = me.getGiaTri(aData);
-                        var strHuyen = objHuyen ? me.getGiaTri(objHuyen) : "";
-                        var strXa = strXa_Id? me.getGiaTri(objXa): "";
+                        var strHuyen = me.getGiaTri(objHuyen);
+                        var strXa = me.getGiaTri(objXa);
 
                         edu.extend.genDropTinhThanh(strTinh_Id, strHuyen_Id, strXa_Id, strTinh, strHuyen, strXa);
+                        if (aData.THONGTIN3) {
+                            //var objHoSo = data.find(e => e.MABANGDANHMUC === aData.THONGTIN3);
+                            //console.log('#m' + aData.ID);
+                            $('#m' + aData.ID).on('change', function () {
+                                var strCha_Id = $("#m" + aData.ID).val();
+                                //console.log(strCha_Id)
+                                if (strCha_Id == "") {
+                                    var dtReRult = me['dt' + aData.THONGTIN3];
+                                } else {
+                                    var dtReRult = me['dt' + aData.THONGTIN3].filter(e => e.QUANHECHA_ID === strCha_Id);
+                                }
+                                var obj = {
+                                    data: dtReRult,
+                                    renderInfor: {
+                                        id: "ID",
+                                        parentId: "",
+                                        name: "TEN",
+                                        code: "MA",
+                                    },
+                                    renderPlace: ["m" + aData.THONGTIN3],
+                                    type: "",
+                                    //title: "Chọn " + edu.util.returnEmpty(aData.TENHIENTHITOHOP)
+                                };
+                                edu.system.loadToCombo_data(obj);
+                            });
+                        }
                     }; break;
                 }
             }
-            arrFile.push("txtFileDinhKem" + aData.ID);
         });
+        //if (arrFile.length) edu.system.uploadFiles(arrFile);
+        //setTimeout(function () {
+        //    data.forEach(aData => {
+        //        if (aData.KIEUDULIEU) {
 
-        //edu.system.uploadFiles(arrFile);
-        setTimeout(function () {
-            data.forEach(aData => {
-                if (aData.KIEUDULIEU) {
-
-                    switch (aData.KIEUDULIEU.toUpperCase()) {
-                        case "LIST": {
-                            $("#m" + aData.ID).val(me.getGiaTri(aData)).trigger("change");
-                        }; break;
-                        case "FILE": edu.system.viewFiles("m" + aData.ID, me.strSinhVien_Id + aData.ID, "SV_Files"); break;
-                    }
-                }
-                //edu.system.viewFiles("txtFileDinhKem" + aData.ID, aData.ID, "SV_Files");
-            });
-        }, 1000);
-        edu.system.pickerdate();
-        edu.system.pickerNumber();
+        //            switch (aData.KIEUDULIEU.toUpperCase()) {
+        //                case "LIST": {
+        //                    if (me.getGiaTri(aData)) $("#m" + aData.ID).val(me.getGiaTri(aData)).trigger("change");
+        //                }; break;
+        //            }
+        //        }
+        //    });
+        //}, 6666);
+        //edu.system.pickerdate();
         //me.actionRowSpanForACol(jsonForm.strTable_Id, 1);
         /*III. Callback*/
+        //$('.form-select').searchBox({
+        //    elementWidth: ''
+        //});
+        //$(".form-select").select2();
     },
     actionRowSpanForACol: function (strTableId, icol) {
         if (document.getElementById(strTableId) == undefined) {

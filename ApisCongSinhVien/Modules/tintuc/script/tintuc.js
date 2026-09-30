@@ -84,8 +84,7 @@ TinTuc.prototype = {
             me.viewForm_TinTuc(objTinTuc);
             me.save_DaXem(strId);
         });
-        $("#zoneDonVi").delegate('.nav-new-item', 'click', function (e) {
-            e.preventDefault();
+        $("#zoneDonVi").delegate('.nav-new-item', 'click', function () {
             var strId = this.id;
             me.strDaoTao_CoCauToChuc_Id = strId;
             me.getList_TinTuc();

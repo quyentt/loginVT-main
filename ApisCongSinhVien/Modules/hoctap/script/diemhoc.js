@@ -10,23 +10,6 @@ function DiemHoc() { };
 DiemHoc.prototype = {
     dtKetQua: [],
     strNguoiHoc_Id: '',
-    resolveNguoiHocId: function () {
-        // Only allow viewing another student's data when this page is embedded
-        // inside a staff modal (zoneHTSinhVien/modalHTSinhVien).
-        try {
-            var isEmbeddedViewer = $("#zoneHTSinhVien").length > 0 || $("#modalHTSinhVien").length > 0;
-            if (isEmbeddedViewer) {
-                if (window._embeddedSinhVien_Id) return window._embeddedSinhVien_Id;
-                if (window.main_doc) {
-                    for (var k in main_doc) {
-                        if (main_doc[k] && main_doc[k].strSinhVien_Id) return main_doc[k].strSinhVien_Id;
-                    }
-                }
-            }
-        } catch (e) {
-        }
-        return edu.system.userId;
-    },
     init: function () {
         var me = this;
 
@@ -42,17 +25,18 @@ DiemHoc.prototype = {
         //    me.popover_DiemThanhPhan(id, point);
         //});
         $("#zone_bangdiem").delegate('.btnXemDiemThanhPhan', 'click', function (e) {
-            // Ngăn <a href="#"> bên trong điều hướng làm hash rỗng -> hashchange trong
-            // index.aspx reset về dashboard/location.reload() -> văng khỏi màn hình.
-            e.preventDefault();
-            e.stopPropagation();
             var point = this;
             var id = this.id;
             me.getList_DiemThanhPhan(id, point);
         });
-        me.strNguoiHoc_Id = me.resolveNguoiHocId();
+        try {
+            if (main_doc && main_doc.LichGiang && main_doc.LichGiang.strSinhVien_Id) me.strNguoiHoc_Id = main_doc.LichGiang.strSinhVien_Id
+            else
+                me.strNguoiHoc_Id = edu.system.userId;// 'e7c4d5e4b2ed4ea1a50c3aaaac1988f6';
+        } catch {
+            me.strNguoiHoc_Id = edu.system.userId;// 'e7c4d5e4b2ed4ea1a50c3aaaac1988f6';
+        }
         
-
         me.getList_ChuongTrinhHoc();
         me.getList_ThoiGianDangKy(me.strNguoiHoc_Id);
         me.getList_QuaTrinhQuyetDinh();
@@ -176,9 +160,8 @@ DiemHoc.prototype = {
     genHtml_ThongTinCaNhan: function () {
         var me = this;
         var jsonSV = me.dtKetQua.rsThongTinNguoiHoc[0];
-        var hoTen = edu.util.returnEmpty(jsonSV.QLSV_NGUOIHOC_HODEM) + " " + edu.util.returnEmpty(jsonSV.QLSV_NGUOIHOC_TEN);
-        $("#lblHoTen_DiemHoc").html(hoTen);
         $(".lblHoTen").html(edu.util.returnEmpty(jsonSV.QLSV_NGUOIHOC_HODEM) + " " + edu.util.returnEmpty(jsonSV.QLSV_NGUOIHOC_TEN));
+        console.log(edu.util.returnEmpty(jsonSV.QLSV_NGUOIHOC_HODEM) + " " + edu.util.returnEmpty(jsonSV.QLSV_NGUOIHOC_TEN));
         $("#lblMaSo").html(edu.util.returnEmpty(jsonSV.QLSV_NGUOIHOC_MASO));
         $("#lblNgaySinh").html(edu.util.returnEmpty(jsonSV.QLSV_NGUOIHOC_NGAYSINH));
         $("#lblGioiTinh").html(edu.util.returnEmpty(jsonSV.QLSV_NGUOIHOC_GIOITINH));
@@ -314,7 +297,7 @@ DiemHoc.prototype = {
                 htmlBangDiem += '<td class="text-center"><em class="show-in-mobi">Điểm chữ:</em><span>' + edu.util.returnEmpty(e.DIEMQUYDOI_TEN) + '</span></td>';
                 htmlBangDiem += '<td class="text-center"><em class="show-in-mobi">Đánh giá:</em><span>' + edu.util.returnEmpty(e.DANHGIA_TEN) + '</span></td>';
                 htmlBangDiem += '<td class="text-center"><em class="show-in-mobi">Ghi chú:</em><span>' + edu.util.returnEmpty(e.GHICHU) + '</span></td>';
-                htmlBangDiem += '<td class="btnXemDiemThanhPhan" id="' + e.ID + '" style="cursor:pointer;"><em class="show-in-mobi">Chi tiết:</em><a href="javascript:void(0);">Chi tiết</a></td>';
+                htmlBangDiem += '<td class="btnXemDiemThanhPhan" id="' + e.ID + '"><em class="show-in-mobi">Chi tiết:</em><a href="#">Chi tiết</a></td>';
                 htmlBangDiem += '</tr>';
             });
 
