@@ -409,10 +409,26 @@ LichGiangNhieuPhong.prototype = {
             if (me.bDaXemLich) me.getList_TuanHienTai();
         });
 
+        // select2 4.0.3 khóa cuộn các khung cha khi mở dropdown và chỉ gỡ khóa ở khung ĐANG có thanh cuộn lúc đóng.
+        // Chọn xong → lưới đổi thành "Đang tải..." (trang ngắn lại, hết thanh cuộn) → khóa không được gỡ → trang đứng im, không cuộn được.
+        // → Tự gỡ khóa ở mọi khung cha mỗi khi một ô chọn của thẻ lọc đóng lại.
+        $(".lgnp-filter-card").on("select2:close", "select", function () {
+            $(this).parents().off("scroll.select2");
+        });
+
         // Lọc "Phòng trống lúc" (ngày + khung tiết) — đổi khung tiết khi chưa chọn ngày thì không cần tải lại
         $("#dropLoc_NgayTrong, #dropLoc_TietTrong").each(function () {
             if ($(this).hasClass("select2-hidden-accessible")) $(this).select2("destroy");
             $(this).select2({ width: '100%', minimumResultsForSearch: Infinity });
+        });
+        // Dòng tóm tắt lọc phòng trống: đổi qua lại 1 ngày / cả tuần (vẽ lại từ dữ liệu đang có), bỏ lọc
+        $("#zoneLocTrong").on("click", "#btnLocTrong_CaTuan", function () {
+            me.bLocXemCaTuan = !me.bLocXemCaTuan;
+            me.capNhatThanhLocTrong();
+            if (me.dtPhongHoc.length > 0) me.genTable_ThongTin(me.dtLichHoc);
+        });
+        $("#zoneLocTrong").on("click", "#btnLocTrong_Bo", function () {
+            $("#dropLoc_NgayTrong").val('').trigger('change');
         });
         $("#dropLoc_NgayTrong, #dropLoc_TietTrong").change(function () {
             if (this.id === 'dropLoc_TietTrong' && !$("#dropLoc_NgayTrong").val()) return;
@@ -660,6 +676,7 @@ LichGiangNhieuPhong.prototype = {
 
         me.getList_PhongHoc(function() {
             if (iToken !== me.iLoadToken) return;
+            me.capNhatThanhLocTrong();
             if (me.dtPhongHocFull.length === 0) {
                 var o = me.objLocTrong;
                 var strThongBao = o ? 'Không có phòng trống ' + me.getThu(o.NGAYHOC) + ' ' + o.NGAYHOC + ' tiết ' + o.TU + '-' + o.DEN + ' phù hợp bộ lọc'
@@ -744,7 +761,7 @@ LichGiangNhieuPhong.prototype = {
 
     appendRoomsToGrid: function (newRooms) {
         var me = this;
-        var arrDays = me.getDaysInWeek(me.strNgayBatDau, me.strNgayKetThuc);
+        var arrDays = me.getNgayHienThi();
         $(".scroll-notice").remove();
         $("#scheduleGrid").append(me.genHtml_DongPhong(newRooms, arrDays, me.dtLichHoc));
         me.genHtml_ThongBaoCuon();
@@ -804,6 +821,37 @@ LichGiangNhieuPhong.prototype = {
                 if (typeof callback === 'function') callback();
             });
         });
+    },
+
+    // Các ngày lưới sẽ vẽ: bình thường cả tuần; đang lọc "Phòng trống lúc" thì chỉ ngày đã chọn
+    // (trừ khi người dùng bấm "Xem cả tuần" trên dòng tóm tắt).
+    getNgayHienThi: function () {
+        var me = this;
+        var arrDays = me.getDaysInWeek(me.strNgayBatDau, me.strNgayKetThuc);
+        var o = me.objLocTrong;
+        if (!o || me.bLocXemCaTuan) return arrDays;
+        var arrMotNgay = arrDays.filter(function (d) { return d.date === o.NGAYHOC; });
+        return arrMotNgay.length ? arrMotNgay : arrDays;
+    },
+
+    // Dòng tóm tắt phía trên lưới khi đang lọc "Phòng trống lúc": số phòng trống + nút xem cả tuần / bỏ lọc
+    capNhatThanhLocTrong: function () {
+        var me = this;
+        var o = me.objLocTrong;
+        var $zone = $("#zoneLocTrong");
+        if (!o) { me.bLocXemCaTuan = false; $zone.hide().html(''); return; }
+        var bd = me.getGioTiet(o.TU, false), kt = me.getGioTiet(o.DEN, true);
+        var fn2 = function (i) { return (i < 10 ? '0' : '') + i; };
+        var strGio = bd && kt ? ' (' + fn2(bd.gio) + ':' + fn2(bd.phut) + ' - ' + fn2(kt.gio) + ':' + fn2(kt.phut) + ')' : '';
+        var html = '<i class="fa-solid fa-door-open"></i>';
+        html += '<span><b>' + me.dtPhongHocFull.length + ' phòng trống</b> ' + me.getThu(o.NGAYHOC) + ' ' + o.NGAYHOC + ', tiết ' + o.TU + '-' + o.DEN + strGio;
+        html += me.bLocXemCaTuan ? '' : ' — đang chỉ hiện ngày này';
+        html += '</span>';
+        html += '<span class="lgnp-thanh-loc-nut">';
+        html += '<button type="button" class="btn btn-xem" id="btnLocTrong_CaTuan">' + (me.bLocXemCaTuan ? '<i class="fa-solid fa-calendar-day me-1"></i>Chỉ xem ngày này' : '<i class="fa-solid fa-calendar-week me-1"></i>Xem cả tuần') + '</button>';
+        html += '<button type="button" class="btn btn-bo" id="btnLocTrong_Bo"><i class="fa-solid fa-xmark me-1"></i>Bỏ lọc</button>';
+        html += '</span>';
+        $zone.html(html).css('display', 'flex');
     },
 
     // Danh sách ngày trong tuần đang xem cho ô "Phòng trống lúc" (giữ thứ đã chọn khi chuyển tuần)
@@ -1120,8 +1168,9 @@ LichGiangNhieuPhong.prototype = {
             return;
         }
 
-        var arrDays = me.getDaysInWeek(me.strNgayBatDau, me.strNgayKetThuc);
+        var arrDays = me.getNgayHienThi();
         var html = '';
+        $("#scheduleGrid").toggleClass("lgnp-1ngay", arrDays.length === 1);
 
         // Header: Phòng | Hiệu suất | mỗi ngày 3 cột buổi (Sáng/Chiều/Tối)
         html += '<div class="schedule-header" style="grid-column: 1; grid-row: 1 / 3;">Phòng</div>';
@@ -1173,11 +1222,13 @@ LichGiangNhieuPhong.prototype = {
         });
 
         var modeLabel = me.getEfficiencyModeLabel();
+        // Hiệu suất luôn tính trên cả tuần, kể cả khi lưới chỉ vẽ 1 ngày (đang lọc phòng trống)
+        var arrDaysTuan = me.getDaysInWeek(me.strNgayBatDau, me.strNgayKetThuc);
         rooms.forEach(function (room) {
             var iDong = me.iNextRow;
 
             // Tính hiệu suất sử dụng phòng
-            var efficiency = me.calculateEfficiency(objTheoPhong[room.ID] || [], arrDays);
+            var efficiency = me.calculateEfficiency(objTheoPhong[room.ID] || [], arrDaysTuan);
 
             // Xác định màu sắc
             var efficiencyClass = 'low';
