@@ -235,7 +235,7 @@ duyetdiemthituluan.prototype = {
                     me.dtDiemSoSanhGiaoVien = data.Data.DiemSoSanhGiaoVien; 
                     if (me.dtChiTietPhongThi.length > 0)
                         me.strExamstructPartId = me.dtChiTietPhongThi[0].EXAMSTRUCTPARTID; 
-                    me.genTable_ChiTietPhongThi(strCoTinhLaiDiem, me.dtChiTietPhongThi, data.Pager);
+                   // me.genTable_ChiTietPhongThi(strCoTinhLaiDiem, me.dtChiTietPhongThi, data.Pager);
                     me.gen_zoneTable_ChiTietPhongThi(strCoTinhLaiDiem, me.dtChiTietPhongThi, data.Pager);
                 }
                 else {
@@ -903,11 +903,11 @@ duyetdiemthituluan.prototype = {
                     strDiemSoSanh = dtDiem_ThiSinh[0].MARK;
             }
             //Lay tung ten cot điểm giảng viên
-          
-            for (var iCol = 0; iCol < me.dtGiaoVienChamThi.length; iCol++) { 
-                var strGiaTri = "";                
+
+            for (var iCol = 0; iCol < me.dtGiaoVienChamThi.length; iCol++) {
+                var strGiaTri = "";
                 var dtDiem = edu.util.objGetDataInData(me.dtGiaoVienChamThi[iCol].NHANSUID, me.dtDiemGiaoVienChamThi, "NHANSUID");
-                 
+
                 if (dtDiem.length > 0) {
                     var dtDiem_PhanThi = edu.util.objGetDataInData(me.strExamstructPartId, dtDiem, "EXAMSTRUCTPARTID");
                     if (dtDiem_PhanThi.length > 0) {
@@ -917,14 +917,30 @@ duyetdiemthituluan.prototype = {
                     }
                 }
                 if (strDiemSoSanh == "")
-                    strGiaTri = "<span style='color:red'>" + strGiaTri+"</span>";
+                    strGiaTri = "<span style='color:red'>" + strGiaTri + "</span>";
                 strBody += "<td class='td-center'>" +
                     strGiaTri +
-                    "</td>"; 
-            } 
-            strBody += "<td class='td-left'>" +
-                '<input type ="text" id="txtDiemDuocCongNhan' + data[iRow].ID + '" value ="' + edu.util.returnEmpty(strDiemSoSanh) + '" class="form-control" />';
-            "</td>";
+                    "</td>";
+            }
+            var dtDiemDaLuu = edu.util.objGetDataInData(strID, me.dtChiTietPhongThi, "ID");
+            if (dtDiemDaLuu.length == 1) {
+                if (edu.util.returnEmpty(dtDiemDaLuu[0].MARK) != '') {
+                    strBody += "<td class='td-left'>" +
+                        '<input type ="text" id="txtDiemDuocCongNhan' + data[iRow].ID + '" style="background-color:burlywood;" value ="' + edu.util.returnEmpty(dtDiemDaLuu[0].MARK) + '" class="form-control" />'
+                    "</td>";
+                }
+                else {
+                    strBody += "<td class='td-left'>" +
+                        '<input type ="text" id="txtDiemDuocCongNhan' + data[iRow].ID + '" value ="' + edu.util.returnEmpty(strDiemSoSanh) + '" class="form-control" />'
+                    "</td>";
+                }
+
+            }
+            else {
+                strBody += "<td class='td-left'>" +
+                    '<input type ="text" id="txtDiemDuocCongNhan' + data[iRow].ID + '" value ="' + edu.util.returnEmpty(strDiemSoSanh) + '" class="form-control" />'
+                "</td>";
+            }
             var strHTML = "";
             if (edu.util.returnEmpty(data[iRow].TENVIPHAMQUYCHETHI) != "")
                 strHTML = "<span style='color:red;'>" + data[iRow].TENVIPHAMQUYCHETHI + "</span>";

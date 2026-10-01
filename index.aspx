@@ -1991,6 +1991,19 @@
             }, false, false, false, null);
           }
 
+          // Nút/link dạng a[href="#"] trong các module (vd "Xem thông tin" ở Đăng ký công nhận
+          // điểm) khi click sẽ đổi URL hash về rỗng -> listener hashchange bên dưới hiểu nhầm là
+          // "back về state không hash" -> reset dashboard / location.reload() -> văng về trang chủ
+          // (đang thủ vai thì mất luôn vai). Chặn default ở capture phase để hash không đổi;
+          // handler click của module vẫn chạy bình thường.
+          document.addEventListener('click', function (e) {
+            var t = e.target;
+            var a = t && t.closest ? t.closest('a') : null;
+            if (!a) return;
+            var href = a.getAttribute('href');
+            if (href === '#' || href === '') e.preventDefault();
+          }, true);
+
           // (3) Đổi hash khi đã trong app -> mở màn tương ứng.
           window.addEventListener('hashchange', function () {
             var key = normalizeHash();
