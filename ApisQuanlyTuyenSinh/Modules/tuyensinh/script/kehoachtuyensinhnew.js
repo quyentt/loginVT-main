@@ -2990,9 +2990,11 @@ KeHoachTuyenSinhNew.prototype = {
         var me = main_doc.KeHoachTuyenSinhNew;
         me._suaMode = false;
         me.strSuaHoSo_Id = '';
+        me._isSavingKhai = false;
+        me._isSavingSua = false;
         $('#kqdk_khai_edit_banner').addClass('d-none');
         $('#kqdk_khai_luu_canhbao').addClass('d-none');
-        $('#btnKhaiSave').html('<i class="fa-solid fa-floppy-disk"></i><span> Lưu hồ sơ</span>');
+        $('#btnKhaiSave').prop('disabled', false).removeClass('disabled').html('<i class="fa-solid fa-floppy-disk"></i><span> Lưu hồ sơ</span>');
         $('#btnKhaiDoiNVDauVao').addClass('d-none');
     },
 
@@ -3376,6 +3378,10 @@ KeHoachTuyenSinhNew.prototype = {
     -------------------------------------------*/
     saveSuaHoSo_Full: function () {
         var me = main_doc.KeHoachTuyenSinhNew;
+        if (me._isSavingSua) {
+            console.warn("[saveSuaHoSo_Full] Đang trong quá trình cập nhật, bỏ qua thao tác lặp.");
+            return;
+        }
         if (!edu.util.checkValue(me.strSuaHoSo_Id)) {
             edu.system.alert("Chưa xác định hồ sơ để sửa", "w");
             return;
@@ -3387,6 +3393,21 @@ KeHoachTuyenSinhNew.prototype = {
             $('#txtKQ_HoTen').focus();
             return;
         }
+
+        var $btnSave = $('#btnKhaiSave');
+        me._isSavingSua = true;
+        $btnSave.prop('disabled', true).addClass('disabled').html('<i class="fa-solid fa-spinner fa-spin"></i><span> Đang cập nhật...</span>');
+
+        var unlockSua = function () {
+            me._isSavingSua = false;
+            $btnSave.prop('disabled', false).removeClass('disabled');
+            if (me._suaMode) {
+                $btnSave.html('<i class="fa-light fa-floppy-disk"></i> Cập nhật hồ sơ');
+            } else {
+                $btnSave.html('<i class="fa-solid fa-floppy-disk"></i><span> Lưu hồ sơ</span>');
+            }
+        };
+
         var g = function (id) { return edu.system.getValById(id) || ''; };
         // Chụp Nơi sinh / Hộ khẩu + Thanh toán ngay bây giờ — _exitSuaMode() ở success sẽ dọn form
         var addrBlocks = me._collectAddrBlocks();
@@ -3413,10 +3434,6 @@ KeHoachTuyenSinhNew.prototype = {
         var extraObj = {
             NgayCapCCCD: g('txtKQ_NgayCapCCCD'),
             NoiCapCCCD: g('txtKQ_NoiCapCCCD'),
-            NS_Huyen_Id: g('ddlKQ_NS_Huyen'),
-            HK_Huyen_Id: g('ddlKQ_HK_Huyen'),
-            // Quận/huyện không có param trong signature (Them_HoSo_TS cũng nhét vào
-            // strExtra_Person_Data) — địa chỉ thật đã đi đường riêng qua save_PersonAddress.
             NS_Huyen_Id: g('ddlKQ_NS_Huyen'),
             HK_Huyen_Id: g('ddlKQ_HK_Huyen')
         };
@@ -3562,6 +3579,7 @@ KeHoachTuyenSinhNew.prototype = {
                         edu.system.alert("Cập nhật hồ sơ thành công"
                             + me._addrWarnText(addrBlocks) + me._nguonWarnText()
                             + me._hoaDonWarnText() + txtDM, "s");
+                        unlockSua();
                         me._exitSuaMode();
                         // Về lại screen list; việc tải lại do taiLaiDS lo — nó chờ cả
                         // nhánh ghi CCCD xong mới gọi, tránh đọc phải dữ liệu cũ.
@@ -3571,10 +3589,12 @@ KeHoachTuyenSinhNew.prototype = {
                         taiLaiDS();
                     });
                 } else {
+                    unlockSua();
                     edu.system.alert("Sua_HoSo_TS: " + ((data && data.Message) || 'Lỗi'), "w");
                 }
             },
             error: function (er) {
+                unlockSua();
                 edu.system.alert("Sua_HoSo_TS (ex): " + JSON.stringify(er), "w");
             },
             type: 'POST',
@@ -7113,6 +7133,11 @@ KeHoachTuyenSinhNew.prototype = {
     -- Reset toàn bộ form khai + về tab đầu
     -------------------------------------------*/
     resetKhai_HoSo: function () {
+        // Reset trạng thái lock lưu hồ sơ
+        main_doc.KeHoachTuyenSinhNew._isSavingKhai = false;
+        main_doc.KeHoachTuyenSinhNew._isSavingSua = false;
+        $('#btnKhaiSave').prop('disabled', false).removeClass('disabled');
+
         // Sang hồ sơ khác → quên bản ghi hóa đơn cũ, nếu không sẽ Sua_ nhầm sang người trước
         main_doc.KeHoachTuyenSinhNew._currentInvoiceId = '';
         // Tương tự với nguồn khai thác: giữ lại id cũ là bỏ chọn ở hồ sơ B sẽ XOÁ bản ghi của A
@@ -7199,6 +7224,10 @@ KeHoachTuyenSinhNew.prototype = {
             me.saveSuaHoSo_Full();
             return;
         }
+        if (me._isSavingKhai) {
+            console.warn("[saveKhai_HoSo] Đang trong quá trình lưu hồ sơ, bỏ qua thao tác click lặp.");
+            return;
+        }
         if (!edu.util.checkValue(me.strKeHoachTuyenSinh_Id)) {
             edu.system.alert("Chưa xác định kế hoạch tuyển sinh (mở lại từ danh sách)", "w");
             return;
@@ -7232,17 +7261,31 @@ KeHoachTuyenSinhNew.prototype = {
         if (!edu.util.checkValue(edu.system.getValById('ddlKQ_GioiTinh'))) {
             warn("Vui lòng chọn Giới tính", 0, 'ddlKQ_GioiTinh'); return;
         }
-        // Điện thoại: bỏ bắt buộc (2026-09-09, theo yêu cầu) — vẫn gửi lên BE nếu có nhập.
-        // Mở lại: bỏ comment block dưới + thêm <span class="aps-sv-req">*</span> vào label #txtKQ_DienThoai.
-        //if (!edu.util.checkValue(edu.system.getValById('txtKQ_DienThoai'))) {
-        //    warn("Vui lòng nhập Điện thoại", 0, 'txtKQ_DienThoai'); return;
-        //}
 
         // --- TAB 2: CCCD & Hộ khẩu ---
         var soCCCD = edu.system.getValById('txtKQ_SoCCCD');
         if (!edu.util.checkValue(soCCCD)) { warn("Vui lòng nhập Số CCCD", 1, 'txtKQ_SoCCCD'); return; }
         if (!/^\d{9,12}$/.test(soCCCD)) {
             warn("Số CCCD phải là 9–12 chữ số", 1, 'txtKQ_SoCCCD'); return;
+        }
+
+        // Kiểm tra trùng CCCD ngay tại FE dựa trên danh sách hồ sơ đã nạp (chống tạo 2 lần do mạng lag/ấn nhầm)
+        var cccdNhap = String(soCCCD || '').trim();
+        var trungHS = null;
+        if (cccdNhap && me.dtKQDK_HoSo && me.dtKQDK_HoSo.length) {
+            for (var iCCCD = 0; iCCCD < me.dtKQDK_HoSo.length; iCCCD++) {
+                var itemHS = me.dtKQDK_HoSo[iCCCD];
+                var itemCccd = String(me._kqPick(itemHS, ['PERSONIDEN_SOCCCD', 'PersonIden_SoCCCD', 'SOCCCD', 'SO_CCCD', 'CCCD']) || '').trim();
+                if (itemCccd && itemCccd === cccdNhap) {
+                    trungHS = itemHS;
+                    break;
+                }
+            }
+        }
+        if (trungHS) {
+            var tenTrung = me._kqPick(trungHS, ['COREPERSON_HOTEN', 'HOTEN']) || 'thí sinh khác';
+            warn("Số CCCD <b>" + cccdNhap + "</b> đã tồn tại trong danh sách hồ sơ (Thí sinh: <b>" + tenTrung + "</b>).<br/>Vui lòng kiểm tra lại!", 1, 'txtKQ_SoCCCD');
+            return;
         }
 
         // --- TAB 4: Trúng tuyển ---
@@ -7255,6 +7298,21 @@ KeHoachTuyenSinhNew.prototype = {
         if (!edu.util.checkValue(edu.system.getValById('ddlKQ_NguyenVongDauRa'))) {
             warn("Vui lòng chọn Nguyện vọng đầu ra (ngành đầu vào)", 3, 'ddlKQ_NguyenVongDauRa'); return;
         }
+
+        // Khóa nút Lưu & bật loading spinner chống double-click khi mạng lag
+        var $btnSave = $('#btnKhaiSave');
+        me._isSavingKhai = true;
+        $btnSave.prop('disabled', true).addClass('disabled').html('<i class="fa-solid fa-spinner fa-spin"></i><span> Đang lưu...</span>');
+
+        var unlockSave = function () {
+            me._isSavingKhai = false;
+            $btnSave.prop('disabled', false).removeClass('disabled');
+            if (me._suaMode) {
+                $btnSave.html('<i class="fa-light fa-floppy-disk"></i> Cập nhật hồ sơ');
+            } else {
+                $btnSave.html('<i class="fa-solid fa-floppy-disk"></i><span> Lưu hồ sơ</span>');
+            }
+        };
 
         // Tự tính tổng lần cuối trước khi build payload
         me.tinhTongDiem_Khai();
@@ -7478,6 +7536,7 @@ KeHoachTuyenSinhNew.prototype = {
                                 }
                                 edu.system.alert("Đã lưu hồ sơ thành công"
                                     + me._addrWarnText(snap.addr) + canhBaoHD + txtDM, kq && kq.thieuId ? "w" : "s");
+                                unlockSave();
                                 me.resetKhai_HoSo();
                             });
                             return;
@@ -7485,6 +7544,7 @@ KeHoachTuyenSinhNew.prototype = {
                         // Không tra được Core_Person_Id → 7 bảng phụ CHƯA được ghi.
                         // Trước đây chỗ này im lặng nên người dùng tưởng đã lưu đủ,
                         // mãi tới khi kế toán báo thiếu địa chỉ mới biết.
+                        unlockSave();
                         me.resetKhai_HoSo();
                         $('#kqdk_khai_luu_canhbao').removeClass('d-none');
                         edu.system.alert('Đã lưu hồ sơ chính, NHƯNG chưa gắn được các thông tin '
@@ -7500,10 +7560,12 @@ KeHoachTuyenSinhNew.prototype = {
                         xuLy(pid || newPersonId, hosoId);
                     });
                 } else {
+                    unlockSave();
                     edu.system.alert("Them_HoSo_TS: " + ((data && data.Message) || 'Lỗi không xác định'), "w");
                 }
             },
             error: function (er) {
+                unlockSave();
                 edu.system.alert("Them_HoSo_TS (ex): " + JSON.stringify(er), "w");
             },
             type: 'POST',
