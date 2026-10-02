@@ -2884,57 +2884,52 @@ KeHoachTuyenSinhNew.prototype = {
         me.resetKhai_HoSo();
         me.initKhai_DanhMuc();
 
-        // Đợt tuyển sinh của hồ sơ — phải set context TRƯỚC khi load Nguyện vọng đầu ra
-        // và Phương thức, vì 2 dropdown đó lọc theo KH + Đợt.
-        // Trước đây openSuaHoSo không gọi _loadDotToKhai() nên dropdown Đợt rỗng và không bind.
-        var dotId = pick(d, ['HOSO_KH_TS_DOT_ID', 'HoSo_KH_TS_Dot_Id', 'KH_TS_DOT_ID',
-            'TS_KH_TUYENSINH_DOT_ID', 'DOT_ID'])
-            || me._kqPickFuzzy(d, /DOT.*_ID$/i);
-        var dotTen = pick(d, ['HOSO_KH_TS_DOT_TEN', 'DOT_TEN', 'TEN_DOT']);
-        /* View danh sách KHÔNG có cột đợt (đã đo 23/09/2026 — cả LayTT_HoSo_TS cũng không),
-           nên đoạn dò ở trên gần như luôn ra rỗng. Suy ngược từ nguyện vọng đầu ra:
-           mỗi đầu ra thuộc đúng một (kế hoạch + đợt). Thiếu bước này thì đợt rỗng →
-           dropdown Nguyện vọng / Phương thức nạp ra rỗng → bấm Cập nhật là dính
-           "Ghi nhận nguồn khai thác lỗi: Khong ton tai ho so tuyen sinh". */
-        if (!dotId) {
-            var nvId = pick(d, ['NGUYENVONG_DAURA_ID', 'NguyenVong_DauRa_Id']);
-            var dr = nvId ? ((me._kqDauRaMap || {})[nvId] || null) : null;
-            if (dr && dr.dotId) {
-                dotId = dr.dotId;
-                if (!dotTen) dotTen = dr.dotTen || '';
+        // Đợt tuyển sinh của hồ sơ — nạp _ensureKQDK_DauRaMap trước để suy ngược đợt từ nguyện vọng đầu ra
+        me._ensureKQDK_DauRaMap(function () {
+            var dotId = pick(d, ['HOSO_KH_TS_DOT_ID', 'HoSo_KH_TS_Dot_Id', 'KH_TS_DOT_ID',
+                'TS_KH_TUYENSINH_DOT_ID', 'DOT_ID'])
+                || me._kqPickFuzzy(d, /DOT.*_ID$/i);
+            var dotTen = pick(d, ['HOSO_KH_TS_DOT_TEN', 'DOT_TEN', 'TEN_DOT']);
+            if (!dotId) {
+                var nvId = pick(d, ['NGUYENVONG_DAURA_ID', 'NguyenVong_DauRa_Id']);
+                var dr = nvId ? ((me._kqDauRaMap || {})[nvId] || null) : null;
+                if (dr && dr.dotId) {
+                    dotId = dr.dotId;
+                    if (!dotTen) dotTen = dr.dotTen || '';
+                }
             }
-        }
-        if (dotId) me.strDot_Id_ForKQ = dotId;
+            if (dotId) me.strDot_Id_ForKQ = dotId;
 
-        me._ensureDotTuyenSinh(function () {
-            me._loadDotToKhai();                      // đổ option + preselect theo strDot_Id_ForKQ
-            me._setSelectByIdOrText('#ddlKQ_DotTuyenSinh', dotId, dotTen);   // bảo hiểm + fallback theo tên
-            me._loadNguyenVongDauRa();
-            me._loadPhuongThucTuyenSinh();
-            // Tab 1 + 2 — nạp Giới tính/Dân tộc/Tôn giáo/Điện thoại/Email/CCCD
-            // (view LayDS_HoSo_TS không trả, hoặc bị danh mục nạp lại làm mất lựa chọn)
-            me._loadPersonExtras_ForEdit(me.strSuaHoSo_CorePersonId, d);
-            // Tab 3 + 5 — lấy chi tiết đầy đủ theo Id thay vì đọc cache list (view list
-            // chỉ có ~20 cột nên Xét tuyển / Gia đình luôn trống dù DB có dữ liệu).
-            me._loadHoSoDetail_ForEdit(strId);
-            // Tab 6 — cụm "Thông tin thanh toán" (PERSON_BANK), trước giờ không ai đọc lên
-            me._loadBank_ForEdit(me.strSuaHoSo_CorePersonId);
-            // Tab 5 — bố/mẹ (PERSON_FAMILY)
-            me._loadFamily_ForEdit(me.strSuaHoSo_CorePersonId);
-            // Tab 6 — nạp thông tin hóa đơn đã lưu (PERSON_INVOICE_INFO)
-            me._loadPersonInvoice(me.strSuaHoSo_CorePersonId);
-            // Tab 7 — nạp danh mục rồi bind nguồn khai thác đã ghi nhận (nếu có)
-            me._loadNguonKhaiThac(function () {
-                me._loadHoSoDoiTacTS(me.strSuaHoSo_CorePersonId);
+            me._ensureDotTuyenSinh(function () {
+                me._loadDotToKhai();                      // đổ option + preselect theo strDot_Id_ForKQ
+                me._setSelectByIdOrText('#ddlKQ_DotTuyenSinh', dotId, dotTen);   // bảo hiểm + fallback theo tên
+                me._loadNguyenVongDauRa();
+                me._loadPhuongThucTuyenSinh();
+                // Tab 1 + 2 — nạp Giới tính/Dân tộc/Tôn giáo/Điện thoại/Email/CCCD
+                // (view LayDS_HoSo_TS không trả, hoặc bị danh mục nạp lại làm mất lựa chọn)
+                me._loadPersonExtras_ForEdit(me.strSuaHoSo_CorePersonId, d);
+                // Tab 3 + 5 — lấy chi tiết đầy đủ theo Id thay vì đọc cache list (view list
+                // chỉ có ~20 cột nên Xét tuyển / Gia đình luôn trống dù DB có dữ liệu).
+                me._loadHoSoDetail_ForEdit(strId);
+                // Tab 6 — cụm "Thông tin thanh toán" (PERSON_BANK), trước giờ không ai đọc lên
+                me._loadBank_ForEdit(me.strSuaHoSo_CorePersonId);
+                // Tab 5 — bố/mẹ (PERSON_FAMILY)
+                me._loadFamily_ForEdit(me.strSuaHoSo_CorePersonId);
+                // Tab 6 — nạp thông tin hóa đơn đã lưu (PERSON_INVOICE_INFO)
+                me._loadPersonInvoice(me.strSuaHoSo_CorePersonId);
+                // Tab 7 — nạp danh mục rồi bind nguồn khai thác đã ghi nhận (nếu có)
+                me._loadNguonKhaiThac(function () {
+                    me._loadHoSoDoiTacTS(me.strSuaHoSo_CorePersonId);
+                });
+                // Tab 8 — danh mục hồ sơ (TS_HOSO). Phải gọi SAU khi strDot_Id_ForKQ
+                // đã set ở trên, vì LayDSTS_HoSo lọc theo Id đợt tuyển sinh.
+                me._loadHoSoDM_ForEdit(strId);
+                me._veBadgeKeHoach();
+                // Các mục đang đóng mà hồ sơ này có dữ liệu thì bung ra cho thấy.
+                // Đợi các nhánh nạp async (dropdown retry tới ~1.8s) xong mới soát.
+                setTimeout(function () { me._secMoNeuCoDuLieu(); }, 1200);
+                setTimeout(function () { me._secMoNeuCoDuLieu(); }, 2400);
             });
-            // Tab 8 — danh mục hồ sơ (TS_HOSO). Phải gọi SAU khi strDot_Id_ForKQ
-            // đã set ở trên, vì LayDSTS_HoSo lọc theo Id đợt tuyển sinh.
-            me._loadHoSoDM_ForEdit(strId);
-            me._veBadgeKeHoach();
-            // Các mục đang đóng mà hồ sơ này có dữ liệu thì bung ra cho thấy.
-            // Đợi các nhánh nạp async (dropdown retry tới ~1.8s) xong mới soát.
-            setTimeout(function () { me._secMoNeuCoDuLieu(); }, 1200);
-            setTimeout(function () { me._secMoNeuCoDuLieu(); }, 2400);
         });
 
         // Chuyển sang screen Khai
@@ -3409,12 +3404,19 @@ KeHoachTuyenSinhNew.prototype = {
         };
 
         var g = function (id) { return edu.system.getValById(id) || ''; };
-        // Chụp Nơi sinh / Hộ khẩu + Thanh toán ngay bây giờ — _exitSuaMode() ở success sẽ dọn form
+        // Chụp Nơi sinh / Hộ khẩu + Thanh toán + Nguồn khai thác ngay bây giờ — _exitSuaMode() ở success sẽ dọn form
         var addrBlocks = me._collectAddrBlocks();
         var bankInfo = me._collectBank();
         var profileInfo = me._collectProfile();
         var famList = me._collectFamily();
         var idenInfo = me._collectIden();
+        var nguonSnap = {
+            doiTacId: g('ddlKQ_NguonKhaiThac'),
+            ghiChu: g('txtKQ_NguonKhaiThac_GhiChu'),
+            nguyenVong: g('ddlKQ_NguyenVongDauRa'),
+            dot: me.strDot_Id_ForKQ || g('ddlKQ_DotTuyenSinh') || me._hsDotHienTai(),
+            keHoachId: me.strKeHoachTuyenSinh_Id || ''
+        };
 
         // XT_Mon_Data: MON_MA~DIEM~SO_MON~STT~MON_TEN|... — cùng format với luồng Thêm mới
         var tenMon = (g('txtKQ_ToHopTen') || '').split(/[,;]/);
@@ -3508,6 +3510,9 @@ KeHoachTuyenSinhNew.prototype = {
             'strIntake_IntakeTypeCode': g('txtKQ_IntakeTypeCode'),
             'strDaoTao_CoSoDaoTao_Id': g('ddlKQ_CoSoDaoTao'),
             'strNguyenVong_DauRa_Id': g('ddlKQ_NguyenVongDauRa'),
+            'strTS_DoiTacTuyenSinh_Id': g('ddlKQ_NguonKhaiThac'),
+            'strTS_DoiTacTuyenSinh_id': g('ddlKQ_NguonKhaiThac'),
+            'strTS_DoiTacTuyenSinh_Khac': g('txtKQ_NguonKhaiThac_GhiChu'),
             'strExtra_Data': me._fitExtraData(extraFiltered)
         };
         // ⚠ Chống ghi đè rỗng: ô nào đang trống trên form thì BỎ HẲN khỏi payload,
@@ -3564,7 +3569,10 @@ KeHoachTuyenSinhNew.prototype = {
                     }, 2000);
                     // Tab 7 — ghi nhận nguồn khai thác SAU CÙNG. Chế độ Sửa đã biết sẵn
                     // Core_Person_Id của hồ sơ đang mở (lưu ở openSuaHoSo).
-                    me.save_HoSoDoiTacTS(me.strSuaHoSo_CorePersonId || '');
+                    if (me.strSuaHoSo_CorePersonId && nguonSnap.doiTacId) {
+                        me._nguonMap[me.strSuaHoSo_CorePersonId] = me._tenDoiTacTS(nguonSnap.doiTacId);
+                    }
+                    me.save_HoSoDoiTacTS(me.strSuaHoSo_CorePersonId || '', nguonSnap);
                     /* Tab 8 — danh mục hồ sơ giấy tờ. Gộp về MỘT nút (yêu cầu 22/09/2026):
                        không còn nút "Lưu danh mục" riêng, bấm "Cập nhật hồ sơ" là lưu luôn.
                        Gọi TRƯỚC khi dọn form vì _saveHoSoDM đọc thẳng từ lưới trong DOM.
@@ -4411,87 +4419,58 @@ KeHoachTuyenSinhNew.prototype = {
         var xong = function (coMoi) { if (typeof cb === 'function') cb(coMoi); };
         if (!edu.util.checkValue(me._ACTION_LayDS_HoSo_DoiTacTS)) { xong(false); return; }
 
+        me._nguonDangTai = me._nguonDangTai || {};
         var canIds = [];
         (rows || []).forEach(function (d) {
             var pid = me._kqPick(d, ['COREPERSON_ID', 'CORE_PERSON_ID', 'PERSON_ID']);
-            if (pid && !(pid in me._nguonMap) && canIds.indexOf(pid) < 0) canIds.push(pid);
+            if (!pid) return;
+            // Ưu tiên đọc trực tiếp từ bản ghi hồ sơ nếu view LayDS_HoSo_TS có trả
+            var dtIdDirect = me._kqPick(d, ['TS_DOITACTUYENSINH_ID', 'DOITAC_ID', 'ID_DOITAC', 'TS_DOITAC_ID', 'DOI_TAC_ID']);
+            var tenDirect = me._kqPick(d, ['TS_DOITACTUYENSINH_TEN', 'DOITAC_TEN'])
+                || (dtIdDirect ? me._tenDoiTacTS(dtIdDirect) : '');
+            if (tenDirect) {
+                me._nguonMap[pid] = tenDirect;
+                return;
+            }
+            if (!(pid in me._nguonMap) && !me._nguonDangTai[pid] && canIds.indexOf(pid) < 0) {
+                canIds.push(pid);
+            }
         });
         if (!canIds.length) { xong(false); return; }
 
-        // Gọi proc ghi-nhận đối tác. personId rỗng = lấy cả kế hoạch.
-        var goi = function (personId, ok) {
-            edu.system.makeRequest({
-                success: function (data) {
-                    ok((data && data.Success && edu.util.checkValue(data.Data)) ? data.Data : []);
-                },
-                error: function () { ok([]); },
-                type: 'POST',
-                contentType: true,
-                action: me._ACTION_LayDS_HoSo_DoiTacTS,
-                data: {
-                    'action': me._ACTION_LayDS_HoSo_DoiTacTS,
-                    'func': 'PKG_CORE_TS_HOSO.LayDS_TS_HoSo_DoiTacTS',
-                    'iM': edu.system.iM,
-                    'strHoSo_KH_TS_Id': me.strKeHoachTuyenSinh_Id || '',
-                    'strHoSo_KH_TS_Dot_Id': me.strDot_Id_ForKQ || '',
-                    'strNguyenVong_DauRa_Id': '',
-                    'strCore_Person_Id': personId || '',
-                    'strTS_DoiTacTuyenSinh_Id': '',
-                    // Prefix 'd' = NUMBER bên Oracle: rỗng phải là null, gửi '' là PLS-00306
-                    'dIs_Primary': null,
-                    'dIs_Current': null,
-                    'dIs_Active': 1,
-                    'strTuKhoa': '',
-                    'strNguoiThucHien_Id': edu.system.userId
-                },
-                fakedb: []
-            }, false, false, false, null);
-        };
+        canIds.forEach(function (p) { me._nguonDangTai[p] = 1; });
 
-        var ghi = function (r) {
-            var pid = me._pickLoose(r, ['CORE_PERSON_ID', 'COREPERSON_ID', 'PERSON_ID']);
+        var ghi = function (r, fallbackPid) {
+            var pid = me._pickLoose(r, ['CORE_PERSON_ID', 'COREPERSON_ID', 'PERSON_ID']) || fallbackPid;
             if (!pid) return;
-            var ten = me._kqPick(r, ['TS_DOITACTUYENSINH_TEN', 'DOITAC_TEN', 'DOITACTUYENSINH_TEN', 'HOTEN'])
-                || me._tenDoiTacTS(me._kqPick(r, ['TS_DOITACTUYENSINH_ID', 'DOITAC_ID']));
+            var dtId = me._pickLoose(r, ['TS_DOITACTUYENSINH_ID', 'DOITAC_ID', 'ID_DOITAC', 'TS_DOITAC_ID', 'DOI_TAC_ID']);
+            var ten = me._kqPick(r, ['TS_DOITACTUYENSINH_TEN', 'DOITAC_TEN', 'HOTEN', 'TEN', 'FULL_NAME', 'TENDAYDU', 'TEN_DONVI'])
+                || me._tenDoiTacTS(dtId);
             me._nguonMap[pid] = ten || '';
         };
 
         me._ensureDMDoiTacTS(function () {
-            // Lần đầu: thử lấy một lượt cho cả kế hoạch
-            if (!me._nguonLoDaThu) {
-                me._nguonLoDaThu = true;
-                goi('', function (arr) {
-                    if (arr.length) {
-                        arr.forEach(ghi);
-                        // Ai không có bản ghi → ghi rỗng để khỏi hỏi lại vòng sau
-                        canIds.forEach(function (p) { if (!(p in me._nguonMap)) me._nguonMap[p] = ''; });
-                        xong(true);
-                        return;
-                    }
-                    me._nguonLoHong = true;   // proc không cho bỏ trống → hỏi từng người
-                    layTungNguoi();
-                });
-                return;
-            }
-            if (me._nguonLoHong) { layTungNguoi(); return; }
-            // Lô đã chạy được rồi mà vẫn có người chưa biết → chắc chắn là không có nguồn
-            canIds.forEach(function (p) { me._nguonMap[p] = ''; });
-            xong(true);
+            layTungNguoi();
         });
 
         function layTungNguoi() {
-            var i = 0, dangChay = 0, MAX = 6;
+            var i = 0, dangChay = 0, MAX = 6, coMoi = false;
             var tiep = function () {
                 while (dangChay < MAX && i < canIds.length) {
                     var pid = canIds[i++];
                     dangChay++;
                     (function (personId) {
-                        goi(personId, function (arr) {
-                            if (arr.length) arr.forEach(ghi);
-                            if (!(personId in me._nguonMap)) me._nguonMap[personId] = '';
+                        me._queryHoSoDoiTacTS(personId, '', function (arr) {
+                            delete me._nguonDangTai[personId];
+                            if (arr && arr.length) {
+                                arr.forEach(function (r) { ghi(r, personId); });
+                                coMoi = true;
+                            } else {
+                                if (!(personId in me._nguonMap)) me._nguonMap[personId] = '';
+                            }
                             dangChay--;
                             if (i < canIds.length) { tiep(); return; }
-                            if (dangChay === 0) xong(true);
+                            if (dangChay === 0) xong(coMoi);
                         });
                     })(pid);
                 }
@@ -4981,7 +4960,9 @@ KeHoachTuyenSinhNew.prototype = {
             // chỉ số của _KQ_COT_GON và mã cột bộ lọc.
             (function () {
                 var pid = pick(d, ['COREPERSON_ID', 'CORE_PERSON_ID', 'PERSON_ID']);
-                return (me._nguonMap || {})[pid] || '';
+                var dtId = pick(d, ['TS_DOITACTUYENSINH_ID', 'DOITAC_ID', 'ID_DOITAC', 'TS_DOITAC_ID', 'DOI_TAC_ID']);
+                var tenDirect = pick(d, ['TS_DOITACTUYENSINH_TEN', 'DOITAC_TEN']) || (dtId ? me._tenDoiTacTS(dtId) : '');
+                return (me._nguonMap || {})[pid] || tenDirect || '';
             })(),
 
             /* ===== [52..68] BỔ SUNG cho file xuất (khách báo 29/09/2026 "xuất ra thiếu
@@ -7461,6 +7442,11 @@ KeHoachTuyenSinhNew.prototype = {
             'strPersonBank_ChuTaiKhoan': g('txtKQ_HD_ChuTK'),
             'strPersonBank_GhiChu': g('txtKQ_HD_GhiChu'),
 
+            // Nguồn khai thác (đối tác)
+            'strTS_DoiTacTuyenSinh_Id': g('ddlKQ_NguonKhaiThac'),
+            'strTS_DoiTacTuyenSinh_id': g('ddlKQ_NguonKhaiThac'),
+            'strTS_DoiTacTuyenSinh_Khac': g('txtKQ_NguonKhaiThac_GhiChu'),
+
             // Extra JSON — lưu các field ngoài signature để không mất user input
             'strExtra_Person_Data': JSON.stringify({
                 NS_Huyen_Id: g('ddlKQ_NS_Huyen'),
@@ -7485,8 +7471,8 @@ KeHoachTuyenSinhNew.prototype = {
             }
         });
 
-        // Chụp TOÀN BỘ form trước khi gửi. resetKhai_HoSo() ở success xoá trắng form ngay,
-        // trong khi các hàm lưu phụ chạy async → lúc callback về không còn gì để đọc.
+        var dotHienTai = me.strDot_Id_ForKQ || g('ddlKQ_DotTuyenSinh') || me._hsDotHienTai();
+        var keHoachIdHienTai = me.strKeHoachTuyenSinh_Id || '';
         var snap = {
             addr: me._collectAddrBlocks(),
             invoice: me._collectInvoice(),
@@ -7497,14 +7483,17 @@ KeHoachTuyenSinhNew.prototype = {
             nguon: {
                 doiTacId: g('ddlKQ_NguonKhaiThac'),
                 ghiChu: g('txtKQ_NguonKhaiThac_GhiChu'),
-                nguyenVong: g('ddlKQ_NguyenVongDauRa')
+                nguyenVong: g('ddlKQ_NguyenVongDauRa'),
+                dot: dotHienTai,
+                keHoachId: keHoachIdHienTai
             },
             cccd: g('txtKQ_SoCCCD'),
             hoTen: hoTen,
             // Tab 8 — giấy tờ thí sinh mang tới, khai ngay từ lúc thêm mới.
             // Phải chụp ở đây vì lưới bị dọn trắng ngay khi lưu xong.
             danhMuc: me._hsThuLuoi(),
-            dot: me._hsDotHienTai()
+            dot: dotHienTai,
+            keHoachId: keHoachIdHienTai
         };
 
         edu.system.makeRequest({
@@ -7518,6 +7507,9 @@ KeHoachTuyenSinhNew.prototype = {
                     var canhBaoHD = me._hoaDonWarnText();
                     var xuLy = function (pid, hosoId) {
                         if (pid) {
+                            if (snap && snap.nguon && snap.nguon.doiTacId) {
+                                me._nguonMap[pid] = me._tenDoiTacTS(snap.nguon.doiTacId);
+                            }
                             me._saveKhai_PhuThuoc(pid, snap);
                             /* Danh mục hồ sơ (tab 8) gắn theo HOSO_ID chứ không phải person,
                                nên chỉ ghi được sau khi tra ra Id hồ sơ vừa tạo. Gộp kết quả
@@ -8931,6 +8923,12 @@ KeHoachTuyenSinhNew.prototype = {
         setTxt('txtKQ_IntakeTypeCode', V(['INTAKE_INTAKETYPECODE', 'INTAKETYPECODE', 'INTAKE_TYPE_CODE'], /INTAKE.*TYPE.*CODE$/));
         setDrop('#ddlKQ_CoSoDaoTao', V(['DAOTAO_COSODAOTAO_ID', 'COSODAOTAO_ID'], /COSODAOTAO/), T(/COSODAOTAO/));
 
+        // --- Tab 7: Nguồn khai thác (đối tác tuyển sinh) ---
+        var dtId = V(['TS_DOITACTUYENSINH_ID', 'TS_DOITAC_TUYENSINH_ID', 'TS_DOITAC_ID', 'DOITAC_ID', 'DOI_TAC_ID'], /DOITAC/);
+        var dtTen = T(/DOITAC/);
+        if (edu.util.checkValue(dtId) || edu.util.checkValue(dtTen)) {
+            setDrop('#ddlKQ_NguonKhaiThac', dtId, dtTen);
+        }
     },
 
     /*------------------------------------------
@@ -9637,6 +9635,67 @@ KeHoachTuyenSinhNew.prototype = {
     -- Payload lọc dùng chung cho LayDS_TS_HoSo_DoiTacTS (đọc + dọn rác).
     -- Một chỗ duy nhất để đọc và ghi không lệch bộ khóa.
     -------------------------------------------*/
+    /*------------------------------------------
+    -- Tra cứu nguồn khai thác đã lưu với cơ chế thử luỹ tiến (progressive fallback).
+    -- Đảm bảo dù backend lưu theo bộ (KH + Đợt + Người) hay chỉ theo Người thì vẫn tìm thấy.
+    -------------------------------------------*/
+    _queryHoSoDoiTacTS: function (corePersonId, dotId, cb) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var xong = function (rows) { if (typeof cb === 'function') cb(rows || []); };
+        if (!edu.util.checkValue(corePersonId)) { xong([]); return; }
+
+        var dot = dotId !== undefined && dotId !== '' ? dotId : (me.strDot_Id_ForKQ || me._hsDotHienTai() || '');
+        var khId = me.strKeHoachTuyenSinh_Id || '';
+
+        var makePayload = function (useKh, useDot, isActive, isPrimary, isCurrent) {
+            return {
+                'action': me._ACTION_LayDS_HoSo_DoiTacTS,
+                'func': 'PKG_CORE_TS_HOSO.LayDS_TS_HoSo_DoiTacTS',
+                'iM': edu.system.iM,
+                'strHoSo_KH_TS_Id': useKh ? khId : '',
+                'strHoSo_KH_TS_Dot_Id': useDot ? dot : '',
+                'strNguyenVong_DauRa_Id': '',
+                'strCore_Person_Id': corePersonId,
+                'strTS_DoiTacTuyenSinh_Id': '',
+                'dIs_Primary': isPrimary !== undefined && isPrimary !== null ? isPrimary : '',
+                'dIs_Current': isCurrent !== undefined && isCurrent !== null ? isCurrent : '',
+                'dIs_Active': isActive !== undefined && isActive !== null ? isActive : '',
+                'strTuKhoa': '',
+                'strNguoiThucHien_Id': edu.system.userId
+            };
+        };
+
+        var doReq = function (payload, next) {
+            edu.system.makeRequest({
+                success: function (data) {
+                    var arr = (data && data.Success && edu.util.checkValue(data.Data)) ? data.Data : [];
+                    if (arr.length) { xong(arr); return; }
+                    next();
+                },
+                error: function () { next(); },
+                type: 'POST',
+                contentType: true,
+                action: payload.action,
+                data: payload,
+                fakedb: []
+            }, false, false, false, null);
+        };
+
+        // Bước 1: Tra theo KH + Đợt + Người (không lọc dIs_Active/Primary/Current vì Them_TS_HoSo_DoiTacTS lưu IS_ACTIVE = NULL)
+        doReq(makePayload(!!khId, !!dot, '', '', ''), function () {
+            // Bước 2: Tra theo KH + Người (bỏ đợt)
+            doReq(makePayload(!!khId, false, '', '', ''), function () {
+                // Bước 3: Tra chỉ theo Core_Person_Id
+                doReq(makePayload(false, false, '', '', ''), function () {
+                    // Bước 4: Dự phòng thử dIs_Active = 1
+                    doReq(makePayload(false, false, 1, '', ''), function () {
+                        xong([]);
+                    });
+                });
+            });
+        });
+    },
+
     _dtcFilter: function (corePersonId) {
         var me = main_doc.KeHoachTuyenSinhNew;
         return {
@@ -9644,20 +9703,29 @@ KeHoachTuyenSinhNew.prototype = {
             'func': 'PKG_CORE_TS_HOSO.LayDS_TS_HoSo_DoiTacTS',
             'iM': edu.system.iM,
             'strHoSo_KH_TS_Id': me.strKeHoachTuyenSinh_Id || '',
-            // Để rỗng đợt & nguyện vọng: tra theo KH + Core_Person_Id là bao quát nhất,
-            // tránh trường hợp proc/DB lưu dot_id lệch hoặc null làm đọc về 0 dòng.
             'strHoSo_KH_TS_Dot_Id': '',
             'strNguyenVong_DauRa_Id': '',
             'strCore_Person_Id': corePersonId || '',
             'strTS_DoiTacTuyenSinh_Id': '',
-            // Convention Oracle: param prefix 'd' là NUMBER → rỗng phải gửi null,
-            // gửi '' sẽ dính PLS-00306 wrong number or types of arguments.
-            'dIs_Primary': null,
-            'dIs_Current': null,
-            'dIs_Active': null,
+            'dIs_Primary': '',
+            'dIs_Current': '',
+            'dIs_Active': '',
             'strTuKhoa': '',
             'strNguoiThucHien_Id': edu.system.userId
         };
+    },
+
+    _hsDotHienTai: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        return me.strDot_Id_ForKQ
+            || edu.system.getValById('ddlKQ_DotTuyenSinh')
+            || (me.strDot_Id_HienTai || '');
+    },
+
+    _nvDauRaHienTai: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        return edu.system.getValById('ddlKQ_NguyenVongDauRa')
+            || (me.strNguyenVongDauRa_Id || '');
     },
 
     /*------------------------------------------
@@ -9667,7 +9735,7 @@ KeHoachTuyenSinhNew.prototype = {
     -------------------------------------------*/
     _dtcLocTheoNV: function (rows) {
         var me = main_doc.KeHoachTuyenSinhNew;
-        var nv = me._nvDauRaHienTai();
+        var nv = (typeof me._nvDauRaHienTai === 'function') ? me._nvDauRaHienTai() : '';
         if (!nv || !rows || !rows.length) return rows || [];
         var khop = rows.filter(function (r) {
             var v = me._pickLoose(r, ['NGUYENVONG_DAURA_ID', 'TS_KEHOACH_DAU_RA_ID', 'DAURA_ID']);
@@ -9678,48 +9746,36 @@ KeHoachTuyenSinhNew.prototype = {
 
     /*------------------------------------------
     -- Sau khi ghi xong: đọc lại, GIỮ bản mới nhất, xoá phần dư.
-    -- Làm theo hướng này thì dù proc Thêm là chèn mới hay ghi đè, bản đang hiệu lực
-    -- cũng không bao giờ bị xoá nhầm.
     -------------------------------------------*/
     _dtcDonRac: function (corePersonId) {
         var me = main_doc.KeHoachTuyenSinhNew;
         if (!edu.util.checkValue(corePersonId)) return;
-        edu.system.makeRequest({
-            success: function (data) {
-                var rows = me._dtcLocTheoNV((data && data.Success && edu.util.checkValue(data.Data)) ? data.Data : []);
-                console.log('[NguonKhaiThac] sau khi lưu còn ' + rows.length + ' dòng'
-                    + (rows.length ? ' — cột: ' + Object.keys(rows[0]).join(', ') : ''));
-                if (rows.length <= 1) {
-                    if (rows.length === 1) {
-                        me._currentDoiTacRowId = me._dtcRowId(rows[0]);
-                        me._currentDoiTacRowIds = me._currentDoiTacRowId ? [me._currentDoiTacRowId] : [];
-                    }
-                    return;
+        me._queryHoSoDoiTacTS(corePersonId, '', function (data) {
+            var rows = me._dtcLocTheoNV(data || []);
+            console.log('[NguonKhaiThac] sau khi lưu còn ' + rows.length + ' dòng'
+                + (rows.length ? ' — cột: ' + Object.keys(rows[0]).join(', ') : ''));
+            if (rows.length <= 1) {
+                if (rows.length === 1) {
+                    me._currentDoiTacRowId = me._dtcRowId(rows[0]);
+                    me._currentDoiTacRowIds = me._currentDoiTacRowId ? [me._currentDoiTacRowId] : [];
                 }
-                var giu = me._dtcDongMoiNhat(rows);
-                var idGiu = me._dtcRowId(giu);
-                me._currentDoiTacRowId = idGiu;
-                me._currentDoiTacRowIds = idGiu ? [idGiu] : [];
-                rows.forEach(function (r) {
-                    var rid = me._dtcRowId(r);
-                    // Không dò ra Id thì THÔI, đừng đoán — thà để dòng dư còn hơn xoá nhầm
-                    if (!rid || rid === idGiu) return;
-                    console.log('[NguonKhaiThac] xoá dòng dư', rid);
-                    me._xoaDoiTacTS(rid);
-                });
-            },
-            error: function () { },
-            type: 'POST', contentType: true,
-            action: me._ACTION_LayDS_HoSo_DoiTacTS,
-            data: me._dtcFilter(corePersonId),
-            fakedb: []
-        }, false, false, false, null);
+                return;
+            }
+            var giu = me._dtcDongMoiNhat(rows);
+            var idGiu = me._dtcRowId(giu);
+            me._currentDoiTacRowId = idGiu;
+            me._currentDoiTacRowIds = idGiu ? [idGiu] : [];
+            rows.forEach(function (r) {
+                var rid = me._dtcRowId(r);
+                if (!rid || rid === idGiu) return;
+                console.log('[NguonKhaiThac] xoá dòng dư', rid);
+                me._xoaDoiTacTS(rid);
+            });
+        });
     },
 
     _loadHoSoDoiTacTS: function (corePersonId) {
         var me = main_doc.KeHoachTuyenSinhNew;
-        // Gắn bản ghi đang nhớ vào đúng chủ của nó — xem chú thích ở _loadPersonInvoice.
-        // Ở đây hậu quả nặng hơn: nhớ nhầm là XOÁ bản ghi của người khác.
         me._currentDoiTacPersonId = corePersonId || '';
         if (!edu.util.checkValue(corePersonId)) return;
         if (!edu.util.checkValue(me._ACTION_LayDS_HoSo_DoiTacTS)) return;
@@ -9729,70 +9785,43 @@ KeHoachTuyenSinhNew.prototype = {
             me._setSelectByIdOrText('#ddlKQ_NguonKhaiThac', id, ten);
         };
 
-        // Cùng bộ lọc với lúc ghi và lúc dọn rác — ghi một kiểu đọc một kiểu là
-        // lưu xong mở lại không thấy nguồn khai thác đâu.
-        var obj_list = me._dtcFilter(corePersonId);
-        edu.system.makeRequest({
-            success: function (data) {
-                var soDong = (data && data.Success && edu.util.checkValue(data.Data)) ? data.Data.length : 0;
-                console.log('[NguonKhaiThac] đọc lên: ' + soDong + ' dòng | KH=' + obj_list.strHoSo_KH_TS_Id
-                    + ' | người=' + corePersonId
-                    + (data && !data.Success ? (' | lỗi: ' + (data.Message || '')) : ''));
-                if (!data || !data.Success || !edu.util.checkValue(data.Data) || !data.Data.length) {
-                    // CỨU CÁNH: Nếu API không trả dòng nào nhưng bên ngoài _nguonMap đã có tên đối tác
-                    var tenNgoai = (me._nguonMap || {})[corePersonId] || '';
-                    if (tenNgoai) setDropdown('', tenNgoai);
-                    return;
-                }
-                // Nhánh lọc theo nguyện vọng dưới proc đang hỏng → lọc tại đây
-                var rows = me._dtcLocTheoNV(data.Data);
-                if (!rows.length) {
-                    var tenNgoai2 = (me._nguonMap || {})[corePersonId] || '';
-                    if (tenNgoai2) setDropdown('', tenNgoai2);
-                    return;
-                }
-                /* ⚠ KHÔNG lấy Data[0]. Dữ liệu cũ có thể còn dòng rác từ thời chưa dùng
-                   Sua_ (đổi nguồn phải thêm-rồi-xoá, xoá trượt là dòng cũ nằm lại) —
-                   khi đó Data[0] là bản CŨ NHẤT, form hiện nguồn cũ dù vừa lưu thành công.
-                   Đúng hiện tượng khách báo 23/09/2026 "cập nhật được 2 lần rồi thôi". */
-                var r = me._dtcDongMoiNhat(rows);
-                if (!r) return;
-                console.log('[NguonKhaiThac] dòng chọn:', r);
-                // Nhớ TẤT CẢ dòng cũ để lần lưu sau dọn sạch, không chỉ mỗi dòng đang hiện
-                me._currentDoiTacRowIds = rows.map(function (x) { return me._dtcRowId(x); })
-                    .filter(function (x) { return !!x; });
-                var id = me._pickLoose(r, ['TS_DOITACTUYENSINH_ID', 'Ts_DoiTacTuyenSinh_Id', 'TS_DOITAC_TUYENSINH_ID',
-                    'DOITAC_ID', 'DOI_TAC_ID', 'DOITACTUYENSINH_ID', 'TS_DOITAC_ID', 'ID_DOITAC']) || '';
-                var ten = me._pickLoose(r, ['TS_DOITACTUYENSINH_TEN', 'DOITAC_TEN', 'HOTEN', 'TEN', 'FULL_NAME'])
-                    || me._tenDoiTacTS(id)
-                    || (me._nguonMap || {})[corePersonId]
-                    || '';
-                // Id của chính bản ghi ghi-nhận (khác với Id đối tác) — cần để Xóa/Sửa
-                me._currentDoiTacRowId = me._dtcRowId(r);
-                if (rows.length > 1 || !me._currentDoiTacRowId) {
-                    kqdkNoLog('[NguonKhaiThac] ' + rows.length + ' dòng, rowId="'
-                        + me._currentDoiTacRowId + '" — cột:', Object.keys(rows[0] || {}));
-                }
-                var ghiChu = r.GHICHU || r.GhiChu || '';
-                me._currentDoiTacPartnerId = id;
-                me._currentDoiTacGhiChu = ghiChu;
-                // Sua_TS_HoSo_DoiTacTS có nhận strTS_HoSo_Nguon_Id → giữ lại nếu view trả,
-                // để lúc sửa gửi đúng giá trị cũ thay vì rỗng (rỗng dễ bị proc ghi đè mất).
-                me._currentDoiTacNguonId = me._pickLoose(r, ['TS_HOSO_NGUON_ID', 'HOSO_NGUON_ID']) || '';
-                if (ghiChu) edu.util.viewValById('txtKQ_NguonKhaiThac_GhiChu', ghiChu);
-                setDropdown(id, ten);
-            },
-            error: function (er) {
-                kqdkNoLog('[NguonKhaiThac] LayDS_TS_HoSo_DoiTacTS err:', er);
+        me._queryHoSoDoiTacTS(corePersonId, '', function (data) {
+            var soDong = (data && data.length) ? data.length : 0;
+            console.log('[NguonKhaiThac] đọc lên: ' + soDong + ' dòng | người=' + corePersonId);
+            if (!data || !data.length) {
                 var tenNgoai = (me._nguonMap || {})[corePersonId] || '';
                 if (tenNgoai) setDropdown('', tenNgoai);
-            },
-            type: 'POST',
-            contentType: true,
-            action: obj_list.action,
-            data: obj_list,
-            fakedb: []
-        }, false, false, false, null);
+                return;
+            }
+            var rows = me._dtcLocTheoNV(data);
+            if (!rows.length) {
+                var tenNgoai2 = (me._nguonMap || {})[corePersonId] || '';
+                if (tenNgoai2) setDropdown('', tenNgoai2);
+                return;
+            }
+            var r = me._dtcDongMoiNhat(rows);
+            if (!r) return;
+            console.log('[NguonKhaiThac] dòng chọn:', r);
+            me._currentDoiTacRowIds = rows.map(function (x) { return me._dtcRowId(x); })
+                .filter(function (x) { return !!x; });
+            var id = me._pickLoose(r, ['TS_DOITACTUYENSINH_ID', 'Ts_DoiTacTuyenSinh_Id', 'TS_DOITAC_TUYENSINH_ID',
+                'DOITAC_ID', 'DOI_TAC_ID', 'DOITACTUYENSINH_ID', 'TS_DOITAC_ID', 'ID_DOITAC']) || '';
+            var ten = me._pickLoose(r, ['TS_DOITACTUYENSINH_TEN', 'DOITAC_TEN', 'HOTEN', 'TEN', 'FULL_NAME'])
+                || me._tenDoiTacTS(id)
+                || (me._nguonMap || {})[corePersonId]
+                || '';
+            me._currentDoiTacRowId = me._dtcRowId(r);
+            if (rows.length > 1 || !me._currentDoiTacRowId) {
+                kqdkNoLog('[NguonKhaiThac] ' + rows.length + ' dòng, rowId="'
+                    + me._currentDoiTacRowId + '" — cột:', Object.keys(rows[0] || {}));
+            }
+            var ghiChu = r.GHICHU || r.GhiChu || '';
+            me._currentDoiTacPartnerId = id;
+            me._currentDoiTacGhiChu = ghiChu;
+            me._currentDoiTacNguonId = me._pickLoose(r, ['TS_HOSO_NGUON_ID', 'HOSO_NGUON_ID']) || '';
+            if (ghiChu) edu.util.viewValById('txtKQ_NguonKhaiThac_GhiChu', ghiChu);
+            setDropdown(id, ten);
+        });
     },
 
     /*------------------------------------------
@@ -9879,30 +9908,22 @@ KeHoachTuyenSinhNew.prototype = {
             return;
         }
 
+        var dotId = (snap && snap.dot) ? snap.dot : (me.strDot_Id_ForKQ || me._hsDotHienTai());
+        var nvId = (snap && snap.nguyenVong) ? snap.nguyenVong : me._nvDauRaHienTai();
+        var khId = (snap && snap.keHoachId) ? snap.keHoachId : (me.strKeHoachTuyenSinh_Id || '');
+
         var obj_save = {
             'action': 'SV_Core_TS_HoSo_MH/FSkkLB4VEh4JLhIuHgUuKBUgIhUS',
             'func': 'PKG_CORE_TS_HOSO.Them_TS_HoSo_DoiTacTS',
             'iM': edu.system.iM,
-            'strId': '',   // entity có strId (thêm mới → rỗng)
-            /* 3 tham số context giống Them_HoSo_TS. Proc dùng đúng bộ này để TRA RA hồ sơ;
-               thiếu một mảnh là "Khong ton tai ho so tuyen sinh" (khách báo 22/09/2026).
-               Đợt phải lấy qua _hsDotHienTai(): ưu tiên dropdown trên form — đó là đợt THẬT
-               của hồ sơ đang mở — vì strDot_Id_ForKQ chỉ là context lúc mở modal, vào thẳng
-               từ danh sách Kết quả đăng ký thì nó rỗng. */
-            'strHoSo_KH_TS_Id': me.strKeHoachTuyenSinh_Id || '',
-            'strHoSo_KH_TS_Dot_Id': me._hsDotHienTai(),
-            // Khai mới thì lấy từ ảnh chụp form; Sửa thì qua _nvDauRaHienTai — có cứu cánh
-            // đọc từ cache danh sách khi dropdown chưa nạp được (nguyên nhân lỗi
-            // "Khong ton tai ho so tuyen sinh" khách báo 23/09/2026).
-            'strNguyenVong_DauRa_Id': (snap && snap.nguyenVong) ? snap.nguyenVong : me._nvDauRaHienTai(),
+            'strHoSo_KH_TS_Id': khId,
+            'strHoSo_KH_TS_Dot_Id': dotId,
+            'strNguyenVong_DauRa_Id': nvId,
             'strCore_Person_Id': corePersonId,
             'strTS_DoiTacTuyenSinh_Id': strDoiTac_Id,
-            // Ngày ghi nhận: gửi ngày hiện tại dd/MM/yyyy thay vì rỗng — proc có thể
-            // TO_DATE tham số này, chuỗi rỗng dễ làm insert fail ngầm (Success=true, Id rỗng).
             'strNgay_Ghi_Nhan': me._ngayHomNay(),
             'dIs_Primary': 1,
             'dIs_Current': 1,
-            'dIs_Active': 1,
             'strNguon_Ghi_Nhan_Code': '',
             'strNguoi_Ghi_Nhan_Id': edu.system.userId,
             'strGhiChu': ghiChuMoi,
@@ -10017,7 +10038,7 @@ KeHoachTuyenSinhNew.prototype = {
         // So CCCD theo chữ số thôi — file/BE hay dính khoảng trắng, dấu gạch
         var soCC = function (s) { return ((s || '') + '').replace(/\D/g, ''); };
 
-        var doTim = function (kw, ok) {
+        var doTim = function (kw, dotParam, ok) {
             edu.system.makeRequest({
                 success: function (data) {
                     var rows = (data && data.Success && data.Data) || [];
@@ -10047,7 +10068,7 @@ KeHoachTuyenSinhNew.prototype = {
                     'iM': edu.system.iM,
                     'strTuKhoa': kw || '',
                     'strHoSo_KH_TS_Id': me.strKeHoachTuyenSinh_Id || '',
-                    'strHoSo_KH_TS_Dot_Id': me.strDot_Id_ForKQ || '',
+                    'strHoSo_KH_TS_Dot_Id': dotParam !== undefined ? dotParam : (me.strDot_Id_ForKQ || ''),
                     'strHoSo_KH_Dot_PT_Id': '',
                     'strNguyenVong_DauRa_Id': '',
                     'strHoSo_KetQuaCode': '',
@@ -10063,11 +10084,12 @@ KeHoachTuyenSinhNew.prototype = {
         };
 
         var nhip = 0;
+        var dotIdKQ = me.strDot_Id_ForKQ || '';
         var vong = function () {
-            doTim(edu.util.checkValue(cccd) ? cccd : (hoTen || ''), function (id, hsId) {
+            doTim(edu.util.checkValue(cccd) ? cccd : (hoTen || ''), dotIdKQ, function (id, hsId) {
                 if (id) { xong(id, hsId); return; }
-                // Proc có thể không tìm theo CCCD → quét cả danh sách rồi lọc tại chỗ
-                doTim('', function (id2, hsId2) {
+                // Proc có thể không tìm theo CCCD hoặc đợt chưa nạp kịp → quét cả danh sách không lọc đợt
+                doTim('', '', function (id2, hsId2) {
                     if (id2) { xong(id2, hsId2); return; }
                     if (++nhip > 3) {
                         kqdkNoLog('[LuuHoSo] không tra được Core_Person_Id sau ' + nhip + ' nhịp');
