@@ -285,7 +285,7 @@
     flex-wrap: wrap;
     gap: var(--ums-sp-3);
     margin-top: var(--ums-sp-3);
-    margin-bottom: var(--ums-sp-4);
+    margin-bottom: 0;
     width: 100%;
 }
 
@@ -401,8 +401,12 @@
 }
 
 /* ---------- dòng "tên : giá trị" chỉ xem ---------- */
-.ums-skin .ums-field--inline+.ums-field--inline {
-    margin-top: calc(var(--ums-sp-3) * -1);
+.ums-skin .ums-field--inline:has(.skin-gt) + .ums-field--inline:has(.skin-gt) {
+    margin-top: calc(var(--ums-sp-2) * -1);
+}
+
+.ums-skin .ums-grid > .ums-field {
+    margin-bottom: 0;
 }
 
 .ums-skin .skin-gt {
