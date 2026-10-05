@@ -1075,7 +1075,7 @@ systemroot.prototype = {
             setTimeout(function () {
                 me.versionPageJS();
                 checkChangeHtml();
-            }, 20000)
+            }, 300000)
         }
     },
     /*--------------------------------------
