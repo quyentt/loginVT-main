@@ -46,6 +46,8 @@ systemroot.prototype = {
     strChucNang_Id: '',
     dtChucNang: [],
     pathChucNang: '',
+    // Cổng Help: {functionId} = ID chức năng; v=1 = giao diện cũ (bản _v2 gửi v=2). Để rỗng = giữ nút "?" cũ
+    strHelpUrl: 'https://con98.api-apis.com/help-master/mo?ma={functionId}&v=1',
     tokenJWT: '',
     flag_alert: false,
     iSoLuong: 0,
@@ -958,7 +960,7 @@ systemroot.prototype = {
         //Cộng thêm version cho file html
         function EditUrlHtml() {
             url = me.rootPath + "/" + appCode + url;
-            var newVersion = "v=" + randomInt(4);
+            var newVersion = "v=" + randomInt(32);
             if (url.indexOf('?') != -1) {
                 url += "&" + newVersion
             }
@@ -968,7 +970,7 @@ systemroot.prototype = {
         }
 
         function EditUrlJS(strData) {
-            var newVersion = "?v=" + randomInt(4);
+            var newVersion = "?v=" + randomInt(32);
             var iStart = 0;
             while (1) {
                 var ivitri = strData.indexOf("<script", iStart);
@@ -6678,7 +6680,10 @@ systemroot.prototype = {
                 eval(data[0].DUONGDANHUONGDANSUDUNG);
             }
         }
-        else {
+        if (me.strHelpUrl) {
+            me.pathChucNang += '<a id="btnCongHelp" href="' + me.strHelpUrl.replace('{functionId}', encodeURIComponent(data[0].ID)) + '" target="_blank" rel="noopener" title="Hướng dẫn sử dụng" style="float:right; cursor: pointer; margin-left: 10px"><i class="fa fa-question-circle fa-customer"></i></a>';
+        }
+        else if (!edu.util.checkValue(data[0].DUONGDANHUONGDANSUDUNG)) {
             me.pathChucNang += '<a style="float:right; cursor: pointer" data-toggle="popover" data-placement="left" title="Help" data-content="intro.user"><i class="fa fa-question-circle fa-customer"></i></a>';
         }
         if (typeof (Storage) !== "undefined") {

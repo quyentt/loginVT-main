@@ -46,6 +46,8 @@ systemroot.prototype = {
     strChucNang_Id: '',
     dtChucNang: [],
     pathChucNang: '',
+    // Cổng Help: {functionId} = ID chức năng; v=1 = giao diện cũ (bản _v2 gửi v=2). Để rỗng = không hiện nút "?"
+    strHelpUrl: 'https://con98.api-apis.com/help-master/mo?ma={functionId}&v=1',
     tokenJWT: '',
     flag_alert: false,
     iSoLuong: 0,
@@ -1075,7 +1077,7 @@ systemroot.prototype = {
             setTimeout(function () {
                 me.versionPageJS();
                 checkChangeHtml();
-            }, 20000)
+            }, 300000)
         }
     },
     /*--------------------------------------
@@ -6556,7 +6558,10 @@ systemroot.prototype = {
         //else {
         //    me.pathChucNang += '<a style="float:right; cursor: pointer" data-toggle="popover" data-placement="left" title="Help" data-content="intro.user"><i class="fa fa-question-circle fa-customer"></i></a>';
         //}
-        
+        if (me.strHelpUrl) {
+            me.pathChucNang += '<a id="btnCongHelp" href="' + me.strHelpUrl.replace('{functionId}', encodeURIComponent(data[0].ID)) + '" target="_blank" rel="noopener" title="Hướng dẫn sử dụng" style="margin-left: 10px"><i class="fal fa-question-circle" style="font-size: 16px !important"></i></a>';
+        }
+
         $(".content-tab .link").html(me.pathChucNang);
         $("#btnHuongDanSuDung").click(function () {
             var url = this.name;
@@ -9438,7 +9443,7 @@ systemroot.prototype = {
         var me = this;
         if (!me.isActive || !me.urlPage) return;
         jQuery.ajax({
-            url: me.rootPath + "/" + me.appCode + me.urlPage + "?v=" + me.randomInt(4),
+            url: me.rootPath + "/" + me.appCode + me.urlPage + "?v=" + me.randomInt(32),
 
             // If "type" variable is undefined, then "GET" method will be used.
             // Make value of this field explicit since
@@ -9456,7 +9461,7 @@ systemroot.prototype = {
         var me = this;
         if (!me.isActive) return;
         jQuery.ajax({
-            url: "Config.js?v=" + me.randomInt(4),
+            url: "Config.js?v=" + me.randomInt(32),
             type: "GET",
             dataType: "html",
         }).done(function (responseText) {
