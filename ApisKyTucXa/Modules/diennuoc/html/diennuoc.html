@@ -259,6 +259,13 @@
     </div>
     </div>
 </section>
+<!-- FIX: menu Import bị ô select2 "Chọn tòa nhà" đè mất mục "1. Import Điện".
+     indexi.aspx ép .select2-container z-index 99999 !important, dropdown-menu của Bootstrap chỉ 1000. -->
+<style>
+    #zonebtnDN_Import .dropdown-menu {
+        z-index: 100000 !important;
+    }
+</style>
 <!-- page script -->
 <script src="modules/diennuoc/script/diennuoc.js?v=1.0.0.1"></script>
 <script type="text/javascript">
