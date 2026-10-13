@@ -1182,6 +1182,8 @@ ChuongTrinhHocPhan.prototype = {
     },
     viewEdit_ChuongTrinh: function (data) {
         var me = main_doc.ChuongTrinhHocPhan;
+        // Mở chương trình khác -> bỏ trạng thái sắp xếp cột của bảng học phần
+        if (typeof resetTblHocPhanSort === "function") resetTblHocPhanSort();
         edu.util.viewHTMLById("lblNoiDungChuongTrinh", data[0].TENCHUONGTRINH + " - " + data[0].DAOTAO_KHOADAOTAO_TEN);
         edu.util.viewHTMLById("lblInputHocPhan", data[0].TENCHUONGTRINH);
         edu.util.viewHTMLById("lblInputHocPhan", data[0].TENCHUONGTRINH);
@@ -2679,6 +2681,8 @@ ChuongTrinhHocPhan.prototype = {
                     dtReRult.forEach(e => {
                         $("#div_" + e.DAOTAO_HOCPHAN_ID + "_" + e.LOAIPHANBO_ID).html(edu.util.returnEmpty(e.SOTIET));
                     });
+                    // Các cột phân bổ được điền bất đồng bộ -> sort lại nếu đang sắp xếp theo cột nào đó
+                    if (typeof applyTblHocPhanSort === "function") applyTblHocPhanSort();
                 }
                 else {
                     edu.system.alert(obj_list + " : " + data.Message, "s");
@@ -2746,14 +2750,21 @@ ChuongTrinhHocPhan.prototype = {
         $("#tblHocPhan thead tr:eq(0)").append('<th style="width: 100px" class="td-fixed"><span class="lang" key="">Chi tiết</span></th>');
         $("#tblHocPhan thead tr:eq(0)").append('<th style="width: 100px" class="td-fixed"><span class="lang" key="">Học tập</span></th>');
         $("#tblHocPhan thead tr:eq(0)").append('<th class="td-center td-fixed"><input type="checkbox" class="chkSystemSelectAll"></th>');
+        // Sắp xếp theo cột (logic ở script cuối cthp.html): cột đầu (Stt) và 3 cột cuối (Chi tiết, Học tập, checkbox) không sort
+        $("#tblHocPhan thead th").slice(1, -3).addClass("tbl-sortable").attr("title", "Bấm để sắp xếp");
 
         var jsonForm = {
             strTable_Id: "tblHocPhan",
             aaData: data,
             colPos: {
+                // ẨN cột "Thứ tự": muốn mở lại thì bỏ comment mDataProp THUTU bên dưới + th trong cthp.html và tăng MỌI chỉ số colPos (cả các push bên dưới) thêm 1
                 center: [0, 1, 3, 4],
             },
-            aoColumns: [{
+            aoColumns: [
+            /*{
+                "mDataProp": "THUTU"
+            },*/
+            {
                 "mDataProp": "DAOTAO_HOCPHAN_MA"
             },
             {
@@ -2875,14 +2886,34 @@ ChuongTrinhHocPhan.prototype = {
         edu.system.move_ThroughInTable(jsonForm.strTable_Id)
         /*III. Callback*/
     },
+    /* Map DAOTAO_HOCPHAN_ID -> "Học kỳ dự kiến" lấy từ danh sách học phần của chương trình (cùng nguồn với cột "Học kỳ dự kiến" ở bảng chính) */
+    getMap_HocKyDuKien: function () {
+        var me = this;
+        var objMap = {};
+        var dt = me.dtHocPhan_ChuongTrinh || [];
+        for (var i = 0; i < dt.length; i++) {
+            if (objMap[dt[i].DAOTAO_HOCPHAN_ID] === undefined) {
+                objMap[dt[i].DAOTAO_HOCPHAN_ID] = edu.util.returnEmpty(dt[i].DAOTAO_THOIGIAN_KEHOACH);
+            }
+        }
+        return objMap;
+    },
+    /* Badge học kỳ dự kiến, nằm trong <a> của <li> nên đi theo dòng khi chuyển qua lại giữa 2 danh sách. Không có học kỳ -> không hiện */
+    genHTML_HocKyDuKien: function (objMap, strDaoTao_HocPhan_Id) {
+        var strHocKy = objMap[strDaoTao_HocPhan_Id];
+        if (!strHocKy) return '';
+        return '<span class="kbb-hocky" title="Học kỳ dự kiến: ' + strHocKy + '">' + strHocKy + '</span>';
+    },
     genTable_HocPhan_ChuongTrinh_OnSelect: function (data, iPager) {
         var me = this;
         var row = '';
+        var objHocKy = me.getMap_HocKyDuKien();
         for (var i = 0; i < data.length; i++) {
             row += '<li class="treeview item-li" id="drag_KBB_' + data[i].DAOTAO_HOCPHAN_ID + '" name="" draggable="true" ondragstart="main_doc.ChuongTrinhHocPhan.khoibatbuoc_dragstart_handler(event);">';
             row += '<a>';
             row += '<i class="fa-solid fa-circle-check"></i> <span>' + edu.util.returnEmpty(data[i].DAOTAO_HOCPHAN_MA) + " - " + edu.util.returnEmpty(data[i].HOCTRINHAPDUNGHOCTAP) + "(" + edu.util.returnEmpty(data[i].TONGSOTIETPHANBO) + ") - " + edu.util.returnEmpty(data[i].DAOTAO_HOCPHAN_TEN) +'</span>';
             row += '<span class="submit btn btn-primary pull-right btnSelectHocPhan" id="btnSelect_KBB_' + data[i].DAOTAO_HOCPHAN_ID + '"><span class="lang" key="lb_luu">Chọn</span><i class="fa-solid fa-angle-right"></i></span>';
+            row += me.genHTML_HocKyDuKien(objHocKy, data[i].DAOTAO_HOCPHAN_ID);
             row += '</a>';
             row += '</li>';
         }
@@ -3283,6 +3314,7 @@ ChuongTrinhHocPhan.prototype = {
     genTable_HocPhan_ChuongTrinh_KBB_Select: function (data, iPager) {
         var me = this;
         var row = '';
+        var objHocKy = me.getMap_HocKyDuKien();
         for (var i = 0; i < data.length; i++) {
             //var strCheck = data[i].LAHOCPHANBATBUOC ? 'checked="checked"' : '';
             row += '<li class="treeview item-li" id="drag_KBB_' + data[i].DAOTAO_HOCPHAN_ID + '" name="' + edu.util.returnEmpty(data[i].ID) + '" draggable="true" ondragstart="main_doc.ChuongTrinhHocPhan.khoibatbuoc_dragstart_handler(event);">';
@@ -3290,6 +3322,7 @@ ChuongTrinhHocPhan.prototype = {
             row += '<i class="fa-solid fa-circle-check"></i> <span>' + edu.util.returnEmpty(data[i].DAOTAO_HOCPHAN_MA) + " - " + edu.util.returnEmpty(data[i].HOCTRINHAPDUNGHOCTAP) + "(" + edu.util.returnEmpty(data[i].TONGSOTIETPHANBO) + ") - " + edu.util.returnEmpty(data[i].DAOTAO_HOCPHAN_TEN) + '</span>';
             //row += '<div class="checkbox-inline user-check-print"><input type="checkbox" ' + strCheck +' style="float: left;" id="' + data[i].ID + '" class="btnCheckBatBuoc" ><span><p>Bắt buộc</p></span></div>';
             row += '<span class="submit btn btn-danger pull-right btnSelectHocPhan" name="' + edu.util.returnEmpty(data[i].ID) + '" id="btnSelect_KBB_' + data[i].DAOTAO_HOCPHAN_ID + '"><span class="lang" key="lb_luu"> Bỏ Chọn</span> <i class="fa-solid fa-xmark"></i></span>';
+            row += me.genHTML_HocKyDuKien(objHocKy, data[i].DAOTAO_HOCPHAN_ID);
             row += '</a>';
             row += '</li>';
         }
