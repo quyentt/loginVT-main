@@ -5429,8 +5429,8 @@ KeHoachTuyenSinhNew.prototype = {
 
     /*------------------------------------------
     -- Gọi phân lớp tự động cho các bản ghi đang tick ở list KQĐK.
-    -- ParamCore_Person_Id lấy từ record field CorePerson_Id.
-    -- Ưu tiên endpoint old3, fallback old2 -> old để tương thích nhiều môi trường.
+    -- strCore_Person_Id lấy từ record field CorePerson_Id.
+    -- Gọi lần lượt từng hồ sơ qua _call_PhanLopTuDong_ByCorePerson (PKG_CORE_NhapHoc_ThuTien.PhanLop_TuDong).
     -------------------------------------------*/
     kqdk_PhanLopTuDong_Selected: function () {
         var me = main_doc.KeHoachTuyenSinhNew;
@@ -5499,63 +5499,44 @@ KeHoachTuyenSinhNew.prototype = {
     },
 
     /*------------------------------------------
-    -- Call 1 hồ sơ theo CorePerson_Id.
-    -- Dùng func mới PKG_CORE_NhapHoc_ThuTien.PhanLop_TuDong, endpoint fallback.
+    -- Origin: PKG_CORE_NhapHoc_ThuTien.PhanLop_TuDong
+    -- Phân lớp tự động cho 1 hồ sơ theo CorePerson_Id.
+    -- Response chỉ có Success + Message: BE đặt Success = (Message rỗng), các giá trị Out
+    -- (dThucHien_Out, strLyDo_Out, strLop_Id_Out, ...) KHÔNG được trả về cho FE.
     -------------------------------------------*/
     _call_PhanLopTuDong_ByCorePerson: function (corePersonId, cb) {
         var me = main_doc.KeHoachTuyenSinhNew;
-        var apis = [
-            'SV_CORE_NhapHoc_ThuTien_MH/ESkgLw0uMR4VNAUuLyYeLi0lcgPP',
-            'SV_CORE_NhapHoc_ThuTien_MH/ESkgLw0uMR4VNAUuLyYeLi0lcwPP',
-            'SV_CORE_NhapHoc_ThuTien_MH/ESkgLw0uMR4VNAUuLyYeLi0l'
-        ];
-        var tryAt = 0;
-        var messages = [];
-
-        var tryOne = function () {
-            if (tryAt >= apis.length) {
-                cb({ ok: false, message: messages.join(' | ') || 'Không gọi được API phân lớp' });
-                return;
-            }
-
-            var action = apis[tryAt++];
-            var obj_save = {
-                'action': action,
-                'func': 'PKG_CORE_NhapHoc_ThuTien.PhanLop_TuDong',
-                'iM': edu.system.iM,
-                'strCore_Person_Id': corePersonId,
-                'strNguonSuKien_Code': 'TS_KQDK_AUTO_CLASS',
-                'strNguoiThucHien_Id': edu.system.userId,
-                'strVaiTroDangNhap_Id': edu.system.strVaiTro_Id || '',
-                'strChucNangHeThong_Id': edu.system.strChucNang_Id || ''
-            };
-
-            edu.system.makeRequest({
-                success: function (data) {
-                    if (data && data.Success) {
-                        cb({ ok: true, message: data.Message || '' });
-                    } else {
-                        messages.push((action.split('/')[1] || action) + ': ' + ((data && data.Message) || 'BE reject'));
-                        tryOne();
-                    }
-                },
-                error: function (er) {
-                    messages.push((action.split('/')[1] || action) + ': HTTP ' + JSON.stringify(er));
-                    tryOne();
-                },
-                type: 'POST',
-                contentType: true,
-                action: obj_save.action,
-                data: obj_save,
-                fakedb: []
-            }, false, false, false, null);
-        };
-
         if (!corePersonId) {
             cb({ ok: false, message: 'Thiếu CorePerson_Id' });
             return;
         }
-        tryOne();
+
+        var obj_save = {
+            'action': 'SV_CORE_NhapHoc_ThuTien_MH/ESkgLw0uMR4VNAUuLyYP',
+            'func': 'PKG_CORE_NhapHoc_ThuTien.PhanLop_TuDong',
+            'iM': edu.system.iM,
+            'strCore_Person_Id': corePersonId,
+            'strNguonSuKien_Code': 'TS_KQDK_AUTO_CLASS',
+            'strNguoiThucHien_Id': edu.system.userId
+        };
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data && data.Success) {
+                    cb({ ok: true, message: data.Message || '' });
+                } else {
+                    cb({ ok: false, message: (data && data.Message) || 'BE từ chối phân lớp' });
+                }
+            },
+            error: function (er) {
+                cb({ ok: false, message: 'PhanLop_TuDong (ex): ' + JSON.stringify(er) });
+            },
+            type: 'POST',
+            contentType: true,
+            action: obj_save.action,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
     },
 
     /*------------------------------------------
