@@ -726,10 +726,11 @@ KeHoachTuyenSinhNew.prototype = {
         });
         $('#tblKQDK_HoSo').on('click', '.btnXoaHoSo', function () {
             var id = $(this).attr('data-id');
+            var nvId = $(this).attr('data-nv-id') || '';
             if (!edu.util.checkValue(id)) return;
             edu.system.confirm("Bạn có chắc chắn xóa hồ sơ này không?");
             $("#btnYes").off("click").on("click", function () {
-                me.deleteHoSo_TS(id);
+                me.deleteHoSo_TS(id, nvId);
             });
         });
 
@@ -3637,7 +3638,7 @@ KeHoachTuyenSinhNew.prototype = {
     -- Origin: PKG_CORE_TS_HOSO.Xoa_HoSo_TS
     -- Action: SV_Core_TS_HoSo_MH/GS4gHgkuEi4eFRIP
     -------------------------------------------*/
-    deleteHoSo_TS: function (strId) {
+    deleteHoSo_TS: function (strId, strNvId) {
         var me = main_doc.KeHoachTuyenSinhNew;
         var obj_save = {
             'action': 'SV_Core_TS_HoSo_MH/GS4gHgkuEi4eFRIP',
@@ -3647,7 +3648,9 @@ KeHoachTuyenSinhNew.prototype = {
             'strVaiTroDangNhap_Id': edu.system.strVaiTro_Id || '',
             'strChucNangHeThong_Id': edu.system.strChucNang_Id || '',
             'strHanhDong_Code': 'XOA',
-            'strHoSo_Id': strId
+            'strHoSo_Id': strId,
+            // = TS_HOSO_NGUYENVONG_Id của dòng đang xóa (ParamTS_HoSo_NV_Id của proc)
+            'strTS_HoSo_NV_Id': strNvId || ''
         };
         edu.system.makeRequest({
             success: function (data) {
@@ -4774,13 +4777,16 @@ KeHoachTuyenSinhNew.prototype = {
             var arr = me._kqRowToArray(d, i + 1);   // STT toàn cục
             var idAttr = esc(id);
             var corePersonIdAttr = esc(corePersonId);
+            // TS_HOSO_NGUYENVONG_Id: BE bổ sung vào bản ghi, Xoa_HoSo_TS cần làm ParamTS_HoSo_NV_Id.
+            // Khớp không phân biệt hoa/thường để không phụ thuộc BE trả _ID hay _Id.
+            var nvIdAttr = esc(me._kqPickFuzzy(d, /^TS_HOSO_NGUYENVONG_ID$/i));
             var tds = '';
             tds += '<td class="td-center kqdk-col1">' + arr[0] + '</td>';
             tds += '<td class="td-center kqdk-col2">' + arr[1] + '</td>';
             // Thao tác — chuyển lên vị trí 3 (sticky) để không bị khuất khi scroll ngang
             tds += '<td class="td-center kqdk-col3">'
                 + '<a class="btn btn-sm btn-primary btnSuaHoSo" data-id="' + idAttr + '" title="Sửa hồ sơ" style="padding:4px 8px;margin-right:4px;"><i class="fa fa-pencil"></i></a>'
-                + '<a class="btn btn-sm btn-danger btnXoaHoSo" data-id="' + idAttr + '" title="Xóa hồ sơ" style="padding:4px 8px;"><i class="fa fa-trash"></i></a>'
+                + '<a class="btn btn-sm btn-danger btnXoaHoSo" data-id="' + idAttr + '" data-nv-id="' + nvIdAttr + '" title="Xóa hồ sơ" style="padding:4px 8px;"><i class="fa fa-trash"></i></a>'
                 + '</td>';
             if (me._kqTableMode === 'gon') {
                 me._KQ_COT_GON.forEach(function (c) {

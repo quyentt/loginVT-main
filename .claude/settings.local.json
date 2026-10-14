@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(xargs grep -l \"overflow-x\")"
+      "Bash(xargs grep -l \"overflow-x\")",
+      "Bash(git log *)"
     ]
   }
 }
