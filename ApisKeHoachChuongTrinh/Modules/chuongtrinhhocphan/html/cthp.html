@@ -671,6 +671,183 @@
         margin-top: 10px;
         padding: 6px 10px;
     }
+
+    /* ═══ Danh sách chương trình: tab "Dạng thẻ" | "Dạng cây" ═══
+       Cây: Khoa quản lý → Ngành → Chuyên ngành → Chương trình (dựng trong cthp.js: genTree_ChuongTrinh).
+       .cthp-hide dùng !important để chắc chắn ẩn được .zoneBox_ChuongTrinh (đang display:flex trong styles-content.css). */
+    .aps-chuongtrinhhocphan .cthp-hide {
+        display: none !important;
+    }
+    .aps-chuongtrinhhocphan .cthp-list-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px 16px;
+    }
+    .aps-chuongtrinhhocphan .cthp-view-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    .aps-chuongtrinhhocphan .cthp-view-tabs li {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    .aps-chuongtrinhhocphan .cthp-view-tabs a {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        font-size: 13px;
+        font-weight: 500;
+        color: #0f172a;
+        background: #f8fafc;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        cursor: pointer;
+        text-decoration: none !important;
+    }
+    .aps-chuongtrinhhocphan .cthp-view-tabs a:hover {
+        border-color: #223771;
+    }
+    .aps-chuongtrinhhocphan .cthp-view-tabs li.active a {
+        color: #ffffff !important;
+        font-weight: 600;
+        background: #223771;
+        border-color: #223771;
+    }
+    .aps-chuongtrinhhocphan .cthp-tree {
+        padding: 10px 14px 14px;
+        background: #ffffff;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+    }
+    .aps-chuongtrinhhocphan .cthp-tree-toolbar {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding-bottom: 10px;
+        margin-bottom: 8px;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    .aps-chuongtrinhhocphan .cthp-tree-summary {
+        margin-left: auto;
+        font-size: 13px;
+        font-weight: 600;
+        color: #223771;
+    }
+    .aps-chuongtrinhhocphan .cthp-tree-empty {
+        padding: 24px 8px;
+        font-size: 14px;
+        text-align: center;
+        color: #64748b;
+    }
+    .aps-chuongtrinhhocphan .cthp-tree ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    .aps-chuongtrinhhocphan .cthp-tree ul ul {
+        margin-left: 12px;
+        padding-left: 14px;
+        border-left: 1px dashed #cbd5e1;
+    }
+    .aps-chuongtrinhhocphan .cthp-tree .cthp-node > ul {
+        display: none;
+    }
+    .aps-chuongtrinhhocphan .cthp-tree .cthp-node.open > ul {
+        display: block;
+    }
+    .aps-chuongtrinhhocphan .cthp-node-row {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 6px 10px;
+        padding: 6px 8px;
+        font-size: 14px;
+        color: #0f172a;
+        border-radius: 6px;
+    }
+    .aps-chuongtrinhhocphan .cthp-node-toggle {
+        cursor: pointer;
+        user-select: none;
+    }
+    .aps-chuongtrinhhocphan .cthp-node-row:hover {
+        background: #f1f5f9;
+    }
+    .aps-chuongtrinhhocphan .cthp-caret {
+        width: 12px;
+        font-size: 11px;
+        color: #64748b;
+        transition: transform .15s ease;
+    }
+    .aps-chuongtrinhhocphan .cthp-node.open > .cthp-node-row .cthp-caret {
+        transform: rotate(90deg);
+    }
+    .aps-chuongtrinhhocphan .cthp-ico {
+        width: 18px;
+        text-align: center;
+    }
+    .aps-chuongtrinhhocphan .cthp-lv1 > .cthp-node-row {
+        font-weight: 700;
+    }
+    .aps-chuongtrinhhocphan .cthp-lv2 > .cthp-node-row,
+    .aps-chuongtrinhhocphan .cthp-lv3 > .cthp-node-row {
+        font-weight: 600;
+    }
+    .aps-chuongtrinhhocphan .cthp-lv1 > .cthp-node-row .cthp-ico {
+        color: #223771;
+    }
+    .aps-chuongtrinhhocphan .cthp-lv2 > .cthp-node-row .cthp-ico {
+        color: #198754;
+    }
+    .aps-chuongtrinhhocphan .cthp-lv3 > .cthp-node-row .cthp-ico {
+        color: #b45309;
+    }
+    .aps-chuongtrinhhocphan .cthp-leaf .cthp-ico {
+        color: #0d6efd;
+    }
+    .aps-chuongtrinhhocphan .cthp-node-name {
+        flex: 1 1 220px;
+        min-width: 0;
+    }
+    .aps-chuongtrinhhocphan .cthp-code,
+    .aps-chuongtrinhhocphan .cthp-sub {
+        font-weight: 400;
+        color: #64748b;
+    }
+    .aps-chuongtrinhhocphan .cthp-sub {
+        font-size: 13px;
+    }
+    .aps-chuongtrinhhocphan .cthp-count {
+        padding: 1px 10px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #223771;
+        white-space: nowrap;
+        background: #eef2ff;
+        border: 1px solid #c7d2fe;
+        border-radius: 11px;
+    }
+    .aps-chuongtrinhhocphan .cthp-actions {
+        display: inline-flex;
+        gap: 6px;
+    }
+    .aps-chuongtrinhhocphan .cthp-actions .btn {
+        display: inline-flex !important;
+        align-items: center;
+        height: 28px;
+        margin: 0 !important;
+        padding: 0 10px !important;
+        font-size: 12px;
+        white-space: nowrap;
+    }
 </style>
 <section class="content aps-KeHoachChuongTrinh">
     <div class="row aps-chuongtrinhhocphan">
@@ -710,10 +887,20 @@
             <!-- /.Danh sách  -->
             <div class="box box-solid aps-list-chuongtrinh pd20 pr10">
                 <div class="box-header pd0 pb10">
-                    <h3 class="box-title mt-0 line-20"><i class="fa-solid fa-books"></i> Danh sách chương trình</h3>
+                    <div class="cthp-list-head">
+                        <h3 class="box-title mt-0 line-20"><i class="fa-solid fa-books"></i> Danh sách chương trình</h3>
+                        <!-- Tab chuyển kiểu hiển thị: thẻ (mặc định) | cây Khoa - Ngành - Chuyên ngành -->
+                        <ul class="cthp-view-tabs" id="cthpViewTabs">
+                            <li class="active"><a href="#" data-view="card"><i class="fa-solid fa-table-cells-large"></i> Dạng thẻ</a></li>
+                            <li><a href="#" data-view="tree"><i class="fa-solid fa-sitemap"></i> Dạng cây (Khoa – Ngành – Chuyên ngành)</a></li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="box-body pd0 mt-10">
                     <div id="zoneBox_ChuongTrinh" class="zoneBox_ChuongTrinh"></div>
+                    <div id="zoneTree_ChuongTrinh" class="cthp-tree cthp-hide">
+                        <div class="cthp-tree-empty">Chọn hệ đào tạo, khóa đào tạo rồi bấm <b>Tìm kiếm</b> để xem cây Khoa – Ngành – Chuyên ngành.</div>
+                    </div>
                 </div>
             </div>
         </div>
