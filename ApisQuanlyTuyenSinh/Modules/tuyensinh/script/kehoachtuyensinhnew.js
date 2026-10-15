@@ -713,7 +713,7 @@ KeHoachTuyenSinhNew.prototype = {
 
         // Delegate: nút Sửa / Xóa trên từng row hồ sơ
         $('#tblKQDK_HoSo').on('click', '.btnSuaHoSo', function () {
-            me.openSuaHoSo($(this).attr('data-id'));
+            me.openSuaHoSo($(this).attr('data-id'), $(this).attr('data-nv-id'));
         });
         // Bấm vào dòng → mở form hồ sơ. Bỏ qua click lên nút/checkbox/link để không
         // vừa xóa vừa mở, và bỏ qua khi user đang bôi đen để copy chữ.
@@ -722,7 +722,7 @@ KeHoachTuyenSinhNew.prototype = {
             var sel = window.getSelection && window.getSelection();
             if (sel && String(sel).length > 0) return;
             var id = $(this).attr('data-id');
-            if (edu.util.checkValue(id)) me.openSuaHoSo(id);
+            if (edu.util.checkValue(id)) me.openSuaHoSo(id, $(this).attr('data-nv-id'));
         });
         $('#tblKQDK_HoSo').on('click', '.btnXoaHoSo', function () {
             var id = $(this).attr('data-id');
@@ -2858,7 +2858,7 @@ KeHoachTuyenSinhNew.prototype = {
     -- API Sua_HoSo_TS chỉ update 9 field cơ bản → hiển thị banner cảnh báo.
     -- Flag _suaMode giúp saveKhai_HoSo dispatch sang Sua_HoSo_TS thay vì Them_HoSo_TS.
     -------------------------------------------*/
-    openSuaHoSo: function (strId) {
+    openSuaHoSo: function (strId, strNvId) {
         var me = main_doc.KeHoachTuyenSinhNew;
         if (!edu.util.checkValue(strId)) return;
         var pick = me._kqPick;
@@ -2866,7 +2866,11 @@ KeHoachTuyenSinhNew.prototype = {
         for (var i = 0; i < (me.dtKQDK_HoSo || []).length; i++) {
             var r = me.dtKQDK_HoSo[i];
             var rid = pick(r, ['HOSO_ID', 'ID', 'HoSo_Id', 'Id']);
-            if (rid === strId) { d = r; break; }
+            if (rid !== strId) continue;
+            // Một hồ sơ có thể có nhiều dòng nguyện vọng → ưu tiên đúng dòng được bấm
+            // (strNvId); không truyền thì lấy dòng đầu tiên khớp hồ sơ như trước.
+            if (!d) d = r;
+            if (!strNvId || me._kqPickFuzzy(r, /^TS_HOSO_NGUYENVONG_ID$/i) === strNvId) { d = r; break; }
         }
         if (!d) {
             edu.system.alert("Không tìm thấy hồ sơ trong cache — vui lòng Tải lại danh sách", "w");
@@ -2874,6 +2878,8 @@ KeHoachTuyenSinhNew.prototype = {
         }
 
         me.strSuaHoSo_Id = strId;
+        // ParamTS_HoSo_NV_Id của Sua_HoSo_TS — xác định đúng bản ghi nguyện vọng (lấy như lúc xóa)
+        me.strSuaHoSo_NV_Id = me._kqPickFuzzy(d, /^TS_HOSO_NGUYENVONG_ID$/i) || '';
         me._suaMode = true;
         // Vào form Sửa TỪ danh sách → nút Đóng ở header phải quay về danh sách,
         // không đóng hẳn modal (xem binding #btnKQDK_Close).
@@ -2995,6 +3001,7 @@ KeHoachTuyenSinhNew.prototype = {
         var me = main_doc.KeHoachTuyenSinhNew;
         me._suaMode = false;
         me.strSuaHoSo_Id = '';
+        me.strSuaHoSo_NV_Id = '';
         me._isSavingKhai = false;
         me._isSavingSua = false;
         $('#kqdk_khai_edit_banner').addClass('d-none');
@@ -3464,6 +3471,8 @@ KeHoachTuyenSinhNew.prototype = {
             'strChucNangHeThong_Id': edu.system.strChucNang_Id || '',
             'strHanhDong_Code': 'SUA',
             'strHoSo_Id': me.strSuaHoSo_Id,
+            // ParamTS_HoSo_NV_Id — xác định đúng bản ghi nguyện vọng (cùng giá trị lúc xóa hồ sơ)
+            'strTS_HoSo_NV_Id': me.strSuaHoSo_NV_Id || '',
             'strCorePerson_HoTen': hoTen,
             // BE strict format dd/mm/yyyy (comment dòng 1097-1098). Ô nhập là type=date
             // nên trả về ISO yyyy-mm-dd → PHẢI đổi lại, gửi ISO thẳng là BE hiểu sai ngày/tháng.
@@ -3520,15 +3529,11 @@ KeHoachTuyenSinhNew.prototype = {
             'strIntake_IntakeTypeCode': g('txtKQ_IntakeTypeCode'),
             'strDaoTao_CoSoDaoTao_Id': g('ddlKQ_CoSoDaoTao'),
             'strNguyenVong_DauRa_Id': g('ddlKQ_NguyenVongDauRa'),
-            /* Lớp dự kiến đầu ra — luồng THÊM MỚI (Them_HoSo_TS) vẫn gửi tham số này từ
-               10/09/2026, nhưng luồng SỬA thì BỎ SÓT nên chọn lớp rồi bấm Cập nhật là mất
-               (sếp Khoa báo 05/10/2026). Tên tham số lấy đúng theo chữ ký Them_HoSo_TS.
-               ⚠ GỬI CẢ HAI TÊN. Trong toàn bộ trang này, tham số lớp dự kiến được gọi là
-               `strDaoTao_LopQuanLy_DuKien` ở MỌI nơi khác: bảng cột file Excel import,
-               danh sách 77 param của Them_HoSo_TS bên "Đọc từ API", và cả tham số lọc của
-               LayDS_HoSo_TS. Chỉ 2 chỗ lưu tay dùng `..._Id_DK` — nhiều khả năng sai tên,
-               nên BE nhận "đủ hàm" mà giá trị vẫn rơi mất (05/10/2026).
-               Tên lạ thì BE bỏ qua chứ không lỗi, nên gửi kèm là an toàn. */
+            /* Lớp dự kiến đầu ra. Chữ ký Sua_HoSo_TS (BE mở thêm 4 tham số, xác nhận qua
+               controller): strTS_HoSo_NV_Id, strNguyenVong_DauRa_Id, strDaoTao_CoSoDaoTao_Id,
+               strDaoTao_LopQuanLy_Id_DK — 3 cái sau lấy từ form giống luồng Thêm mới.
+               Tên đúng của Sửa là `..._Id_DK`; `strDaoTao_LopQuanLy_DuKien` là tên đoán từ
+               hồi chữ ký chưa rõ (05/10/2026), giữ lại vì vô hại — tên lạ thì BE bỏ qua. */
             'strDaoTao_LopQuanLy_Id_DK': g('ddlKQ_LopDuKien'),
             'strDaoTao_LopQuanLy_DuKien': g('ddlKQ_LopDuKien'),
             'strTS_DoiTacTuyenSinh_Id': g('ddlKQ_NguonKhaiThac'),
@@ -4785,7 +4790,7 @@ KeHoachTuyenSinhNew.prototype = {
             tds += '<td class="td-center kqdk-col2">' + arr[1] + '</td>';
             // Thao tác — chuyển lên vị trí 3 (sticky) để không bị khuất khi scroll ngang
             tds += '<td class="td-center kqdk-col3">'
-                + '<a class="btn btn-sm btn-primary btnSuaHoSo" data-id="' + idAttr + '" title="Sửa hồ sơ" style="padding:4px 8px;margin-right:4px;"><i class="fa fa-pencil"></i></a>'
+                + '<a class="btn btn-sm btn-primary btnSuaHoSo" data-id="' + idAttr + '" data-nv-id="' + nvIdAttr + '" title="Sửa hồ sơ" style="padding:4px 8px;margin-right:4px;"><i class="fa fa-pencil"></i></a>'
                 + '<a class="btn btn-sm btn-danger btnXoaHoSo" data-id="' + idAttr + '" data-nv-id="' + nvIdAttr + '" title="Xóa hồ sơ" style="padding:4px 8px;"><i class="fa fa-trash"></i></a>'
                 + '</td>';
             if (me._kqTableMode === 'gon') {
@@ -4798,7 +4803,7 @@ KeHoachTuyenSinhNew.prototype = {
                     tds += '<td>' + esc(arr[j]) + '</td>';
                 }
             }
-            rows += '<tr data-id="' + idAttr + '" data-kq-idx="' + i + '" data-core-person-id="' + corePersonIdAttr + '">' + tds + '</tr>';
+            rows += '<tr data-id="' + idAttr + '" data-nv-id="' + nvIdAttr + '" data-kq-idx="' + i + '" data-core-person-id="' + corePersonIdAttr + '">' + tds + '</tr>';
         }
         $tbody.append(rows);
 
