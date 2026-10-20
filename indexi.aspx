@@ -1890,8 +1890,8 @@
     <script src="<%= Apis.CommonV1.Base.AppSetting.GetString("RootPathUpload")%>/Core/uploadfile.js?v=1.0.0.12"></script><!--CORE JS-->
     <script src="<%= Apis.CommonV1.Base.AppSetting.GetString("RootPathUpload")%>/Core/uploadavatar.js?v=1.0.0.12"></script><!--CORE JS-->
 
-    <%-- Chatbot hỗ trợ — chỉ bật cho đơn vị CMC (AppSetting DONVI) --%>
-    <% if (Apis.CommonV1.Base.AppSetting.GetString("DONVI") == "CMC") { %>
+    <%-- Chatbot hỗ trợ — chỉ bật cho CMC: AppSetting DONVI == CMC hoặc tên miền *.cmcu.edu.vn --%>
+    <% if (Apis.CommonV1.Base.AppSetting.GetString("DONVI") == "CMC" || Request.Url.Host.EndsWith("cmcu.edu.vn", StringComparison.OrdinalIgnoreCase)) { %>
     <script src="https://cmcu.edu.vn/wp-content/uploads/js-host/chatbot-iu.js"></script>
     <script>
         window.Chatbot.init({
