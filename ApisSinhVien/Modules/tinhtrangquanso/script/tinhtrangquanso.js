@@ -14,6 +14,7 @@ TinhTrangQuanSo.prototype = {
     arrTrangThai_Id: [],
     arrTrangThai_Ten: [],
     dtTrangThaiMoRong: [],
+    iMaxNganhHoc: 100,//Giới hạn số ngành được chọn (BE nhận chuỗi Id nối bằng dấu phẩy, VARCHAR2)
 
     init: function () {
         var me = this;
@@ -42,6 +43,7 @@ TinhTrangQuanSo.prototype = {
         me.getList_LopQuanLy();
         me.getList_NamNhapHoc();
         me.getList_KhoaQuanLy();
+        me.getList_NganhHoc();
         $("#btnSearch").click(function (e) {
             $("#zone_quanso").slideDown();
             me.arrTrangThai_Id = edu.extend.getCheckedCheckBoxByClassName('ckbDSTrangThaiSV_LHD');
@@ -91,10 +93,36 @@ TinhTrangQuanSo.prototype = {
             me.resetCombobox(this);
         });
         $('#dropSearch_NamNhapHoc_IHD').on('select2:select', function (e) {
-            
+
             me.resetCombobox(this);
         });
-        
+        //Ngành học: chọn nhiều nhưng không quá iMaxNganhHoc.
+        //Gắn ở init (trước khi loadToCombo_data bind handler "Chọn tất cả") nên chạy trước và chặn được SELECTALL.
+        $('#dropSearch_NganhHoc_IHD').on('select2:select', function (e) {
+            var x = $(this).val() || [];
+            var strMsg = "Chỉ được chọn tối đa " + me.iMaxNganhHoc + " ngành học. Muốn thống kê toàn trường, hãy chọn \"Tất cả ngành học\".";
+            if (x.indexOf("SELECTALL") != -1) {
+                var iTong = $(this).find("option").filter(function () {
+                    return this.value !== "" && this.value !== "SELECTALL";
+                }).length;
+                if (iTong > me.iMaxNganhHoc) {
+                    e.stopImmediatePropagation();//không cho handler "Chọn tất cả" chạy tiếp
+                    var arrConLai = x.filter(function (v) { return v !== "SELECTALL"; });
+                    $(this).val(arrConLai.length > 0 ? arrConLai : [""]).trigger("change");
+                    edu.system.alert(strMsg, "w");
+                }
+                return;
+            }
+            var arrChon = x.filter(function (v) { return v !== ""; });
+            if (arrChon.length > me.iMaxNganhHoc) {
+                var strVuaChon = e.params && e.params.data ? e.params.data.id : "";
+                $(this).val(x.filter(function (v) { return v !== strVuaChon; })).trigger("change");
+                edu.system.alert(strMsg, "w");
+                return;
+            }
+            me.resetCombobox(this);
+        });
+
         $("#MainContent").delegate(".ckbDSTrangThaiSV_LHD_ALL", "click", function (e) {
             
             var checked_status = this.checked;
@@ -124,6 +152,7 @@ TinhTrangQuanSo.prototype = {
             addKeyValue("strChuongTrinh_Id", edu.util.getValCombo("dropSearch_ChuongTrinh_IHD"));
             addKeyValue("strLopQuanLy_Id", edu.util.getValCombo("dropSearch_Lop_IHD"));
             addKeyValue("strNamNhapHoc", edu.util.getValCombo("dropSearch_NamNhapHoc_IHD"));
+            addKeyValue("strNganhDT_Id", edu.util.getValCombo("dropSearch_NganhHoc_IHD"));
             addKeyValue("strTrangThaiNguoiHoc_Id", main_doc.TinhTrangQuanSo.arrTrangThai_Id.toString());
             addKeyValue("strTrangThaiNguoiHoc_Ten", main_doc.TinhTrangQuanSo.arrTrangThai_Ten.toString());
             addKeyValue("strTinhDenNgay", edu.util.getValById("txtSearch_DenNgay_IHD"));
@@ -247,6 +276,11 @@ TinhTrangQuanSo.prototype = {
         var objList = {
         };
         edu.system.getList_KhoaQuanLy({}, "", "", me.cbGenCombo_KhoaQuanLy);
+    },
+    getList_NganhHoc: function () {
+        var me = this;
+        //Zone để rỗng + callback: tự render để hiện "TEN (MA)"
+        edu.system.loadToCombo_DanhMucDuLieu("KHCT.NCN", "", "", me.cbGenCombo_NganhHoc);
     },
     /*------------------------------------------
     --Discription: [0] GEN HTML ==> Systemroot
@@ -395,6 +429,25 @@ TinhTrangQuanSo.prototype = {
         edu.system.loadToCombo_data(obj);
         if (data.length != 1) $("#dropSearch_NguoiThu_IHD").val("").trigger("change");
     },
+    cbGenCombo_NganhHoc: function (data) {
+        var obj = {
+            data: data,
+            renderInfor: {
+                id: "ID",
+                parentId: "",
+                name: "TEN",
+                code: "MA",
+                avatar: "",
+                mRender: function (nRow, aData) {
+                    return aData.MA ? aData.TEN + " (" + aData.MA + ")" : aData.TEN;
+                }
+            },
+            renderPlace: ["dropSearch_NganhHoc_IHD"],
+            type: "",
+            title: "Tất cả ngành học",
+        }
+        edu.system.loadToCombo_data(obj);
+    },
     /*------------------------------------------
     --Discription: [0] GEN HTML ==> Systemroot
     --ULR: Modules
@@ -456,6 +509,7 @@ TinhTrangQuanSo.prototype = {
             'strChuongTrinh_Id': edu.util.getValCombo("dropSearch_ChuongTrinh_IHD"),
             'strLopQuanLy_Id': edu.util.getValCombo("dropSearch_Lop_IHD"),
             'strNamNhapHoc': edu.util.getValCombo("dropSearch_NamNhapHoc_IHD"),
+            'strNganhDT_Id': edu.util.getValCombo("dropSearch_NganhHoc_IHD"),
             'strTrangThaiNguoiHoc_Id': me.arrTrangThai_Id.toString(),
             'strNguoiThucHien_Id': edu.system.userId,
         };
@@ -747,15 +801,12 @@ TinhTrangQuanSo.prototype = {
     endGetQuanSo: function () {
         var me = main_doc.TinhTrangQuanSo;
         for (var i = 0; i < me.arrHead_Id.length; i++) {
+            //Tổng số chỉ cộng các cột trạng thái; cột tiêu chí mở rộng (Nữ, Dân tộc thiểu số...) là tập con nên không cộng
             var iTongDong = 0;
             for (var j = 0; j < me.arrTrangThai_Id.length; j++) {
                 var iValue = parseInt($("#lblQuanSo" + me.arrHead_Id[i] + "_" + me.arrTrangThai_Id[j]).html());
                 if (!isNaN(iValue)) iTongDong += iValue;
             }
-            me.dtTrangThaiMoRong.forEach(e => {
-                var iValue = parseInt($("#lblQuanSo" + me.arrHead_Id[i] + "_" + e.ID).html());
-                if (!isNaN(iValue)) iTongDong += iValue;
-            });
             $("#lblTongCong_" + me.arrHead_Id[i]).html(iTongDong);
         }
         $("#tblViewCauTrucQuanSo tfoot").html('<tr><th style="text-align: center" colspan="' + (me.iMaxLength + 1) + '">Tổng số</th></tr>');
@@ -777,7 +828,7 @@ TinhTrangQuanSo.prototype = {
                 var iValue = parseInt(arrClass[j].innerHTML);
                 if (!isNaN(iValue)) idemSoLuong += iValue;
             }
-            iTongToanBang += idemSoLuong;
+            //Không cộng vào iTongToanBang (xem ghi chú ở trên)
             $("#tblViewCauTrucQuanSo tfoot tr").append('<th style="text-align: center">' + idemSoLuong + '</th>');
         });
         $("#tblViewCauTrucQuanSo tfoot tr").append('<th style="text-align: center">' + iTongToanBang + '</th>');
@@ -977,6 +1028,7 @@ TinhTrangQuanSo.prototype = {
             'strChuongTrinh_Id': edu.util.getValCombo("dropSearch_ChuongTrinh_IHD"),
             'strLopQuanLy_Id': edu.util.getValCombo("dropSearch_Lop_IHD"),
             'strNamNhapHoc': edu.util.getValCombo("dropSearch_NamNhapHoc_IHD"),
+            'strNganhDT_Id': edu.util.getValCombo("dropSearch_NganhHoc_IHD"),
             'strTrangThaiNguoiHoc_Id': me.arrTrangThai_Id.toString(),
             'strNguoiThucHien_Id': edu.system.userId,
         };

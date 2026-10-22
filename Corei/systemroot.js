@@ -568,7 +568,18 @@ systemroot.prototype = {
         let dtShow = dataPost;
         if (dataPost.iM) {
             op.type = "POST";
-            dataPost = { 'A': AE(JSON.stringify(dataPost), op.action.substring(op.action.indexOf("/") + 1)) };
+            let keycheck = op.action.substring(op.action.indexOf("/") + 1);
+            dataPost = { 'A': AE(JSON.stringify(dataPost), keycheck) };
+            try{
+                if(dtShow.func){
+                    iViTri = dtShow.func.indexOf(".");
+                    if(iViTri>0){
+                        let check = dtShow.func.substring(iViTri+1);
+                        check = AE(check, "A").replace(/=/g, 'P');
+                        if(check != keycheck) dtShow["fund"] = "Sai hàm";
+                    }
+                }
+            }catch{}
         }
         $.ajax({
             type: op.type,
@@ -960,7 +971,7 @@ systemroot.prototype = {
         //Cộng thêm version cho file html
         function EditUrlHtml() {
             url = me.rootPath + "/" + appCode + url;
-            var newVersion = "v=" + randomInt(4);
+            var newVersion = "v=" + randomInt(32);
             if (url.indexOf('?') != -1) {
                 url += "&" + newVersion
             }
@@ -970,7 +981,7 @@ systemroot.prototype = {
         }
 
         function EditUrlJS(strData) {
-            var newVersion = "?v=" + randomInt(4);
+            var newVersion = "?v=" + randomInt(32);
             var iStart = 0;
             while (1) {
                 var ivitri = strData.indexOf("<script", iStart);
