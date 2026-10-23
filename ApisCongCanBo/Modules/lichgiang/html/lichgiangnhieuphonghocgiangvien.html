@@ -1797,6 +1797,238 @@
         }
     }
 
+    /* ═══ Tra bận / rỗi theo ngày (JS traBanRoi / genHtml_BanRoi) ═══ */
+    .lgv-banroi-bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        gap: 10px 12px;
+        margin: 6px 0 14px;
+        padding: 12px 14px;
+        background: #f4f7fd;
+        border: 1px solid #dbe3f3;
+        border-radius: 10px;
+    }
+
+    .lgv-banroi-title {
+        flex: 0 0 auto;
+        align-self: center;
+        font-weight: 700;
+        font-size: 14px;
+        color: #223771;
+        margin-right: 6px;
+    }
+
+    .lgv-banroi-title i {
+        margin-right: 6px;
+    }
+
+    .lgv-banroi-item {
+        display: flex;
+        flex-direction: column;
+        min-width: 160px;
+    }
+
+    .lgv-banroi-item label {
+        margin: 0 0 4px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #475569;
+    }
+
+    .lgv-banroi-item .form-control,
+    .lgv-banroi-item .form-select {
+        height: 38px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #0f172a;
+    }
+
+    .lgv-banroi-btn {
+        height: 38px;
+        font-weight: 600;
+        background: #223771 !important;
+        border-color: #223771 !important;
+        color: #fff !important;
+    }
+
+    .lgv-banroi {
+        margin-bottom: 16px;
+        border: 1px solid #dbe3f3;
+        border-radius: 10px;
+        overflow: hidden;
+        background: #fff;
+    }
+
+    .lgv-br-tomtat {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 14px;
+        background: #ecf9f1;
+        border-bottom: 1px solid #cfe9d9;
+        font-size: 14px;
+        color: #0f172a;
+    }
+
+    .lgv-br-tomtat .lgv-br-nhom {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .lgv-br-tomtat .lgv-br-nhom.phai {
+        margin-left: auto;
+        gap: 10px;
+    }
+
+    .lgv-br-tomtat .btn {
+        font-size: 13px;
+        font-weight: 600;
+        padding: 4px 12px;
+        border-radius: 6px;
+        background: #fff;
+        border: 1px solid #cbd5e1;
+        color: #334155;
+    }
+
+    .lgv-br-tomtat .btn.active {
+        background: #223771;
+        border-color: #223771;
+        color: #fff;
+    }
+
+    .lgv-br-tomtat .btn.btn-xuat {
+        border-color: #198754;
+        color: #198754;
+    }
+
+    .lgv-br-bang-wrap {
+        max-height: 70vh;
+        overflow: auto;
+    }
+
+    .lgv-br-bang {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        font-size: 13px;
+    }
+
+    .lgv-br-bang th {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        background: #f8f9fa;
+        padding: 8px 10px;
+        border-bottom: 1px solid #d6dce6;
+        border-right: 1px solid #e3e7ee;
+        font-weight: 700;
+        color: #0f172a;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+
+    .lgv-br-bang th small {
+        display: block;
+        font-weight: 500;
+        color: #64748b;
+    }
+
+    .lgv-br-bang td {
+        padding: 6px 10px;
+        border-bottom: 1px solid #e3e7ee;
+        border-right: 1px solid #eef1f6;
+        vertical-align: middle;
+        color: #0f172a;
+    }
+
+    .lgv-br-bang td.c-stt {
+        text-align: center;
+        width: 50px;
+    }
+
+    .lgv-br-bang td.c-ten {
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .lgv-br-bang td.c-ten small {
+        display: block;
+        font-weight: 500;
+        color: #64748b;
+    }
+
+    .lgv-br-bang td.c-tt {
+        text-align: center;
+        width: 90px;
+    }
+
+    .lgv-br-bang th.trong-khung {
+        background: #e8eefc;
+    }
+
+    .lgv-br-badge {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 12px;
+    }
+
+    .lgv-br-badge.ban {
+        background: #fde8e0;
+        color: #c2410c;
+    }
+
+    .lgv-br-badge.roi {
+        background: #dcf5e6;
+        color: #1e7a45;
+    }
+
+    .lgv-br-bang td.c-buoi {
+        min-width: 200px;
+        font-size: 12px;
+    }
+
+    .lgv-br-bang td.c-buoi .trong {
+        color: #94a3b8;
+    }
+
+    .lgv-br-lich {
+        margin: 2px 0;
+        padding: 3px 8px;
+        border-radius: 4px;
+        color: #fff;
+        line-height: 1.35;
+    }
+
+    .lgv-br-lich {
+        cursor: pointer;
+        transition: filter .15s, box-shadow .15s;
+    }
+
+    .lgv-br-lich:hover {
+        filter: brightness(1.12);
+        box-shadow: 0 2px 6px rgba(15, 23, 42, .25);
+    }
+
+    .lgv-br-lich b {
+        font-weight: 700;
+    }
+
+    .lgv-br-bang tr.dong-ban td.c-ten {
+        color: #c2410c;
+    }
+
+    .lgv-br-rong {
+        padding: 30px;
+        text-align: center;
+        color: #475569;
+    }
+
     @media (max-width:440px) {
         .week-navigation {
             flex-direction: inherit !important;
@@ -1944,6 +2176,42 @@
                         Tuần sau <i class="fal fa-chevron-right"></i>
                     </button>
                 </div>
+
+                <!-- Tra cứu bận / rỗi theo ngày: phạm vi = giảng viên đang lọc (khoa/đơn vị, 1 hoặc nhiều giảng viên) -->
+                <div class="lgv-banroi-bar">
+                    <div class="lgv-banroi-title"><i class="fa-solid fa-user-clock"></i>Tra bận / rỗi theo ngày</div>
+                    <div class="lgv-banroi-item">
+                        <label for="txtBR_Ngay">Ngày</label>
+                        <input type="date" class="form-control" id="txtBR_Ngay">
+                    </div>
+                    <div class="lgv-banroi-item">
+                        <label for="dropBR_Thu">Hoặc thứ (tuần đang xem)</label>
+                        <select class="form-select" id="dropBR_Thu">
+                            <option value="">-- Chọn thứ --</option>
+                            <option value="0">Thứ 2</option>
+                            <option value="1">Thứ 3</option>
+                            <option value="2">Thứ 4</option>
+                            <option value="3">Thứ 5</option>
+                            <option value="4">Thứ 6</option>
+                            <option value="5">Thứ 7</option>
+                            <option value="6">Chủ nhật</option>
+                        </select>
+                    </div>
+                    <div class="lgv-banroi-item">
+                        <label for="dropBR_Buoi">Buổi / tiết</label>
+                        <select class="form-select" id="dropBR_Buoi">
+                            <option value="1-15">Cả ngày (T1-15)</option>
+                            <option value="1-10">Sáng + chiều (T1-10)</option>
+                            <option value="1-6">Sáng (T1-6)</option>
+                            <option value="7-10">Chiều (T7-10)</option>
+                            <option value="11-15">Tối (T11-15)</option>
+                        </select>
+                    </div>
+                    <button type="button" class="btn btn-primary lgv-banroi-btn" id="btnBR_Tra">
+                        <i class="fa-solid fa-magnifying-glass"></i> Tra bận / rỗi
+                    </button>
+                </div>
+                <div class="lgv-banroi" id="zoneBanRoi" style="display: none;"></div>
 
                 <div class="schedule-grid-container">
                     <div class="schedule-grid" id="scheduleGrid">
@@ -2145,7 +2413,7 @@
 </div>
 
 <!-- CDN không hoạt động, bỏ qua và dùng XLSX fallback trực tiếp -->
-<script src="modules/lichgiang/script/lichgiangnhieuphonghocgiangvien.js?v=4.0.0.0"></script>
+<script src="modules/lichgiang/script/lichgiangnhieuphonghocgiangvien.js?v=4.1.1.0"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         // Check if XLSX library is loaded
