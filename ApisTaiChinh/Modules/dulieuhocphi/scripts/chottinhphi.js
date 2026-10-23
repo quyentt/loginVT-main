@@ -72,7 +72,8 @@ ChotTinhPhi.prototype = {
         //    //me.enableButton_Start(strHangDoi_Id);
         //});
 
-        $("#tblTaskBar_ChotTinhPhi").delegate("#btnXemDanhSach", "click", function () {
+        // Nút nằm ngoài bảng #tblTaskBar_ChotTinhPhi nên không delegate trên bảng được
+        $("#btnXemDanhSach").click(function () {
             me.getList_NienChe();
             me.getList_TinChi();
         });
