@@ -422,6 +422,13 @@ LichGiangNhieuPhong.prototype = {
         //me.genCombo_CanBo(); // → gọi sau khi nạp xong danh mục tình trạng (để danh sách đầu tiên đã bỏ người nghỉ việc)
         me.genCombo_TinhTrang(function () { me.genCombo_CanBo(); });
 
+        // select2 4.0.3 khóa cuộn các khung cha khi mở dropdown và chỉ gỡ khóa ở khung ĐANG có thanh cuộn lúc đóng.
+        // Chọn xong → lưới đổi thành "Đang tải..." (trang ngắn lại, hết thanh cuộn) → khóa không được gỡ → trang đứng im.
+        // → Tự gỡ khóa ở mọi khung cha mỗi khi một ô select2 của trang đóng lại.
+        $(".aps-lichgiang").off("select2:close.lgvCuon").on("select2:close.lgvCuon", "select", function () {
+            $(this).parents().off("scroll.select2");
+        });
+
         // Đổi tình trạng nhân sự → nạp lại danh sách giảng viên của khoa đang chọn (bỏ chọn nhiều như khi đổi khoa)
         $("#dropSearch_TinhTrang").change(function () {
             me.loadCanBoByDonVi($("#dropSearch_DonVi").val() || '');
