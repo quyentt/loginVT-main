@@ -2345,6 +2345,11 @@
                             style="flex: 1 1 100%; min-width: 100%; margin-bottom: 6px;">
                             <option value="">Tất cả khoa/đơn vị</option>
                         </select>
+                        <!-- Tình trạng nhân sự (danh mục NS.TTNS) — mặc định "Đang làm việc" để bỏ thầy cô đã nghỉ -->
+                        <select class="form-select" id="dropSearch_TinhTrang"
+                            style="flex: 1 1 100%; min-width: 100%; margin-bottom: 6px;">
+                            <option value="">Tất cả tình trạng nhân sự</option>
+                        </select>
                         <select class="form-select" id="dropSearch_CanBo"
                             style="flex: 1 1 100%; min-width: 100%; margin-bottom: 6px;">
                             <option value="">Tìm kiếm giảng viên...</option>
@@ -2700,7 +2705,7 @@
 </div>
 
 <!-- CDN không hoạt động, bỏ qua và dùng XLSX fallback trực tiếp -->
-<script src="modules/lichgiang/script/lichgiangnhieuphonghocgiangvien.js?v=4.3.0.0"></script>
+<script src="modules/lichgiang/script/lichgiangnhieuphonghocgiangvien.js?v=4.5.0.0"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         // Check if XLSX library is loaded
