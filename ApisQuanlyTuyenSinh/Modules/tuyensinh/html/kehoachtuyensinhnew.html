@@ -3500,10 +3500,12 @@
                 <div class="d-flex align-items-end flex-wrap mb-15" style="gap:12px;">
                     <div style="flex:1; min-width:280px; max-width:460px;">
                         <label style="display:block;font-size:12.5px;font-weight:700;color:#334155;margin-bottom:4px;">
-                            Họ tên / Số CCCD / Mã hồ sơ / Mã sinh viên / Mã lớp quản lý
+                            Họ tên / Số CCCD / Mã hồ sơ
+                            <!-- 26/10/2026: bỏ "Mã sinh viên / Mã lớp quản lý" khỏi nhãn vì Tra cứu đã chuyển sang
+                                 dữ liệu TS (LayDS_HoSo_TS_FULL); khi sếp cho hàm khớp các từ khóa đó thì trả lại nhãn. -->
                         </label>
                         <input id="txtTraCuu_TuKhoa" class="form-control" style="height:40px;font-weight:600;color:#0f172a;"
-                               placeholder="VD: Nguyễn Khoa Vinh — 046211014012 — 66CCK2_VLVH">
+                               placeholder="VD: Nguyễn Khoa Vinh — 046211014012">
                     </div>
                     <div style="width:190px;">
                         <label style="display:block;font-size:12.5px;font-weight:700;color:#334155;margin-bottom:4px;">
@@ -3521,11 +3523,9 @@
 
                 <div class="alert alert-info" style="margin-bottom:12px;font-size:13px;">
                     <i class="fa-light fa-circle-info"></i>
-                    Tìm trên <b>toàn trường</b>, không phụ thuộc kế hoạch hay đợt đang mở. Cột
-                    <b>“Đang ở đâu”</b> cho biết em đó còn ở tuyển sinh (kế hoạch nào, đợt nào) hay
-                    đã sang người học (hệ, khóa, lớp). Một em có thể hiện <b>nhiều dòng</b> nếu nộp
-                    nhiều nguyện vọng hoặc đã học ở nhiều ngành.
-                    Gõ <b>mã lớp quản lý</b> thì ra <b>cả lớp</b> (tối đa 3 lớp khớp nhất).
+                    Tìm trên <b>toàn trường</b> theo <b>dữ liệu tuyển sinh</b>, không phụ thuộc kế hoạch hay đợt
+                    đang mở. Mỗi dòng là <b>một hồ sơ / một nguyện vọng</b>: cột <b>“Đang ở đâu”</b> cho biết
+                    kế hoạch nào, đợt nào, hệ và ngành nào; một em nộp nhiều lần thì hiện <b>nhiều dòng</b>.
                 </div>
 
                 <div class="table-responsive" style="max-height:calc(100vh - 300px);overflow:auto;">
