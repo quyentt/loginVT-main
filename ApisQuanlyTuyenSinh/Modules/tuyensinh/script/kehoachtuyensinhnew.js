@@ -6487,6 +6487,7 @@ KeHoachTuyenSinhNew.prototype = {
         var me = main_doc.KeHoachTuyenSinhNew;
         me._bindHoSoDM();
         me._resetFormHoSoDM();
+        me._hsBaoLoiDoc('');   // xoá dòng báo lỗi của hồ sơ trước
 
         /* KHAI MỚI (chưa có Id hồ sơ) — vẫn dựng lưới theo QUY ĐỊNH của đợt.
            Sếp Khoa 22/09/2026: "đây là khai báo từ đầu... học sinh mang theo giấy tờ gì
@@ -6529,14 +6530,14 @@ KeHoachTuyenSinhNew.prototype = {
             var A = me._ACT_HS.LayDS;
             var nhanKetQua = function (data) {
                 if (data && data.Success) { xong(data.Data || []); return; }
-                if (khiHong) { khiHong(); return; }
+                if (khiHong) { khiHong(A.func + ": " + ((data && data.Message) || '')); return; }
                 edu.system.alert(A.func + ": " + ((data && data.Message) || ''), "w");
                 xong([]);
             };
             edu.system.makeRequest({
                 success: nhanKetQua,
                 error: function (er) {
-                    if (khiHong) { khiHong(); return; }
+                    if (khiHong) { khiHong(A.func + " (er): " + JSON.stringify(er)); return; }
                     edu.system.alert(A.func + " (er): " + JSON.stringify(er), "w");
                     xong([]);
                 },
@@ -6557,10 +6558,41 @@ KeHoachTuyenSinhNew.prototype = {
             }, false, false, false, null);
         };
 
-        // Lấy QUY ĐỊNH của đợt trước (khung của bảng), rồi mới lấy số đã nộp của thí sinh
+        /* 27/10/2026 — BỎ nhánh lùi [2] (lọc theo ĐỢT). Đo thật: LayDSTS_HoSo lọc theo hồ sơ hỏng
+           → nhánh [2] trả 5 dòng MỨC ĐỢT (TS_HOSODUTUYEN_ID = null, SOLUONG = null, tạo bởi
+           2302006 ngày 21/09/2026) → lưới coi đó là giấy tờ CỦA THÍ SINH: hiện "Đã nộp = 0" cho
+           cả 5 dòng và gắn data-id của dòng mức đợt vào lưới, nên bấm Cập nhật là gửi Sua_TS_HoSo
+           lên dòng dùng chung của cả đợt thay vì Them dòng riêng của hồ sơ. Khung lưới đã có từ
+           _hsLayQuyDinh nên nhánh [2] không bổ sung được gì ngoài dữ liệu sai.
+           Giờ: đọc theo hồ sơ hỏng thì hiện NGUYÊN lỗi BE ngay trên lưới + để lưới trống
+           (bấm Cập nhật sẽ Them dòng mới cho đúng hồ sơ), không lùi về dòng mức đợt.
         me._hsLayQuyDinh(function () {
             goiLayDS(true, function () { goiLayDS(false, null); });
+        }); */
+        me._hsBaoLoiDoc('');
+        me._hsLayQuyDinh(function () {
+            goiLayDS(true, function (msg) { me._hsBaoLoiDoc(msg); xong([]); });
         });
+    },
+
+    /*------------------------------------------
+    -- Dòng báo lỗi ngay trên lưới tab 8 khi KHÔNG đọc được giấy tờ của hồ sơ.
+    -- Hiện NGUYÊN message BE/CSDL (user chốt: không tự chế thông báo ở tab này, để chụp báo BE);
+    -- dùng khối inline chứ không dùng alert vì đang đứng trong modal (chồng alert là BS3
+    -- gỡ body.modal-open làm modal tự đóng). msg rỗng = xoá dòng báo lỗi.
+    -------------------------------------------*/
+    _hsBaoLoiDoc: function (msg) {
+        var $t = $('#tblKQ_HS');
+        if (!$t.length) return;
+        $('#kqhs_loi_doc').remove();
+        if (!msg) return;
+        var esc = function (s) { return $('<div>').text(s == null ? '' : s).html(); };
+        $t.before('<div id="kqhs_loi_doc" style="margin:0 0 10px;padding:10px 14px;background:#fef2f2;'
+            + 'border:1px solid #fecaca;border-left:4px solid #dc2626;border-radius:6px;font-size:13px;color:#7f1d1d;">'
+            + '<b>Không đọc được giấy tờ đã nộp của hồ sơ này</b><br/>'
+            + '<span style="word-break:break-word;">' + esc(msg) + '</span><br/>'
+            + '<span style="color:#991b1b;">Bảng để trống, không lấy dòng mức đợt thay thế. '
+            + 'Nhập số đã nộp rồi bấm “Cập nhật hồ sơ” sẽ tạo dòng mới cho đúng hồ sơ này.</span></div>');
     },
 
     /*------------------------------------------
