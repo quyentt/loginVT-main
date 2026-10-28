@@ -45,6 +45,8 @@ LichGiangNhieuPhong.prototype = {
     bSangDoiLich: false,        // Đang chuyển từ modal chọn buổi sang modal đổi lịch (giữ tô ô đang chọn)
     strLoaiPhongDoi: '',        // Loại phòng hiện tại của buổi đang đổi (LT/TH) → chỉ cho đổi sang phòng cùng loại
     iTokenChiTiet: 0,           // Chống lệch khi bấm liên tiếp nhiều thẻ lịch
+    objPhongDuocDoi: null,      // { ID phòng: 1 } — danh mục phòng được đổi lịch vào (rsDanhMucPhong); null = chưa biết → không lọc
+    bPhongDuocDoiLoi: false,    // Nạp danh mục thất bại/rỗng → thôi không thử lại trong phiên
 
     // Module 3 tiết theo lịch xếp thường gặp. Sáng/Chiều mỗi buổi 2 module (trên/dưới), Tối 1 module.
     arrModule: [
@@ -287,7 +289,9 @@ LichGiangNhieuPhong.prototype = {
         me.objCachePhong = {};
         me.objDangTai = {};
         me.objLichCuaToi = {};
-        
+        me.objPhongDuocDoi = null;
+        me.bPhongDuocDoiLoi = false;
+
         var date = new Date();
         var nMonth = date.getMonth() + 1;
         var nYear = date.getFullYear();
@@ -522,7 +526,7 @@ LichGiangNhieuPhong.prototype = {
         });
 
         // Đổi lịch ngay trên trang: bấm ô Trống → chọn buổi dạy của mình → modal yêu cầu đổi lịch điền sẵn
-        $("#scheduleGrid").delegate(".schedule-module.is-free", "click", function () {
+        $("#scheduleGrid").delegate(".schedule-module.is-free:not(.khong-doi)", "click", function () {
             me.chonOTrong($(this));
         });
         $("#zoneDoi_DSLop").delegate(".lgnp-lop-item", "click", function () {
@@ -819,6 +823,7 @@ LichGiangNhieuPhong.prototype = {
         $(".scroll-notice").remove();
         $("#scheduleGrid").append(me.genHtml_DongPhong(newRooms, arrDays, me.dtLichHoc));
         me.genHtml_ThongBaoCuon();
+        me.capNhatOKhongDuocDoi();
     },
 
     // Dòng "Cuộn xuống để xem thêm" khi còn phòng chưa vẽ (bấm vào cũng tải thêm)
@@ -1023,7 +1028,11 @@ LichGiangNhieuPhong.prototype = {
                 else fnChay();
             });
         };
-        for (var i = 0; i < Math.min(me.iMaxConcurrent, arrNgay.length); i++) fnChay();
+        // Phòng trống ở đây là để đổi lịch vào → bỏ phòng không có trong danh mục phòng được đổi TRƯỚC khi đếm "N phòng trống"
+        me.getPhongDuocDoi(function () {
+            dtPhong = dtPhong.filter(function (p) { return me.isPhongDuocDoi(p.ID); });
+            for (var i = 0; i < Math.min(me.iMaxConcurrent, arrNgay.length); i++) fnChay();
+        });
     },
 
     // Phòng trống của 1 ngày + khung tiết (cache theo ngày|tiết|loại). callback(dt) hoặc callback(null, strLoi)
@@ -1385,6 +1394,7 @@ LichGiangNhieuPhong.prototype = {
         if (iCaoDongNgay) $("#scheduleGrid .schedule-subheader").css("top", iCaoDongNgay + "px");
 
         me.genHtml_ThongBaoCuon();
+        me.capNhatOKhongDuocDoi();
     },
 
     // Vẽ các phòng: mỗi phòng chiếm 2 dòng grid (module trên / module dưới của mỗi buổi)
@@ -1855,6 +1865,89 @@ LichGiangNhieuPhong.prototype = {
         $("#zoneDoi_DSLop").html(html);
     },
 
+    // Tham số API KhoiTaoThongTinYeuCauDoiLich cho 1 buổi dạy (modal đổi lịch + nạp danh mục phòng được đổi dùng chung)
+    getThamSo_KhoiTaoDoiLich: function (objLop) {
+        return {
+            'action': 'KHCT_LichGiang_DoiLich/KhoiTaoThongTinYeuCauDoiLich',
+            'type': 'GET',
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strIdLichHoc': objLop.IDLICHHOC,
+            'strIdHocPhan': objLop.IDHOCPHAN,
+            'strIdPhongHoc': objLop.IDPHONGHOC,
+            'strIdLopHocPhan': objLop.IDLOPHOCPHAN,
+            'strNgayHoc': objLop.NGAYHOC,
+            'strThu': objLop.THUHOC,
+            'strTietBatDau': objLop.TIETBATDAU,
+            'strTietKetThuc': objLop.TIETKETTHUC,
+            'strGioBatDau': objLop.GIOBATDAU,
+            'strPhutBatDau': objLop.PHUTBATDAU,
+            'strGioKetThuc': objLop.GIOKETTHUC,
+            'strPhutKetThuc': objLop.PHUTKETTHUC,
+        };
+    },
+
+    // Danh mục phòng được phép đổi lịch vào = rsDanhMucPhong của KhoiTaoThongTinYeuCauDoiLich. API đó đòi 1 buổi dạy của mình
+    // → lấy buổi đầu tiên trong tuần đang xem, nạp 1 lần/phiên. Tuần không có buổi dạy → chưa nạp được (tuần sau thử lại);
+    // lỗi hoặc danh mục rỗng → objPhongDuocDoi giữ null = KHÔNG lọc (như trước), bước "Kiểm tra trùng lịch" của BE vẫn chặn.
+    getPhongDuocDoi: function (callback) {
+        var me = this;
+        if (me.objPhongDuocDoi || me.bPhongDuocDoiLoi) { callback(); return; }
+        me.getLichCuaToi(me.strNgayBatDau, me.strNgayKetThuc, function (dtLich) {
+            var objLop = (dtLich || []).find(function (x) { return x.IDLICHHOC; });
+            if (!objLop) { callback(); return; }
+            me.goiMotLan('D|PhongDuocDoi', function (fnXong) {
+                var obj_list = me.getThamSo_KhoiTaoDoiLich(objLop);
+                edu.system.makeRequest({
+                    success: function (data) {
+                        fnXong(data.Success ? (data.Data || {}).rsDanhMucPhong : null);
+                    },
+                    error: function () {
+                        fnXong(null);
+                    },
+                    type: 'GET',
+                    action: obj_list.action,
+                    contentType: true,
+                    data: obj_list,
+                }, false, false, false, null);
+            }, function (dtPhong) {
+                if (dtPhong && dtPhong.length > 0) {
+                    var obj = {};
+                    dtPhong.forEach(function (p) { obj[String(p.ID)] = 1; });
+                    me.objPhongDuocDoi = obj;
+                    console.log("Danh mục phòng được đổi lịch (rsDanhMucPhong): " + dtPhong.length + " phòng");
+                } else {
+                    me.bPhongDuocDoiLoi = true;
+                    console.warn("Không nạp được danh mục phòng được đổi lịch — không lọc phòng ở lưới.");
+                }
+                callback();
+            });
+        });
+    },
+
+    // Phòng có được đổi lịch vào không (chưa có danh mục → coi như được, BE vẫn kiểm tra ở bước kiểm tra trùng lịch)
+    isPhongDuocDoi: function (strPhongId) {
+        var me = this;
+        return !me.objPhongDuocDoi || !!me.objPhongDuocDoi[String(strPhongId)];
+    },
+
+    // Ô Trống của phòng không có trong danh mục được đổi → không bấm được (khỏi phải mở modal đổi lịch rồi mới biết bị chặn).
+    // Danh mục chưa nạp thì nạp nền 1 lần rồi đánh dấu lại — không chặn việc vẽ lưới.
+    capNhatOKhongDuocDoi: function () {
+        var me = this;
+        if (me.objPhongDuocDoi) { me.danhDauOKhongDuocDoi(); return; }
+        me.getPhongDuocDoi(function () {
+            if (me.objPhongDuocDoi) me.danhDauOKhongDuocDoi();
+        });
+    },
+
+    danhDauOKhongDuocDoi: function () {
+        var me = this;
+        $("#scheduleGrid .schedule-module.is-free[data-room-id]").each(function () {
+            if (me.isPhongDuocDoi($(this).attr("data-room-id"))) return;
+            $(this).addClass("khong-doi").removeAttr("data-room-id").attr("title", "Phòng không có trong danh mục phòng được đổi lịch");
+        });
+    },
+
     // Mở modal yêu cầu đổi lịch cho 1 buổi dạy (objDich = ô trống đã chọn, null nếu mở từ thẻ lớp)
     moDoiLich: function (objLop, objDich) {
         var me = this;
@@ -1875,23 +1968,7 @@ LichGiangNhieuPhong.prototype = {
         $("#btnDL_KiemTra, #btnDL_Gui").prop("disabled", true);
         me.moModal("modal_doilich");
 
-        var obj_list = {
-            'action': 'KHCT_LichGiang_DoiLich/KhoiTaoThongTinYeuCauDoiLich',
-            'type': 'GET',
-            'strNguoiThucHien_Id': edu.system.userId,
-            'strIdLichHoc': objLop.IDLICHHOC,
-            'strIdHocPhan': objLop.IDHOCPHAN,
-            'strIdPhongHoc': objLop.IDPHONGHOC,
-            'strIdLopHocPhan': objLop.IDLOPHOCPHAN,
-            'strNgayHoc': objLop.NGAYHOC,
-            'strThu': objLop.THUHOC,
-            'strTietBatDau': objLop.TIETBATDAU,
-            'strTietKetThuc': objLop.TIETKETTHUC,
-            'strGioBatDau': objLop.GIOBATDAU,
-            'strPhutBatDau': objLop.PHUTBATDAU,
-            'strGioKetThuc': objLop.GIOKETTHUC,
-            'strPhutKetThuc': objLop.PHUTKETTHUC,
-        };
+        var obj_list = me.getThamSo_KhoiTaoDoiLich(objLop);
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {

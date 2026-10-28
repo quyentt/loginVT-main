@@ -2766,6 +2766,24 @@
         display: block;
     }
 
+    /* Ô trống của phòng không có trong danh mục phòng được đổi: không bấm được, không hiện gợi ý "+ Đổi lịch" */
+    .schedule-module.is-free.khong-doi {
+        cursor: default;
+    }
+
+    .schedule-module.is-free.khong-doi:hover {
+        background: #ffffff;
+        box-shadow: none;
+    }
+
+    .schedule-module.is-free.khong-doi:hover .module-free .nhan {
+        display: block;
+    }
+
+    .schedule-module.is-free.khong-doi:hover .module-free .goi-y {
+        display: none;
+    }
+
     .schedule-module.o-dang-chon,
     .schedule-module.o-dang-chon:hover {
         background: #fff1e5;
@@ -3755,7 +3773,7 @@
 </div>
 
 <!-- CDN không hoạt động, bỏ qua và dùng XLSX fallback trực tiếp -->
-<script src="modules/lichgiang/script/lichgiangnhieuphonghoc.js?v=3.13.2.0"></script>
+<script src="modules/lichgiang/script/lichgiangnhieuphonghoc.js?v=3.13.3.0"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         // Check if XLSX library is loaded

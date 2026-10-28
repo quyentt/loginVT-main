@@ -3003,8 +3003,10 @@ KeHoachTuyenSinhNew.prototype = {
         $('#txtKQ_DienThoai').val(pick(d, ['PERSONCONTACT_DIENTHOAI']));
         $('#txtKQ_Email').val(pick(d, ['PERSONCONTACT_EMAIL']));
         $('#txtKQ_SoCCCD').val(pick(d, ['PERSONIDEN_SOCCCD']));
-        $('#txtKQ_MaHoSo').val(pick(d, ['HOSO_MAHOSO']));
-        $('#txtKQ_SBD').val(pick(d, ['HOSO_SOBAODANH']));
+        // MA_HOSO / SO_BAO_DANH: tên cột do LayDS_HoSo_TS_FULL đặt (thấy trong proc PL/SQL 26/10/2026),
+        // bản gọn thì là HOSO_MAHOSO / HOSO_SOBAODANH — nhận cả hai để khỏi trống khi chuyển sang FULL.
+        $('#txtKQ_MaHoSo').val(pick(d, ['HOSO_MAHOSO', 'MA_HOSO']));
+        $('#txtKQ_SBD').val(pick(d, ['HOSO_SOBAODANH', 'SO_BAO_DANH']));
         $('#txtKQ_ToHopMa').val(pick(d, ['XETTUYEN_TOHOPMON_CODE']));
         $('#txtKQ_TongDiemXT').val(pick(d, ['XETTUYEN_DIEMTONGXT']));
 
@@ -4236,7 +4238,7 @@ KeHoachTuyenSinhNew.prototype = {
             get: function (d) {
                 var me = main_doc.KeHoachTuyenSinhNew;
                 // View có cột tên ngành thì lấy thẳng, không thì tra qua Nguyện vọng đầu ra
-                var ten = me._kqPick(d, ['INTAKE_NGANH_TEN', 'NGANH_TEN', 'TEN_NGANH', 'MaNganh_Ten']);
+                var ten = me._kqPick(d, ['DAOTAO_NGANH_TS_TEN', 'INTAKE_NGANH_TEN', 'NGANH_TEN', 'TEN_NGANH', 'MaNganh_Ten']);
                 if (ten) return ten;
                 var drId = me._kqPick(d, ['NGUYENVONG_DAURA_ID', 'NguyenVong_DauRa_Id']);
                 var dr = drId ? (me._kqDauRaMap || {})[drId] : null;
@@ -4573,7 +4575,7 @@ KeHoachTuyenSinhNew.prototype = {
     == Muốn bỏ hẳn cách chữa cháy này thì BE phải mở rộng view LayDS_HoSo_TS.
     ==========================================================================*/
     _ctMap: {},            // HOSO_ID → { hs: LayTT_HoSo_TS }  (trước là COREPERSON_ID → 3 API)
-    _KQ_BAN_CHUAN: '2026-10-26',   // dấu phiên bản: gõ main_doc.KeHoachTuyenSinhNew._KQ_BAN_CHUAN ở Console để biết đã deploy bản này chưa
+    _KQ_BAN_CHUAN: '2026-10-28b',   // dấu phiên bản: gõ main_doc.KeHoachTuyenSinhNew._KQ_BAN_CHUAN ở Console để biết đã deploy bản này chưa
     _CT_MAX_ROWS: 60,      // quá số này thì bắt bấm tay, không tự nạp
 
     /*------------------------------------------
@@ -5067,7 +5069,9 @@ KeHoachTuyenSinhNew.prototype = {
                không có mấy khóa đó (xem _ensureKQDK_DauRaMap). ===== */
             (function () {
                 var dr = (me._kqDauRaMap || {})[pick(d, ['NGUYENVONG_DAURA_ID'])] || {};
-                var tenKH = dr.khTen || '';
+                /* 28/10/2026: ưu tiên cột do LayDS_HoSo_TS_FULL trả ngay trên dòng; chưa có (bản gọn)
+                   thì mới suy từ nguyện vọng đầu ra như cũ. */
+                var tenKH = pick(d, ['TS_KEHOACH_TUYENSINH_TEN']) || dr.khTen || '';
                 if (!tenKH) {
                     // Danh sách mở theo 1 kế hoạch → lấy tên kế hoạch đang mở
                     (me.dtKeHoachTuyenSinh || []).forEach(function (k) {
@@ -5080,25 +5084,25 @@ KeHoachTuyenSinhNew.prototype = {
             })(),
             (function () {
                 var dr = (me._kqDauRaMap || {})[pick(d, ['NGUYENVONG_DAURA_ID'])] || {};
-                return dr.dotTen || '';
+                return pick(d, ['TS_KEHOACH_TUYENSINH_DOT_TEN', 'HOSO_KH_TS_DOT_TEN']) || dr.dotTen || '';
             })(),
             pick(d, ['HOSO_MAHOSO', 'HoSo_MaHoSo', 'MA_HOSO']),
-            pick(d, ['HOSO_SOBAODANH', 'HoSo_SoBaoDanh', 'SOBAODANH']),
+            pick(d, ['HOSO_SOBAODANH', 'HoSo_SoBaoDanh', 'SOBAODANH', 'SO_BAO_DANH']),
             (function () {
                 var dr = (me._kqDauRaMap || {})[pick(d, ['NGUYENVONG_DAURA_ID'])] || {};
                 return dr.ten ? (dr.ma ? (dr.ten + ' (' + dr.ma + ')') : dr.ten) : '';
             })(),
             (function () {
                 var dr = (me._kqDauRaMap || {})[pick(d, ['NGUYENVONG_DAURA_ID'])] || {};
-                return dr.heTen || '';
+                return pick(d, ['DAOTAO_HEDAOTAO_TEN']) || dr.heTen || '';
             })(),
             (function () {
                 var dr = (me._kqDauRaMap || {})[pick(d, ['NGUYENVONG_DAURA_ID'])] || {};
-                return dr.ctTen || '';
+                return pick(d, ['DAOTAO_CHUONGTRINH_TEN']) || dr.ctTen || '';
             })(),
             (function () {
                 var dr = (me._kqDauRaMap || {})[pick(d, ['NGUYENVONG_DAURA_ID'])] || {};
-                return dr.nganhTen || '';
+                return pick(d, ['DAOTAO_NGANH_TS_TEN']) || dr.nganhTen || '';
             })(),
             // Mã trạng thái đổi sang chữ đọc được; mã lạ thì giữ nguyên, không đoán
             me._tcTenTrangThai(pick(d, ['HOSO_STATUS'])),
@@ -5108,9 +5112,10 @@ KeHoachTuyenSinhNew.prototype = {
             bu(pick(d, ['INTAKE_NGAYTIEPNHAN']), 'INTAKE_NGAYTIEPNHAN'),
             (String(pick(d, ['INTAKE_ISSTUDYCREATED'])) === '1' ? 'Có' : ''),
             // 3 cột hóa đơn còn thiếu (chỉ có dữ liệu ở chế độ Đầy đủ, như 5 cột hóa đơn trên)
-            me._pickLoose(hd, ['BUYER_NAME_TENNM', 'BUYER_NAME']) || '',
-            me._pickLoose(hd, ['BUYER_EMAIL']) || '',
-            me._pickLoose(hd, ['BUYER_PHONE_SDT', 'BUYER_PHONE']) || ''
+            // Ưu tiên cột do LayDS_HoSo_TS_FULL trả trên dòng (28/10/2026), không có mới lấy từ bản chi tiết hd
+            pick(d, ['PERSONINVOICE_NGUOIMUA']) || me._pickLoose(hd, ['BUYER_NAME_TENNM', 'BUYER_NAME']) || '',
+            pick(d, ['PERSONINVOICE_EMAIL']) || me._pickLoose(hd, ['BUYER_EMAIL']) || '',
+            pick(d, ['PERSONINVOICE_SDT']) || me._pickLoose(hd, ['BUYER_PHONE_SDT', 'BUYER_PHONE']) || ''
         ];
     },
 
@@ -5175,7 +5180,7 @@ KeHoachTuyenSinhNew.prototype = {
                     pick(d, ['PERSONCONTACT_EMAIL', 'EMAIL']),
                     pick(d, ['PERSONIDEN_SOCCCD', 'PersonIden_SoCCCD', 'SOCCCD']),
                     pick(d, ['HOSO_MAHOSO', 'HoSo_MaHoSo', 'MA_HOSO']),
-                    pick(d, ['HOSO_SOBAODANH', 'HoSo_SoBaoDanh', 'SBD']),
+                    pick(d, ['HOSO_SOBAODANH', 'HoSo_SoBaoDanh', 'SBD', 'SO_BAO_DANH']),
                     pick(d, ['COREPERSON_MASO', 'MA_SV', 'MASO'])
                 ].join('|').toLowerCase().indexOf(kw) !== -1;
             });
@@ -5343,7 +5348,7 @@ KeHoachTuyenSinhNew.prototype = {
                 return [
                     pick(d, ['COREPERSON_HOTEN', 'HOTEN']), pick(d, ['PERSONCONTACT_DIENTHOAI', 'DIENTHOAI']),
                     pick(d, ['PERSONCONTACT_EMAIL', 'EMAIL']), pick(d, ['PERSONIDEN_SOCCCD', 'SOCCCD']),
-                    pick(d, ['HOSO_MAHOSO']), pick(d, ['HOSO_SOBAODANH']), pick(d, ['COREPERSON_MASO'])
+                    pick(d, ['HOSO_MAHOSO', 'MA_HOSO']), pick(d, ['HOSO_SOBAODANH', 'SO_BAO_DANH']), pick(d, ['COREPERSON_MASO'])
                 ].join('|').toLowerCase().indexOf(kw) !== -1;
             });
         }
