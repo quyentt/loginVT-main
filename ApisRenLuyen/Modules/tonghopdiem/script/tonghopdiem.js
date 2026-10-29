@@ -13,6 +13,7 @@ TongHopDiem.prototype = {
     strPhamViMa: '',
     dtThieuDRL: [],
     isLoading_ThieuDRL: false,
+    isLoading_XepLoai: false,
 
     init: function () {
         var me = this;
@@ -31,10 +32,12 @@ TongHopDiem.prototype = {
 
         edu.system.loadToCombo_DanhMucDuLieu("DIEM.PHAMVITONGHOPDIEM", "", "", me.loadToCombo_PhamVi);
         edu.system.loadToCombo_DanhMucDuLieu("DRL.DOITUONGAPDUNG", "dropSearch_DoiTuong");
-        $("#btnSave_XepLoai").click(function () {
-            
+        $("#btnSave_XepLoai").click(function (e) {
+            e.preventDefault();
+            if (me.isLoading_XepLoai === true) return;
             edu.system.confirm("Bạn có chắc chắn muốn thực hiện không?");
-            $("#btnYes").click(function (e) {
+            // Namespace + off: nếu confirm dùng lại modal đang mở thì #btnYes không bị chồng handler
+            $("#btnYes").off("click.THDXepLoai").on("click.THDXepLoai", function () {
                 me.save_TongHopDiem();
             });
         });
@@ -122,27 +125,139 @@ TongHopDiem.prototype = {
             'strDaoTao_ChuongTrinh_Id': edu.util.getValCombo('dropSearch_ChuongTrinhDaoTao'),
             'strNguoiThucHien_Id': edu.system.userId,
         };
-        //default
-        edu.system.makeRequest({
-            success: function (data) {
-                if (data.Success) {
-                    edu.system.alert("Thực hiện thành công");
-                }
-                else {
-                    edu.system.alert(data.Message);
-                }
-            },
-            error: function (er) {
-                edu.system.alertOnModal(obj_save.action + " (er): " + er);
-            },
-            type: "POST",
-            action: obj_save.action,
+        me._startXepLoaiProgress();
+        // try/catch: makeRequest có thể ném lỗi trước khi gửi (VD thiếu cấu hình API) — phải báo ra thay vì im lặng
+        try {
+            edu.system.makeRequest({
+                success: function (data) {
+                    try {
+                        console.log("[TongHopDiem][XepLoai] response", data);
+                    } catch (e) { }
+                    if (data && data.Success) {
+                        me._finishXepLoai("s", "Thực hiện xếp loại thành công", data.Message);
+                    }
+                    else {
+                        me._finishXepLoai("w", "Thực hiện xếp loại không thành công",
+                            (data && edu.util.checkValue(data.Message)) ? data.Message : "Máy chủ không trả về nội dung thông báo.");
+                    }
+                },
+                error: function (er) {
+                    try {
+                        console.log("[TongHopDiem][XepLoai] error", er);
+                    } catch (e) { }
+                    var strChiTiet = "Không kết nối được máy chủ.";
+                    if (er && er.statusText === "timeout") {
+                        strChiTiet = "Quá thời gian chờ phản hồi từ máy chủ.";
+                    }
+                    else if (er && er.status) {
+                        strChiTiet = "Lỗi " + er.status + (er.statusText ? " - " + er.statusText : "");
+                        if (er.responseJSON && edu.util.checkValue(er.responseJSON.Message)) strChiTiet += ": " + er.responseJSON.Message;
+                    }
+                    me._finishXepLoai("e", "Không thực hiện được xếp loại", strChiTiet);
+                },
+                type: "POST",
+                action: obj_save.action,
 
-            contentType: true,
-            data: obj_save,
-            fakedb: [
-            ]
-        }, false, false, false, null);
+                contentType: true,
+                data: obj_save,
+                fakedb: [
+                ]
+            }, false, false, false, null);
+            // makeRequest tự bật overlay chung — ẩn đi để chỉ còn thanh tiến trình trong modal
+            $("#overlay").hide();
+        } catch (ex) {
+            try {
+                console.log("[TongHopDiem][XepLoai] exception", ex);
+            } catch (e) { }
+            me._finishXepLoai("e", "Không gửi được yêu cầu xếp loại", ex && ex.message);
+        }
+    },
+
+    /*------------------------------------------
+    --Discription: Hiệu ứng + báo kết quả cho nút "Thực hiện xếp loại".
+    -- Thời gian xử lý không biết trước nên dùng thanh sọc chạy liên tục (không giả % như import)
+    -- kèm đồng hồ "Đã trôi". Kết quả ghi thẳng vào modal đang mở (#alert_content), không dùng
+    -- edu.system.alert append để khỏi bị gộp với alert khác; modal đã đóng thì mới fallback alert.
+    -------------------------------------------*/
+    _formatElapsed: function (iMs) {
+        var iSec = Math.floor(iMs / 1000);
+        if (iSec < 60) return iSec + "s";
+        return Math.floor(iSec / 60) + "p " + (iSec % 60) + "s";
+    },
+
+    _startXepLoaiProgress: function () {
+        var me = this;
+        me.isLoading_XepLoai = true;
+        me._xepLoaiStartTime = new Date().getTime();
+
+        $("#btnSave_XepLoai").addClass("disabled").css("pointer-events", "none")
+            .find("i").attr("class", "fa fa-spinner fa-spin");
+
+        // confirm() đã hide #btnYes và xóa nội dung modal, ở đây ghi đè bằng thanh tiến trình
+        $("#btnYes").hide();
+        var row = '';
+        row += '<div id="zoneXepLoaiProgress_THD">';
+        row += '  <div class="clearfix" style="margin-bottom:4px">';
+        row += '    <span class="pull-left"><i class="fa fa-spinner fa-spin"></i> Đang thực hiện xếp loại…</span>';
+        row += '    <small class="pull-right" style="font-weight:bold;font-size:14px">Đã trôi: <span id="lblXepLoaiTime_THD">0s</span></small>';
+        row += '  </div>';
+        row += '  <div class="progress progress-sm active" style="margin-bottom:0;height:18px">';
+        row += '    <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" style="width:100%"></div>';
+        row += '  </div>';
+        row += '  <div class="text-muted" style="margin-top:6px;font-size:12px">Xếp loại toàn khóa có thể mất vài phút. Vui lòng không đóng cửa sổ trong khi xử lý.</div>';
+        row += '</div>';
+        $("#myModalAlert #alert_content").html(row);
+
+        if (me._xepLoaiTimer) clearInterval(me._xepLoaiTimer);
+        me._xepLoaiTimer = setInterval(function () {
+            $("#lblXepLoaiTime_THD").text(me._formatElapsed(new Date().getTime() - me._xepLoaiStartTime));
+            $("#overlay").hide();
+        }, 1000);
+    },
+
+    // strLoai: "s" thành công, "w" máy chủ trả Success=false, "e" lỗi gọi API
+    _finishXepLoai: function (strLoai, strTieuDe, strChiTiet) {
+        var me = this;
+        // makeRequest có thể gọi success 2 lần nếu handler ném lỗi — chỉ xử lý lần đầu
+        if (me.isLoading_XepLoai !== true) return;
+        me.isLoading_XepLoai = false;
+        if (me._xepLoaiTimer) {
+            clearInterval(me._xepLoaiTimer);
+            me._xepLoaiTimer = null;
+        }
+        $("#overlay").hide();
+        $("#btnSave_XepLoai").removeClass("disabled").css("pointer-events", "")
+            .find("i").attr("class", "fa fa-paper-plane");
+
+        var strThoiGian = me._formatElapsed(new Date().getTime() - me._xepLoaiStartTime);
+        var objStyle = {
+            s: { color: "#00a65a", bg: "rgba(0,166,90,0.1)", icon: "fa-check-circle" },
+            w: { color: "#f39c12", bg: "rgba(243,156,18,0.1)", icon: "fa-exclamation-triangle" },
+            e: { color: "#dd4b39", bg: "rgba(221,75,57,0.1)", icon: "fa-times-circle" }
+        }[strLoai];
+
+        var $content = $("#myModalAlert #alert_content");
+        if ($content.length > 0) {
+            // Dựng bằng .text() để Message từ máy chủ không bị diễn giải thành HTML
+            var $banner = $('<div>').css({
+                "border-left": "4px solid " + objStyle.color,
+                "background": objStyle.bg,
+                "padding": "10px 12px"
+            });
+            $banner.append($('<div>').css({ "font-weight": "bold", "color": objStyle.color })
+                .append($('<i>').addClass("fa " + objStyle.icon)).append(document.createTextNode(" " + strTieuDe)));
+            if (edu.util.checkValue(strChiTiet)) {
+                $banner.append($('<div>').css("margin-top", "4px").text(strChiTiet));
+            }
+            $banner.append($('<div>').addClass("text-muted").css({ "margin-top": "4px", "font-size": "12px" })
+                .text("Thời gian xử lý: " + strThoiGian));
+            $content.empty().append($banner);
+        }
+        else {
+            // Người dùng đã đóng modal giữa chừng → vẫn phải báo kết quả
+            var strNoiDung = $('<div>').text(strTieuDe + (edu.util.checkValue(strChiTiet) ? ": " + strChiTiet : "")).html();
+            edu.system.alert(strNoiDung, strLoai === "s" ? undefined : "w");
+        }
     },
     getList_TongHopDiem: function (strDanhSach_Id) {
         var me = this;
