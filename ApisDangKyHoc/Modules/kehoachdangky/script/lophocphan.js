@@ -20,6 +20,12 @@ LopHocPhan.prototype = {
         -------------------------------------------*/
         edu.system.pageSize_default = 10;
 
+        // Chức năng tra cứu ("Xem kết quả đăng ký...") chỉ xem → bỏ 2 cột Dồn lớp / Dồn nhóm lớp.
+        // Chức năng Tổng hợp (và mọi trường hợp không nhận diện được) giữ nguyên đủ cột.
+        me.bTraCuu = me._isTraCuu();
+        console.log("[LopHocPhan] chức năng:", me.strTenChucNang, "→ chế độ", me.bTraCuu ? "TRA CỨU (ẩn Dồn lớp/Dồn nhóm)" : "TỔNG HỢP (đủ cột)");
+        if (me.bTraCuu) $("#thDonLop, #thDonNhomLop").remove();
+
         $(".scroll-top-mirror").each(function () {
             var $mirror = $(this);
             var $bottom = $mirror.next(".scroll-table-x");
@@ -856,6 +862,24 @@ LopHocPhan.prototype = {
         $("#btnFindInTableClear").click(function (e) { e.preventDefault(); me.clearFindInTable(); });
         me.updateFindCounter();
     },
+    /*------------------------------------------
+    --Discription: Nhận diện chức năng tra cứu theo tên chức năng đang mở
+    --(cùng 1 trang lophocphan.html dùng cho 2 menu: "Tổng hợp kết quả đăng ký..." và "Xem kết quả đăng ký...").
+    --Chỉ trả true khi khớp "Xem kết quả"; lỗi/không tìm thấy → false (hiện đủ, như Tổng hợp).
+    -------------------------------------------*/
+    bTraCuu: false,
+    strTenChucNang: '',
+    _isTraCuu: function () {
+        var me = this;
+        try {
+            var strId = edu.system.strChucNang_Id || sessionStorage.getItem("strChucNang_Id");
+            var objChucNang = (edu.system.dtChucNang || []).find(function (e) { return e.ID === strId; });
+            me.strTenChucNang = objChucNang && objChucNang.TENCHUCNANG ? String(objChucNang.TENCHUCNANG) : '';
+            return /xem\s+kết\s+quả/i.test(me.strTenChucNang.normalize("NFC"));
+        } catch (ex) {
+            return false;
+        }
+    },
     toggle_form: function () {
         edu.util.toggle_overide("zone-bus", "zonebatdau");
         this.getList_LopHocPhan();
@@ -1403,6 +1427,16 @@ LopHocPhan.prototype = {
         me._rebuildLoaiLopOptions(data || [], 'tblLopHocPhan');
         var displayData = me._filterDataByLoaiLop(data || [], 'tblLopHocPhan');
         var hasLoaiLop = me._getSelectedLoaiLop().length > 0;
+        var colDonLop = {
+            "mRender": function (nRow, aData) {
+                return '<span><a class="btn btn-default btnDonLop" id="' + aData.ID + '" name="' + aData.TENLOP  +'" title="Dồn lớp">Dồn lớp</a></span>';
+            }
+        };
+        var colDonNhomLop = {
+            "mRender": function (nRow, aData) {
+                return '<span><a class="btn btn-default btnDonNhomLop" id="' + aData.ID + '" name="' + aData.TENLOP + '" title="Dồn">Dồn nhóm</a></span>';
+            }
+        };
         var jsonForm = {
             strTable_Id: "tblLopHocPhan",
             bPaginate: {
@@ -1507,18 +1541,8 @@ LopHocPhan.prototype = {
                         return edu.util.returnEmpty(aData.CHEDOTINHPHI_TEN);
                     }
                 },
-                /* Ẩn theo yêu cầu (dùng cho tra cứu):*/
-                {
-                    "mRender": function (nRow, aData) {
-                        return '<span><a class="btn btn-default btnDonLop" id="' + aData.ID + '" name="' + aData.TENLOP  +'" title="Dồn lớp">Dồn lớp</a></span>';
-                    }
-                },
-                {
-                    "mRender": function (nRow, aData) {
-                        return '<span><a class="btn btn-default btnDonNhomLop" id="' + aData.ID + '" name="' + aData.TENLOP + '" title="Dồn">Dồn nhóm</a></span>';
-                    }
-                },
-                /* */
+                colDonLop,
+                colDonNhomLop,
                 {
                     "mRender": function (nRow, aData) {
                         return '<input type="checkbox" id="checkX' + aData.ID + '"/>';
@@ -1526,6 +1550,10 @@ LopHocPhan.prototype = {
                 }
             ]
         };
+        // Tra cứu: gỡ 2 cột Dồn (th đã gỡ ở init) → thead vẫn = aoColumns + 1, không lệch cột
+        if (me.bTraCuu) {
+            jsonForm.aoColumns = jsonForm.aoColumns.filter(function (c) { return c !== colDonLop && c !== colDonNhomLop; });
+        }
         edu.system.loadToTable_data(jsonForm);
         me.refreshFindInTable();
     },

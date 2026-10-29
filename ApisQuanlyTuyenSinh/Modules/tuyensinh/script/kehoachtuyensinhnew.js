@@ -791,7 +791,7 @@ KeHoachTuyenSinhNew.prototype = {
             me._dtQuyDinhHS_Dot = '';
             // Cả khi KHAI MỚI (chưa có strSuaHoSo_Id): chọn đợt xong là lưới phải hiện ra
             // để cán bộ ghim luôn giấy tờ thí sinh mang tới.
-            me._loadHoSoDM_ForEdit(me.strSuaHoSo_Id || '');
+            me._loadHoSoDM_ForEdit(me.strSuaHoSo_Id ? (me.strSuaHoSo_CorePersonId || '') : '');
             me._veBadgeKeHoach();
         });
 
@@ -3047,7 +3047,7 @@ KeHoachTuyenSinhNew.prototype = {
                 });
                 // Tab 8 — danh mục hồ sơ (TS_HOSO). Phải gọi SAU khi strDot_Id_ForKQ
                 // đã set ở trên, vì LayDSTS_HoSo lọc theo Id đợt tuyển sinh.
-                me._loadHoSoDM_ForEdit(strId);
+                me._loadHoSoDM_ForEdit(me.strSuaHoSo_CorePersonId);   // khóa tab 8 = Id core_person, không phải HOSO_ID
                 me._veBadgeKeHoach();
                 // Các mục đang đóng mà hồ sơ này có dữ liệu thì bung ra cho thấy.
                 // Đợi các nhánh nạp async (dropdown retry tới ~1.8s) xong mới soát.
@@ -4640,7 +4640,7 @@ KeHoachTuyenSinhNew.prototype = {
     == Muốn bỏ hẳn cách chữa cháy này thì BE phải mở rộng view LayDS_HoSo_TS.
     ==========================================================================*/
     _ctMap: {},            // HOSO_ID → { hs: LayTT_HoSo_TS }  (trước là COREPERSON_ID → 3 API)
-    _KQ_BAN_CHUAN: '2026-10-29',
+    _KQ_BAN_CHUAN: '2026-10-29-tab8-person',
 
     /*------------------------------------------
     -- 74 cột FE đọc từ LayDS_HoSo_TS_FULL (danh sách đã gửi sếp 28/10/2026).
@@ -6523,9 +6523,11 @@ KeHoachTuyenSinhNew.prototype = {
     == chung ở cuối form kích hoạt (gộp 1 nút, 22/09/2026).
     ==
     == Khóa gắn kết:
-    ==   strTS_HoSoDuTuyen_Id      = Id hồ sơ. Sửa: me.strSuaHoSo_Id. Khai mới: chưa có
-    ==                               lúc gõ lưới → tra sau khi Them_HoSo_TS chạy xong
-    ==                               (_findNewPersonId trả kèm HOSO_ID).
+    ==   strTS_HoSoDuTuyen_Id      = Id CORE_PERSON của thí sinh (sếp Tuấn chốt 29/10/2026), KHÔNG
+    ==                               phải HOSO_ID: select * from core_person where id = HOSO_ID ra 0 dòng
+    ==                               → LayDSTS_HoSo văng ORA-24338. Sửa: me.strSuaHoSo_CorePersonId.
+    ==                               Khai mới: chưa có lúc gõ lưới → lấy sau khi Them_HoSo_TS chạy xong
+    ==                               (_findNewPersonId trả pid).
     ==   strTS_KeHoachTuyenSinh_Id = Id ĐỢT tuyển sinh (BE xác nhận, dù tên param là KeHoach)
     ==
     == 2 action LayDS/LayTT KHÔNG có trong tài liệu BE gửi, được suy ra từ quy tắc
@@ -6630,7 +6632,8 @@ KeHoachTuyenSinhNew.prototype = {
 
     /*------------------------------------------
     -- Nạp danh sách danh mục hồ sơ của hồ sơ đang mở.
-    -- Gọi từ openSuaHoSo (sau khi đã có strSuaHoSo_Id + strDot_Id_ForKQ).
+    -- Gọi từ openSuaHoSo (sau khi đã có strSuaHoSo_CorePersonId + strDot_Id_ForKQ).
+    -- strHoSoId ở đây là Id CORE_PERSON (tên cũ giữ nguyên cho khỏi đổi chữ ký): rỗng = khai mới.
     -------------------------------------------*/
     _loadHoSoDM_ForEdit: function (strHoSoId, cb) {
         var me = main_doc.KeHoachTuyenSinhNew;
@@ -6679,6 +6682,9 @@ KeHoachTuyenSinhNew.prototype = {
             var A = me._ACT_HS.LayDS;
             var nhanKetQua = function (data) {
                 if (data && data.Success) { xong(data.Data || []); return; }
+                // Chỉ in khi LỖI (log chạy nền vẫn tắt): để biết đúng khóa FE vừa gửi khi báo BE
+                console.warn('[Tab8] ' + A.func + ' lỗi — gửi strTS_HoSoDuTuyen_Id=' + (theoHoSo ? strHoSoId : '(rỗng)')
+                    + ' | strTS_KeHoachTuyenSinh_Id=' + (me.strDot_Id_ForKQ || '(rỗng)') + ' | bản FE=' + me._KQ_BAN_CHUAN);
                 if (khiHong) { khiHong(A.func + ": " + ((data && data.Message) || '')); return; }
                 edu.system.alert(A.func + ": " + ((data && data.Message) || ''), "w");
                 xong([]);
@@ -7111,7 +7117,8 @@ KeHoachTuyenSinhNew.prototype = {
             edu.system.alert("Không có thay đổi nào để lưu.", "w");
             return false;
         }
-        me._saveHoSoDM_Rows(me.strSuaHoSo_Id, me._hsDotHienTai(), viec, cb, true);
+        // Khóa tab 8 = Id core_person (sếp Tuấn 29/10/2026), không phải me.strSuaHoSo_Id (HOSO_ID).
+        me._saveHoSoDM_Rows(me.strSuaHoSo_CorePersonId, me._hsDotHienTai(), viec, cb, true);
     },
 
     /*------------------------------------------
@@ -7183,7 +7190,7 @@ KeHoachTuyenSinhNew.prototype = {
         me._hsCall(me._ACT_HS.Xoa, { 'strIds': strId }, function () {
             edu.system.alert("Xóa danh mục hồ sơ thành công!", "s");
             if (me._suaHoSoDM_Id === strId) me._resetFormHoSoDM();
-            me._loadHoSoDM_ForEdit(me.strSuaHoSo_Id);
+            me._loadHoSoDM_ForEdit(me.strSuaHoSo_CorePersonId);
         });
     },
 
@@ -7767,11 +7774,10 @@ KeHoachTuyenSinhNew.prototype = {
                                 me._nguonMap[pid] = me._tenDoiTacTS(snap.nguon.doiTacId);
                             }
                             me._saveKhai_PhuThuoc(pid, snap);
-                            /* Danh mục hồ sơ (tab 8) gắn theo HOSO_ID chứ không phải person,
-                               nên chỉ ghi được sau khi tra ra Id hồ sơ vừa tạo. Gộp kết quả
-                               vào ĐÚNG MỘT alert: bắn alert thứ hai là BS3 gỡ body.modal-open
-                               làm modal tự đóng (xem feedback_bs3_alert_stacking). */
-                            me._saveHoSoDM_Rows(hosoId, snap.dot, snap.danhMuc, function (kq) {
+                            /* Danh mục hồ sơ (tab 8) gắn theo Id core_person (sếp Tuấn 29/10/2026) —
+                               chính là pid đã có. Gộp kết quả vào ĐÚNG MỘT alert: bắn alert thứ hai
+                               là BS3 gỡ body.modal-open làm modal tự đóng (xem feedback_bs3_alert_stacking). */
+                            me._saveHoSoDM_Rows(pid, snap.dot, snap.danhMuc, function (kq) {
                                 var txtDM = '';
                                 if (kq && kq.total && !kq.thieuId) {
                                     txtDM = '<br/>Danh mục hồ sơ: đã lưu ' + kq.done + '/' + kq.total + ' dòng'
@@ -7801,9 +7807,8 @@ KeHoachTuyenSinhNew.prototype = {
                             + '<b>"Cập nhật hồ sơ"</b> một lần để lưu nốt.', 'w');
                     };
                     var newPersonId = me._pickCorePersonIdFromResp(data);
-                    // Có danh mục hồ sơ cần ghi thì PHẢI tra ngược danh sách: response
-                    // Them_HoSo_TS không trả HOSO_ID, mà tab 8 gắn theo Id đó.
-                    if (newPersonId && !(snap.danhMuc && snap.danhMuc.length)) xuLy(newPersonId, '');
+                    // Tab 8 gắn theo Id core_person nên chỉ cần pid; không còn phải tra HOSO_ID.
+                    if (newPersonId) xuLy(newPersonId, '');
                     else me._findNewPersonId(snap.cccd, snap.hoTen, function (pid, hosoId) {
                         xuLy(pid || newPersonId, hosoId);
                     }, snap.nguon && snap.nguon.nguyenVong);   // ưu tiên đúng nguyện vọng vừa khai khi 1 CCCD có nhiều hồ sơ
