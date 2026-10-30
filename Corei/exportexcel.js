@@ -38,7 +38,8 @@
 --Tùy chọn chung: confirm (mặc định true khi bấm nút gắn bằng bindButton: hiện hộp thoại "Bạn có muốn xuất không?";
 --  đặt false để xuất thẳng)
 --Tùy chọn của 1 cột:
---  header, field | render(row, index), width, align (left|center|right),
+--  header, field | render(row, index), width, align (left|center|right), html (true: giá trị là HTML -> đổi thành chữ),
+--  group (tên nhóm cột: các cột liên tiếp cùng group có thêm dòng tiêu đề nhóm gộp ngang),
 --  type ("text" mặc định | "number"), format ("general" | "int" | "dec2"), sum (true: có dòng Tổng)
 --Lưu ý: chỉ cột khai type:"number" mới ghi số; mã số/CCCD... luôn là chữ để không mất số 0 đầu.
 ----------------------------------------------*/
@@ -60,7 +61,7 @@ var exportexcelApi = (function (root) {
     }
     function esc(s) {
         return String(s)
-            .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F￾￿]/g, "")
+            .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\uFFFE\uFFFF]/g, "")
             .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
     }
     function colName(i) {
@@ -99,7 +100,7 @@ var exportexcelApi = (function (root) {
         // DOMParser không nạp ảnh/chạy script nên an toàn với HTML do mRender sinh ra
         if (typeof DOMParser !== "undefined") {
             var doc = new DOMParser().parseFromString(s.replace(/<br\s*\/?>/gi, "\n"), "text/html");
-            return (doc.body.textContent || "").replace(/ /g, " ").trim();
+            return (doc.body.textContent || "").replace(/\u00a0/g, " ").trim();
         }
         return s.replace(/<br\s*\/?>/gi, "\n").replace(/<[^>]*>/g, "").replace(/&nbsp;/g, " ").trim();
     }
@@ -217,10 +218,16 @@ var exportexcelApi = (function (root) {
         var n = sh.cols.length, widths = [], c, r;
         // chừa chỗ cho mũi tên bộ lọc ở ô tiêu đề để không đè lên chữ
         var pad = (sh.filter !== false && sh.rows.length > 0) ? 3 : 0;
+        var spanned = {}, hm = sh.headerMerges || [];
+        for (var q = 0; q < hm.length; q++) {
+            if (hm[q][3] <= hm[q][1]) continue;
+            for (var rr = hm[q][0]; rr <= hm[q][2]; rr++) for (var cc = hm[q][1]; cc <= hm[q][3]; cc++) spanned[rr + "," + cc] = true;
+        }
         for (c = 0; c < n; c++) {
             if (sh.cols[c].width) { widths.push(sh.cols[c].width); continue; }
             var need = 0;
             for (r = 0; r < sh.header.length; r++) {
+                if (spanned[r + "," + c]) continue;// ô gộp ngang (tên nhóm cột) không được làm rộng 1 cột
                 // tiêu đề được phép xuống dòng nên chỉ cần đủ chỗ cho khoảng 16 ký tự
                 need = Math.max(need, Math.min(longestLine(toText(sh.header[r][c])), 16));
             }
@@ -275,12 +282,18 @@ var exportexcelApi = (function (root) {
         if (r > 0) addRow("", 8);
 
         // Tiêu đề cột (có thể nhiều dòng, có gộp ô)
-        var headStart = r;
+        var headStart = r, spanW = {};
+        for (i = 0; i < (sh.headerMerges || []).length; i++) {
+            var hmg = sh.headerMerges[i], tw = 0;
+            if (hmg[3] <= hmg[1]) continue;
+            for (c = hmg[1]; c <= hmg[3]; c++) tw += widths[c];
+            spanW[hmg[0] + "," + hmg[1]] = tw;
+        }
         for (i = 0; i < sh.header.length; i++) {
             var hcells = "", maxLines = 1;
             for (c = 0; c < n; c++) {
                 hcells += strCell(r, c, sh.header[i][c], sHead);
-                var wCap = Math.max(6, widths[c] - 1);
+                var wCap = Math.max(6, (spanW[i + "," + c] || widths[c]) - 1);
                 maxLines = Math.max(maxLines, Math.ceil(longestLine(toText(sh.header[i][c])) / wCap));
             }
             addRow(hcells, Math.max(30, 16 * maxLines + 4));
@@ -520,13 +533,40 @@ var exportexcelApi = (function (root) {
                 if (typeof def.render === "function") v = def.render(data[i], i);
                 else if (def.field) v = data[i][def.field];
                 else v = "";
+                if (def.html) v = htmlToText(v);
                 r.push(v);
             }
             rows.push(r);
         }
+        // Cột có group: thêm 1 dòng tiêu đề nhóm ("Thông tin sinh viên", "Thông tin đăng ký"...) gộp ngang các cột liên tiếp cùng nhóm;
+        // cột không thuộc nhóm nào gộp dọc 2 dòng như cột STT
+        var header = [head], merges = [], hasGroup = false;
+        for (j = 0; j < defs.length; j++) if (defs[j].group) hasGroup = true;
+        if (hasGroup) {
+            var off = useStt ? 1 : 0, g0 = [], g1 = [];
+            if (useStt) { g0.push(head[0]); g1.push(""); merges.push([0, 0, 1, 0]); }
+            for (j = 0; j < defs.length; j++) {
+                if (defs[j].group) {
+                    g0.push((j === 0 || defs[j - 1].group !== defs[j].group) ? defs[j].group : "");
+                    g1.push(defs[j].header);
+                } else {
+                    g0.push(defs[j].header);
+                    g1.push("");
+                    merges.push([0, off + j, 1, off + j]);
+                }
+            }
+            for (j = 0; j < defs.length;) {
+                if (!defs[j].group) { j++; continue; }
+                var kEnd = j;
+                while (kEnd + 1 < defs.length && defs[kEnd + 1].group === defs[j].group) kEnd++;
+                if (kEnd > j) merges.push([0, off + j, 0, off + kEnd]);
+                j = kEnd + 1;
+            }
+            header = [g0, g1];
+        }
         return {
             name: opts.name, title: opts.title, subTitles: subTitlesOf(opts),
-            header: [head], headerMerges: [], cols: cols, rows: rows,
+            header: header, headerMerges: merges, cols: cols, rows: rows,
             footer: buildFooter(opts, rows.length), filter: opts.filter, freeze: opts.freeze
         };
     }
@@ -536,7 +576,7 @@ var exportexcelApi = (function (root) {
         $td.find("select").each(function () { var o = root.$(this).find("option:selected"); if (root.$(this).val()) parts.push(o.text()); });
         $td.find("input:not([type=checkbox]):not([type=radio]),textarea").each(function () { parts.push(root.$(this).val()); });
         if (parts.length > 0) return parts.join("; ");
-        return (td.innerText || td.textContent || "").replace(/ /g, " ").replace(/[ \t]+\n/g, "\n").trim();
+        return (td.innerText || td.textContent || "").replace(/\u00a0/g, " ").replace(/[ \t]+\n/g, "\n").trim();
     }
 
     // Đọc bảng đang hiển thị: tiêu đề nhiều dòng + colspan/rowspan -> lưới + danh sách ô gộp
@@ -634,7 +674,7 @@ var exportexcelApi = (function (root) {
     function fmtInt(n) { return Number(n).toLocaleString("vi-VN"); }
     // Bỏ dấu + chữ thường để gõ "dien" tìm ra "Điện"
     function fold(s) {
-        return toText(s).normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[đĐ]/g, "d").toLowerCase();
+        return toText(s).normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[đĐ]/g, "d").toLowerCase();
     }
     // Tên (chữ hiển thị) các mục đang chọn của 1 ô chọn trên màn hình; bỏ mục tiêu đề "-- Chọn ... --" và "Tất cả"
     function selectedTexts(id) {
@@ -833,10 +873,37 @@ var exportexcelApi = (function (root) {
         + '#modalEduExporter .modal-footer .btn i{margin-right:7px}'
         + '#modalEduExporter .modal-footer .btn + .btn{margin-left:12px}';
 
+    // Thẻ "Đã nhận lệnh" dùng chung của edu.process (Corei/processrun.js); chưa nạp file đó thì bỏ qua, xuất vẫn chạy bình thường
+    function ackStart(strTitle, strStep) {
+        try {
+            var e = root.edu;
+            if (e && e.process && typeof e.process.ack === "function") return e.process.ack(strTitle, strStep);
+        } catch (ex) { }
+        return null;
+    }
+    function paintThen(fn) {
+        var e = root.edu;
+        if (e && e.process && typeof e.process.paintThen === "function") e.process.paintThen(fn);
+        else setTimeout(fn, 0);
+    }
+
+    // CSS của hộp thoại nạp 1 lần duy nhất (ngay khi tải trang), không chèn <style> mỗi lần bấm: chèn <style> làm trình duyệt tính lại
+    // kiểu dáng toàn trang, rất chậm khi sau lưng có bảng hàng nghìn dòng
+    function ensureAskCss() {
+        var d = root.document;
+        if (!d || !d.head || d.getElementById("eduExporterCss")) return;
+        var el = d.createElement("style");
+        el.id = "eduExporterCss";
+        el.textContent = ASK_CSS;
+        d.head.appendChild(el);
+    }
+    ensureAskCss();
+
     // Hỏi "có muốn xuất không" (kèm các ô lọc thêm nếu có); đồng ý thì gọi fnOk(opts đã lọc)
-    function askExport(opts, fnOk) {
+    function askExport(opts, fnOk, ack) {
         var $ = root.$, specs = opts.sheets || [opts], groups = filterGroupsOf(specs), i, j, k;
         if (!$ || !$.fn || !$.fn.modal) {
+            if (ack) ack.close();
             if (!root.confirm || root.confirm(ASK_TEXT)) fnOk(opts);
             return;
         }
@@ -848,7 +915,8 @@ var exportexcelApi = (function (root) {
             if (specs[i].data) total += specs[i].data.length; else bDom = true;
         }
 
-        var h = '<div class="modal fade" id="modalEduExporter" tabindex="-1" role="dialog"><style>' + ASK_CSS + '</style>'
+        ensureAskCss();
+        var h = '<div class="modal fade" id="modalEduExporter" tabindex="-1" role="dialog">'
             + '<div class="modal-dialog"><div class="modal-content">'
             + '<div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button>'
             + '<h4 class="modal-title"><i class="fa fa-file-excel-o"></i> Xuất Excel</h4></div>'
@@ -1001,10 +1069,19 @@ var exportexcelApi = (function (root) {
             $m.modal("hide");
             fnOk(o2);
         });
-        $m.on("hidden.bs.modal", function () { $m.remove(); });
-        $m.on("shown.bs.modal", function () { $m.find(".ee-kwin").first().trigger("focus"); });
+        // Mở chồng lên modal khác (VD "Danh sách không đăng ký"): nâng lớp hiển thị; đóng xong trả lại khóa cuộn trang của modal bên dưới
+        var bChong = $(".modal.in").length > 0;
+        $m.on("hidden.bs.modal", function () {
+            $m.remove();
+            if ($(".modal.in").length > 0) $("body").addClass("modal-open");
+        });
+        $m.on("shown.bs.modal", function () { if (ack) ack.close(); $m.find(".ee-kwin").first().trigger("focus"); });
         refresh();
         $m.modal("show");
+        if (bChong) {
+            $m.css("z-index", 1070);
+            setTimeout(function () { $(".modal-backdrop").last().css("z-index", 1065); }, 0);
+        }
     }
 
     /*------------------------------------------
@@ -1022,7 +1099,7 @@ var exportexcelApi = (function (root) {
     }
 
     return {
-        version: "1.4.0",
+        version: "1.6.0",
 
         // Dựng file .xlsx (Uint8Array, không nén) mà không tải về — dùng cho kiểm thử hoặc gửi lên nơi khác
         buildXlsx: function (opts) {
@@ -1047,32 +1124,41 @@ var exportexcelApi = (function (root) {
 
         // Xuất từ mảng dữ liệu (opts xem phần mô tả ở đầu file). Trả về Promise<boolean>
         exportData: function (opts) {
-            var p;
-            try {
-                // Toàn bộ nguồn là mảng dữ liệu rỗng thì báo, không xuất file chỉ có tiêu đề
-                var specs = opts.sheets || [opts], iRows = 0, bDom = false;
-                for (var i = 0; i < specs.length; i++) {
-                    iRows += (specs[i].data || []).length;
-                    if (!specs[i].data && specs[i].table && !specs[i].aoColumns) bDom = true;
-                }
-                if (opts.allowEmpty !== true && !bDom && iRows === 0) {
-                    warn("Không có dữ liệu để xuất.");
-                    return Promise.resolve(false);
-                }
-                p = this.buildXlsxAsync(opts);
-            } catch (ex) {
-                if (root.console) root.console.log("[edu.exporter] lỗi", ex);
-                warn("Không tạo được file Excel: " + ex.message);
+            var me = this, specs = opts.sheets || [opts], iRows = 0, bDom = false, i;
+            // Toàn bộ nguồn là mảng dữ liệu rỗng thì báo, không xuất file chỉ có tiêu đề
+            for (i = 0; i < specs.length; i++) {
+                iRows += (specs[i].data || []).length;
+                if (!specs[i].data && specs[i].table && !specs[i].aoColumns) bDom = true;
+            }
+            if (opts.allowEmpty !== true && !bDom && iRows === 0) {
+                warn("Không có dữ liệu để xuất.");
                 return Promise.resolve(false);
             }
             var name = toText(opts.fileName || (opts.sheets ? opts.sheets[0].name : opts.name) || "BaoCao").replace(/[\\\/:*?"<>|]/g, "_");
-            return p.then(function (bytes) {
-                download(bytes, name + "_" + stamp(new Date()) + ".xlsx");
-                return true;
-            }, function (ex) {
-                if (root.console) root.console.log("[edu.exporter] lỗi", ex);
-                warn("Không tạo được file Excel: " + ex.message);
-                return false;
+            var ack = ackStart("Xuất Excel", "Đang tạo file Excel…");
+            // thẻ được vẽ xong rồi mới dựng file (dựng XML cho hàng chục nghìn dòng chiếm trình duyệt vài giây)
+            return new Promise(function (resolve) {
+                function fin(bOk, strErr) {
+                    if (ack) ack.close();
+                    if (strErr) warn("Không tạo được file Excel: " + strErr);
+                    resolve(bOk);
+                }
+                paintThen(function () {
+                    var p;
+                    try { p = me.buildXlsxAsync(opts); }
+                    catch (ex) {
+                        if (root.console) root.console.log("[edu.exporter] lỗi", ex);
+                        fin(false, ex.message);
+                        return;
+                    }
+                    p.then(function (bytes) {
+                        download(bytes, name + "_" + stamp(new Date()) + ".xlsx");
+                        fin(true);
+                    }, function (ex) {
+                        if (root.console) root.console.log("[edu.exporter] lỗi", ex);
+                        fin(false, ex.message);
+                    });
+                });
             });
         },
 
@@ -1089,7 +1175,15 @@ var exportexcelApi = (function (root) {
         exportWithConfirm: function (opts) {
             var me = this;
             if (opts.confirm === false) return me.exportData(opts);
-            askExport(opts, function (o) { me.exportData(o); });
+            var ack = ackStart("Xuất Excel", "Đang lên phương án xuất dữ liệu…");
+            paintThen(function () {
+                try { askExport(opts, function (o) { me.exportData(o); }, ack); }
+                catch (ex) {
+                    if (ack) ack.close();
+                    if (root.console) root.console.log("[edu.exporter] lỗi", ex);
+                    warn("Không mở được hộp thoại xuất: " + ex.message);
+                }
+            });
         },
 
         // Gắn nút xuất: fnGetOpts chạy MỖI LẦN bấm để lấy dữ liệu/điều kiện lọc mới nhất; trả về null/false nếu chưa xuất được

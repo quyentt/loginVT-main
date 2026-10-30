@@ -22,6 +22,7 @@
 --      notes: ["Chưa chọn năm học"],                     // lưu ý hiện ở khung Bước 1
 --      concurrency: 1,                                   // số bản ghi chạy cùng lúc (mặc định 1, tối đa 10)
 --      stopOnError: false, autoStart: false,
+--      (bấm là hiện NGAY thẻ "Đã nhận lệnh" rồi mới chuẩn bị: nạp danh sách -> dựng bảng -> mở form)
 --      onFinish: function (sum) {}, onClose: function (sum) {}   // sum = { total, ok, err, pending, elapsedMs }
 --  });
 --  edu.process.callApi(paramsCuaMakeRequest) -> Promise<{ ok, message, data }>   // dùng trong run: khi cần gọi nhiều API cho 1 bản ghi
@@ -44,7 +45,7 @@ var processrunApi = (function (root) {
     function fmtInt(n) { return Number(n).toLocaleString("vi-VN"); }
     function esc(s) {
         return String(s)
-            .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F￾￿]/g, "")
+            .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\uFFFE\uFFFF]/g, "")
             .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
     }
     function toText(v) {
@@ -170,21 +171,26 @@ var processrunApi = (function (root) {
         + '#modalEduProcess .pr-tab.on{border-color:#223771;background:#223771;color:#fff}'
         + '#modalEduProcess .pr-auto{display:flex;align-items:center;gap:6px;margin:0 0 0 auto;font-weight:500;color:#64748b;cursor:pointer}'
         + '#modalEduProcess .pr-auto input{margin:0}'
-        + '#modalEduProcess .pr-box{max-height:46vh;overflow:auto;border:1px solid #cbd5e1;border-radius:6px}'
-        + '#modalEduProcess .pr-tbl{width:100%;margin:0;border-collapse:separate;border-spacing:0;table-layout:fixed}'
-        + '#modalEduProcess .pr-tbl th{position:sticky;top:0;z-index:2;padding:9px 8px;border-right:1px solid #35508a;background:#1f3864;font-weight:700;text-align:center;color:#fff}'
-        + '#modalEduProcess .pr-tbl td{padding:7px 10px;border-right:1px solid #eef2f7;border-bottom:1px solid #e2e8f0;vertical-align:middle;word-break:break-word;color:#0f172a}'
-        + '#modalEduProcess .pr-tbl td.c{text-align:center}'
-        + '#modalEduProcess .pr-tbl tr.pr-s-ok td{background:#f6fef9}'
-        + '#modalEduProcess .pr-tbl tr.pr-s-err td{background:#fff5f5}'
-        + '#modalEduProcess .pr-tbl tr.pr-s-run td{background:#eff4ff}'
+        + '#modalEduProcess .pr-box{position:relative;max-height:46vh;min-height:140px;overflow:auto;border:1px solid #cbd5e1;border-radius:6px;background:#fff}'
+        + '#modalEduProcess .pr-in{min-width:900px}'
+        + '#modalEduProcess .pr-head,#modalEduProcess .pr-r{display:grid;grid-template-columns:var(--cols)}'
+        + '#modalEduProcess .pr-head{position:sticky;top:0;z-index:2;background:#1f3864;color:#fff;font-weight:700}'
+        + '#modalEduProcess .pr-head>div{display:flex;align-items:center;justify-content:center;padding:9px 8px;border-right:1px solid #35508a;text-align:center}'
+        + '#modalEduProcess .pr-vp{position:relative}'
+        + '#modalEduProcess .pr-r{position:absolute;left:0;right:0;height:48px;border-bottom:1px solid #e2e8f0;contain:layout paint}'
+        + '#modalEduProcess .pr-r>div{display:flex;align-items:center;min-width:0;padding:0 10px;border-right:1px solid #eef2f7;color:#0f172a}'
+        + '#modalEduProcess .pr-r>div.c{justify-content:center;text-align:center}'
+        + '#modalEduProcess .pr-r .tx{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;word-break:break-word;line-height:1.35}'
+        + '#modalEduProcess .pr-r.pr-s-ok{background:#f6fef9}'
+        + '#modalEduProcess .pr-r.pr-s-err{background:#fff5f5}'
+        + '#modalEduProcess .pr-r.pr-s-run{background:#eff4ff}'
+        + '#modalEduProcess .pr-empty{padding:24px;text-align:center;color:#94a3b8}'
         + '#modalEduProcess .pr-s-ok .pr-st{font-weight:700;color:#067647}'
         + '#modalEduProcess .pr-s-err .pr-st{font-weight:700;color:#b42318}'
         + '#modalEduProcess .pr-s-err .pr-nt{color:#b42318}'
         + '#modalEduProcess .pr-s-run .pr-st{font-weight:700;color:#223771}'
         + '#modalEduProcess .pr-s-pend .pr-st{color:#94a3b8}'
         + '#modalEduProcess .pr-st i{margin-right:5px}'
-        + '#modalEduProcess .pr-body[data-f="ok"] tr:not(.pr-s-ok),#modalEduProcess .pr-body[data-f="err"] tr:not(.pr-s-err),#modalEduProcess .pr-body[data-f="pend"] tr:not(.pr-s-pend){display:none}'
         + '#modalEduProcess .pr-msg{display:none;margin-top:8px;font-weight:600;color:#b42318}'
         + '#modalEduProcess .modal-footer{display:flex;align-items:center;justify-content:flex-end}'
         + '#modalEduProcess .pr-exp{display:flex;gap:10px;margin-right:auto}'
@@ -199,40 +205,158 @@ var processrunApi = (function (root) {
     }
 
     /*------------------------------------------
-    --Discription: [4] Mở form tiến trình
+    --Discription: [4] Thẻ "Đã nhận lệnh" + mở form tiến trình
+    -- Bấm nút là hệ thống phản hồi NGAY (thẻ "Đã nhận lệnh... đang lên phương án") rồi mới làm phần nặng
+    -- (nạp danh sách, dựng bảng, mở form) theo từng bước có hiển thị — không để màn hình đứng im.
     -------------------------------------------*/
+    var ACK_CSS = '#eduAck{position:fixed;top:0;right:0;bottom:0;left:0;z-index:2000;display:flex;align-items:center;justify-content:center;background:rgba(15,23,42,.5);animation:eaFade .15s ease-out}'
+        + '#eduAck.ea-leave{opacity:0;transition:opacity .22s}'
+        + '#eduAck .ea-card{display:flex;align-items:flex-start;gap:18px;width:480px;max-width:92vw;padding:22px 26px;border-radius:14px;background:#fff;box-shadow:0 18px 50px rgba(15,23,42,.35)}'
+        + '#eduAck .ea-ring{flex:0 0 46px;width:46px;height:46px;border:4px solid #dbe4ff;border-top-color:#223771;border-radius:50%;animation:eaSpin .85s linear infinite}'
+        + '#eduAck .ea-body{flex:1 1 auto;min-width:0}'
+        + '#eduAck .ea-head{font-size:19px;font-weight:700;color:#1f3864}'
+        + '#eduAck .ea-title{margin-top:2px;font-weight:600;color:#0f172a;word-break:break-word}'
+        + '#eduAck .ea-steps{margin-top:12px;line-height:1.95;color:#334155}'
+        + '#eduAck .ea-step i{display:inline-block;width:22px}'
+        + '#eduAck .ea-step.ea-done{color:#067647}'
+        + '#eduAck .ea-step.ea-now{color:#223771;font-weight:600}'
+        + '@keyframes eaSpin{to{transform:rotate(360deg)}}'
+        + '@keyframes eaFade{from{opacity:0}to{opacity:1}}';
+    // CSS nạp 1 lần duy nhất (ngay khi tải trang, lúc DOM còn nhỏ); dùng lại ở mọi lần mở form
+    function ensureCss() {
+        var d = root.document;
+        if (!d || !d.head || d.getElementById("eduProcessCss")) return;
+        var el = d.createElement("style");
+        el.id = "eduProcessCss";
+        el.textContent = PR_CSS + ACK_CSS;
+        d.head.appendChild(el);
+    }
+    var ACK_PACE = 170;//mỗi bước hiện tối thiểu chừng này ms để người dùng kịp đọc
+    var PREPARING = false;
+
+    // Chờ trình duyệt thật sự vẽ xong khung hình hiện tại rồi mới chạy fn (có dự phòng khi tab bị ẩn nên không có khung hình)
+    function paintThen(fn) {
+        var done = false;
+        function run() { if (done) return; done = true; fn(); }
+        if (root.requestAnimationFrame) root.requestAnimationFrame(function () { root.requestAnimationFrame(function () { setTimeout(run, 0); }); });
+        setTimeout(run, 250);
+    }
+    // Thẻ "Đã nhận lệnh": next(textXongBuocTruoc, textBuocMoi) đánh dấu xong bước hiện tại và mở bước mới; close() ẩn thẻ
+    function showAck(title) {
+        ensureCss();
+        var old = root.document.getElementById("eduAck");
+        if (old) old.parentNode.removeChild(old);
+        var el = root.document.createElement("div");
+        el.id = "eduAck";
+        el.innerHTML = '<div class="ea-card"><div class="ea-ring"></div><div class="ea-body"><div class="ea-head">Đã nhận lệnh</div>'
+            + '<div class="ea-title"></div><div class="ea-steps"></div></div></div>';
+        el.querySelector(".ea-title").textContent = title || "";
+        root.document.body.appendChild(el);
+        var steps = el.querySelector(".ea-steps"), cur = null;
+        return {
+            next: function (doneText, nowText) {
+                if (cur && doneText) { cur.className = "ea-step ea-done"; cur.innerHTML = '<i class="fa fa-check-circle"></i>' + esc(doneText); }
+                if (nowText) {
+                    cur = root.document.createElement("div");
+                    cur.className = "ea-step ea-now";
+                    cur.innerHTML = '<i class="fa fa-spinner fa-spin"></i>' + esc(nowText);
+                    steps.appendChild(cur);
+                }
+            },
+            close: function () {
+                if (!el.parentNode) return;
+                el.className = "ea-leave";
+                setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 260);
+            }
+        };
+    }
+
+    // Bước A: nạp danh sách bản ghi + chữ hiển thị của từng bản ghi
+    function prepare(cfg) {
+        var items = cfg.items || [], i, c;
+        var p = {
+            items: items, unit: cfg.unit || "bản ghi", title: cfg.title || "Tiến trình", info: [], st: [],
+            conc: Math.max(1, Math.min(MAX_CONCURRENCY, parseInt(cfg.concurrency, 10) || 1)),
+            cols: cfg.columns || [{
+                header: cfg.infoHeader || "Thông tin xử lý",
+                render: cfg.info || function (it) { return (it && typeof it === "object") ? (it.TEN || it.name || it.ID || "") : it; }
+            }]
+        };
+        for (i = 0; i < items.length; i++) {
+            var vals = [];
+            for (c = 0; c < p.cols.length; c++) {
+                vals.push(toText(typeof p.cols[c].render === "function" ? p.cols[c].render(items[i], i) : (p.cols[c].field ? items[i][p.cols[c].field] : "")));
+            }
+            p.info.push(vals);
+            p.st.push({ s: "pend", start: null, end: null, msg: "" });
+        }
+        return p;
+    }
+
     function open(cfg) {
-        var $ = root.$, i;
+        var $ = root.$;
         cfg = cfg || {};
         if (!$ || !$.fn || !$.fn.modal) { warn("Thiếu jQuery/Bootstrap để mở form tiến trình."); return null; }
         var $prev = $("#modalEduProcess");
         if ($prev.length > 0 && $prev.data("eduProcessRunning")) { $prev.modal("show"); return $prev.data("eduProcessCtl") || null; }
+        if (PREPARING) return null;//đang chuẩn bị một form: bỏ qua bấm đúp
+        PREPARING = true;
         $prev.remove();
 
-        var items = cfg.items || [], unit = cfg.unit || "bản ghi", title = cfg.title || "Tiến trình";
-        var conc = Math.max(1, Math.min(MAX_CONCURRENCY, parseInt(cfg.concurrency, 10) || 1));
-        var cols = cfg.columns || [{
-            header: cfg.infoHeader || "Thông tin xử lý",
-            render: cfg.info || function (it) { return (it && typeof it === "object") ? (it.TEN || it.name || it.ID || "") : it; }
-        }];
-
-        // Bước 1: danh sách bản ghi + chữ hiển thị của từng bản ghi
-        var info = [], st = [];
-        for (i = 0; i < items.length; i++) {
-            var vals = [];
-            for (var c = 0; c < cols.length; c++) {
-                vals.push(toText(typeof cols[c].render === "function" ? cols[c].render(items[i], i) : (cols[c].field ? items[i][cols[c].field] : "")));
-            }
-            info.push(vals);
-            st.push({ s: "pend", start: null, end: null, msg: "" });
+        var real = null, nItems = (cfg.items || []).length, tLast = Date.now();
+        // controller trả về ngay; các lệnh chỉ có tác dụng khi form đã dựng xong
+        var ctl = {
+            start: function () { if (real) real.ctl.start(); },
+            stop: function () { if (real) real.ctl.stop(); },
+            retry: function () { if (real) real.ctl.retry(); },
+            close: function () { if (real) real.ctl.close(); },
+            summary: function () { return real ? real.ctl.summary() : { total: nItems, ok: 0, err: 0, pending: nItems, running: 0, elapsedMs: 0 }; }
+        };
+        var ack = showAck(cfg.title || "Tiến trình");
+        ack.next("", "Đang lên phương án thực hiện…");
+        function fail(ex) {
+            PREPARING = false;
+            ack.close();
+            if (root.console) root.console.log("[edu.process] lỗi", ex);
+            warn("Không mở được form tiến trình: " + (ex && ex.message ? ex.message : ex));
         }
+        // mỗi bước chờ thẻ được vẽ xong và hiện tối thiểu ACK_PACE ms rồi mới làm phần việc của bước đó
+        function stage(fn) {
+            var wait = Math.max(0, ACK_PACE - (Date.now() - tLast));
+            paintThen(function () {
+                setTimeout(function () {
+                    try { fn(); } catch (ex) { fail(ex); }
+                }, wait);
+            });
+        }
+        stage(function () {
+            var prep = prepare(cfg);
+            ack.next("Đã nạp " + fmtInt(prep.items.length) + " " + prep.unit, "Đang dựng bảng theo dõi…");
+            tLast = Date.now();
+            stage(function () {
+                real = build(cfg, prep);
+                ack.next("Đã dựng bảng theo dõi", "Sẵn sàng — đang mở màn hình điều khiển…");
+                tLast = Date.now();
+                stage(function () {
+                    real.show(function () { ack.close(); PREPARING = false; });
+                });
+            });
+        });
+        return ctl;
+    }
+
+    // Bước B: dựng form (chưa hiện). Trả về { ctl, show(fnShown) }
+    function build(cfg, prep) {
+        var $ = root.$, i, c;
+        var items = prep.items, unit = prep.unit, title = prep.title, conc = prep.conc, cols = prep.cols, info = prep.info, st = prep.st;
         var cnt = { ok: 0, err: 0, run: 0, pend: items.length };
-        var running = false, stopping = false, closed = false, elapsedAcc = 0, segStart = 0, rendered = 0;
-        var timers = { clock: null, render: null, sum: null, msg: null };
+        var running = false, stopping = false, closed = false, elapsedAcc = 0, segStart = 0;
+        var timers = { clock: null, render: null, sum: null, msg: null, scroll: null };
 
         // ---- HTML ----
         var subs = [].concat(typeof cfg.subTitles === "function" ? cfg.subTitles() : (cfg.subTitles || []));
-        var h = '<div class="modal fade" id="modalEduProcess" tabindex="-1" role="dialog"><style>' + PR_CSS + '</style>'
+        ensureCss();
+        var h = '<div class="modal" id="modalEduProcess" tabindex="-1" role="dialog">'
             + '<div class="modal-dialog"><div class="modal-content">'
             + '<div class="modal-header"><button type="button" class="close pr-close">&times;</button>'
             + '<h4 class="modal-title"><i class="fa fa-cogs"></i> ' + esc(title) + '</h4></div>'
@@ -264,11 +388,10 @@ var processrunApi = (function (root) {
             + '<span class="pr-tab" data-f="err">Lỗi (<span class="t-err">0</span>)</span>'
             + '<span class="pr-tab" data-f="pend">Chưa chạy (<span class="t-pend">0</span>)</span>'
             + '<label class="pr-auto"><input type="checkbox" class="pr-autochk" checked> Tự cuộn theo dòng đang chạy</label></div>'
-            + '<div class="pr-box"><table class="pr-tbl"><colgroup><col style="width:64px">';
-        for (c = 0; c < cols.length; c++) h += '<col>';
-        h += '<col style="width:108px"><col style="width:108px"><col style="width:160px"><col style="width:30%"></colgroup><thead><tr><th>STT</th>';
-        for (c = 0; c < cols.length; c++) h += '<th>' + esc(cols[c].header || "") + '</th>';
-        h += '<th>Thời gian bắt đầu</th><th>Thời gian kết thúc</th><th>Kết quả</th><th>Ghi chú</th></tr></thead><tbody class="pr-body" data-f=""></tbody></table></div>'
+            + '<div class="pr-box"><div class="pr-in" style="--cols:64px repeat(' + cols.length + ',minmax(130px,1fr)) 104px 104px 150px minmax(200px,1.4fr)">'
+            + '<div class="pr-head"><div>STT</div>';
+        for (c = 0; c < cols.length; c++) h += '<div>' + esc(cols[c].header || "") + '</div>';
+        h += '<div>Thời gian bắt đầu</div><div>Thời gian kết thúc</div><div>Kết quả</div><div>Ghi chú</div></div><div class="pr-vp"></div></div></div>'
             + '<div class="pr-msg"></div>'
             + '</div><div class="modal-footer"><div class="pr-exp">'
             + '<button type="button" class="btn btn-warning pr-x-err"><i class="fa fa-file-excel-o"></i>Xuất lỗi</button>'
@@ -278,35 +401,59 @@ var processrunApi = (function (root) {
             + '</div></div></div></div>';
 
         var $m = $(h).appendTo(document.body);
-        var tbody = $m.find(".pr-body")[0], $box = $m.find(".pr-box"), $banner = $m.find(".pr-banner"), $prog = $m.find(".pr-prog");
+        var vp = $m.find(".pr-vp")[0], head = $m.find(".pr-head")[0], $box = $m.find(".pr-box"), $banner = $m.find(".pr-banner"), $prog = $m.find(".pr-prog");
         var $run = $m.find(".pr-run"), $stop = $m.find(".pr-stop"), $retry = $m.find(".pr-retry");
 
-        // ---- Hiển thị ----
-        function rowHtml(k) {
-            var s = st[k], r = '<tr class="' + cls(s.s) + '"><td class="c">' + (k + 1) + '</td>';
-            for (var a = 0; a < info[k].length; a++) r += '<td>' + esc(info[k][a]) + '</td>';
-            return r + '<td class="c">' + fmtTime(s.start) + '</td><td class="c">' + fmtTime(s.end) + '</td>'
-                + '<td class="c pr-st">' + statusHtml(s.s) + '</td><td class="pr-nt">' + esc(s.msg) + '</td></tr>';
+        // ---- Hiển thị: CHỈ dựng các dòng đang nhìn thấy (cuộn tới đâu dựng tới đó) ----
+        // Bảng hàng nghìn dòng mà đổi 1 ô là trình duyệt tính lại bố cục cả bảng (đo thực tế ~45ms mỗi bản ghi, chạy 2.684 lớp mất thêm hàng phút).
+        // Dựng cửa sổ vài chục dòng thì mỗi lần cập nhật chỉ động tới đúng 1 dòng, và form mở tức thì dù 2 nghìn hay 20 nghìn bản ghi.
+        // Dòng có chiều cao cố định (chữ dài cắt 2 dòng, rê chuột xem đủ); file Excel xuất ra luôn đủ chữ.
+        var ROW_H = 48, BUF = 6, curFilter = "", view = null, viewDirty = false, rowEl = {}, rafScroll = null;
+        function viewLen() { return view ? view.length : items.length; }
+        function rowHtml(k, pos) {
+            var s = st[k], r = '<div class="pr-r ' + cls(s.s) + '" data-k="' + k + '" style="top:' + (pos * ROW_H) + 'px"><div class="c">' + (k + 1) + '</div>';
+            for (var a = 0; a < info[k].length; a++) r += '<div title="' + esc(info[k][a]) + '"><span class="tx">' + esc(info[k][a]) + '</span></div>';
+            return r + '<div class="c">' + fmtTime(s.start) + '</div><div class="c">' + fmtTime(s.end) + '</div>'
+                + '<div class="c pr-st">' + statusHtml(s.s) + '</div><div class="pr-nt" title="' + esc(s.msg) + '"><span class="tx">' + esc(s.msg) + '</span></div></div>';
         }
-        // Dựng bảng theo từng đợt để danh sách hàng nghìn bản ghi không làm đơ trình duyệt
-        function renderChunk() {
+        function renderWindow() {
             if (closed) return;
-            var end = Math.min(items.length, rendered + 300), buf = "";
-            for (var k = rendered; k < end; k++) buf += rowHtml(k);
-            tbody.insertAdjacentHTML("beforeend", buf);
-            rendered = end;
-            if (rendered < items.length) timers.render = setTimeout(renderChunk, 0);
+            var n = viewLen(), box = $box[0], hh = head.offsetHeight || 38, h = box.clientHeight || 420, i;
+            var first = Math.max(0, Math.floor(box.scrollTop / ROW_H) - BUF), last = Math.min(n - 1, Math.ceil((box.scrollTop + h - hh) / ROW_H) + BUF), buf = "";
+            for (i = first; i <= last; i++) buf += rowHtml(view ? view[i] : i, i);
+            vp.innerHTML = n === 0 ? '<div class="pr-empty">Không có bản ghi nào</div>' : buf;
+            rowEl = {};
+            if (n > 0) for (i = 0; i < vp.children.length; i++) rowEl[vp.children[i].getAttribute("data-k")] = vp.children[i];
+        }
+        // Dựng lại danh sách đang xem theo tab lọc (Tất cả / Thành công / Lỗi / Chưa chạy)
+        function rebuildView() {
+            var k;
+            if (!curFilter) view = null;
+            else {
+                view = [];
+                for (k = 0; k < items.length; k++) if (st[k].s === curFilter) view.push(k);
+            }
+            viewDirty = false;
+            vp.style.height = (viewLen() === 0 ? 70 : viewLen() * ROW_H) + "px";
+            renderWindow();
         }
         function setRow(k) {
-            var tr = tbody.rows[k];
-            if (!tr) return;// chưa dựng tới dòng này — lúc dựng sẽ lấy đúng trạng thái hiện tại
-            var s = st[k], n = cols.length;
-            tr.className = cls(s.s);
-            tr.cells[n + 1].textContent = fmtTime(s.start);
-            tr.cells[n + 2].textContent = fmtTime(s.end);
-            tr.cells[n + 3].innerHTML = statusHtml(s.s);
-            tr.cells[n + 4].textContent = s.msg;
+            // đang lọc theo trạng thái: dòng có thể đổi tab, dựng lại danh sách lọc theo nhịp cập nhật số liệu
+            if (curFilter) { viewDirty = true; scheduleRefresh(); }
+            var el = rowEl[k];
+            if (!el) return;// dòng đang ngoài khung nhìn — lúc cuộn tới sẽ dựng theo đúng trạng thái hiện tại
+            var s = st[k], c = el.children, n = cols.length;
+            el.className = "pr-r " + cls(s.s);
+            c[n + 1].textContent = fmtTime(s.start);
+            c[n + 2].textContent = fmtTime(s.end);
+            c[n + 3].innerHTML = statusHtml(s.s);
+            c[n + 4].title = s.msg;
+            c[n + 4].firstChild.textContent = s.msg;
         }
+        $box.on("scroll", function () {
+            if (rafScroll) return;
+            rafScroll = (root.requestAnimationFrame || function (f) { return setTimeout(f, 16); })(function () { rafScroll = null; renderWindow(); });
+        });
         function setState(k, to) {
             cnt[st[k].s]--;
             st[k].s = to;
@@ -317,6 +464,7 @@ var processrunApi = (function (root) {
             return { total: items.length, ok: cnt.ok, err: cnt.err, pending: cnt.pend, running: cnt.run, elapsedMs: elapsed() };
         }
         function refreshNow() {
+            if (viewDirty) rebuildView();
             var total = items.length, done = cnt.ok + cnt.err, pct = total > 0 ? Math.floor(done * 100 / total) : 0;
             $m.find(".n-total, .t-all").text(fmtInt(total));
             $m.find(".n-run").text(fmtInt(cnt.run));
@@ -347,12 +495,17 @@ var processrunApi = (function (root) {
             clearTimeout(timers.msg);
             timers.msg = setTimeout(function () { $x.hide(); }, 5000);
         }
+        // Cuộn theo dòng đang chạy: gom lại, tối đa 1 lần / 250ms (chỉ khi đang xem tab "Tất cả")
+        var scrollTo = -1;
+        function doScroll() {
+            timers.scroll = null;
+            if (closed || scrollTo < 0 || curFilter || !$m.find(".pr-autochk").prop("checked")) return;
+            var box = $box[0], hh = head.offsetHeight || 38, top = hh + scrollTo * ROW_H, bottom = top + ROW_H;
+            if (top < box.scrollTop + hh || bottom > box.scrollTop + box.clientHeight) box.scrollTop = Math.max(0, top - box.clientHeight / 2);
+        }
         function autoScroll(k) {
-            if (!$m.find(".pr-autochk").prop("checked")) return;
-            var tr = tbody.rows[k], box = $box[0];
-            if (!tr || tr.offsetParent === null) return;
-            var top = tr.offsetTop, bottom = top + tr.offsetHeight;
-            if (top < box.scrollTop + 36 || bottom > box.scrollTop + box.clientHeight) box.scrollTop = Math.max(0, top - box.clientHeight / 2);
+            scrollTo = k;
+            if (!timers.scroll) timers.scroll = setTimeout(doScroll, 250);
         }
 
         // ---- Chạy ----
@@ -495,7 +648,9 @@ var processrunApi = (function (root) {
         $m.on("click", ".pr-tab", function () {
             $m.find(".pr-tab").removeClass("on");
             $(this).addClass("on");
-            tbody.setAttribute("data-f", $(this).attr("data-f"));
+            curFilter = $(this).attr("data-f") || "";
+            $box[0].scrollTop = 0;
+            rebuildView();
         });
         $m.on("hidden.bs.modal", function () {
             closed = true;
@@ -503,8 +658,10 @@ var processrunApi = (function (root) {
             clearTimeout(timers.render);
             clearTimeout(timers.sum);
             clearTimeout(timers.msg);
+            clearTimeout(timers.scroll);
             var sum = summary();
             $m.remove();
+            if ($(".modal.in").length > 0) $("body").addClass("modal-open");//modal bên dưới (nếu có) giữ khóa cuộn trang
             if (typeof cfg.onClose === "function") { try { cfg.onClose(sum); } catch (ex) { } }
         });
         $m.on("shown.bs.modal", function () { $run.trigger("focus"); });
@@ -521,22 +678,40 @@ var processrunApi = (function (root) {
             showBanner("info", intro);
         }
         refreshNow();
-        renderChunk();
-        $m.modal({ backdrop: "static", keyboard: false });
-        if (cfg.autoStart && items.length > 0) setTimeout(startRun, 400);
+        rebuildView();
 
         var ctl = { start: startRun, stop: stopRun, retry: retryErrors, close: requestClose, summary: summary };
         $m.data("eduProcessCtl", ctl);
-        return ctl;
+        return {
+            ctl: ctl,
+            show: function (fnShown) {
+                $m.one("shown.bs.modal", function () {
+                    if (typeof fnShown === "function") fnShown();
+                    renderWindow();//form đã hiện: đã biết kích thước thật của khung cuộn
+                    if (cfg.autoStart && items.length > 0) setTimeout(startRun, 300);
+                });
+                $m.modal({ backdrop: "static", keyboard: false });
+            }
+        };
     }
+
+    ensureCss();
 
     /*------------------------------------------
     --Discription: [5] API công khai
     -------------------------------------------*/
     return {
-        version: "1.0.0",
+        version: "1.2.0",
         open: open,
-        callApi: callApi
+        callApi: callApi,
+        // Thẻ "Đã nhận lệnh" dùng riêng cho tác vụ khác (VD xuất Excel dữ liệu lớn):
+        //   var a = edu.process.ack("Xuất Excel", "Đang chuẩn bị dữ liệu…"); ...; a.close();
+        ack: function (strTitle, strFirstStep) {
+            var a = showAck(strTitle);
+            if (strFirstStep) a.next("", strFirstStep);
+            return a;
+        },
+        paintThen: paintThen
     };
 })(typeof window !== "undefined" ? window : globalThis);
 
