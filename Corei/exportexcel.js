@@ -28,9 +28,12 @@
 --  name, title, subTitles[], columns[] | (table + aoColumns + colOptions), data[],
 --  stt (mặc định true), sttHeader ("STT"), footer (mặc định true: tổng số bản ghi + ngày xuất + người xuất),
 --  user (mặc định lấy tên đang đăng nhập), filter (mặc định true), freeze (mặc định true)
---  filters: [{ label, field | get(row) }] — các danh sách "lọc thêm khi xuất" trong hộp thoại hỏi trước khi xuất
+--  filters: [{ label, field | get(row), selected[] | from }] — các danh sách "lọc thêm khi xuất" trong hộp thoại hỏi trước khi xuất
 --           (tích chọn nhiều giá trị, có ô tìm kiếm trong danh sách và ô từ khóa chung theo mọi cột của file;
---            không tích gì = tất cả; bộ lọc chỉ có 1 giá trị thì tự bỏ qua; chỉ áp cho sheet có data)
+--            không tích gì = tất cả; chỉ áp cho sheet có data).
+--           QUY TẮC MẶC ĐỊNH (chung cho mọi bộ lọc): chọn gì ở ngoài màn hình tìm kiếm thì hộp thoại tích sẵn đúng cái đó,
+--           không chọn gì thì để trống. Khai báo bằng selected: [tên các mục đã chọn ngoài màn hình, chụp lúc tìm kiếm — nên dùng
+--           edu.exporter.selectedTexts("idOChon")] hoặc from: "idOChon" (đọc ngay lúc mở hộp thoại). Khớp theo tên, không phân biệt hoa/thường, dấu.
 --  skipWhenFiltered: true => sheet này bị bỏ khi người dùng có lọc thêm (VD sheet thống kê tính sẵn từ server)
 --Tùy chọn chung: confirm (mặc định true khi bấm nút gắn bằng bindButton: hiện hộp thoại "Bạn có muốn xuất không?";
 --  đặt false để xuất thẳng)
@@ -633,6 +636,29 @@ var exportexcelApi = (function (root) {
     function fold(s) {
         return toText(s).normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[đĐ]/g, "d").toLowerCase();
     }
+    // Tên (chữ hiển thị) các mục đang chọn của 1 ô chọn trên màn hình; bỏ mục tiêu đề "-- Chọn ... --" và "Tất cả"
+    function selectedTexts(id) {
+        var out = [];
+        if (!root.$) return out;
+        root.$("#" + id + " option:selected").each(function () {
+            var v = root.$(this).val(), t = root.$(this).text().replace(/\s+/g, " ").trim();
+            if (v && v !== "SELECTALL" && t) out.push(t);
+        });
+        return out;
+    }
+    // Các giá trị cần tích sẵn của 1 bộ lọc: def.selected (tên đã chụp lúc tìm kiếm) và/hoặc def.from (id ô chọn ngoài màn hình, đọc ngay lúc mở)
+    function presetOf(def) {
+        var names = [].concat(def.selected || []), out = [], i;
+        if (def.from) {
+            var ids = [].concat(def.from);
+            for (i = 0; i < ids.length; i++) names = names.concat(selectedTexts(ids[i]));
+        }
+        for (i = 0; i < names.length; i++) {
+            var t = fold(toText(names[i]).replace(/\s+/g, " ").trim());
+            if (t) out.push(t);
+        }
+        return out;
+    }
     // Chuỗi để tìm theo từ khóa của từng dòng = các ô hiển thị trong file (bỏ cột STT)
     function haystackOf(spec) {
         try {
@@ -665,9 +691,15 @@ var exportexcelApi = (function (root) {
                     if (counts[t] === undefined) { counts[t] = 0; keys.push(t); }
                     counts[t]++;
                 }
-                if (keys.length < 2) continue;// chỉ 1 giá trị thì lọc vô nghĩa
+                if (keys.length === 0) continue;
                 keys.sort(function (a, b) { return a.localeCompare(b, "vi", { numeric: true }); });
-                g.items.push({ label: def.label || def.field || "", vals: vals, keys: keys, counts: counts, selected: Object.create(null), nSel: 0 });
+                // Mặc định theo bộ lọc đã chọn ngoài màn hình tìm kiếm (khớp không phân biệt hoa/thường, dấu):
+                // chọn gì ngoài thì tích sẵn đúng cái đó; không chọn gì thì để trống (= xuất tất cả). Mọi bộ lọc cùng 1 quy tắc.
+                var want = presetOf(def), sel = Object.create(null), defSel = Object.create(null), nSel = 0;
+                for (var q = 0; q < keys.length; q++) {
+                    if (want.indexOf(fold(keys[q])) >= 0) { sel[keys[q]] = true; defSel[keys[q]] = true; nSel++; }
+                }
+                g.items.push({ label: def.label || def.field || "", vals: vals, keys: keys, counts: counts, selected: sel, nSel: nSel, def: defSel, defN: nSel });
             }
             g.hay = haystackOf(spec);
             groups.push(g);
@@ -685,12 +717,34 @@ var exportexcelApi = (function (root) {
         }
         return true;
     }
+    function countOf(g) {
+        var n = 0;
+        for (var r = 0; r < g.total; r++) if (rowMatches(g, r)) n++;
+        return n;
+    }
+    // "Có lọc thêm" = số dòng thật sự xuất ít hơn dữ liệu đang xem. Tích đúng những gì đã chọn ngoài màn hình
+    // (dữ liệu vốn đã như vậy) thì không tính là lọc thêm.
     function isFiltered(groups) {
+        for (var i = 0; i < groups.length; i++) if (countOf(groups[i]) < groups[i].total) return true;
+        return false;
+    }
+    // Lựa chọn của 1 bộ lọc có khác mặc định (theo màn hình tìm kiếm) không
+    function itemChanged(it) {
+        if (it.nSel !== it.defN) return true;
+        for (var k in it.selected) if (!it.def[k]) return true;
+        return false;
+    }
+    function isChanged(groups) {
         for (var i = 0; i < groups.length; i++) {
             if (groups[i].tokens.length > 0) return true;
-            for (var j = 0; j < groups[i].items.length; j++) if (groups[i].items[j].nSel > 0) return true;
+            for (var j = 0; j < groups[i].items.length; j++) if (itemChanged(groups[i].items[j])) return true;
         }
         return false;
+    }
+    function copySel(m) {
+        var o = Object.create(null);
+        for (var k in m) o[k] = true;
+        return o;
     }
     // Áp các lựa chọn lọc lên bản sao của opts (không sửa opts gốc của trang)
     function filteredOpts(opts, groups) {
@@ -703,11 +757,18 @@ var exportexcelApi = (function (root) {
             var copy = {};
             for (k in spec) copy[k] = spec[k];
             if (g && active) {
-                var rows = [], desc = [];
+                var rows = [], desc = [], changed = [], ticked = [], use, j, it, names;
                 for (var r = 0; r < spec.data.length; r++) if (rowMatches(g, r)) rows.push(spec.data[r]);
-                for (var j = 0; j < g.items.length; j++) {
-                    var it = g.items[j], names = [];
-                    if (it.nSel === 0) continue;
+                // Chỉ ghi vào file các bộ lọc người dùng đã đổi so với mặc định (mặc định đã có ở dòng điều kiện tìm kiếm)
+                for (j = 0; j < g.items.length; j++) {
+                    if (g.items[j].nSel === 0) continue;
+                    ticked.push(g.items[j]);
+                    if (itemChanged(g.items[j])) changed.push(g.items[j]);
+                }
+                use = (changed.length > 0 || g.tokens.length > 0) ? changed : ticked;
+                for (j = 0; j < use.length; j++) {
+                    it = use[j];
+                    names = [];
                     for (k = 0; k < it.keys.length; k++) if (it.selected[it.keys[k]]) names.push(it.keys[k] || "(Trống)");
                     desc.push(it.label + " = " + (names.length > 6 ? names.slice(0, 6).join(", ") + " ... (+" + (names.length - 6) + ")" : names.join(", ")));
                 }
@@ -745,8 +806,9 @@ var exportexcelApi = (function (root) {
         + '#modalEduExporter .ee-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:18px}'
         + '@media (max-width:767px){#modalEduExporter .ee-grid{grid-template-columns:minmax(0,1fr) !important}}'
         + '#modalEduExporter .ee-card{overflow:hidden;border:1px solid #e2e8f0;border-radius:8px;background:#fff}'
+        + '#modalEduExporter .ee-card.pre{border-color:#223771;box-shadow:0 0 0 1px #223771 inset}'
         + '#modalEduExporter .ee-card-h{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;border-bottom:1px solid #e2e8f0;background:#f8fafc}'
-        + '#modalEduExporter .ee-card-h{gap:8px}'
+        + '#modalEduExporter .ee-card-h{gap:14px}'
         + '#modalEduExporter .ee-card-h > span:first-child{min-width:0;white-space:nowrap}'
         + '#modalEduExporter .ee-acts{flex:0 0 auto;white-space:nowrap}'
         + '#modalEduExporter .ee-dot{margin:0 7px;color:#94a3b8}'
@@ -799,8 +861,8 @@ var exportexcelApi = (function (root) {
             h += '</div>';
         }
         if (groups.length > 0) {
-            h += '<div class="ee-sec"><div class="ee-cap">Lọc thêm khi xuất<small>không bắt buộc — không chọn gì là xuất tất cả</small></div>'
-                + '<a class="ee-link ee-clear" style="display:none"><i class="fa fa-times-circle"></i> Xóa tất cả lựa chọn</a></div>'
+            h += '<div class="ee-sec"><div class="ee-cap">Lọc thêm khi xuất<small>mặc định theo bộ lọc đã chọn ở ngoài; không tích gì là xuất tất cả</small></div>'
+                + '<a class="ee-link ee-clear" style="display:none" title="Quay về đúng những gì đã chọn ở ngoài màn hình tìm kiếm"><i class="fa fa-undo"></i> Đặt lại mặc định</a></div>'
                 + '<div class="ee-note" id="eduExporterNote"></div>';
             for (i = 0; i < groups.length; i++) {
                 if (groups.length > 1 && groups[i].name) h += '<div class="ee-cap" style="margin:6px 0">' + esc(groups[i].name) + '</div>';
@@ -811,15 +873,18 @@ var exportexcelApi = (function (root) {
                 h += '<div class="ee-grid" style="grid-template-columns:repeat(' + nCols + ',minmax(0,1fr))">';
                 for (j = 0; j < groups[i].items.length; j++) {
                     var it = groups[i].items[j];
-                    h += '<div class="ee-card" data-g="' + i + '" data-i="' + j + '">'
-                        + '<div class="ee-card-h"><span><span class="ee-card-t">' + esc(it.label) + '</span><span class="ee-badge">0</span></span>'
-                        + '<span class="ee-acts"><a class="ee-link ee-all" title="Tích tất cả các mục đang hiện trong danh sách (dùng sau khi gõ tìm kiếm)">Chọn đang hiện</a>'
+                    h += '<div class="ee-card' + (it.defN > 0 ? ' pre' : '') + '" data-g="' + i + '" data-i="' + j + '"'
+                        + (it.defN > 0 ? ' title="Đã tích sẵn theo bộ lọc bạn chọn ở ngoài màn hình tìm kiếm"' : '') + '>'
+                        + '<div class="ee-card-h"><span><span class="ee-card-t">' + esc(it.label) + '</span>'
+                        + '<span class="ee-badge"' + (it.nSel > 0 ? ' style="display:inline-block"' : '') + '>' + it.nSel + '</span></span>'
+                        + '<span class="ee-acts"><a class="ee-link ee-all" title="Tích tất cả các mục đang hiện trong danh sách (dùng sau khi gõ tìm kiếm)">Chọn hết</a>'
                         + '<span class="ee-dot">&middot;</span><a class="ee-link ee-none" title="Bỏ tích tất cả">Bỏ chọn</a></span></div>'
                         + '<div class="ee-card-s"><div class="ee-search"><i class="fa fa-search"></i>'
                         + '<input type="text" class="ee-q" autocomplete="off" placeholder="Tìm trong danh sách (' + fmtInt(it.keys.length) + ' mục)..."></div></div>'
                         + '<div class="ee-list">';
                     for (k = 0; k < it.keys.length; k++) {
-                        h += '<label class="ee-opt" data-k="' + k + '" data-f="' + esc(fold(it.keys[k])) + '"><input type="checkbox">'
+                        var bOn = !!it.selected[it.keys[k]];
+                        h += '<label class="ee-opt' + (bOn ? ' on' : '') + '" data-k="' + k + '" data-f="' + esc(fold(it.keys[k])) + '"><input type="checkbox"' + (bOn ? ' checked' : '') + '>'
                             + '<span class="ee-t">' + esc(it.keys[k] || "(Trống)") + '</span><span class="ee-n">' + fmtInt(it.counts[it.keys[k]]) + '</span></label>';
                     }
                     h += '<div class="ee-empty">Không có mục nào khớp</div></div></div>';
@@ -845,11 +910,11 @@ var exportexcelApi = (function (root) {
             if (it.nSel > 0) $c.find(".ee-badge").text(it.nSel).show(); else $c.find(".ee-badge").hide();
         }
         function refresh() {
-            var parts = [], zero = false, filtered = isFiltered(groups);
+            var parts = [], zero = false, filtered = false;
             for (var a = 0; a < groups.length; a++) {
-                var n = 0;
-                for (var r = 0; r < groups[a].total; r++) if (rowMatches(groups[a], r)) n++;
+                var n = countOf(groups[a]);
                 if (n === 0) zero = true;
+                if (n < groups[a].total) filtered = true;
                 parts.push((groups.length > 1 && groups[a].name ? esc(groups[a].name) + ": " : "") + "Sẽ xuất <b>" + fmtInt(n) + "</b> / " + fmtInt(groups[a].total) + " bản ghi");
             }
             if (groups.length === 0 && !bDom) parts.push("Sẽ xuất <b>" + fmtInt(total) + "</b> bản ghi");
@@ -857,7 +922,7 @@ var exportexcelApi = (function (root) {
             $r.toggle(parts.length > 0).toggleClass("zero", zero).find(".ee-rt").html(parts.join("<br>"));
             $r.find("i").attr("class", zero ? "fa fa-exclamation-triangle" : "fa fa-check-circle");
             $m.find("#btnEduExporterOk").prop("disabled", zero);
-            $m.find(".ee-clear").toggle(filtered);
+            $m.find(".ee-clear").toggle(isChanged(groups));
             var $note = $m.find("#eduExporterNote");
             if (filtered && skipNames.length > 0) $note.text('Sheet "' + skipNames.join('", "') + '" chỉ được xuất khi không lọc thêm.').show();
             else $note.hide();
@@ -910,14 +975,21 @@ var exportexcelApi = (function (root) {
             g.tokens = fold(g.kw).split(/\s+/).filter(function (t) { return t !== ""; });
             refresh();
         });
+        // Đặt lại = về đúng mặc định (những gì đã chọn ở ngoài màn hình tìm kiếm), xóa từ khóa và ô tìm trong danh sách
         $m.on("click", ".ee-clear", function () {
             for (var a = 0; a < groups.length; a++) {
                 groups[a].kw = "";
                 groups[a].tokens = [];
-                for (var b = 0; b < groups[a].items.length; b++) { groups[a].items[b].selected = Object.create(null); groups[a].items[b].nSel = 0; }
+                for (var b = 0; b < groups[a].items.length; b++) { groups[a].items[b].selected = copySel(groups[a].items[b].def); groups[a].items[b].nSel = groups[a].items[b].defN; }
             }
-            $m.find(".ee-opt").removeClass("on ee-hide").find("input").prop("checked", false);
-            $m.find(".ee-badge").hide();
+            $m.find(".ee-card").each(function () {
+                var c = cardOf(this);
+                c.$c.find(".ee-opt").each(function () {
+                    var bOn = !!c.it.selected[c.it.keys[parseInt($(this).attr("data-k"), 10)]];
+                    $(this).removeClass("ee-hide").toggleClass("on", bOn).find("input").prop("checked", bOn);
+                });
+                syncBadge(c.$c, c.it);
+            });
             $m.find(".ee-q, .ee-kwin").val("");
             $m.find(".ee-empty").hide();
             refresh();
@@ -950,7 +1022,7 @@ var exportexcelApi = (function (root) {
     }
 
     return {
-        version: "1.3.0",
+        version: "1.4.0",
 
         // Dựng file .xlsx (Uint8Array, không nén) mà không tải về — dùng cho kiểm thử hoặc gửi lên nơi khác
         buildXlsx: function (opts) {
@@ -1053,6 +1125,9 @@ var exportexcelApi = (function (root) {
             }
             return out.join("; ");
         },
+
+        // Tên các mục đang chọn của 1 ô chọn trên màn hình (dùng để chụp lại điều kiện lúc tìm kiếm, đưa vào filters[].selected)
+        selectedTexts: selectedTexts,
 
         columnsFromTable: columnsFromTable
     };

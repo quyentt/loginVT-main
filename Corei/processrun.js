@@ -1,0 +1,545 @@
+/*----------------------------------------------
+--Form tiến trình dùng chung: edu.process
+--Mọi chức năng cần chạy hàng loạt (xếp loại theo lớp, tính điểm, đẩy dữ liệu...) chỉ việc "gửi vào" form này:
+--  danh sách bản ghi đã nạp (Bước 1) + cách xử lý 1 bản ghi. Form lo toàn bộ phần còn lại:
+--  hiện từng bản ghi (STT | Thông tin xử lý | Thời gian bắt đầu | Thời gian kết thúc | Kết quả | Ghi chú),
+--  tiến độ thật, tổng hợp thành công/lỗi, Dừng / Chạy tiếp / Chạy lại bản ghi lỗi,
+--  xuất Excel danh sách lỗi - thành công - tất cả (qua edu.exporter, cùng style mọi chức năng).
+--
+--Dùng:
+--  edu.process.open({
+--      title: "Thực hiện xếp loại rèn luyện",
+--      subTitles: ["Năm học: 2025"],                     // điều kiện: hiện trên form và ghi vào file xuất
+--      items: [{ ID: "...", TEN: "Lớp A" }, ...],        // Bước 1: danh sách bản ghi do chức năng nạp sẵn
+--      unit: "lớp quản lý",                              // đơn vị gọi tên bản ghi (mặc định "bản ghi")
+--      infoHeader: "Lớp quản lý",                        // tiêu đề cột "Thông tin xử lý"
+--      info: function (it, i) { return it.TEN; },        // chữ hiển thị của 1 bản ghi (hoặc columns:[{header, field|render}] nếu nhiều cột)
+--      request: function (it, i) {                       // gọi API cho 1 bản ghi: trả về tham số của edu.system.makeRequest
+--          return { action: "RL_XuLy/...", data: { strDaoTao_LopQuanLy_Id: it.ID } };
+--      },                                                //   Success=true là thành công, Message là ghi chú; lỗi mạng/HTTP tự thành "không thành công"
+--      // hoặc run: function (it, i, done) {...}         // xử lý tùy ý: trả về Promise | {ok, message} | boolean, hoặc gọi done({ok, message})
+--      fileName: "KetQuaXepLoai",                        // tên file xuất
+--      notes: ["Chưa chọn năm học"],                     // lưu ý hiện ở khung Bước 1
+--      concurrency: 1,                                   // số bản ghi chạy cùng lúc (mặc định 1, tối đa 10)
+--      stopOnError: false, autoStart: false,
+--      onFinish: function (sum) {}, onClose: function (sum) {}   // sum = { total, ok, err, pending, elapsedMs }
+--  });
+--  edu.process.callApi(paramsCuaMakeRequest) -> Promise<{ ok, message, data }>   // dùng trong run: khi cần gọi nhiều API cho 1 bản ghi
+----------------------------------------------*/
+var processrunApi = (function (root) {
+    var MAX_CONCURRENCY = 10;//khớp iGioiHanLuong của edu.system
+
+    /*------------------------------------------
+    --Discription: [1] Tiện ích
+    -------------------------------------------*/
+    function pad2(n) { return (n < 10 ? "0" : "") + n; }
+    function fmtTime(d) { return d ? pad2(d.getHours()) + ":" + pad2(d.getMinutes()) + ":" + pad2(d.getSeconds()) : ""; }
+    function fmtDateTime(d) {
+        return d ? pad2(d.getDate()) + "/" + pad2(d.getMonth() + 1) + "/" + d.getFullYear() + " " + fmtTime(d) : "";
+    }
+    function fmtElapsed(ms) {
+        var s = Math.floor(ms / 1000), h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60);
+        return (h > 0 ? h + ":" + pad2(m) : pad2(m)) + ":" + pad2(s % 60);
+    }
+    function fmtInt(n) { return Number(n).toLocaleString("vi-VN"); }
+    function esc(s) {
+        return String(s)
+            .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F￾￿]/g, "")
+            .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+    function toText(v) {
+        if (v === null || v === undefined) return "";
+        var s = String(v);
+        return (s === "null" || s === "undefined") ? "" : s;
+    }
+    function warn(msg) {
+        var edu = root.edu;
+        if (edu && edu.system && typeof edu.system.alert === "function") edu.system.alert(msg, "w");
+        else if (root.console) root.console.log(msg);
+    }
+
+    /*------------------------------------------
+    --Discription: [2] Gọi API theo 1 kiểu duy nhất cho mọi chức năng:
+    -- thành công/không thành công + nội dung thông báo luôn có, không để lỗi trôi mất
+    -------------------------------------------*/
+    function callApi(params) {
+        return new Promise(function (resolve) {
+            var edu = root.edu;
+            if (!edu || !edu.system || typeof edu.system.makeRequest !== "function") {
+                resolve({ ok: false, message: "Chưa sẵn sàng gọi máy chủ (thiếu edu.system.makeRequest)." });
+                return;
+            }
+            var p = {}, k;
+            for (k in params) p[k] = params[k];
+            if (!p.type) p.type = "POST";
+            if (p.contentType === undefined) p.contentType = true;
+            if (!p.fakedb) p.fakedb = [];
+            p.success = function (data) {
+                var ok = !!(data && data.Success);
+                var msg = (data && data.Message !== undefined && data.Message !== null) ? String(data.Message) : "";
+                resolve({ ok: ok, message: ok ? msg : (msg || "Máy chủ không trả về nội dung thông báo."), data: data });
+            };
+            p.error = function (er) {
+                var m = "Không kết nối được máy chủ.";
+                if (er && er.statusText === "timeout") m = "Quá thời gian chờ phản hồi từ máy chủ.";
+                else if (er && er.status) {
+                    m = "Lỗi " + er.status + (er.statusText ? " - " + er.statusText : "");
+                    if (er.responseJSON && er.responseJSON.Message) m += ": " + er.responseJSON.Message;
+                }
+                resolve({ ok: false, message: m });
+            };
+            try {
+                edu.system.makeRequest(p, false, false, false, null);
+                // makeRequest tự bật overlay "Đang tải dữ liệu" — ẩn đi, đã có form tiến trình
+                if (root.$) root.$("#overlay").hide();
+            } catch (ex) {
+                resolve({ ok: false, message: "Không gửi được yêu cầu: " + (ex && ex.message ? ex.message : ex) });
+            }
+        });
+    }
+
+    // Mọi kiểu trả về của run/request quy về { ok, message }
+    function normalize(r) {
+        if (r === true) return { ok: true, message: "" };
+        if (r === false) return { ok: false, message: "" };
+        if (r && typeof r === "object") {
+            var m = r.message !== undefined ? r.message : r.Message;
+            return { ok: r.ok !== undefined ? !!r.ok : !!r.Success, message: toText(m) };
+        }
+        return { ok: true, message: "" };
+    }
+
+    // Xử lý 1 bản ghi -> Promise<{ ok, message }>; không bao giờ ném lỗi ra ngoài
+    function execute(cfg, item, i) {
+        return new Promise(function (resolve) {
+            var settled = false;
+            function fin(r) {
+                if (settled) return;
+                settled = true;
+                resolve(normalize(r));
+            }
+            try {
+                if (typeof cfg.request === "function") {
+                    callApi(cfg.request(item, i)).then(fin);
+                }
+                else if (typeof cfg.run === "function") {
+                    var r = cfg.run(item, i, fin);
+                    if (r && typeof r.then === "function") r.then(fin, function (e) { fin({ ok: false, message: (e && e.message) || String(e) }); });
+                    // run không khai báo tham số done mà trả về ngay thì coi như xong
+                    else if (r !== undefined || cfg.run.length < 3) fin(r);
+                }
+                else fin({ ok: false, message: "Chức năng chưa khai báo request hoặc run." });
+            } catch (ex) {
+                fin({ ok: false, message: ex && ex.message ? ex.message : String(ex) });
+            }
+        });
+    }
+
+    /*------------------------------------------
+    --Discription: [3] Giao diện — dùng chung bảng màu với hộp thoại xuất Excel
+    -------------------------------------------*/
+    var PR_CSS = '#modalEduProcess .modal-dialog{width:1160px !important;max-width:96% !important}'
+        + '#modalEduProcess .modal-body{padding:18px 22px !important}'
+        + '#modalEduProcess .pr-cond{margin-bottom:14px;padding:9px 16px;border-left:4px solid #223771;border-radius:6px;background:#f1f5fb}'
+        + '#modalEduProcess .pr-cap{font-size:12px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:#64748b}'
+        + '#modalEduProcess .pr-line{margin-top:3px;line-height:1.55;color:#0f172a}'
+        + '#modalEduProcess .pr-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:12px}'
+        + '#modalEduProcess .pr-btns .btn{min-width:112px;font-weight:700}'
+        + '#modalEduProcess .pr-btns .btn + .btn{margin-left:10px}'
+        + '#modalEduProcess .btn i{margin-right:7px}'
+        + '#modalEduProcess .pr-stats{display:flex;flex-wrap:wrap;gap:8px}'
+        + '#modalEduProcess .pr-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 13px;border-radius:16px;background:#eef2f7;font-size:13px;font-weight:600;color:#334155}'
+        + '#modalEduProcess .pr-pill b{font-size:15px}'
+        + '#modalEduProcess .pr-pill.ok{background:#ecfdf3;color:#067647}'
+        + '#modalEduProcess .pr-pill.err{background:#fef3f2;color:#b42318}'
+        + '#modalEduProcess .pr-pill.run{background:#eff4ff;color:#223771}'
+        + '#modalEduProcess .pr-prog{position:relative;height:24px;margin:0 0 12px;overflow:hidden;border-radius:12px;background:#e2e8f0;box-shadow:none}'
+        + '#modalEduProcess .pr-prog .progress-bar{height:100%;background-color:#93b4ff;box-shadow:none;transition:width .3s}'
+        + '#modalEduProcess .pr-prog.s-ok .progress-bar{background-color:#6ee7a0}'
+        + '#modalEduProcess .pr-prog.s-warn .progress-bar{background-color:#fcd34d}'
+        + '#modalEduProcess .pr-prog.s-err .progress-bar{background-color:#fca5a5}'
+        + '#modalEduProcess .pr-ptext{position:absolute;top:0;right:0;left:0;font-size:12px;font-weight:700;line-height:24px;text-align:center;color:#0f172a}'
+        + '#modalEduProcess .pr-banner{margin:0 0 12px;padding:11px 16px;border:1px solid;border-radius:8px;font-weight:600;line-height:1.5}'
+        + '#modalEduProcess .pr-banner.ok{border-color:#abefc6;background:#ecfdf3;color:#067647}'
+        + '#modalEduProcess .pr-banner.warn{border-color:#fedf89;background:#fffaeb;color:#b54708}'
+        + '#modalEduProcess .pr-banner.err{border-color:#fecdca;background:#fef3f2;color:#b42318}'
+        + '#modalEduProcess .pr-banner.info{border-color:#c7d7fe;background:#eff4ff;color:#223771}'
+        + '#modalEduProcess .pr-banner .pr-note{margin-top:4px;font-weight:500}'
+        + '#modalEduProcess .pr-tabs{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:12px 0 8px}'
+        + '#modalEduProcess .pr-tab{padding:4px 14px;border:1px solid #cbd5e1;border-radius:16px;background:#fff;font-size:13px;font-weight:600;color:#334155;cursor:pointer}'
+        + '#modalEduProcess .pr-tab.on{border-color:#223771;background:#223771;color:#fff}'
+        + '#modalEduProcess .pr-auto{display:flex;align-items:center;gap:6px;margin:0 0 0 auto;font-weight:500;color:#64748b;cursor:pointer}'
+        + '#modalEduProcess .pr-auto input{margin:0}'
+        + '#modalEduProcess .pr-box{max-height:46vh;overflow:auto;border:1px solid #cbd5e1;border-radius:6px}'
+        + '#modalEduProcess .pr-tbl{width:100%;margin:0;border-collapse:separate;border-spacing:0;table-layout:fixed}'
+        + '#modalEduProcess .pr-tbl th{position:sticky;top:0;z-index:2;padding:9px 8px;border-right:1px solid #35508a;background:#1f3864;font-weight:700;text-align:center;color:#fff}'
+        + '#modalEduProcess .pr-tbl td{padding:7px 10px;border-right:1px solid #eef2f7;border-bottom:1px solid #e2e8f0;vertical-align:middle;word-break:break-word;color:#0f172a}'
+        + '#modalEduProcess .pr-tbl td.c{text-align:center}'
+        + '#modalEduProcess .pr-tbl tr.pr-s-ok td{background:#f6fef9}'
+        + '#modalEduProcess .pr-tbl tr.pr-s-err td{background:#fff5f5}'
+        + '#modalEduProcess .pr-tbl tr.pr-s-run td{background:#eff4ff}'
+        + '#modalEduProcess .pr-s-ok .pr-st{font-weight:700;color:#067647}'
+        + '#modalEduProcess .pr-s-err .pr-st{font-weight:700;color:#b42318}'
+        + '#modalEduProcess .pr-s-err .pr-nt{color:#b42318}'
+        + '#modalEduProcess .pr-s-run .pr-st{font-weight:700;color:#223771}'
+        + '#modalEduProcess .pr-s-pend .pr-st{color:#94a3b8}'
+        + '#modalEduProcess .pr-st i{margin-right:5px}'
+        + '#modalEduProcess .pr-body[data-f="ok"] tr:not(.pr-s-ok),#modalEduProcess .pr-body[data-f="err"] tr:not(.pr-s-err),#modalEduProcess .pr-body[data-f="pend"] tr:not(.pr-s-pend){display:none}'
+        + '#modalEduProcess .pr-msg{display:none;margin-top:8px;font-weight:600;color:#b42318}'
+        + '#modalEduProcess .modal-footer{display:flex;align-items:center;justify-content:flex-end}'
+        + '#modalEduProcess .pr-exp{display:flex;gap:10px;margin-right:auto}'
+        + '#modalEduProcess .modal-footer .btn i{margin-right:7px}';
+
+    function cls(s) { return s === "ok" ? "pr-s-ok" : s === "err" ? "pr-s-err" : s === "run" ? "pr-s-run" : "pr-s-pend"; }
+    function statusHtml(s) {
+        if (s === "ok") return '<i class="fa fa-check-circle"></i>Thành công';
+        if (s === "err") return '<i class="fa fa-times-circle"></i>Không thành công';
+        if (s === "run") return '<i class="fa fa-spinner fa-spin"></i>Đang chạy…';
+        return "Chưa chạy";
+    }
+
+    /*------------------------------------------
+    --Discription: [4] Mở form tiến trình
+    -------------------------------------------*/
+    function open(cfg) {
+        var $ = root.$, i;
+        cfg = cfg || {};
+        if (!$ || !$.fn || !$.fn.modal) { warn("Thiếu jQuery/Bootstrap để mở form tiến trình."); return null; }
+        var $prev = $("#modalEduProcess");
+        if ($prev.length > 0 && $prev.data("eduProcessRunning")) { $prev.modal("show"); return $prev.data("eduProcessCtl") || null; }
+        $prev.remove();
+
+        var items = cfg.items || [], unit = cfg.unit || "bản ghi", title = cfg.title || "Tiến trình";
+        var conc = Math.max(1, Math.min(MAX_CONCURRENCY, parseInt(cfg.concurrency, 10) || 1));
+        var cols = cfg.columns || [{
+            header: cfg.infoHeader || "Thông tin xử lý",
+            render: cfg.info || function (it) { return (it && typeof it === "object") ? (it.TEN || it.name || it.ID || "") : it; }
+        }];
+
+        // Bước 1: danh sách bản ghi + chữ hiển thị của từng bản ghi
+        var info = [], st = [];
+        for (i = 0; i < items.length; i++) {
+            var vals = [];
+            for (var c = 0; c < cols.length; c++) {
+                vals.push(toText(typeof cols[c].render === "function" ? cols[c].render(items[i], i) : (cols[c].field ? items[i][cols[c].field] : "")));
+            }
+            info.push(vals);
+            st.push({ s: "pend", start: null, end: null, msg: "" });
+        }
+        var cnt = { ok: 0, err: 0, run: 0, pend: items.length };
+        var running = false, stopping = false, closed = false, elapsedAcc = 0, segStart = 0, rendered = 0;
+        var timers = { clock: null, render: null, sum: null, msg: null };
+
+        // ---- HTML ----
+        var subs = [].concat(typeof cfg.subTitles === "function" ? cfg.subTitles() : (cfg.subTitles || []));
+        var h = '<div class="modal fade" id="modalEduProcess" tabindex="-1" role="dialog"><style>' + PR_CSS + '</style>'
+            + '<div class="modal-dialog"><div class="modal-content">'
+            + '<div class="modal-header"><button type="button" class="close pr-close">&times;</button>'
+            + '<h4 class="modal-title"><i class="fa fa-cogs"></i> ' + esc(title) + '</h4></div>'
+            + '<div class="modal-body">';
+        var lines = [];
+        for (i = 0; i < subs.length; i++) if (toText(subs[i]) !== "") lines.push(subs[i]);
+        if (lines.length > 0) {
+            h += '<div class="pr-cond"><div class="pr-cap">Điều kiện áp dụng</div>';
+            for (i = 0; i < lines.length; i++) h += '<div class="pr-line">' + esc(lines[i]).replace(/(^|; )([^:;]+?):/g, "$1<b>$2:</b>") + '</div>';
+            h += '</div>';
+        }
+        h += '<div class="pr-bar"><div class="pr-btns">'
+            + '<button type="button" class="btn btn-primary pr-run"><i class="fa fa-play"></i>RUN</button>'
+            + '<button type="button" class="btn btn-danger pr-stop" style="display:none"><i class="fa fa-stop"></i>Dừng</button>'
+            + '<button type="button" class="btn btn-warning pr-retry" style="display:none"><i class="fa fa-repeat"></i><span></span></button>'
+            + '</div><div class="pr-stats">'
+            + '<span class="pr-pill">Tổng <b class="n-total">0</b></span>'
+            + '<span class="pr-pill run">Đang chạy <b class="n-run">0</b></span>'
+            + '<span class="pr-pill ok"><i class="fa fa-check-circle"></i>Thành công <b class="n-ok">0</b></span>'
+            + '<span class="pr-pill err"><i class="fa fa-times-circle"></i>Lỗi <b class="n-err">0</b></span>'
+            + '<span class="pr-pill">Còn lại <b class="n-pend">0</b></span>'
+            + '<span class="pr-pill"><i class="fa fa-clock-o"></i><b class="n-time">00:00</b></span>'
+            + '</div></div>'
+            + '<div class="progress pr-prog"><div class="progress-bar progress-bar-striped" style="width:0%"></div><div class="pr-ptext"></div></div>'
+            + '<div class="pr-banner info"></div>'
+            + '<div class="pr-tabs">'
+            + '<span class="pr-tab on" data-f="">Tất cả (<span class="t-all">0</span>)</span>'
+            + '<span class="pr-tab" data-f="ok">Thành công (<span class="t-ok">0</span>)</span>'
+            + '<span class="pr-tab" data-f="err">Lỗi (<span class="t-err">0</span>)</span>'
+            + '<span class="pr-tab" data-f="pend">Chưa chạy (<span class="t-pend">0</span>)</span>'
+            + '<label class="pr-auto"><input type="checkbox" class="pr-autochk" checked> Tự cuộn theo dòng đang chạy</label></div>'
+            + '<div class="pr-box"><table class="pr-tbl"><colgroup><col style="width:64px">';
+        for (c = 0; c < cols.length; c++) h += '<col>';
+        h += '<col style="width:108px"><col style="width:108px"><col style="width:160px"><col style="width:30%"></colgroup><thead><tr><th>STT</th>';
+        for (c = 0; c < cols.length; c++) h += '<th>' + esc(cols[c].header || "") + '</th>';
+        h += '<th>Thời gian bắt đầu</th><th>Thời gian kết thúc</th><th>Kết quả</th><th>Ghi chú</th></tr></thead><tbody class="pr-body" data-f=""></tbody></table></div>'
+            + '<div class="pr-msg"></div>'
+            + '</div><div class="modal-footer"><div class="pr-exp">'
+            + '<button type="button" class="btn btn-warning pr-x-err"><i class="fa fa-file-excel-o"></i>Xuất lỗi</button>'
+            + '<button type="button" class="btn btn-success pr-x-ok"><i class="fa fa-file-excel-o"></i>Xuất thành công</button>'
+            + '<button type="button" class="btn btn-default pr-x-all"><i class="fa fa-file-excel-o"></i>Xuất tất cả</button>'
+            + '</div><button type="button" class="btn btn-default pr-close"><i class="fa fa-times-circle"></i>Đóng</button>'
+            + '</div></div></div></div>';
+
+        var $m = $(h).appendTo(document.body);
+        var tbody = $m.find(".pr-body")[0], $box = $m.find(".pr-box"), $banner = $m.find(".pr-banner"), $prog = $m.find(".pr-prog");
+        var $run = $m.find(".pr-run"), $stop = $m.find(".pr-stop"), $retry = $m.find(".pr-retry");
+
+        // ---- Hiển thị ----
+        function rowHtml(k) {
+            var s = st[k], r = '<tr class="' + cls(s.s) + '"><td class="c">' + (k + 1) + '</td>';
+            for (var a = 0; a < info[k].length; a++) r += '<td>' + esc(info[k][a]) + '</td>';
+            return r + '<td class="c">' + fmtTime(s.start) + '</td><td class="c">' + fmtTime(s.end) + '</td>'
+                + '<td class="c pr-st">' + statusHtml(s.s) + '</td><td class="pr-nt">' + esc(s.msg) + '</td></tr>';
+        }
+        // Dựng bảng theo từng đợt để danh sách hàng nghìn bản ghi không làm đơ trình duyệt
+        function renderChunk() {
+            if (closed) return;
+            var end = Math.min(items.length, rendered + 300), buf = "";
+            for (var k = rendered; k < end; k++) buf += rowHtml(k);
+            tbody.insertAdjacentHTML("beforeend", buf);
+            rendered = end;
+            if (rendered < items.length) timers.render = setTimeout(renderChunk, 0);
+        }
+        function setRow(k) {
+            var tr = tbody.rows[k];
+            if (!tr) return;// chưa dựng tới dòng này — lúc dựng sẽ lấy đúng trạng thái hiện tại
+            var s = st[k], n = cols.length;
+            tr.className = cls(s.s);
+            tr.cells[n + 1].textContent = fmtTime(s.start);
+            tr.cells[n + 2].textContent = fmtTime(s.end);
+            tr.cells[n + 3].innerHTML = statusHtml(s.s);
+            tr.cells[n + 4].textContent = s.msg;
+        }
+        function setState(k, to) {
+            cnt[st[k].s]--;
+            st[k].s = to;
+            cnt[to]++;
+        }
+        function elapsed() { return elapsedAcc + (running ? Date.now() - segStart : 0); }
+        function summary() {
+            return { total: items.length, ok: cnt.ok, err: cnt.err, pending: cnt.pend, running: cnt.run, elapsedMs: elapsed() };
+        }
+        function refreshNow() {
+            var total = items.length, done = cnt.ok + cnt.err, pct = total > 0 ? Math.floor(done * 100 / total) : 0;
+            $m.find(".n-total, .t-all").text(fmtInt(total));
+            $m.find(".n-run").text(fmtInt(cnt.run));
+            $m.find(".n-ok, .t-ok").text(fmtInt(cnt.ok));
+            $m.find(".n-err, .t-err").text(fmtInt(cnt.err));
+            $m.find(".n-pend, .t-pend").text(fmtInt(cnt.pend));
+            $m.find(".n-time").text(fmtElapsed(elapsed()));
+            $prog.find(".progress-bar").css("width", pct + "%");
+            $prog.find(".pr-ptext").text(fmtInt(done) + " / " + fmtInt(total) + " (" + pct + "%)");
+            $prog.find(".progress-bar").toggleClass("active", running);
+            // nút
+            $run.prop("disabled", running || cnt.pend === 0)
+                .html(running ? '<i class="fa fa-spinner fa-spin"></i>Đang chạy…' : (done > 0 && cnt.pend > 0 ? '<i class="fa fa-play"></i>Chạy tiếp' : '<i class="fa fa-play"></i>RUN'));
+            $stop.toggle(running).prop("disabled", stopping).html(stopping ? '<i class="fa fa-spinner fa-spin"></i>Đang dừng…' : '<i class="fa fa-stop"></i>Dừng');
+            $retry.toggle(!running && cnt.err > 0).find("span").text("Chạy lại " + fmtInt(cnt.err) + " bản ghi lỗi");
+            $m.find(".pr-x-err").prop("disabled", cnt.err === 0);
+            $m.find(".pr-x-ok").prop("disabled", cnt.ok === 0);
+            $m.find(".pr-x-all").prop("disabled", done === 0);
+        }
+        // Cập nhật số liệu tối đa ~12 lần/giây để chạy nhanh hàng nghìn bản ghi không bị chậm vì vẽ lại
+        function scheduleRefresh() {
+            if (timers.sum || closed) return;
+            timers.sum = setTimeout(function () { timers.sum = null; if (!closed) refreshNow(); }, 80);
+        }
+        function showBanner(type, html) { $banner.attr("class", "pr-banner " + type).html(html).show(); }
+        function showMsg(text) {
+            var $x = $m.find(".pr-msg").text(text).show();
+            clearTimeout(timers.msg);
+            timers.msg = setTimeout(function () { $x.hide(); }, 5000);
+        }
+        function autoScroll(k) {
+            if (!$m.find(".pr-autochk").prop("checked")) return;
+            var tr = tbody.rows[k], box = $box[0];
+            if (!tr || tr.offsetParent === null) return;
+            var top = tr.offsetTop, bottom = top + tr.offsetHeight;
+            if (top < box.scrollTop + 36 || bottom > box.scrollTop + box.clientHeight) box.scrollTop = Math.max(0, top - box.clientHeight / 2);
+        }
+
+        // ---- Chạy ----
+        function finishRun() {
+            running = false;
+            elapsedAcc += Date.now() - segStart;
+            clearInterval(timers.clock);
+            timers.clock = null;
+            if (closed) return;
+            $m.data("eduProcessRunning", false);
+            var total = items.length, wasStopped = stopping;
+            stopping = false;
+            refreshNow();
+            var t = " Tổng thời gian: " + fmtElapsed(elapsed()) + ".";
+            $prog.removeClass("s-ok s-warn s-err");
+            if (cnt.pend > 0) {
+                $prog.addClass("s-warn");
+                showBanner("warn", '<i class="fa fa-pause-circle"></i> ' + (wasStopped ? "Đã dừng" : "Chưa xong") + ': đã chạy ' + fmtInt(cnt.ok + cnt.err) + ' / ' + fmtInt(total)
+                    + ' ' + esc(unit) + ' (' + fmtInt(cnt.ok) + ' thành công, ' + fmtInt(cnt.err) + ' lỗi). Bấm <b>Chạy tiếp</b> để chạy ' + fmtInt(cnt.pend) + ' ' + esc(unit) + ' còn lại.' + t);
+            }
+            else if (cnt.err === 0) {
+                $prog.addClass("s-ok");
+                showBanner("ok", '<i class="fa fa-check-circle"></i> Hoàn tất: tất cả ' + fmtInt(total) + ' ' + esc(unit) + ' đều thành công.' + t);
+            }
+            else if (cnt.ok === 0) {
+                $prog.addClass("s-err");
+                showBanner("err", '<i class="fa fa-times-circle"></i> Hoàn tất: cả ' + fmtInt(total) + ' ' + esc(unit) + ' đều không thành công. Xem cột Ghi chú hoặc bấm <b>Xuất lỗi</b>.' + t);
+            }
+            else {
+                $prog.addClass("s-warn");
+                showBanner("warn", '<i class="fa fa-exclamation-triangle"></i> Hoàn tất: ' + fmtInt(cnt.ok) + ' thành công, <b>' + fmtInt(cnt.err) + ' không thành công</b>. Bấm <b>Xuất lỗi</b> để xem chi tiết hoặc <b>Chạy lại</b> các ' + esc(unit) + ' lỗi.' + t);
+            }
+            if (typeof cfg.onFinish === "function") { try { cfg.onFinish(summary()); } catch (ex) { } }
+        }
+
+        function startRun() {
+            if (running || cnt.pend === 0 || closed) return;
+            var queue = [], next = 0, inflight = 0;
+            for (var k = 0; k < items.length; k++) if (st[k].s === "pend") queue.push(k);
+            running = true;
+            stopping = false;
+            segStart = Date.now();
+            $m.data("eduProcessRunning", true);
+            $banner.hide();
+            $prog.removeClass("s-ok s-warn s-err");
+            clearInterval(timers.clock);
+            timers.clock = setInterval(function () { $m.find(".n-time").text(fmtElapsed(elapsed())); }, 1000);
+            refreshNow();
+
+            function launch(k) {
+                inflight++;
+                setState(k, "run");
+                st[k].start = new Date();
+                st[k].end = null;
+                st[k].msg = "";
+                setRow(k);
+                autoScroll(k);
+                scheduleRefresh();
+                execute(cfg, items[k], k).then(function (r) {
+                    inflight--;
+                    if (closed) return;
+                    st[k].end = new Date();
+                    st[k].msg = r.message;
+                    setState(k, r.ok ? "ok" : "err");
+                    if (!r.ok && cfg.stopOnError) stopping = true;
+                    setRow(k);
+                    scheduleRefresh();
+                    pump();
+                });
+            }
+            function pump() {
+                while (!stopping && !closed && inflight < conc && next < queue.length) launch(queue[next++]);
+                if (inflight === 0 && (stopping || closed || next >= queue.length)) finishRun();
+            }
+            pump();
+        }
+        function stopRun() {
+            if (!running || stopping) return;
+            stopping = true;// các bản ghi đang chạy dở được chờ cho xong, không bắt đầu bản ghi mới
+            refreshNow();
+        }
+        function retryErrors() {
+            if (running) return;
+            for (var k = 0; k < items.length; k++) {
+                if (st[k].s !== "err") continue;
+                setState(k, "pend");
+                st[k].start = null; st[k].end = null; st[k].msg = "";
+                setRow(k);
+            }
+            startRun();
+        }
+
+        // ---- Xuất Excel (cùng bộ xuất của mọi chức năng) ----
+        function exportKind(kind) {
+            var edu = root.edu;
+            if (!edu || !edu.exporter) { showMsg("Chưa cập nhật chức năng xuất Excel (thiếu Corei/exportexcel.js và indexi.aspx)."); return; }
+            var rows = [], k;
+            for (k = 0; k < items.length; k++) {
+                var s = st[k];
+                if (kind === "all" ? s.s === "run" : s.s !== kind) continue;
+                rows.push({
+                    vals: info[k], startText: fmtDateTime(s.start), endText: fmtDateTime(s.end),
+                    secs: (s.start && s.end) ? Math.round((s.end - s.start) / 100) / 10 : "",
+                    result: s.s === "ok" ? "Thành công" : s.s === "err" ? "Không thành công" : "Chưa chạy", note: s.msg
+                });
+            }
+            if (rows.length === 0) { showMsg(kind === "err" ? "Không có " + unit + " lỗi nào để xuất." : kind === "ok" ? "Chưa có " + unit + " thành công nào để xuất." : "Chưa có kết quả để xuất."); return; }
+            var columns = [];
+            cols.forEach(function (col, idx) { columns.push({ header: col.header || "Thông tin xử lý", render: function (row) { return row.vals[idx]; } }); });
+            columns.push({ header: "Thời gian bắt đầu", field: "startText", align: "center" });
+            columns.push({ header: "Thời gian kết thúc", field: "endText", align: "center" });
+            columns.push({ header: "Thời lượng (giây)", field: "secs", type: "number", align: "center" });
+            columns.push({ header: "Kết quả", field: "result", align: "center" });
+            columns.push({ header: "Ghi chú", field: "note" });
+            var label = kind === "err" ? "Lỗi" : kind === "ok" ? "Thành công" : "Tất cả";
+            edu.exporter.exportData({
+                fileName: (cfg.fileName || "KetQuaTienTrinh") + (kind === "err" ? "_Loi" : kind === "ok" ? "_ThanhCong" : "_TatCa"),
+                name: label,
+                title: kind === "err" ? "DANH SÁCH BẢN GHI KHÔNG THÀNH CÔNG" : kind === "ok" ? "DANH SÁCH BẢN GHI THÀNH CÔNG" : "KẾT QUẢ THỰC HIỆN TIẾN TRÌNH",
+                subTitles: ["Tiến trình: " + title].concat(lines, [
+                    "Tổng hợp: " + fmtInt(items.length) + " " + unit + "; " + fmtInt(cnt.ok) + " thành công; " + fmtInt(cnt.err) + " không thành công; " + fmtInt(cnt.pend) + " chưa chạy"]),
+                columns: columns,
+                data: rows
+            });
+        }
+
+        // ---- Sự kiện ----
+        function requestClose() {
+            if (running && root.confirm && !root.confirm("Tiến trình đang chạy. Đóng cửa sổ sẽ DỪNG việc xử lý các " + unit + " còn lại.\nBạn có chắc chắn muốn đóng?")) return;
+            if (running) stopping = true;
+            $m.modal("hide");
+        }
+        $m.on("click", ".pr-run", startRun);
+        $m.on("click", ".pr-stop", stopRun);
+        $m.on("click", ".pr-retry", retryErrors);
+        $m.on("click", ".pr-close", requestClose);
+        $m.on("click", ".pr-x-err", function () { exportKind("err"); });
+        $m.on("click", ".pr-x-ok", function () { exportKind("ok"); });
+        $m.on("click", ".pr-x-all", function () { exportKind("all"); });
+        $m.on("click", ".pr-tab", function () {
+            $m.find(".pr-tab").removeClass("on");
+            $(this).addClass("on");
+            tbody.setAttribute("data-f", $(this).attr("data-f"));
+        });
+        $m.on("hidden.bs.modal", function () {
+            closed = true;
+            clearInterval(timers.clock);
+            clearTimeout(timers.render);
+            clearTimeout(timers.sum);
+            clearTimeout(timers.msg);
+            var sum = summary();
+            $m.remove();
+            if (typeof cfg.onClose === "function") { try { cfg.onClose(sum); } catch (ex) { } }
+        });
+        $m.on("shown.bs.modal", function () { $run.trigger("focus"); });
+
+        // ---- Bước 1: hiển thị danh sách đã nạp, chờ bấm RUN ----
+        if (items.length === 0) {
+            showBanner("warn", '<i class="fa fa-info-circle"></i> Không có ' + esc(unit) + ' nào để xử lý.');
+        }
+        else {
+            var intro = '<i class="fa fa-info-circle"></i> <b>Bước 1:</b> đã nạp <b>' + fmtInt(items.length) + '</b> ' + esc(unit)
+                + '. Kiểm tra danh sách bên dưới rồi bấm <b>RUN</b> để chạy lần lượt từng ' + esc(unit) + '.';
+            var notes = cfg.notes || [];
+            for (i = 0; i < notes.length; i++) if (toText(notes[i]) !== "") intro += '<div class="pr-note"><i class="fa fa-exclamation-triangle"></i> ' + esc(notes[i]) + '</div>';
+            showBanner("info", intro);
+        }
+        refreshNow();
+        renderChunk();
+        $m.modal({ backdrop: "static", keyboard: false });
+        if (cfg.autoStart && items.length > 0) setTimeout(startRun, 400);
+
+        var ctl = { start: startRun, stop: stopRun, retry: retryErrors, close: requestClose, summary: summary };
+        $m.data("eduProcessCtl", ctl);
+        return ctl;
+    }
+
+    /*------------------------------------------
+    --Discription: [5] API công khai
+    -------------------------------------------*/
+    return {
+        version: "1.0.0",
+        open: open,
+        callApi: callApi
+    };
+})(typeof window !== "undefined" ? window : globalThis);
+
+// Cùng mẫu với util/systemroot: indexi.aspx khởi tạo bằng edu['process'] = new processrun();
+function processrun() { };
+processrun.prototype = processrunApi;

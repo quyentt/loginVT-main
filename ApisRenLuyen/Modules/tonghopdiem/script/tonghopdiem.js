@@ -13,10 +13,12 @@ TongHopDiem.prototype = {
     strPhamViMa: '',
     dtThieuDRL: [],
     isLoading_ThieuDRL: false,
-    isLoading_XepLoai: false,
     // Điều kiện lọc tại thời điểm tìm kiếm — ghi vào dòng phụ đề của file Excel cho khớp với dữ liệu đang xem
     arrLoc_TongHopDiem: [],
     arrLoc_ThieuDRL: [],
+    // Các mục đã chọn ở ô tìm kiếm ngoài màn hình tại thời điểm tìm — làm mặc định (tích sẵn) cho hộp thoại lọc thêm khi xuất
+    objLoc_TongHopDiem: {},
+    objLoc_ThieuDRL: {},
 
     // Cột khai báo 1 lần: dùng cho cả vẽ bảng (loadToTable_data) lẫn xuất Excel (edu.exporter)
     aoColumns_TongHopDiem: [
@@ -81,14 +83,10 @@ TongHopDiem.prototype = {
 
         edu.system.loadToCombo_DanhMucDuLieu("DIEM.PHAMVITONGHOPDIEM", "", "", me.loadToCombo_PhamVi);
         edu.system.loadToCombo_DanhMucDuLieu("DRL.DOITUONGAPDUNG", "dropSearch_DoiTuong");
+        // Thực hiện xếp loại: mở form tiến trình chung, chạy từng lớp quản lý
         $("#btnSave_XepLoai").click(function (e) {
             e.preventDefault();
-            if (me.isLoading_XepLoai === true) return;
-            edu.system.confirm("Bạn có chắc chắn muốn thực hiện không?");
-            // Namespace + off: nếu confirm dùng lại modal đang mở thì #btnYes không bị chồng handler
-            $("#btnYes").off("click.THDXepLoai").on("click.THDXepLoai", function () {
-                me.save_TongHopDiem();
-            });
+            me.openProcess_XepLoai();
         });
 
         $("#btnSearch").click(function () {
@@ -167,162 +165,76 @@ TongHopDiem.prototype = {
         });
     },
     /*------------------------------------------
-    --Discription: [3] AccessDB HOC
-    --ULR:  Modules
+    --Discription: [3] Thực hiện xếp loại — "gửi vào" form tiến trình chung (Corei/processrun.js, edu.process).
+    -- Bước 1 nạp danh sách lớp quản lý trong phạm vi đang chọn; form chạy từng lớp, báo giờ bắt đầu/kết thúc,
+    -- kết quả, ghi chú lỗi, có tổng hợp thành công/lỗi và xuất Excel danh sách lỗi/thành công.
     -------------------------------------------*/
-    save_TongHopDiem: function (point) {
-        var me = this;
-        var strDaoTao_ThoiGianDaoTao_Id = edu.util.checkValue(edu.util.getValById("dropSearch_ThoiGianDaoTao")) ? edu.util.getValById('dropSearch_ThoiGianDaoTao') : edu.util.getValById('dropSearch_NamHoc');
-        //--Edit
-        var obj_save = {
-            'action': 'RL_XuLy/TongHopDRLTheoKyNamToanKhoa',
-
-            'strId': $(point).attr("name"),
-            'strChucNang_Id': edu.system.strChucNang_Id,
-            'strDaoTao_ThoiGianDaoTao_Id': strDaoTao_ThoiGianDaoTao_Id,
-            'strDoiTuongApDung_Id': edu.util.getValCombo('dropSearch_DoiTuong'),
-            'strDaoTao_LopQuanLy_Id': edu.util.getValCombo('dropSearch_LopQuanLy'),
-            'strDaoTao_KhoaDaoTao_Id': edu.util.getValCombo('dropSearch_KhoaDaoTao'),
-            'strDaoTao_ChuongTrinh_Id': edu.util.getValCombo('dropSearch_ChuongTrinhDaoTao'),
-            'strNguoiThucHien_Id': edu.system.userId,
-        };
-        me._startXepLoaiProgress();
-        // try/catch: makeRequest có thể ném lỗi trước khi gửi (VD thiếu cấu hình API) — phải báo ra thay vì im lặng
-        try {
-            edu.system.makeRequest({
-                success: function (data) {
-                    try {
-                        console.log("[TongHopDiem][XepLoai] response", data);
-                    } catch (e) { }
-                    if (data && data.Success) {
-                        me._finishXepLoai("s", "Thực hiện xếp loại thành công", data.Message);
-                    }
-                    else {
-                        me._finishXepLoai("w", "Thực hiện xếp loại không thành công",
-                            (data && edu.util.checkValue(data.Message)) ? data.Message : "Máy chủ không trả về nội dung thông báo.");
-                    }
-                },
-                error: function (er) {
-                    try {
-                        console.log("[TongHopDiem][XepLoai] error", er);
-                    } catch (e) { }
-                    var strChiTiet = "Không kết nối được máy chủ.";
-                    if (er && er.statusText === "timeout") {
-                        strChiTiet = "Quá thời gian chờ phản hồi từ máy chủ.";
-                    }
-                    else if (er && er.status) {
-                        strChiTiet = "Lỗi " + er.status + (er.statusText ? " - " + er.statusText : "");
-                        if (er.responseJSON && edu.util.checkValue(er.responseJSON.Message)) strChiTiet += ": " + er.responseJSON.Message;
-                    }
-                    me._finishXepLoai("e", "Không thực hiện được xếp loại", strChiTiet);
-                },
-                type: "POST",
-                action: obj_save.action,
-
-                contentType: true,
-                data: obj_save,
-                fakedb: [
-                ]
-            }, false, false, false, null);
-            // makeRequest tự bật overlay chung — ẩn đi để chỉ còn thanh tiến trình trong modal
-            $("#overlay").hide();
-        } catch (ex) {
-            try {
-                console.log("[TongHopDiem][XepLoai] exception", ex);
-            } catch (e) { }
-            me._finishXepLoai("e", "Không gửi được yêu cầu xếp loại", ex && ex.message);
-        }
-    },
-
-    /*------------------------------------------
-    --Discription: Hiệu ứng + báo kết quả cho nút "Thực hiện xếp loại".
-    -- Thời gian xử lý không biết trước nên dùng thanh sọc chạy liên tục (không giả % như import)
-    -- kèm đồng hồ "Đã trôi". Kết quả ghi thẳng vào modal đang mở (#alert_content), không dùng
-    -- edu.system.alert append để khỏi bị gộp với alert khác; modal đã đóng thì mới fallback alert.
-    -------------------------------------------*/
-    _formatElapsed: function (iMs) {
-        var iSec = Math.floor(iMs / 1000);
-        if (iSec < 60) return iSec + "s";
-        return Math.floor(iSec / 60) + "p " + (iSec % 60) + "s";
-    },
-
-    _startXepLoaiProgress: function () {
-        var me = this;
-        me.isLoading_XepLoai = true;
-        me._xepLoaiStartTime = new Date().getTime();
-
-        $("#btnSave_XepLoai").addClass("disabled").css("pointer-events", "none")
-            .find("i").attr("class", "fa fa-spinner fa-spin");
-
-        // confirm() đã hide #btnYes và xóa nội dung modal, ở đây ghi đè bằng thanh tiến trình
-        $("#btnYes").hide();
-        var row = '';
-        row += '<div id="zoneXepLoaiProgress_THD">';
-        row += '  <div class="clearfix" style="margin-bottom:4px">';
-        row += '    <span class="pull-left"><i class="fa fa-spinner fa-spin"></i> Đang thực hiện xếp loại…</span>';
-        row += '    <small class="pull-right" style="font-weight:bold;font-size:14px">Đã trôi: <span id="lblXepLoaiTime_THD">0s</span></small>';
-        row += '  </div>';
-        row += '  <div class="progress progress-sm active" style="margin-bottom:0;height:18px">';
-        row += '    <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" style="width:100%"></div>';
-        row += '  </div>';
-        row += '  <div class="text-muted" style="margin-top:6px;font-size:12px">Xếp loại toàn khóa có thể mất vài phút. Vui lòng không đóng cửa sổ trong khi xử lý.</div>';
-        row += '</div>';
-        $("#myModalAlert #alert_content").html(row);
-
-        if (me._xepLoaiTimer) clearInterval(me._xepLoaiTimer);
-        me._xepLoaiTimer = setInterval(function () {
-            $("#lblXepLoaiTime_THD").text(me._formatElapsed(new Date().getTime() - me._xepLoaiStartTime));
-            $("#overlay").hide();
-        }, 1000);
-    },
-
-    // strLoai: "s" thành công, "w" máy chủ trả Success=false, "e" lỗi gọi API
-    _finishXepLoai: function (strLoai, strTieuDe, strChiTiet) {
-        var me = this;
-        // makeRequest có thể gọi success 2 lần nếu handler ném lỗi — chỉ xử lý lần đầu
-        if (me.isLoading_XepLoai !== true) return;
-        me.isLoading_XepLoai = false;
-        if (me._xepLoaiTimer) {
-            clearInterval(me._xepLoaiTimer);
-            me._xepLoaiTimer = null;
-        }
-        $("#overlay").hide();
-        $("#btnSave_XepLoai").removeClass("disabled").css("pointer-events", "")
-            .find("i").attr("class", "fa fa-paper-plane");
-
-        var strThoiGian = me._formatElapsed(new Date().getTime() - me._xepLoaiStartTime);
-        var objStyle = {
-            s: { color: "#00a65a", bg: "rgba(0,166,90,0.1)", icon: "fa-check-circle" },
-            w: { color: "#f39c12", bg: "rgba(243,156,18,0.1)", icon: "fa-exclamation-triangle" },
-            e: { color: "#dd4b39", bg: "rgba(221,75,57,0.1)", icon: "fa-times-circle" }
-        }[strLoai];
-
-        var $content = $("#myModalAlert #alert_content");
-        if ($content.length > 0) {
-            // Dựng bằng .text() để Message từ máy chủ không bị diễn giải thành HTML
-            var $banner = $('<div>').css({
-                "border-left": "4px solid " + objStyle.color,
-                "background": objStyle.bg,
-                "padding": "10px 12px"
+    // Các lớp sẽ xếp loại: những lớp đang chọn ở ô "Lớp quản lý"; không chọn lớp nào thì lấy tất cả lớp
+    // trong phạm vi hệ/khóa/chương trình đang chọn (chính là danh sách của ô chọn lớp)
+    getItems_XepLoai: function () {
+        var items = [], seen = {};
+        function pick($opts) {
+            $opts.each(function () {
+                var id = $(this).val();
+                if (!id || id === "SELECTALL" || seen[id]) return;
+                seen[id] = true;
+                items.push({ ID: id, TEN: $(this).text().replace(/\s+/g, " ").trim() });
             });
-            $banner.append($('<div>').css({ "font-weight": "bold", "color": objStyle.color })
-                .append($('<i>').addClass("fa " + objStyle.icon)).append(document.createTextNode(" " + strTieuDe)));
-            if (edu.util.checkValue(strChiTiet)) {
-                $banner.append($('<div>').css("margin-top", "4px").text(strChiTiet));
+        }
+        pick($("#dropSearch_LopQuanLy option:selected"));
+        if (items.length === 0) pick($("#dropSearch_LopQuanLy option"));
+        return items;
+    },
+    openProcess_XepLoai: function () {
+        var me = this;
+        if (!edu.process) {
+            edu.system.alert("Chưa cập nhật form tiến trình (thiếu Corei/processrun.js hoặc indexi.aspx).", "w");
+            return;
+        }
+        // chụp điều kiện tại thời điểm mở form: mọi lớp chạy với cùng điều kiện
+        var strThoiGian = edu.util.checkValue(edu.util.getValById("dropSearch_ThoiGianDaoTao")) ? edu.util.getValById('dropSearch_ThoiGianDaoTao') : edu.util.getValById('dropSearch_NamHoc');
+        var strDoiTuong = edu.util.getValCombo('dropSearch_DoiTuong');
+        var strKhoa = edu.util.getValCombo('dropSearch_KhoaDaoTao');
+        var strChuongTrinh = edu.util.getValCombo('dropSearch_ChuongTrinhDaoTao');
+        var items = me.getItems_XepLoai(), notes = [];
+        // chưa có danh sách lớp thì chạy 1 lần cho cả phạm vi, như trước đây
+        if (items.length === 0) items = [{ ID: "", TEN: "Toàn bộ phạm vi đã chọn (không chia theo lớp)" }];
+        if (!edu.util.checkValue(strThoiGian)) notes.push("Chưa chọn Năm học / Thời gian đào tạo.");
+        edu.process.open({
+            title: "Thực hiện xếp loại rèn luyện kỳ, năm, toàn khóa",
+            subTitles: me.getFilterLines(),
+            unit: "lớp quản lý",
+            infoHeader: "Lớp quản lý",
+            items: items,
+            info: function (it) { return it.TEN; },
+            notes: notes,
+            fileName: "KetQuaXepLoaiRenLuyen",
+            request: function (it) {
+                var action = 'RL_XuLy/TongHopDRLTheoKyNamToanKhoa';
+                return {
+                    action: action,
+                    data: {
+                        'action': action,
+                        'strChucNang_Id': edu.system.strChucNang_Id,
+                        'strDaoTao_ThoiGianDaoTao_Id': strThoiGian,
+                        'strDoiTuongApDung_Id': strDoiTuong,
+                        'strDaoTao_LopQuanLy_Id': it.ID,
+                        'strDaoTao_KhoaDaoTao_Id': strKhoa,
+                        'strDaoTao_ChuongTrinh_Id': strChuongTrinh,
+                        'strNguoiThucHien_Id': edu.system.userId
+                    }
+                };
+            },
+            // đóng form xong thì nạp lại danh sách để thấy kết quả xếp loại mới
+            onClose: function (sum) {
+                if (sum.ok > 0) me.getList_TongHopDiem();
             }
-            $banner.append($('<div>').addClass("text-muted").css({ "margin-top": "4px", "font-size": "12px" })
-                .text("Thời gian xử lý: " + strThoiGian));
-            $content.empty().append($banner);
-        }
-        else {
-            // Người dùng đã đóng modal giữa chừng → vẫn phải báo kết quả
-            var strNoiDung = $('<div>').text(strTieuDe + (edu.util.checkValue(strChiTiet) ? ": " + strChiTiet : "")).html();
-            edu.system.alert(strNoiDung, strLoai === "s" ? undefined : "w");
-        }
+        });
     },
     getList_TongHopDiem: function (strDanhSach_Id) {
         var me = this;
         var arrLoc = me.getFilterLines();
+        var objLoc = me.getSelectedLoc();
         var strDaoTao_ThoiGianDaoTao_Id = edu.util.checkValue(edu.util.getValById("dropSearch_ThoiGianDaoTao")) ? edu.util.getValById('dropSearch_ThoiGianDaoTao') : edu.util.getValById('dropSearch_NamHoc');
         //--Edit
         //var obj_list = {
@@ -356,6 +268,7 @@ TongHopDiem.prototype = {
                     var dtReRult = data.Data;
                     me.dtTongHopDiem = dtReRult;
                     me.arrLoc_TongHopDiem = arrLoc;
+                    me.objLoc_TongHopDiem = objLoc;
                     me.genTable_TongHopDiem(dtReRult.rsChiTiet, data.Pager);
                     me.genTable_ThongKe(dtReRult.rsThongKe, data.Pager);
                 }
@@ -420,6 +333,7 @@ TongHopDiem.prototype = {
         };
 
         var arrLoc = me.getFilterLines();
+        var objLoc = me.getSelectedLoc();
         var t0 = new Date().getTime();
         try {
             console.log("[TongHopDiem][ThieuDRL] request", obj_save);
@@ -438,6 +352,7 @@ TongHopDiem.prototype = {
                     var rows = (dtReRult && dtReRult.rsChiTiet) ? dtReRult.rsChiTiet : dtReRult;
                     me.dtThieuDRL = rows || [];
                     me.arrLoc_ThieuDRL = arrLoc;
+                    me.objLoc_ThieuDRL = objLoc;
                     $("#zone_thongke_thieudrl").show();
                     edu.system.pageIndex_default = 1;
                     me.renderTable_ThieuDRL_Paged();
@@ -493,8 +408,20 @@ TongHopDiem.prototype = {
             ])
         ];
     },
+    // Tên các mục đang chọn ở ô tìm kiếm ngoài màn hình (chụp lúc tìm kiếm)
+    getSelectedLoc: function () {
+        if (!edu.exporter) return {};
+        return {
+            hedt: edu.exporter.selectedTexts("dropSearch_HeDaoTao"),
+            khoa: edu.exporter.selectedTexts("dropSearch_KhoaDaoTao"),
+            ct: edu.exporter.selectedTexts("dropSearch_ChuongTrinhDaoTao"),
+            lop: edu.exporter.selectedTexts("dropSearch_LopQuanLy"),
+            trangthai: edu.exporter.selectedTexts("dropSearch_TrangThai")
+        };
+    },
     getOpts_ExportKetQua: function () {
         var me = this;
+        var loc = me.objLoc_TongHopDiem || {};
         var dt = me.dtTongHopDiem || {};
         var arrChiTiet = dt.rsChiTiet || [];
         if (arrChiTiet.length === 0) {
@@ -512,11 +439,14 @@ TongHopDiem.prototype = {
                     aoColumns: me.aoColumns_TongHopDiem,
                     // Cột 7-9: ngày sinh, giới tính, xếp loại (căn giữa); 10-11: điểm (số). Mã số giữ dạng chữ.
                     colOptions: { 7: { align: "center" }, 8: { align: "center" }, 9: { align: "center" }, 10: { type: "number" }, 11: { type: "number" } },
-                    // Ô "lọc thêm khi xuất" trong hộp thoại hỏi trước khi xuất
+                    // Danh sách "lọc thêm khi xuất". Quy tắc chung: ngoài màn hình chọn gì thì tích sẵn đúng cái đó (selected),
+                    // không chọn gì thì để trống = xuất tất cả. Khoa quản lý/Xếp loại/Giới tính không có ô tương ứng ngoài màn hình nên luôn để trống.
                     filters: [
+                        { label: "Hệ đào tạo", field: "DAOTAO_HEDAOTAO_TEN", selected: loc.hedt },
+                        { label: "Khóa đào tạo", field: "DAOTAO_KHOADAOTAO_TEN", selected: loc.khoa },
                         { label: "Khoa quản lý", field: "DAOTAO_KHOAQUANLY_TEN" },
-                        { label: "Chương trình", field: "DAOTAO_TOCHUCCHUONGTRINH_TEN" },
-                        { label: "Lớp quản lý", field: "DAOTAO_LOPQUANLY_TEN" },
+                        { label: "Chương trình", field: "DAOTAO_TOCHUCCHUONGTRINH_TEN", selected: loc.ct },
+                        { label: "Lớp quản lý", field: "DAOTAO_LOPQUANLY_TEN", selected: loc.lop },
                         { label: "Xếp loại", field: "XEPLOAI_TEN" },
                         { label: "Giới tính", field: "GIOITINH_TEN" }
                     ],
@@ -538,6 +468,7 @@ TongHopDiem.prototype = {
     },
     getOpts_ExportThieuDRL: function () {
         var me = this;
+        var loc = me.objLoc_ThieuDRL || {};
         if (!me.dtThieuDRL || me.dtThieuDRL.length === 0) {
             edu.system.alert("Chưa có dữ liệu để xuất.", "w");
             return null;
@@ -550,10 +481,12 @@ TongHopDiem.prototype = {
             table: "tblThieuDRL",
             aoColumns: me.aoColumns_ThieuDRL,
             filters: [
+                { label: "Hệ đào tạo", field: "TENHEDAOTAO", selected: loc.hedt },
+                { label: "Khóa đào tạo", field: "TENKHOA", selected: loc.khoa },
                 { label: "Khoa quản lý", field: "TENKHOAQUANLY" },
-                { label: "Chương trình", field: "TENCHUONGTRINH" },
-                { label: "Lớp", field: "TENLOP" },
-                { label: "Trạng thái", field: "TRANGTHAI_TEN" }
+                { label: "Chương trình", field: "TENCHUONGTRINH", selected: loc.ct },
+                { label: "Lớp", field: "TENLOP", selected: loc.lop },
+                { label: "Trạng thái", field: "TRANGTHAI_TEN", selected: loc.trangthai }
             ],
             // toàn bộ danh sách, không chỉ trang đang xem
             data: me.dtThieuDRL
