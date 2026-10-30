@@ -20,6 +20,7 @@
 --      // hoặc run: function (it, i, done) {...}         // xử lý tùy ý: trả về Promise | {ok, message} | boolean, hoặc gọi done({ok, message})
 --      fileName: "KetQuaXepLoai",                        // tên file xuất
 --      notes: ["Chưa chọn năm học"],                     // lưu ý hiện ở khung Bước 1
+--      okMessage: "Đã đưa vào hàng đợi",                 // (tùy chọn) ghi chú khi thành công mà máy chủ không trả Message; có thể là hàm (it, i)
 --      concurrency: 1,                                   // số bản ghi chạy cùng lúc (mặc định 1, tối đa 10)
 --      stopOnError: false, autoStart: false,
 --      (bấm là hiện NGAY thẻ "Đã nhận lệnh" rồi mới chuẩn bị: nạp danh sách -> dựng bảng -> mở form)
@@ -117,7 +118,12 @@ var processrunApi = (function (root) {
             function fin(r) {
                 if (settled) return;
                 settled = true;
-                resolve(normalize(r));
+                r = normalize(r);
+                // máy chủ không trả nội dung khi thành công: dùng ghi chú chức năng khai báo (VD "Đã đưa vào hàng đợi")
+                if (r.ok && !r.message && cfg.okMessage) {
+                    try { r.message = toText(typeof cfg.okMessage === "function" ? cfg.okMessage(item, i) : cfg.okMessage); } catch (ex) { }
+                }
+                resolve(r);
             }
             try {
                 if (typeof cfg.request === "function") {
@@ -701,9 +707,159 @@ var processrunApi = (function (root) {
     --Discription: [5] API công khai
     -------------------------------------------*/
     return {
-        version: "1.2.0",
+        version: "1.5.1",
         open: open,
         callApi: callApi,
+        // Các dòng đang tick ở bảng strTableId (ô tick có id = strPrefix + ID, mặc định "checkX"), tra đủ dữ liệu từ arrData theo ID.
+        // Dùng querySelectorAll gốc nên nhanh cả khi bảng có hàng nghìn dòng (bộ chọn ":checkbox...:checked" của jQuery chậm ~120ms/2.684 dòng)
+        selectedRows: function (strTableId, arrData, strPrefix) {
+            var pre = strPrefix || "checkX", map = {}, arr = [], i;
+            (arrData || []).forEach(function (r) { map[r.ID] = r; });
+            var nodes = root.document.querySelectorAll('#' + strTableId + ' tbody input[type="checkbox"][id^="' + pre + '"]:checked');
+            for (i = 0; i < nodes.length; i++) {
+                var r = map[nodes[i].id.substring(pre.length)];
+                if (r) arr.push(r);
+            }
+            return arr;
+        },
+
+        // Mở form tiến trình kèm các tiện ích dùng chung của mọi module. cfg như open, thêm:
+        //   hideModal   modal đang mở cần đóng TRƯỚC (form không bao giờ mở chồng lên modal khác)
+        //   reopenModal modal cần mở lại khi đóng form
+        //   refresh     hàm nạp lại danh sách, chạy khi đóng form nếu có bản ghi thành công
+        //   filters     [[{label, id}, ...], ...] các ô tìm kiếm trên màn hình -> dòng "Điều kiện áp dụng" (cần edu.exporter)
+        run: function (cfg) {
+            var $ = root.$, hide = cfg.hideModal, reopen = cfg.reopenModal, refresh = cfg.refresh, lines = [], i;
+            var c = {};
+            for (var k in cfg) c[k] = cfg[k];
+            delete c.hideModal; delete c.reopenModal; delete c.refresh; delete c.filters;
+            try {
+                if (cfg.filters && root.edu && root.edu.exporter) {
+                    for (i = 0; i < cfg.filters.length; i++) lines.push(root.edu.exporter.filterText(cfg.filters[i]));
+                }
+            } catch (ex) { }
+            c.subTitles = [].concat(cfg.subTitles || [], lines);
+            c.onClose = function (sum) {
+                if (sum.ok > 0 && typeof refresh === "function") refresh();
+                if (reopen) $(reopen).modal("show");
+                if (typeof cfg.onClose === "function") cfg.onClose(sum);
+            };
+            var $m = hide ? $(hide) : $();
+            // isShown của Bootstrap đúng cả khi modal còn đang chạy hiệu ứng mở (lúc đó :visible chưa đúng)
+            var inst = $m.data("bs.modal");
+            if ($m.length > 0 && (inst ? inst.isShown : $m.is(":visible"))) {
+                $m.one("hidden.bs.modal", function () { open(c); });
+                $m.modal("hide");
+            }
+            else open(c);
+        },
+
+        // Lệnh nghiệp vụ chạy 1 lần cho cả phạm vi đang chọn trên màn hình (đưa vào hàng đợi máy chủ, tổng hợp, tính toán, xóa bảng dữ liệu...):
+        // form 1 bản ghi — Bước 1 hiện phạm vi áp dụng (thay cho hộp "Bạn có chắc chắn..."), chạy xong có kết quả, thời gian, xuất Excel như mọi chức năng.
+        //   cfg: title, what (nội dung hiện ở dòng xử lý), request() -> tham số makeRequest, okMessage (mặc định "Đã thực hiện"),
+        //        notes, filters, fileName, refresh (nạp lại danh sách khi đóng form nếu thành công),
+        //        onSuccess(sum) chạy ngay khi lệnh thành công (VD bật thanh theo dõi hàng đợi), hideModal, reopenModal, subTitles ... như run
+        runJob: function (cfg) {
+            var c = {}, k;
+            for (k in cfg) c[k] = cfg[k];
+            var req = cfg.request, ok = cfg.onSuccess, fin = cfg.onFinish;
+            delete c.what; delete c.onSuccess;
+            c.unit = cfg.unit || "yêu cầu";
+            c.infoHeader = cfg.infoHeader || "Nội dung xử lý";
+            c.items = [{ ID: "", TEN: cfg.what || cfg.title }];
+            c.info = function (it) { return it.TEN; };
+            c.okMessage = cfg.okMessage || "Đã thực hiện";
+            c.request = function () { return req(); };
+            c.onFinish = function (sum) {
+                if (sum.ok > 0 && typeof ok === "function") ok(sum);
+                if (typeof fin === "function") fin(sum);
+            };
+            this.run(c);
+        },
+
+        // Mở modal chọn sinh viên chung (edu.extend.genModal_SinhVien); chọn xong đóng modal rồi mở form tiến trình, mỗi sinh viên 1 bản ghi.
+        //   cfg: request(id, false, row) (row = dòng trong edu.extend.dtSinhVien), what (chữ cuối tiêu đề, VD "vào danh sách không tính phí"),
+        //        title (thay hẳn tiêu đề mặc định "Thêm sinh viên ..."), refresh, fileName, subTitles, filters, notes, okMessage ... như run
+        pickSinhVien: function (cfg) {
+            var self = this;
+            function v(x) { return x === null || x === undefined ? "" : x; }
+            root.edu.extend.genModal_SinhVien(function (arrChecked_Id) {
+                if (!arrChecked_Id || arrChecked_Id.length === 0) {
+                    root.edu.system.alert("Vui lòng chọn đối tượng?");
+                    return;
+                }
+                var map = {}, c = {}, k;
+                (root.edu.extend.dtSinhVien || []).forEach(function (r) { map[r.ID] = r; });
+                for (k in cfg) c[k] = cfg[k];
+                delete c.pickerButton; delete c.what;
+                c.hideModal = "#modal_sinhvien";
+                c.title = cfg.title || ("Thêm sinh viên" + (cfg.what ? " " + cfg.what : ""));
+                c.unit = "sinh viên";
+                c.items = arrChecked_Id.map(function (id) { return { ID: id, row: map[id] || {} }; });
+                c.columns = [
+                    { header: "Mã số", render: function (it) { return it.row.QLSV_NGUOIHOC_MASO || it.ID; } },
+                    { header: "Họ tên", render: function (it) { return v(it.row.QLSV_NGUOIHOC_HODEM) + " " + v(it.row.QLSV_NGUOIHOC_TEN); } },
+                    { header: "Lớp quản lý", render: function (it) { return it.row.DAOTAO_LOPQUANLY_TEN; } }
+                ];
+                c.request = function (it) { return cfg.request(it.ID, false, it.row); };
+                self.run(c);
+            });
+        },
+
+        // Gắn bộ nút "thêm theo phạm vi" của modal chọn sinh viên chung (edu.extend.genModal_SinhVien, #modal_sinhvien) — 7 trang dùng
+        // đúng bộ này: chọn sinh viên cụ thể (nút cfg.pickerButton) hoặc thêm theo hệ / khóa / khoa quản lý x khóa / chương trình / lớp.
+        // Mỗi mục được chọn là 1 bản ghi của form tiến trình; modal chọn được đóng trước khi form mở. cfg:
+        //   request(id, isPhamVi, row)  tham số makeRequest cho 1 mục (isPhamVi=false: sinh viên, row = dòng trong edu.extend.dtSinhVien)
+        //   what          chữ cuối tiêu đề, VD "vào danh sách không xử lý" -> "Thêm sinh viên vào danh sách không xử lý"
+        //   pickerButton  bộ chọn nút mở modal chọn sinh viên (bỏ trống nếu trang không có nút này)
+        //   refresh, fileName, subTitles, filters, notes, okMessage ... như run
+        bindPhamVi: function (cfg) {
+            var $ = root.$, self = this;
+            function v(x) { return x === null || x === undefined ? "" : x; }
+            function base(strTitle, strUnit) {
+                var c = {}, k;
+                for (k in cfg) c[k] = cfg[k];
+                delete c.pickerButton; delete c.what;
+                c.hideModal = "#modal_sinhvien";
+                c.title = strTitle + (cfg.what ? " " + cfg.what : "");
+                c.unit = strUnit;
+                return c;
+            }
+            // các mục đang chọn của 1 ô chọn nhiều (bỏ mục rỗng "-- Chọn --")
+            function optItems(strSel) {
+                var a = [];
+                $(strSel + " option:selected").each(function () {
+                    if ($(this).val()) a.push({ ID: $(this).val(), TEN: $(this).text().replace(/\s+/g, " ").trim() });
+                });
+                return a;
+            }
+            function runPhamVi(strTitle, arrItems) {
+                if (arrItems.length === 0) {
+                    root.edu.system.alert("Vui lòng chọn đối tượng?");
+                    return;
+                }
+                var c = base(strTitle, "mục");
+                c.items = arrItems; c.infoHeader = "Phạm vi"; c.info = function (it) { return it.TEN; };
+                c.request = function (it) { return cfg.request(it.ID, true); };
+                self.run(c);
+            }
+            if (cfg.pickerButton) {
+                $(cfg.pickerButton).click(function () { self.pickSinhVien(cfg); });
+            }
+            var $modal = $("#modal_sinhvien");
+            $modal.delegate("#btnAdd_KhoaKhoa", "click", function () {
+                var arrKhoaQL = optItems("#dropSearchModal_KhoaQL_SV"), arrKhoa = optItems("#dropSearchModal_Khoa_SV"), arr = [];
+                arrKhoaQL.forEach(function (e) {
+                    arrKhoa.forEach(function (ele) { arr.push({ ID: ele.ID + e.ID, TEN: e.TEN + " - " + ele.TEN }); });
+                });
+                runPhamVi("Thêm phạm vi theo khoa quản lý và khóa đào tạo", arr);
+            });
+            $modal.delegate("#btnAdd_He", "click", function () { runPhamVi("Thêm phạm vi theo hệ đào tạo", optItems("#dropSearchModal_He_SV")); });
+            $modal.delegate("#btnAdd_Khoa", "click", function () { runPhamVi("Thêm phạm vi theo khóa đào tạo", optItems("#dropSearchModal_Khoa_SV")); });
+            $modal.delegate("#btnAdd_ChuongTrinh", "click", function () { runPhamVi("Thêm phạm vi theo chương trình đào tạo", optItems("#dropSearchModal_ChuongTrinh_SV")); });
+            $modal.delegate("#btnAdd_Lop", "click", function () { runPhamVi("Thêm phạm vi theo lớp quản lý", optItems("#dropSearchModal_Lop_SV")); });
+        },
+
         // Thẻ "Đã nhận lệnh" dùng riêng cho tác vụ khác (VD xuất Excel dữ liệu lớn):
         //   var a = edu.process.ack("Xuất Excel", "Đang chuẩn bị dữ liệu…"); ...; a.close();
         ack: function (strTitle, strFirstStep) {
