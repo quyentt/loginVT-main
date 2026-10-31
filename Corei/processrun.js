@@ -228,13 +228,43 @@ var processrunApi = (function (root) {
         + '#eduAck .ea-step.ea-now{color:#223771;font-weight:600}'
         + '@keyframes eaSpin{to{transform:rotate(360deg)}}'
         + '@keyframes eaFade{from{opacity:0}to{opacity:1}}';
+    var IP_CSS = '.eduip{margin:10px 0;clear:both}'
+        + '.eduip .ip-card{border:1px solid #dbe4f3;border-radius:8px;background:#f8fbff;padding:14px 16px}'
+        + '.eduip .ip-head{display:flex;align-items:center;gap:10px;font-weight:700;color:#1e40af;font-size:14px}'
+        + '.eduip .ip-hint{margin-top:8px;font-size:12.5px;color:#64748b}'
+        + '.eduip .ip-note{margin-top:6px;font-size:12.5px;color:#b45309}'
+        + '.eduip .ip-bar{height:18px;margin-top:10px;border-radius:9px;background:#e8eefb;overflow:hidden}'
+        + '.eduip .ip-bar>i{display:block;height:100%;width:100%;background:#2563eb}'
+        + '.eduip .ip-bar.run>i{background-image:linear-gradient(45deg,rgba(255,255,255,.28) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.28) 50%,rgba(255,255,255,.28) 75%,transparent 75%);background-size:28px 28px;animation:ipMove 1s linear infinite}'
+        + '.eduip .ip-bar.ok>i{background:#12b76a}.eduip .ip-bar.warn>i{background:#f79009}.eduip .ip-bar.err>i{background:#f04438}'
+        + '@keyframes ipMove{to{background-position:28px 0}}'
+        + '.eduip .ip-msg{margin-top:12px;padding:10px 14px;border-radius:6px;font-size:13.5px}'
+        + '.eduip .ip-msg.ok{background:#ecfdf3;border:1px solid #a6f4c5;color:#067647}'
+        + '.eduip .ip-msg.warn{background:#fffaeb;border:1px solid #fedf89;color:#93370d}'
+        + '.eduip .ip-msg.err{background:#fef3f2;border:1px solid #fecdca;color:#b42318}'
+        + '.eduip .ip-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}'
+        + '.eduip .ip-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 13px;border-radius:16px;background:#eef2f7;font-size:13px;font-weight:600;color:#334155}'
+        + '.eduip .ip-pill b{font-size:15px}.eduip .ip-pill.ok{background:#ecfdf3;color:#067647}.eduip .ip-pill.err{background:#fef3f2;color:#b42318}'
+        + '.eduip .ip-bar2{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin:12px 0 8px}'
+        + '.eduip .ip-tabs{display:flex;flex-wrap:wrap;gap:8px}'
+        + '.eduip .ip-tab{padding:4px 14px;border:1px solid #cbd5e1;border-radius:16px;background:#fff;font-size:13px;font-weight:600;color:#334155;cursor:pointer}'
+        + '.eduip .ip-tab.on{border-color:#223771;background:#223771;color:#fff}'
+        + '.eduip .ip-btns .btn{font-weight:700;margin-left:8px}'
+        + '.eduip .ip-box{max-height:44vh;overflow:auto;border:1px solid #cbd5e1;border-radius:6px;background:#fff}'
+        + '.eduip .ip-tbl{width:100%;border-collapse:collapse;font-size:13px}'
+        + '.eduip .ip-tbl th{position:sticky;top:0;z-index:1;background:#1f3864;color:#fff;padding:8px 10px;text-align:center;border-right:1px solid #35508a}'
+        + '.eduip .ip-tbl td{padding:6px 10px;border-bottom:1px solid #e2e8f0;border-right:1px solid #eef2f7;vertical-align:top;word-break:break-word}'
+        + '.eduip .ip-tbl tr.e td{background:#fff5f5}.eduip .ip-tbl tr.o td{background:#f6fef9}'
+        + '.eduip .ip-tbl .c{text-align:center;white-space:nowrap}'
+        + '.eduip .ip-more{text-align:center;padding:10px}'
+        + '.eduip .ip-empty{padding:22px;text-align:center;color:#94a3b8}';
     // CSS nạp 1 lần duy nhất (ngay khi tải trang, lúc DOM còn nhỏ); dùng lại ở mọi lần mở form
     function ensureCss() {
         var d = root.document;
         if (!d || !d.head || d.getElementById("eduProcessCss")) return;
         var el = d.createElement("style");
         el.id = "eduProcessCss";
-        el.textContent = PR_CSS + ACK_CSS;
+        el.textContent = PR_CSS + ACK_CSS + IP_CSS;
         d.head.appendChild(el);
     }
     var ACK_PACE = 170;//mỗi bước hiện tối thiểu chừng này ms để người dùng kịp đọc
@@ -701,13 +731,138 @@ var processrunApi = (function (root) {
         };
     }
 
+    /*------------------------------------------
+    --Discription: [4] Panel kết quả IMPORT EXCEL dùng chung (đặt ngay trong modal import sẵn có, KHÔNG mở modal thứ hai).
+    -- Import chung gửi 1 lần lên máy chủ và chỉ trả kết quả ở cuối nên KHÔNG có % thật: lúc chạy chỉ hiện thanh chạy liên tục
+    -- + đồng hồ + số dòng; xong hiện tổng hợp thành công/lỗi, bảng từng dòng (lọc Tất cả/Thành công/Lỗi) và xuất Excel.
+    --   var ip = edu.process.importPanel({ container: "#zoneImportPanel", title: "Import ...", fileName: "KetQuaImport",
+    --       source: function () { return mảng dòng của sheet (để xuất dòng lỗi đúng dạng file import) }, onBack: function () {} });
+    --   ip.start(soDong); ip.note("Đang thử lại lần 1/2"); ip.finish([{ KEY: "12: ...", VALUE: "lỗi" | "" }, ...]); ip.fail("thông báo"); ip.reset();
+    -------------------------------------------*/
+    function importPanel(cfg) {
+        ensureCss();
+        var $ = root.$, $c = $(cfg.container), timer = null, t0 = 0, total = 0, rows = [], view = [], shown = 0, cur = "", cnt = { ok: 0, err: 0 }, PAGE = 200;
+        $c.addClass("eduip");
+        function srcRows() { try { return (typeof cfg.source === "function" ? cfg.source() : null) || []; } catch (ex) { return []; } }
+        function stopTimer() { if (timer) { clearInterval(timer); timer = null; } }
+        function clock() {
+            var n = Math.floor((new Date().getTime() - t0) / 1000), m = Math.floor(n / 60), sec = n % 60;
+            return (m < 10 ? "0" : "") + m + ":" + (sec < 10 ? "0" : "") + sec;
+        }
+        function reset() { stopTimer(); $c.hide().empty(); }
+        function start(n) {
+            stopTimer();
+            total = n || 0; t0 = new Date().getTime();
+            $c.html('<div class="ip-card"><div class="ip-head"><i class="fa fa-spinner fa-spin"></i><span class="ip-lbl"></span></div>'
+                + '<div class="ip-bar run"><i></i></div>'
+                + '<div class="ip-hint">Đã nhận file. Máy chủ xử lý toàn bộ file trong một lần nên chưa có % thật — vui lòng không đóng cửa sổ này.</div>'
+                + '<div class="ip-note"></div></div>').show();
+            var $l = $c.find(".ip-lbl");
+            function tick() { $l.text("Đang import" + (total > 0 ? " " + fmtInt(total) + " dòng" : "") + " — đã chạy " + clock()); }
+            tick();
+            timer = setInterval(tick, 1000);
+        }
+        function note(txt) { $c.find(".ip-note").html(txt ? '<i class="fa fa-rotate-right"></i> ' + esc(txt) : ""); }
+        function fail(msg) {
+            stopTimer();
+            $c.html('<div class="ip-msg err"><i class="fa fa-triangle-exclamation"></i> ' + esc(msg) + '</div>'
+                + (typeof cfg.onBack === "function" ? '<div class="ip-btns" style="margin-top:10px"><a class="btn btn-default ip-back"><i class="fa fa-arrow-left"></i> Quay lại</a></div>' : "")).show();
+            $c.off("click.ipb").on("click.ipb", ".ip-back", function () { cfg.onBack(); });
+        }
+        function rowHtml(r, i) {
+            return '<tr class="' + (r.ok ? "o" : "e") + '"><td class="c">' + (i + 1) + '</td><td class="c">' + (r.line === "" ? "" : esc(r.line)) + '</td><td>' + esc(r.text)
+                + '</td><td class="c"><b style="color:' + (r.ok ? "#067647" : "#b42318") + '">' + (r.ok ? "Thành công" : "Lỗi") + '</b></td><td>' + esc(r.msg) + '</td></tr>';
+        }
+        function build() {
+            view = cur === "ok" ? rows.filter(function (r) { return r.ok; }) : cur === "err" ? rows.filter(function (r) { return !r.ok; }) : rows;
+            shown = 0;
+            $c.find(".ip-body").empty();
+            more();
+            $c.find(".ip-box")[0].scrollTop = 0;
+        }
+        function more() {
+            var $b = $c.find(".ip-body"), end = Math.min(view.length, shown + PAGE), h = "", i;
+            $c.find(".ip-more").remove();
+            for (i = shown; i < end; i++) h += rowHtml(view[i], i);
+            if (view.length === 0) h = '<tr><td colspan="5" class="ip-empty">Không có dòng nào</td></tr>';
+            $b.append(h);
+            shown = end;
+            if (shown < view.length) $c.find(".ip-box").append('<div class="ip-more"><a class="btn btn-default ip-moreb">Hiển thị thêm ' + fmtInt(Math.min(PAGE, view.length - shown)) + ' dòng (còn ' + fmtInt(view.length - shown) + ')</a></div>');
+        }
+        function finish(data) {
+            stopTimer();
+            var secs = Math.max(0, Math.round((new Date().getTime() - t0) / 1000)), src = srcRows(), i, k, line, m;
+            rows = []; cnt = { ok: 0, err: 0 };
+            data = data || [];
+            for (i = 0; i < data.length; i++) {
+                k = toText(data[i].KEY); line = ""; m = /^\s*(\d+)\s*:\s*/.exec(k);
+                if (m) { line = parseInt(m[1], 10); k = k.substring(m[0].length); }
+                var ok = toText(data[i].VALUE) === "";
+                if (ok) cnt.ok++; else cnt.err++;
+                rows.push({ ok: ok, line: line, text: k, msg: toText(data[i].VALUE), src: (line !== "" && src[line - 1]) ? src[line - 1] : null });
+            }
+            var all = rows.length, kind = all === 0 ? "warn" : cnt.err === 0 ? "ok" : cnt.ok === 0 ? "err" : "warn";
+            var msg = all === 0 ? "Máy chủ không trả về dòng kết quả nào (file không có dữ liệu hoặc sheet trống)."
+                : cnt.err === 0 ? "Import hoàn tất: cả " + fmtInt(all) + " dòng đều thành công."
+                : cnt.ok === 0 ? "Import không thành công: cả " + fmtInt(all) + " dòng đều lỗi. Bấm Xuất lỗi, sửa theo cột Lỗi rồi import lại."
+                : "Import hoàn tất: " + fmtInt(cnt.ok) + " dòng thành công, " + fmtInt(cnt.err) + " dòng lỗi. Bấm Xuất lỗi, sửa theo cột Lỗi rồi import lại các dòng lỗi.";
+            cur = cnt.err > 0 ? "err" : "";
+            $c.html('<div class="ip-card"><div class="ip-head"><i class="fa fa-flag-checkered"></i><span>' + esc(cfg.title || "Kết quả import") + '</span></div>'
+                + '<div class="ip-bar ' + kind + '"><i></i></div>'
+                + '<div class="ip-pills"><span class="ip-pill">Tổng <b>' + fmtInt(all) + '</b> dòng</span><span class="ip-pill ok">Thành công <b>' + fmtInt(cnt.ok) + '</b></span>'
+                + '<span class="ip-pill err">Lỗi <b>' + fmtInt(cnt.err) + '</b></span><span class="ip-pill">Thời gian <b>' + clockText(secs) + '</b></span></div>'
+                + '<div class="ip-msg ' + kind + '"><i class="fa ' + (kind === "ok" ? "fa-circle-check" : "fa-triangle-exclamation") + '"></i> ' + esc(msg) + '</div></div>'
+                + '<div class="ip-bar2"><div class="ip-tabs"><span class="ip-tab' + (cur === "" ? " on" : "") + '" data-f="">Tất cả (' + fmtInt(all) + ')</span>'
+                + '<span class="ip-tab' + (cur === "ok" ? " on" : "") + '" data-f="ok">Thành công (' + fmtInt(cnt.ok) + ')</span>'
+                + '<span class="ip-tab' + (cur === "err" ? " on" : "") + '" data-f="err">Lỗi (' + fmtInt(cnt.err) + ')</span></div>'
+                + '<div class="ip-btns"><a class="btn btn-warning ip-x-err"><i class="fa fa-file-excel-o"></i> Xuất lỗi</a><a class="btn btn-success ip-x-ok"><i class="fa fa-file-excel-o"></i> Xuất thành công</a>'
+                + '<a class="btn btn-default ip-x-all"><i class="fa fa-file-excel-o"></i> Xuất tất cả</a>'
+                + (typeof cfg.onBack === "function" ? '<a class="btn btn-default ip-back"><i class="fa fa-arrow-left"></i> Quay lại</a>' : "") + '</div></div>'
+                + '<div class="ip-box"><table class="ip-tbl"><thead><tr><th style="width:60px">STT</th><th style="width:70px">Dòng</th><th>Dữ liệu</th><th style="width:110px">Kết quả</th><th>Ghi chú / Lỗi</th></tr></thead><tbody class="ip-body"></tbody></table></div>').show();
+            $c.off("click.ip")
+                .on("click.ip", ".ip-tab", function () { $c.find(".ip-tab").removeClass("on"); $(this).addClass("on"); cur = $(this).attr("data-f") || ""; build(); })
+                .on("click.ip", ".ip-moreb", more)
+                .on("click.ip", ".ip-back", function () { if (typeof cfg.onBack === "function") cfg.onBack(); })
+                .on("click.ip", ".ip-x-err", function () { exportKind("err", secs); })
+                .on("click.ip", ".ip-x-ok", function () { exportKind("ok", secs); })
+                .on("click.ip", ".ip-x-all", function () { exportKind("all", secs); });
+            build();
+            note("");
+        }
+        function clockText(n) { var m = Math.floor(n / 60), sec = n % 60; return (m < 10 ? "0" : "") + m + ":" + (sec < 10 ? "0" : "") + sec; }
+        function exportKind(kind, secs) {
+            var edu = root.edu, list = rows.filter(function (r) { return kind === "all" ? true : kind === "ok" ? r.ok : !r.ok; });
+            if (!edu || !edu.exporter) { warn("Chưa cập nhật bộ xuất Excel (thiếu Corei/exportexcel.js)."); return; }
+            if (list.length === 0) { warn(kind === "err" ? "Không có dòng lỗi nào để xuất." : kind === "ok" ? "Chưa có dòng thành công nào để xuất." : "Chưa có kết quả để xuất."); return; }
+            // Có dòng gốc của sheet thì xuất đúng các cột của file import (+ cột Kết quả/Ghi chú) để sửa rồi import lại
+            var keys = [], seen = {}, haveSrc = list.every(function (r) { return !!r.src; });
+            if (haveSrc) list.forEach(function (r) { for (var p in r.src) if (!seen[p] && p !== "Lỗi") { seen[p] = true; keys.push(p); } });
+            var columns = [{ header: "Dòng", render: function (r) { return r.line; }, align: "center" }];
+            if (haveSrc) keys.forEach(function (p) { columns.push({ header: p, render: function (r) { return r.src ? toText(r.src[p]) : ""; } }); });
+            else columns.push({ header: "Dữ liệu", render: function (r) { return r.text; } });
+            columns.push({ header: "Kết quả", render: function (r) { return r.ok ? "Thành công" : "Lỗi"; }, align: "center" });
+            columns.push({ header: kind === "err" ? "Lỗi" : "Ghi chú", render: function (r) { return r.msg; } });
+            edu.exporter.exportData({
+                fileName: (cfg.fileName || "KetQuaImport") + (kind === "err" ? "_Loi" : kind === "ok" ? "_ThanhCong" : "_TatCa"),
+                name: kind === "err" ? "Lỗi" : kind === "ok" ? "Thành công" : "Tất cả",
+                title: kind === "err" ? "DANH SÁCH DÒNG IMPORT LỖI" : kind === "ok" ? "DANH SÁCH DÒNG IMPORT THÀNH CÔNG" : "KẾT QUẢ IMPORT",
+                subTitles: [].concat(cfg.title ? [cfg.title] : [], cfg.subTitles || [],
+                    ["Tổng hợp: " + fmtInt(rows.length) + " dòng; " + fmtInt(cnt.ok) + " thành công; " + fmtInt(cnt.err) + " lỗi; thời gian xử lý " + clockText(secs)]),
+                columns: columns,
+                data: list
+            });
+        }
+        return { start: start, note: note, finish: finish, fail: fail, reset: reset, summary: function () { return { total: rows.length, ok: cnt.ok, err: cnt.err }; } };
+    }
+
+
     ensureCss();
 
     /*------------------------------------------
     --Discription: [5] API công khai
     -------------------------------------------*/
     return {
-        version: "1.5.1",
+        version: "1.6.0",
         open: open,
         callApi: callApi,
         // Các dòng đang tick ở bảng strTableId (ô tick có id = strPrefix + ID, mặc định "checkX"), tra đủ dữ liệu từ arrData theo ID.
@@ -805,6 +960,9 @@ var processrunApi = (function (root) {
                 self.run(c);
             });
         },
+
+        // Panel kết quả import Excel dùng chung (xem hàm importPanel): start / note / finish / fail / reset
+        importPanel: importPanel,
 
         // Gắn bộ nút "thêm theo phạm vi" của modal chọn sinh viên chung (edu.extend.genModal_SinhVien, #modal_sinhvien) — 7 trang dùng
         // đúng bộ này: chọn sinh viên cụ thể (nút cfg.pickerButton) hoặc thêm theo hệ / khóa / khoa quản lý x khóa / chương trình / lớp.

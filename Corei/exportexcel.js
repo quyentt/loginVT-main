@@ -631,6 +631,21 @@ var exportexcelApi = (function (root) {
                 rows.push(row);
             }
         }
+        // Cột không có tiêu đề và mọi ô đều trống (ô tick chọn dòng, cột nút thao tác): không đưa vào file
+        if (merges.length === 0 && rows.length > 0 && grid.length > 0) {
+            var keep = [];
+            for (c = 0; c < ncols; c++) {
+                var used = toText(grid[grid.length - 1][c]) !== "";
+                for (r = 0; r < rows.length && !used; r++) if (toText(rows[r][c]) !== "") used = true;
+                if (used) keep.push(c);
+            }
+            if (keep.length > 0 && keep.length < ncols) {
+                grid = grid.map(function (g) { return keep.map(function (i) { return g[i]; }); });
+                cols = keep.map(function (i) { return cols[i]; });
+                rows = rows.map(function (rw) { return keep.map(function (i) { return rw[i]; }); });
+                ncols = keep.length;
+            }
+        }
         return {
             name: opts.name, title: opts.title, subTitles: subTitlesOf(opts),
             header: grid, headerMerges: merges, cols: cols, rows: rows,
@@ -1169,6 +1184,30 @@ var exportexcelApi = (function (root) {
             if (!opts.fileName) opts.fileName = strTable_Id;
             opts.allowEmpty = true;
             return this.exportData(opts);
+        },
+
+        // Gắn nút "Xuất Excel" cạnh danh sách đang hiển thị: xuất ĐÚNG bảng trên màn hình (tiêu đề, điều kiện lọc, dòng tổng, ngày xuất).
+        //   cfg: table (id bảng), before | after | append (bộ chọn chỗ chèn nút), fileName, title, subTitles (mảng hoặc hàm trả mảng),
+        //        filters [[{label,id}...]] (ô lọc trên màn hình -> dòng "Điều kiện"), label ("Xuất Excel"), paged (true: bảng có phân trang
+        //        nên chỉ gồm trang đang hiển thị -> ghi rõ trong file và trên nút), confirm (mặc định true)
+        //   Gọi nhiều lần cho cùng 1 bảng thì chỉ có 1 nút.
+        attachTable: function (cfg) {
+            var $ = root.$, me = this, id = "btnEduExp_" + cfg.table.replace(/[^A-Za-z0-9_]/g, "_");
+            if (!$ || $("#" + id).length > 0) return;
+            var $btn = $('<a class="btn btn-success btnEduExp" id="' + id + '" href="#" style="margin-left:6px" title="' + (cfg.paged ? "Chỉ xuất các dòng đang hiển thị (trang hiện tại)" : "Xuất danh sách đang hiển thị ra Excel") + '"><i class="fa fa-file-excel-o"></i> ' + (cfg.label || "Xuất Excel") + (cfg.paged ? " (trang này)" : "") + '</a>');
+            var $to = null;
+            if (cfg.before && $(cfg.before).length) { $to = $(cfg.before).first(); $to.before($btn); }
+            else if (cfg.after && $(cfg.after).length) { $to = $(cfg.after).first(); $to.after($btn); }
+            else if (cfg.append && $(cfg.append).length) { $to = $(cfg.append).first(); $to.append($btn); }
+            else return;
+            me.bindButton("#" + id, function () {
+                var lines = [], i;
+                var sub = typeof cfg.subTitles === "function" ? cfg.subTitles() : (cfg.subTitles || []);
+                for (i = 0; i < sub.length; i++) if (toText(sub[i]) !== "") lines.push(sub[i]);
+                if (cfg.filters) for (i = 0; i < cfg.filters.length; i++) { var t = me.filterText(cfg.filters[i]); if (t) lines.push(t); }
+                if (cfg.paged) lines.push("Lưu ý: chỉ gồm các dòng đang hiển thị (trang hiện tại) của danh sách");
+                return { table: cfg.table, fileName: cfg.fileName || cfg.table, title: cfg.title, subTitles: lines, confirm: cfg.confirm };
+            });
         },
 
         // Hỏi "Bạn có muốn xuất không?" (kèm các ô lọc thêm nếu opts khai báo filters) rồi mới xuất

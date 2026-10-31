@@ -870,10 +870,10 @@ TongHopDiem.prototype = {
 
     /*------------------------------------------
     --Discription: Fork của edu.system.showImportChungV2 dành riêng cho trang
-    -- Tổng hợp điểm — thêm thanh tiến trình "giả lập" 0→90% trong lúc đợi
-    -- response, nhảy 100% khi có kết quả. API SImport chỉ trả về 1 response
-    -- cuối nên không có % thật; thanh chỉ để trấn an người dùng và hiển thị
-    -- thời gian đã trôi.
+    -- Tổng hợp điểm. Dùng panel import dùng chung (edu.process.importPanel):
+    -- đồng hồ + số dòng khi đang chạy, xong hiện tổng hợp thành công/lỗi + xuất Excel.
+    -- (Thanh giả lập 0→90% chỉ còn là dự phòng khi máy khách chưa có processrun.js mới.)
+    -- API SImport chỉ trả về 1 response cuối nên không có % thật.
     -------------------------------------------*/
     showImport_WithProgress: function (strTenHienThi, strMaDanhMuc) {
         var me = this;
@@ -895,6 +895,8 @@ TongHopDiem.prototype = {
         row += '<div class="clear"></div>';
         row += '</div>';
 
+        // Panel tiến trình + kết quả import dùng chung (edu.process.importPanel); thanh giả lập bên dưới chỉ là dự phòng khi máy khách chưa có processrun.js mới
+        row += '<div id="zoneImportPanel" style="display:none"></div>';
         // Vùng thanh tiến trình (ẩn cho tới khi bấm "Thực hiện import")
         row += '<div id="zoneImportProgress_THD" style="display:none; margin:12px 0;">';
         row += '  <div class="clearfix" style="margin-bottom:4px">';
@@ -930,7 +932,22 @@ TongHopDiem.prototype = {
         $("#modalBaoCao").modal("show");
         edu.system.uploadImport(["importToCheck"], edu.system.getList_DataImport);
 
+        // Import chung chỉ gửi 1 lần và trả kết quả ở cuối (không có % thật) nên panel chỉ hiện đồng hồ + số dòng,
+        // xong hiện tổng hợp thành công/lỗi, bảng từng dòng và nút xuất Excel (thay cho thanh 0→90% giả lập trước đây)
+        var ip = null;
+        if (edu.process && typeof edu.process.importPanel === "function") {
+            ip = edu.process.importPanel({
+                container: "#zoneImportPanel",
+                title: strTenHienThi ? "Import " + strTenHienThi : "Kết quả import",
+                fileName: "KetQuaImportTongHopDiem",
+                source: function () { return edu.system.dtImport ? edu.system.dtImport[$("#dropSearch_BangA").val()] : null; },
+                onBack: function () { ip.reset(); $("#tblChuaImport").show(); $("#tblImportLoi").hide(); }
+            });
+        }
+        me._ip = ip;
+
         $('#dropSearch_BangA').on('change', function () {
+            if (ip) ip.reset();
             $("#tblChuaImport").show();
             $("#tblImportLoi").hide();
             edu.system.genTable_Import_View(edu.system.dtImport[$("#dropSearch_BangA").val()], "tblBangA");
@@ -940,10 +957,24 @@ TongHopDiem.prototype = {
         $("#modalBaoCao").off("hidden.bs.modal.THDProgress")
             .on("hidden.bs.modal.THDProgress", function () {
                 me._stopImportProgress();
+                if (ip) ip.reset();
             });
 
         $("#btnThucHienImport").off("click.THD").on("click.THD", function () {
-            me._startImportProgress();
+            if ($(this).hasClass("disabled")) return;
+            var strFile = edu.util.getValById("importToCheck"), strSheet = $("#dropSearch_BangA").val();
+            if (!strFile || !strSheet) {
+                var strLoi = !strFile ? "Vui lòng chọn file import trước khi thực hiện." : "Vui lòng chọn sheet import.";
+                if (ip) ip.fail(strLoi); else edu.system.alert(strLoi, "w");
+                return;
+            }
+            if (ip) {
+                var dtSheet = edu.system.dtImport ? edu.system.dtImport[strSheet] : null;
+                $("#btnThucHienImport").addClass("disabled").css("pointer-events", "none");
+                ip.start(dtSheet && dtSheet.length ? dtSheet.length : 0);
+                $("#overlay").hide();
+            }
+            else me._startImportProgress();
             GetDuLieuDanhMuc();
         });
 
@@ -984,7 +1015,8 @@ TongHopDiem.prototype = {
                 },
                 error: function (er) {
                     me._stopImportProgress();
-                    edu.system.alert(JSON.stringify(er), "w");
+                    if (ip) ip.fail("Không lấy được cấu hình danh mục import. Vui lòng thử lại.");
+                    else edu.system.alert(JSON.stringify(er), "w");
                 },
                 type: 'GET',
                 action: 'CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM',
@@ -1001,6 +1033,19 @@ TongHopDiem.prototype = {
         function ImportData(obj_list) {
             edu.system.makeRequest({
                 success: function (data) {
+                    if (ip) {
+                        me._stopImportProgress();
+                        if (data.Success) {
+                            ip.finish(data.Data);
+                            $("#tblChuaImport").hide();
+                            $("#tblImportLoi").hide();
+                            if (sCallback != undefined && sCallback != "undefined" && sCallback != "") {
+                                eval(sCallback);
+                            }
+                        }
+                        else ip.fail("Import không thực hiện được: " + edu.util.returnEmpty(data.Message));
+                        return;
+                    }
                     me._finishImportProgress();
                     if (data.Success) {
                         data = data.Data;
@@ -1052,7 +1097,12 @@ TongHopDiem.prototype = {
                 },
                 error: function (er) {
                     me._stopImportProgress();
-                    edu.system.alert(JSON.stringify(er), "w");
+                    if (ip) {
+                        var strMsg = "Import thất bại: không gọi được máy chủ.";
+                        if (er && er.status) strMsg = "Import thất bại: lỗi " + er.status + (er.statusText ? " - " + er.statusText : "") + ".";
+                        ip.fail(strMsg);
+                    }
+                    else edu.system.alert(JSON.stringify(er), "w");
                 },
                 type: 'POST',
                 action: obj_list.action,
