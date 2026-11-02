@@ -80,7 +80,7 @@ NhapTheoLop.prototype = {
             me.strDanhSachHoc_Id = this.id;
             me.getList_NhapChuyenCan(this.id);
             var aDataDS = me.dtLopHoc.find(e => me.strDanhSachHoc_Id == e.ID);
-            me["strDangKy_LopHocPhan_Id"] = aDataDS.DAOTAO_HOCPHAN_ID;
+            me["strDangKy_LopHocPhan_Id"] = aDataDS.ID;
             me["strDaoTao_ThoiGianDaoTao_Id"] = aDataDS.DAOTAO_THOIGIANDAOTAO_ID;
             $("#lblForm_KhoiTao_NO").html('<i class="fa fa-plus-square"></i> Danh sách: ' + aDataDS.TEN);
         });
