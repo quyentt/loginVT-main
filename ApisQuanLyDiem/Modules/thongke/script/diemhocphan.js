@@ -13,6 +13,7 @@ DiemHocPhan.prototype = {
 
     init: function () {
         var me = this;
+        me._attachExport();
         /*------------------------------------------
         --Discription: Initial system
         -------------------------------------------*/
@@ -218,6 +219,15 @@ DiemHocPhan.prototype = {
             { label: "Tính chất lọc", id: "dropTinhChatLoc" }, { label: "Thuộc tính điểm", id: "dropThuocTinhDiem" },
             { label: "Tự động tính lại điểm", id: "dropTinhTuDong" }
         ]];
+    },
+    /*------------------------------------------
+    --Discription: Nút "Xuất Excel" chuẩn chung (Corei/exportexcel.js, edu.exporter.attachTable) gắn cạnh các danh sách kết quả:
+    -- xuất đúng danh sách đang xem, có tiêu đề, điều kiện lọc, dòng tổng và ngày xuất như mọi chức năng.
+    -------------------------------------------*/
+    _attachExport: function () {
+        var me = this;
+        if (!window.edu || !edu.exporter || typeof edu.exporter.attachTable !== "function") return;
+        edu.exporter.attachTable({ table: "tblKetQua", after: "#btnXemDanhSach", fileName: "KetQuaThongKeDiemHocPhan", title: "KẾT QUẢ THỐNG KÊ ĐIỂM HỌC PHẦN", filters: me._filters() });
     },
     endHangDoi: function () {
         var me = main_doc.DiemHocPhan;

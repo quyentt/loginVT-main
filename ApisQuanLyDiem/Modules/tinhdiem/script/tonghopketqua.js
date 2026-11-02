@@ -14,6 +14,7 @@ TongHopKetQua.prototype = {
 
     init: function () {
         var me = this;
+        me._attachExport();
         /*------------------------------------------
         --Discription: Initial system
         -------------------------------------------*/
@@ -242,6 +243,18 @@ TongHopKetQua.prototype = {
             okMessage: "Đã đưa vào hàng đợi xử lý",
             request: cfg.request,
             onSuccess: function () { edu.system.createHangDoi(cfg.hangDoi); }
+        });
+    },
+    /*------------------------------------------
+    --Discription: Nút "Xuất Excel" chuẩn chung (Corei/exportexcel.js, edu.exporter.attachTable) gắn cạnh các danh sách kết quả:
+    -- xuất đúng danh sách đang xem, có tiêu đề, điều kiện lọc, dòng tổng và ngày xuất như mọi chức năng.
+    -------------------------------------------*/
+    _attachExport: function () {
+        var me = this;
+        if (!window.edu || !edu.exporter || typeof edu.exporter.attachTable !== "function") return;
+        edu.exporter.attachTable({
+            table: "tblKetQua", after: "#btnRefresh", fileName: "KetQuaTongHopDiem", title: "KẾT QUẢ TỔNG HỢP ĐIỂM",
+            filters: me._filters().concat([[{ label: "Lần học", id: "dropSearch_LanHoc" }, { label: "Loại điểm trung bình", id: "dropSearch_LoaiDiemTrungBinh" }]])
         });
     },
     endHangDoi: function () {

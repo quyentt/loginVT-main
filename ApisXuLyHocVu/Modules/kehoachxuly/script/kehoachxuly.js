@@ -24,6 +24,7 @@ KeHoachXuLy.prototype = {
 
     init: function () {
         var me = this;
+        me._attachExport();
         /*------------------------------------------
         --Discription: Initial system
         -------------------------------------------*/
@@ -361,6 +362,18 @@ KeHoachXuLy.prototype = {
         });
     },
 
+    /*------------------------------------------
+    --Discription: Nút "Xuất Excel" chuẩn chung (Corei/exportexcel.js, edu.exporter.attachTable) gắn cạnh các danh sách kết quả:
+    -- xuất đúng danh sách đang xem, có tiêu đề, điều kiện lọc, dòng tổng và ngày xuất như mọi chức năng.
+    -------------------------------------------*/
+    _attachExport: function () {
+        var me = this;
+        if (!window.edu || !edu.exporter || typeof edu.exporter.attachTable !== "function") return;
+        var f = [[{ label: "Thời gian đào tạo", id: "dropSearch_ThoiGianDaoTao" }]];
+        var sub = function () { return ["Kế hoạch xử lý: " + me._tenKeHoach()]; };
+        edu.exporter.attachTable({ table: "tblKetQuaXuLy", before: "#btnXetKetQuaXuLy", fileName: "KetQuaXuLyHocVu", title: "KẾT QUẢ XỬ LÝ HỌC VỤ", subTitles: sub, filters: f });
+        edu.exporter.attachTable({ table: "tblDSXet", before: "#btnXetDSXet", fileName: "DanhSachXetXuLyHocVu", title: "DANH SÁCH XÉT XỬ LÝ HỌC VỤ", subTitles: sub, filters: f });
+    },
     rewrite: function () {
         //reset id
         var me = this;

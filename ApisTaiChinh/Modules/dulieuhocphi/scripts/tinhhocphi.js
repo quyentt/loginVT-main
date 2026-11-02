@@ -15,6 +15,7 @@ TinhHocPhi.prototype = {
 
     init: function () {
         var me = this;
+        me._attachExport();
         /*------------------------------------------
         --Discription: Initial system
         -------------------------------------------*/
@@ -320,6 +321,18 @@ TinhHocPhi.prototype = {
         if (on.length == all.length) return ["Trạng thái sinh viên: tất cả"];
         on.each(function () { a.push($(this).attr("title")); });
         return ["Trạng thái sinh viên: " + a.join(", ")];
+    },
+    /*------------------------------------------
+    --Discription: Nút "Xuất Excel" chuẩn chung (Corei/exportexcel.js, edu.exporter.attachTable) gắn cạnh các danh sách kết quả:
+    -- xuất đúng danh sách đang xem, có tiêu đề, điều kiện lọc, dòng tổng và ngày xuất như mọi chức năng.
+    -------------------------------------------*/
+    _attachExport: function () {
+        var me = this;
+        if (!window.edu || !edu.exporter || typeof edu.exporter.attachTable !== "function") return;
+        var f = me._filters(), sub = function () { return me._trangThaiLines(); };
+        edu.exporter.attachTable({ table: "tblTinChi", after: "#btnRefresh", fileName: "KetQuaTinhHocPhiTinChi", title: "KẾT QUẢ TÍNH HỌC PHÍ - HỌC CHẾ TÍN CHỈ", subTitles: sub, filters: f });
+        edu.exporter.attachTable({ table: "tblNienChe", after: "#btnRefreshNienChe", fileName: "KetQuaTinhHocPhiNienChe", title: "KẾT QUẢ TÍNH HỌC PHÍ - HỌC CHẾ NIÊN CHẾ", subTitles: sub, filters: f });
+        edu.exporter.attachTable({ table: "tblKhongTinhPhi", before: "#btnDelete_KhongTinhPhi", fileName: "DanhSachKhongTinhPhi", title: "DANH SÁCH SINH VIÊN KHÔNG TÍNH PHÍ", filters: me._filtersKhongTinhPhi() });
     },
     endHangDoi: function () {
         var me = main_doc.TinhHocPhi;

@@ -25,6 +25,7 @@ ThucHienXet.prototype = {
 
     init: function () {
         var me = this;
+        me._attachExport();
         /*------------------------------------------
         --Discription: Initial system
         -------------------------------------------*/
@@ -566,19 +567,25 @@ ThucHienXet.prototype = {
    --Discription: [1] AcessDB ThanhVien
    --ULR:  Modules
    -------------------------------------------*/
-    getList_DoiTuong: function (strHB_KeHoach_Id) {
+    // Tham số lấy danh sách đối tượng xét (dùng cho cả nạp theo trang và xuất Excel toàn bộ)
+    req_DoiTuong: function (iPageIndex, iPageSize) {
         var me = this;
-
-        //--Edit
         var obj_list = {
             'action': 'HB_KeHoach_PhamVi/LayDanhSach',
             'strTuKhoa': edu.util.getValById('tblQuanSoLop_input'),
             'strNguoiDung_Id': edu.util.getValById('dropAAAA'),
             'strHB_KeHoach_Id': me.strHB_KeHoach_Id,
             'strNguoiTao_Id': edu.util.getValById('dropAAAA'),
-            'pageIndex': edu.system.pageIndex_default,
-            'pageSize': edu.system.pageSize_default,
+            'pageIndex': iPageIndex,
+            'pageSize': iPageSize,
         };
+        return { action: obj_list.action, type: "GET", data: obj_list };
+    },
+    getList_DoiTuong: function (strHB_KeHoach_Id) {
+        var me = this;
+
+        //--Edit
+        var obj_list = me.req_DoiTuong(edu.system.pageIndex_default, edu.system.pageSize_default).data;
 
         //
         edu.system.makeRequest({
@@ -2047,6 +2054,47 @@ ThucHienXet.prototype = {
             { header: "Đến ngày", render: function (r) { return r.NGAYKETTHUC; } },
             { header: "Phân loại", render: function (r) { return r.PHANLOAI_TEN; } }
         ];
+    },
+    /*------------------------------------------
+    --Discription: Nút "Xuất Excel" chuẩn chung (Corei/exportexcel.js, edu.exporter.attachTable) gắn cạnh các danh sách kết quả:
+    -- xuất đúng danh sách đang xem, có tiêu đề, điều kiện lọc, dòng tổng và ngày xuất như mọi chức năng.
+    -------------------------------------------*/
+    _attachExport: function () {
+        var me = this;
+        if (!window.edu || !edu.exporter || typeof edu.exporter.attachTable !== "function") return;
+        var f = [[{ label: "Quỹ học bổng", id: "dropSearch_QuyHocBong" }, { label: "Thời gian đào tạo", id: "dropSearch_ThoiGianDaoTao" }]];
+        var sub = function () {
+            var r = (me.dtThucHienXet || []).find(function (e) { return e.ID === me.strHB_KeHoach_Id; });
+            return r ? ["Kế hoạch: " + edu.util.returnEmpty(r.TEN)] : [];
+        };
+        var v = edu.util.returnEmpty;
+        edu.exporter.attachTable({ table: "tblThucHienXet", before: "#btnXoaThucHienXet", fileName: "DanhSachKeHoachXetHocBong", title: "DANH SÁCH KẾ HOẠCH XÉT HỌC BỔNG", filters: f, paged: true });
+        // Đối tượng xét: xuất ĐỦ mọi trang
+        edu.exporter.attachTable({
+            table: "tblQuanSoLop", before: "#btnXetHocBong", fileName: "DoiTuongXetHocBong", title: "DANH SÁCH ĐỐI TƯỢNG XÉT HỌC BỔNG", subTitles: sub, filters: f,
+            fetchAll: function () { return me._fetchAllDoiTuong(); },
+            columns: [
+                { header: "Mã số", field: "QLSV_NGUOIHOC_MASO" },
+                { header: "Họ tên", render: function (r) { return v(r.QLSV_NGUOIHOC_HODEM) + " " + v(r.QLSV_NGUOIHOC_TEN); } },
+                { header: "Ngày sinh", field: "QLSV_NGUOIHOC_NGAYSINH", align: "center" },
+                { header: "Trạng thái", field: "QLSV_TRANGTHAINGUOIHOC_TEN" },
+                { header: "Lớp quản lý", field: "DAOTAO_LOPQUANLY_TEN" },
+                { header: "Chương trình", field: "DAOTAO_CHUONGTRINH_TEN" },
+                { header: "Khóa", field: "DAOTAO_KHOADAOTAO_TEN" },
+                { header: "Khoa quản lý", field: "KHOAQUANLY_TEN" },
+                { header: "Hệ đào tạo", field: "DAOTAO_HEDAOTAO_TEN" }
+            ]
+        });
+        edu.exporter.attachTable({ table: "tblDat", before: "#tblDat", block: true, fileName: "KetQuaXetHocBongDat", title: "DANH SÁCH SINH VIÊN ĐẠT HỌC BỔNG", subTitles: sub, filters: f, paged: true });
+        edu.exporter.attachTable({ table: "tblKhongDat", before: "#tblKhongDat", block: true, fileName: "KetQuaXetHocBongKhongDat", title: "DANH SÁCH SINH VIÊN KHÔNG ĐẠT HỌC BỔNG", subTitles: sub, filters: f, paged: true });
+    },
+    // Nạp TOÀN BỘ danh sách đối tượng xét (cùng API với danh sách đang xem, pageSize lớn) để xuất Excel đủ chứ không chỉ trang hiện tại
+    _fetchAllDoiTuong: function () {
+        var me = this;
+        return edu.process.callApi(me.req_DoiTuong(1, 100000)).then(function (r) {
+            if (!r.ok) throw new Error(r.message);
+            return (r.data && r.data.Data) || [];
+        });
     },
     endHangDoi: function () {
         var me = main_doc.ThucHienXet;

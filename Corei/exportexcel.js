@@ -1114,7 +1114,7 @@ var exportexcelApi = (function (root) {
     }
 
     return {
-        version: "1.6.0",
+        version: "1.8.0",
 
         // Dựng file .xlsx (Uint8Array, không nén) mà không tải về — dùng cho kiểm thử hoặc gửi lên nơi khác
         buildXlsx: function (opts) {
@@ -1187,26 +1187,50 @@ var exportexcelApi = (function (root) {
         },
 
         // Gắn nút "Xuất Excel" cạnh danh sách đang hiển thị: xuất ĐÚNG bảng trên màn hình (tiêu đề, điều kiện lọc, dòng tổng, ngày xuất).
-        //   cfg: table (id bảng), before | after | append (bộ chọn chỗ chèn nút), fileName, title, subTitles (mảng hoặc hàm trả mảng),
-        //        filters [[{label,id}...]] (ô lọc trên màn hình -> dòng "Điều kiện"), label ("Xuất Excel"), paged (true: bảng có phân trang
-        //        nên chỉ gồm trang đang hiển thị -> ghi rõ trong file và trên nút), confirm (mặc định true)
+        //   cfg: table (id bảng), before | after | append (bộ chọn chỗ chèn nút), block (true: nút nằm riêng 1 dòng, căn phải),
+        //        fileName, title, subTitles (mảng hoặc hàm trả mảng), filters [[{label,id}...]] (ô lọc trên màn hình -> dòng "Điều kiện"),
+        //        label ("Xuất Excel"), confirm (mặc định true: hỏi "Bạn có muốn xuất không?"),
+        //        paged (true: bảng có phân trang nên chỉ gồm trang đang hiển thị -> ghi rõ trên nút và trong file),
+        //        fetchAll + columns (bảng có phân trang mà muốn xuất ĐỦ: fetchAll() trả Promise<mảng dòng> nạp toàn bộ bằng cùng API
+        //        với pageSize lớn; columns khai như exportData; có ack "Đã nhận lệnh" trong lúc nạp),
+        //        extraFilters (chỉ đi cùng fetchAll; mảng hoặc hàm trả mảng [{ label, field | get(row), selected[] | from }] — các danh sách
+        //        "lọc thêm khi xuất" trong hộp thoại, cùng quy tắc mặc định như exportData.filters; hàm được gọi MỖI LẦN bấm nút)
         //   Gọi nhiều lần cho cùng 1 bảng thì chỉ có 1 nút.
         attachTable: function (cfg) {
-            var $ = root.$, me = this, id = "btnEduExp_" + cfg.table.replace(/[^A-Za-z0-9_]/g, "_");
+            var $ = root.$, me = this, id = "btnEduExp_" + cfg.table.replace(/[^A-Za-z0-9_]/g, "_"), full = typeof cfg.fetchAll === "function";
             if (!$ || $("#" + id).length > 0) return;
-            var $btn = $('<a class="btn btn-success btnEduExp" id="' + id + '" href="#" style="margin-left:6px" title="' + (cfg.paged ? "Chỉ xuất các dòng đang hiển thị (trang hiện tại)" : "Xuất danh sách đang hiển thị ra Excel") + '"><i class="fa fa-file-excel-o"></i> ' + (cfg.label || "Xuất Excel") + (cfg.paged ? " (trang này)" : "") + '</a>');
-            var $to = null;
-            if (cfg.before && $(cfg.before).length) { $to = $(cfg.before).first(); $to.before($btn); }
-            else if (cfg.after && $(cfg.after).length) { $to = $(cfg.after).first(); $to.after($btn); }
-            else if (cfg.append && $(cfg.append).length) { $to = $(cfg.append).first(); $to.append($btn); }
+            var tip = full ? "Xuất toàn bộ danh sách (không chỉ trang đang hiển thị)" : (cfg.paged ? "Chỉ xuất các dòng đang hiển thị (trang hiện tại)" : "Xuất danh sách đang hiển thị ra Excel");
+            var $btn = $('<a class="btn btn-success btnEduExp" id="' + id + '" href="#" style="margin-left:6px" title="' + tip + '"><i class="fa fa-file-excel-o"></i> ' + (cfg.label || "Xuất Excel") + (!full && cfg.paged ? " (trang này)" : "") + '</a>');
+            var $put = cfg.block ? $('<div class="btnEduExpRow" style="text-align:right;margin:0 0 8px"></div>').append($btn.css("margin-left", 0)) : $btn;
+            if (cfg.before && $(cfg.before).length) $(cfg.before).first().before($put);
+            else if (cfg.after && $(cfg.after).length) $(cfg.after).first().after($put);
+            else if (cfg.append && $(cfg.append).length) $(cfg.append).first().append($put);
             else return;
-            me.bindButton("#" + id, function () {
-                var lines = [], i;
-                var sub = typeof cfg.subTitles === "function" ? cfg.subTitles() : (cfg.subTitles || []);
-                for (i = 0; i < sub.length; i++) if (toText(sub[i]) !== "") lines.push(sub[i]);
-                if (cfg.filters) for (i = 0; i < cfg.filters.length; i++) { var t = me.filterText(cfg.filters[i]); if (t) lines.push(t); }
-                if (cfg.paged) lines.push("Lưu ý: chỉ gồm các dòng đang hiển thị (trang hiện tại) của danh sách");
-                return { table: cfg.table, fileName: cfg.fileName || cfg.table, title: cfg.title, subTitles: lines, confirm: cfg.confirm };
+            function lines() {
+                var out = [], i, sub = typeof cfg.subTitles === "function" ? cfg.subTitles() : (cfg.subTitles || []);
+                for (i = 0; i < sub.length; i++) if (toText(sub[i]) !== "") out.push(sub[i]);
+                if (cfg.filters) for (i = 0; i < cfg.filters.length; i++) { var t = me.filterText(cfg.filters[i]); if (t) out.push(t); }
+                if (cfg.paged && !full) out.push("Lưu ý: chỉ gồm các dòng đang hiển thị (trang hiện tại) của danh sách");
+                return out;
+            }
+            if (!full) {
+                me.bindButton("#" + id, function () {
+                    return { table: cfg.table, fileName: cfg.fileName || cfg.table, title: cfg.title, subTitles: lines(), confirm: cfg.confirm };
+                });
+                return;
+            }
+            $(document).off("click.eduExp", "#" + id).on("click.eduExp", "#" + id, function (e) {
+                e.preventDefault();
+                var ack = (root.edu && root.edu.process && root.edu.process.ack) ? root.edu.process.ack(cfg.label || "Xuất Excel", "Đang nạp toàn bộ danh sách…") : null;
+                var fin = function () { if (ack) ack.close(); };
+                var p;
+                try { p = Promise.resolve(cfg.fetchAll()); } catch (ex) { fin(); warn("Không nạp được danh sách để xuất: " + ex.message); return; }
+                p.then(function (rows) {
+                    fin();
+                    if (!rows || rows.length === 0) { warn("Không có dữ liệu để xuất."); return; }
+                    var flt = typeof cfg.extraFilters === "function" ? cfg.extraFilters() : cfg.extraFilters;
+                    me.exportWithConfirm({ fileName: cfg.fileName || cfg.table, title: cfg.title, subTitles: lines(), columns: cfg.columns, data: rows, filters: flt, confirm: cfg.confirm });
+                }, function (ex) { fin(); warn("Không nạp được danh sách để xuất: " + (ex && ex.message ? ex.message : ex)); });
             });
         },
 

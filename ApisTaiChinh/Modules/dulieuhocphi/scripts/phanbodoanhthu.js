@@ -15,6 +15,7 @@ PhanBoDoanhThu.prototype = {
 
     init: function () {
         var me = this;
+        me._attachExport();
         /*------------------------------------------
         --Discription: Initial system
         -------------------------------------------*/
@@ -200,6 +201,19 @@ PhanBoDoanhThu.prototype = {
             { label: "Khoản thu", id: "dropKhoanThu_TP" }, { label: "Hệ đào tạo", id: "dropHeDaoTao_TP" },
             { label: "Khóa đào tạo", id: "dropKhoaDaoTao_TP" }, { label: "Chương trình đào tạo", id: "dropChuongTrinh_TP" }
         ]];
+    },
+    /*------------------------------------------
+    --Discription: Nút "Xuất Excel" chuẩn chung (Corei/exportexcel.js, edu.exporter.attachTable) gắn cạnh các danh sách kết quả:
+    -- xuất đúng danh sách đang xem, có tiêu đề, điều kiện lọc, dòng tổng và ngày xuất như mọi chức năng.
+    -------------------------------------------*/
+    _attachExport: function () {
+        var me = this;
+        if (!window.edu || !edu.exporter || typeof edu.exporter.attachTable !== "function") return;
+        var v = edu.util.getValById;
+        edu.exporter.attachTable({
+            table: "tblKetQua", before: "#btnDelete_PhanBo", fileName: "KetQuaPhanBoDoanhThu", title: "KẾT QUẢ PHÂN BỔ DOANH THU", filters: me._filters(),
+            subTitles: function () { return (v("txtSearch_NamHoc") || v("txtSearch_HocKy")) ? ["Dữ liệu nguồn: năm học " + v("txtSearch_NamHoc") + ", học kỳ " + v("txtSearch_HocKy")] : []; }
+        });
     },
     endHangDoi: function () {
         var me = main_doc.PhanBoDoanhThu;

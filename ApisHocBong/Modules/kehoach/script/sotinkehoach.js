@@ -13,6 +13,7 @@ SoTinKeHoach.prototype = {
 
     init: function () {
         var me = this;
+        me._attachExport();
         /*------------------------------------------
         --Discription: Initial system
         -------------------------------------------*/
@@ -227,6 +228,18 @@ SoTinKeHoach.prototype = {
         }
         if (cfg.filters === undefined) cfg.filters = [[{ label: "Quỹ học bổng", id: "dropSearch_QuyHocBong" }, { label: "Thời gian", id: "dropSearch_ThoiGian" }]];
         edu.process.run(cfg);
+    },
+    /*------------------------------------------
+    --Discription: Nút "Xuất Excel" chuẩn chung (Corei/exportexcel.js, edu.exporter.attachTable) gắn cạnh các danh sách kết quả:
+    -- xuất đúng danh sách đang xem, có tiêu đề, điều kiện lọc, dòng tổng và ngày xuất như mọi chức năng.
+    -------------------------------------------*/
+    _attachExport: function () {
+        var me = this;
+        if (!window.edu || !edu.exporter || typeof edu.exporter.attachTable !== "function") return;
+        edu.exporter.attachTable({
+            table: "tblSoTinKeHoach", before: "#btnSave_SoTinKeHoach", fileName: "SoTinToiThieuKeHoach", title: "SỐ TÍN TỐI THIỂU CỦA KẾ HOẠCH",
+            filters: [[{ label: "Quỹ học bổng", id: "dropSearch_QuyHocBong" }, { label: "Thời gian", id: "dropSearch_ThoiGian" }]]
+        });
     },
     getList_SoTinKeHoach: function (strDanhSach_Id) {
         var me = this;
