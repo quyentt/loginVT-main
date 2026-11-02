@@ -3582,6 +3582,26 @@ systemroot.prototype = {
         var iTongDuLieu = 0;
         //me.iGioiHanLuong = 1;
 
+        // Trang khai objHangDoi.process = { title, fileName, ... } (xem edu.process.runHangDoi trong Corei/processrun.js)
+        // thì "Bắt đầu" chạy từng nhiệm vụ trong form tiến trình chung; không khai (hoặc máy khách chưa có processrun mới) thì chạy kiểu cũ bên dưới.
+        if (objHangDoi.process && edu.process && typeof edu.process.runHangDoi === "function") {
+            var pc = {}, k;
+            for (k in objHangDoi.process) pc[k] = objHangDoi.process[k];
+            pc.queueId = strHangDoi_Id;
+            // dòng "Hàng đợi: ..." lấy từ chữ đang hiện ở thanh tiến trình ("- Thanh tiến trình <tên>: <ngày giờ tạo>")
+            var strTenHangDoi = $("#thanhtientrinh_" + objHangDoi.strName + strHangDoi_Id + " td").first().text().replace(/^\s*-\s*Thanh tiến trình\s*/i, "").trim();
+            pc.subTitles = [].concat(strTenHangDoi ? ["Hàng đợi: " + strTenHangDoi] : [], pc.subTitles || []);
+            // ô "n luồng cùng chạy" trên thanh tiến trình: "Chạy tuần tự" (giá trị 2) = từng nhiệm vụ một
+            pc.concurrency = pc.concurrency || function () { return me.iGioiHanLuong == 2 ? 1 : (parseInt(me.iGioiHanLuong, 10) || 10); };
+            pc.onClose = function (sum) {
+                if (typeof objHangDoi.callback == "function") objHangDoi.callback();
+                me.createHangDoi(objHangDoi);//vẽ lại thanh tiến trình theo số liệu thật của máy chủ (hàng đợi xong thì biến mất)
+                if (typeof objHangDoi.process.onClose == "function") objHangDoi.process.onClose(sum);
+            };
+            edu.process.runHangDoi(pc);
+            return;
+        }
+
         getList_XuLyNhiemVu();
         function getList_XuLyNhiemVu() {
             var iTinhTrang = 0;

@@ -1176,6 +1176,7 @@ BaoCao.prototype = {
             return;
         }
         delete me._soDong[strKey];
+        delete me._cacheRows[strKey];   // tìm kiếm lại = muốn dữ liệu mới, bỏ bản đã nạp để xuất
         edu.system.beginLoading();
         edu.system.makeRequest({
             success: function (data) {
@@ -1316,8 +1317,17 @@ BaoCao.prototype = {
         return "";
     },
     // Nạp lại toàn bộ dòng của 1 tab bằng đúng API + điều kiện đang chọn (Promise<mảng>)
+    // Lưới trên màn hình chỉ giữ 1 trang đầu (hoặc tối đa iMaxRows_HienThi dòng) nên xuất đủ buộc phải nạp lại từ máy chủ.
+    // Kết quả nạp được giữ lại: bấm Xuất Excel lần nữa (đổi lọc trong hộp thoại, lỡ đóng...) với CÙNG điều kiện thì lấy luôn, không nạp lại.
+    // Bấm "Tìm kiếm" hoặc quá iCacheMs thì bỏ để lấy dữ liệu mới.
+    iCacheMs: 10 * 60 * 1000,
+    iCacheMaxRows: 60000,
+    _cacheRows: {},
     _fetchRows: function (strKey) {
         var me = this, cfg = me._cfgKetQua[strKey], objReq = me._reqKetQua(strKey, true);
+        var strSig = objReq ? JSON.stringify(objReq.data) : "", hit = me._cacheRows[strKey];
+        if (objReq && hit && hit.sig === strSig && (new Date().getTime() - hit.at) < me.iCacheMs) return Promise.resolve(hit.rows);
+        delete me._cacheRows[strKey];
         return new Promise(function (resolve, reject) {
             if (!objReq) { reject(new Error("Vui lòng chọn khoản thu.")); return; }
             edu.system.makeRequest({
@@ -1325,6 +1335,7 @@ BaoCao.prototype = {
                     if (!data.Success) { reject(new Error(data.Message)); return; }
                     var arr = data.Data || [];
                     me._xuatBiCat[strKey] = cfg.paged && arr.length >= me.iMaxRows_Export;
+                    if (arr.length > 0 && arr.length <= me.iCacheMaxRows) me._cacheRows[strKey] = { sig: strSig, at: new Date().getTime(), rows: arr };
                     resolve(arr);
                 },
                 error: function (er) { reject(new Error(JSON.stringify(er))); },

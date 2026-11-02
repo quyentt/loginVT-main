@@ -21,7 +21,7 @@
 --      fileName: "KetQuaXepLoai",                        // tên file xuất
 --      notes: ["Chưa chọn năm học"],                     // lưu ý hiện ở khung Bước 1
 --      okMessage: "Đã đưa vào hàng đợi",                 // (tùy chọn) ghi chú khi thành công mà máy chủ không trả Message; có thể là hàm (it, i)
---      concurrency: 1,                                   // số bản ghi chạy cùng lúc (mặc định 1, tối đa 10)
+--      concurrency: 1,                                   // số bản ghi chạy cùng lúc (mặc định 1, tối đa 10; muốn nhiều hơn khai maxConcurrency)
 --      stopOnError: false, autoStart: false,
 --      (bấm là hiện NGAY thẻ "Đã nhận lệnh" rồi mới chuẩn bị: nạp danh sách -> dựng bảng -> mở form)
 --      onFinish: function (sum) {}, onClose: function (sum) {}   // sum = { total, ok, err, pending, elapsedMs }
@@ -98,6 +98,16 @@ var processrunApi = (function (root) {
                 resolve({ ok: false, message: "Không gửi được yêu cầu: " + (ex && ex.message ? ex.message : ex) });
             }
         });
+    }
+
+    // Mô tả 1 nhiệm vụ của hàng đợi: lấy trường mô tả nếu máy chủ có trả; không có thì ghi số thứ tự để vẫn đếm được
+    function taskText(it, i, n) {
+        var f = ["TEN", "MOTA", "NOIDUNG", "NOIDUNGXULY", "TENNHIEMVU", "NHIEMVU_TEN", "GHICHU"], j, v;
+        for (j = 0; j < f.length; j++) {
+            v = toText(it && it[f[j]]);
+            if (v !== "") return v;
+        }
+        return "Nhiệm vụ " + fmtInt(i + 1) + "/" + fmtInt(n);
     }
 
     // Mọi kiểu trả về của run/request quy về { ok, message }
@@ -269,6 +279,7 @@ var processrunApi = (function (root) {
     }
     var ACK_PACE = 170;//mỗi bước hiện tối thiểu chừng này ms để người dùng kịp đọc
     var PREPARING = false;
+    var LOADING_Q = {};//hàng đợi đang nạp danh sách nhiệm vụ (chống bấm đúp "Bắt đầu")
 
     // Chờ trình duyệt thật sự vẽ xong khung hình hiện tại rồi mới chạy fn (có dự phòng khi tab bị ẩn nên không có khung hình)
     function paintThen(fn) {
@@ -312,7 +323,7 @@ var processrunApi = (function (root) {
         var items = cfg.items || [], i, c;
         var p = {
             items: items, unit: cfg.unit || "bản ghi", title: cfg.title || "Tiến trình", info: [], st: [],
-            conc: Math.max(1, Math.min(MAX_CONCURRENCY, parseInt(cfg.concurrency, 10) || 1)),
+            conc: Math.max(1, Math.min(parseInt(cfg.maxConcurrency, 10) || MAX_CONCURRENCY, parseInt(cfg.concurrency, 10) || 1)),
             cols: cfg.columns || [{
                 header: cfg.infoHeader || "Thông tin xử lý",
                 render: cfg.info || function (it) { return (it && typeof it === "object") ? (it.TEN || it.name || it.ID || "") : it; }
@@ -862,7 +873,7 @@ var processrunApi = (function (root) {
     --Discription: [5] API công khai
     -------------------------------------------*/
     return {
-        version: "1.6.0",
+        version: "1.7.0",
         open: open,
         callApi: callApi,
         // Các dòng đang tick ở bảng strTableId (ô tick có id = strPrefix + ID, mặc định "checkX"), tra đủ dữ liệu từ arrData theo ID.
@@ -930,6 +941,49 @@ var processrunApi = (function (root) {
                 if (typeof fin === "function") fin(sum);
             };
             this.run(c);
+        },
+
+        // Nút "Bắt đầu" của thanh tiến trình hàng đợi (CMS_HangDoiTuTao, vẽ bởi edu.system.createHangDoi) = chỗ THỰC SỰ tính/xử lý:
+        // nạp các nhiệm vụ còn lại của hàng đợi rồi chạy từng nhiệm vụ trong form (giờ bắt đầu/kết thúc, kết quả, lỗi, xuất Excel).
+        // Bước "khởi tạo" tạo hàng đợi chỉ là gọi đúng 1 hàm, không qua form này.
+        //   cfg: queueId (ID hàng đợi), title, subTitles (mảng hoặc hàm), fileName, concurrency (số hoặc hàm; "Chạy tuần tự" = 1),
+        //        info(it, i, n) / infoHeader (chữ mô tả 1 nhiệm vụ), autoStart (mặc định true: bấm "Bắt đầu" là chạy luôn),
+        //        refresh, onFinish, onClose ... như run
+        runHangDoi: function (cfg) {
+            var self = this, edu = root.edu, qid = cfg.queueId;
+            if (!qid || LOADING_Q[qid]) return;
+            if (!edu || !edu.system) { warn("Thiếu edu.system để chạy hàng đợi."); return; }
+            LOADING_Q[qid] = true;
+            var ack = showAck(cfg.title || "Chạy hàng đợi");
+            ack.next("", "Đang nạp các nhiệm vụ còn lại của hàng đợi…");
+            function val(v) { return typeof v === "function" ? v() : v; }
+            paintThen(function () {
+                callApi({
+                    type: "GET", action: "CMS_HangDoiTuTao/LayDSXuLyNhiemVu_HangDoi",
+                    data: { dTinhTrang: 0, strHangDoi_Id: qid, strNguoiThucHien_Id: edu.system.userId, strTuKhoa: "", pageIndex: 1, pageSize: 1000000 }
+                }).then(function (r) {
+                    LOADING_Q[qid] = false;
+                    ack.close();
+                    if (!r.ok) { warn("Không nạp được danh sách nhiệm vụ của hàng đợi: " + r.message); return; }
+                    var items = (r.data && r.data.Data) || [], n = items.length, c = {}, k;
+                    for (k in cfg) c[k] = cfg[k];
+                    delete c.queueId;
+                    c.unit = cfg.unit || "nhiệm vụ";
+                    c.infoHeader = cfg.infoHeader || "Nội dung xử lý";
+                    c.items = items;
+                    // máy chủ chưa trả mô tả nhiệm vụ thì ghi số thứ tự (xem hàm taskText)
+                    c.info = function (it, i) { return typeof cfg.info === "function" ? cfg.info(it, i, n) : taskText(it, i, n); };
+                    c.subTitles = val(cfg.subTitles) || [];
+                    c.concurrency = val(cfg.concurrency) || 1;
+                    c.maxConcurrency = 100;
+                    c.autoStart = cfg.autoStart !== false;
+                    c.okMessage = cfg.okMessage || "Đã xử lý";
+                    c.request = function (it) {
+                        return { type: "POST", action: "CMS_HangDoiTuTao/XuLyNhiemVu_HangDoi", contentType: true, data: { strNguoiThucHien_Id: edu.system.userId, strId: it.ID } };
+                    };
+                    self.run(c);
+                });
+            });
         },
 
         // Mở modal chọn sinh viên chung (edu.extend.genModal_SinhVien); chọn xong đóng modal rồi mở form tiến trình, mỗi sinh viên 1 bản ghi.

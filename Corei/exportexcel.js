@@ -687,6 +687,8 @@ var exportexcelApi = (function (root) {
     -------------------------------------------*/
     var ASK_TEXT = "Bạn có muốn xuất dữ liệu ra file Excel không?";
     function fmtInt(n) { return Number(n).toLocaleString("vi-VN"); }
+    var COLLATOR = null;
+    try { if (root.Intl && root.Intl.Collator) COLLATOR = new root.Intl.Collator("vi", { numeric: true }); } catch (ex) { COLLATOR = null; }
     // Bỏ dấu + chữ thường để gõ "dien" tìm ra "Điện"
     function fold(s) {
         return toText(s).normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[đĐ]/g, "d").toLowerCase();
@@ -730,6 +732,12 @@ var exportexcelApi = (function (root) {
         } catch (ex) { return null; }
     }
 
+    function ensureHay(g, spec) {
+        if (g.hayDone) return;
+        g.hayDone = true;
+        g.hay = haystackOf(spec);
+    }
+
     // Mỗi sheet có filters + data -> 1 nhóm; mỗi bộ lọc giữ sẵn giá trị chuẩn hóa của từng dòng để đếm nhanh
     function filterGroupsOf(specs) {
         var groups = [];
@@ -747,16 +755,19 @@ var exportexcelApi = (function (root) {
                     counts[t]++;
                 }
                 if (keys.length === 0) continue;
-                keys.sort(function (a, b) { return a.localeCompare(b, "vi", { numeric: true }); });
+                // 1 bộ so sánh dùng cho cả lần sắp xếp (localeCompare tự dựng bộ so sánh MỖI lần gọi: 8 nghìn người thu mất vài trăm ms)
+                keys.sort(COLLATOR ? COLLATOR.compare : function (a, b) { return a.localeCompare(b, "vi", { numeric: true }); });
                 // Mặc định theo bộ lọc đã chọn ngoài màn hình tìm kiếm (khớp không phân biệt hoa/thường, dấu):
                 // chọn gì ngoài thì tích sẵn đúng cái đó; không chọn gì thì để trống (= xuất tất cả). Mọi bộ lọc cùng 1 quy tắc.
-                var want = presetOf(def), sel = Object.create(null), defSel = Object.create(null), nSel = 0;
+                var want = presetOf(def), sel = Object.create(null), defSel = Object.create(null), nSel = 0, order = [], rest = [];
                 for (var q = 0; q < keys.length; q++) {
-                    if (want.indexOf(fold(keys[q])) >= 0) { sel[keys[q]] = true; defSel[keys[q]] = true; nSel++; }
+                    if (want.length > 0 && want.indexOf(fold(keys[q])) >= 0) { sel[keys[q]] = true; defSel[keys[q]] = true; nSel++; order.push(q); }
+                    else rest.push(q);
                 }
-                g.items.push({ label: def.label || def.field || "", vals: vals, keys: keys, counts: counts, selected: sel, nSel: nSel, def: defSel, defN: nSel });
+                // Danh sách dài chỉ vẽ từng lô khi cuộn nên các mục đã tích sẵn được xếp lên đầu để luôn nhìn thấy
+                g.items.push({ label: def.label || def.field || "", vals: vals, keys: keys, counts: counts, selected: sel, nSel: nSel, def: defSel, defN: nSel, order: order.concat(rest) });
             }
-            g.hay = haystackOf(spec);
+            // Chuỗi tìm theo từ khóa chỉ dựng khi người dùng gõ ô từ khóa lần đầu (ensureHay): dựng cho vài chục nghìn dòng mất cả trăm ms
             groups.push(g);
         }
         return groups;
@@ -914,11 +925,38 @@ var exportexcelApi = (function (root) {
     }
     ensureAskCss();
 
+    // 1 lô dòng tích chọn của 1 bộ lọc (it.view = thứ tự đang hiển thị, it.shown = đã vẽ bao nhiêu dòng đầu)
+    var CHUNK = 60;
+    function optsHtml(it) {
+        var h = "", end = Math.min(it.view.length, it.shown + CHUNK);
+        for (var a = it.shown; a < end; a++) {
+            var k = it.view[a], key = it.keys[k], bOn = !!it.selected[key];
+            h += '<label class="ee-opt' + (bOn ? ' on' : '') + '" data-k="' + k + '"><input type="checkbox"' + (bOn ? ' checked' : '') + '>'
+                + '<span class="ee-t">' + esc(key || "(Trống)") + '</span><span class="ee-n">' + fmtInt(it.counts[key]) + '</span></label>';
+        }
+        it.shown = end;
+        return h;
+    }
+
+    // Hộp thoại hỏi trước khi xuất đang được dựng/đang mở: bấm thêm nút xuất lần nữa thì bỏ qua. Nếu không chặn, mỗi lần bấm dựng thêm 1 hộp thoại
+    // và lớp nền mờ của hộp thoại cũ bị bỏ lại -> cả màn hình bị phủ mờ, không bấm được gì.
+    var ASKING = 0;
+    function isAsking() {
+        if (!ASKING) return false;
+        if (Date.now() - ASKING < 8000) return true;
+        // Quá 8 giây mà hộp thoại không còn trong trang = đã kẹt cờ (lỗi giữa chừng) -> cho phép xuất lại
+        var d = root.document;
+        if (d && d.getElementById("modalEduExporter")) return true;
+        ASKING = 0;
+        return false;
+    }
+
     // Hỏi "có muốn xuất không" (kèm các ô lọc thêm nếu có); đồng ý thì gọi fnOk(opts đã lọc)
     function askExport(opts, fnOk, ack) {
         var $ = root.$, specs = opts.sheets || [opts], groups = filterGroupsOf(specs), i, j, k;
         if (!$ || !$.fn || !$.fn.modal) {
             if (ack) ack.close();
+            ASKING = 0;
             if (!root.confirm || root.confirm(ASK_TEXT)) fnOk(opts);
             return;
         }
@@ -956,6 +994,9 @@ var exportexcelApi = (function (root) {
                 h += '<div class="ee-grid" style="grid-template-columns:repeat(' + nCols + ',minmax(0,1fr))">';
                 for (j = 0; j < groups[i].items.length; j++) {
                     var it = groups[i].items[j];
+                    // Danh sách dài (vài nghìn người thu/lớp) chỉ vẽ từng lô nhỏ, cuộn tới đâu vẽ tới đó: vẽ cả nghìn dòng 1 lúc làm trang đứng vài giây
+                    it.view = it.order;
+                    it.shown = 0;
                     h += '<div class="ee-card' + (it.defN > 0 ? ' pre' : '') + '" data-g="' + i + '" data-i="' + j + '"'
                         + (it.defN > 0 ? ' title="Đã tích sẵn theo bộ lọc bạn chọn ở ngoài màn hình tìm kiếm"' : '') + '>'
                         + '<div class="ee-card-h"><span><span class="ee-card-t">' + esc(it.label) + '</span>'
@@ -965,11 +1006,7 @@ var exportexcelApi = (function (root) {
                         + '<div class="ee-card-s"><div class="ee-search"><i class="fa fa-search"></i>'
                         + '<input type="text" class="ee-q" autocomplete="off" placeholder="Tìm trong danh sách (' + fmtInt(it.keys.length) + ' mục)..."></div></div>'
                         + '<div class="ee-list">';
-                    for (k = 0; k < it.keys.length; k++) {
-                        var bOn = !!it.selected[it.keys[k]];
-                        h += '<label class="ee-opt' + (bOn ? ' on' : '') + '" data-k="' + k + '" data-f="' + esc(fold(it.keys[k])) + '"><input type="checkbox"' + (bOn ? ' checked' : '') + '>'
-                            + '<span class="ee-t">' + esc(it.keys[k] || "(Trống)") + '</span><span class="ee-n">' + fmtInt(it.counts[it.keys[k]]) + '</span></label>';
-                    }
+                    h += optsHtml(it);
                     h += '<div class="ee-empty">Không có mục nào khớp</div></div></div>';
                 }
                 h += '</div>';
@@ -982,7 +1019,14 @@ var exportexcelApi = (function (root) {
             + '<button type="button" class="btn btn-success" id="btnEduExporterOk"><i class="fa fa-file-excel-o"></i>Xuất Excel</button>'
             + '</div></div></div></div>';
 
-        $("#modalEduExporter").remove();
+        // Còn hộp thoại cũ (không nên xảy ra nhờ isAsking) thì gỡ cả lớp nền mờ của nó, nếu không lớp nền ở lại phủ mờ và chặn mọi cú bấm
+        var $old = $("#modalEduExporter");
+        if ($old.length > 0) {
+            var oldBs = $old.data("bs.modal");
+            if (oldBs && oldBs.$backdrop) oldBs.$backdrop.remove();
+            $old.off().remove();
+            if ($(".modal.in").length === 0) $("body").removeClass("modal-open").css("padding-right", "");
+        }
         var $m = $(h).appendTo(document.body), bDone = false;
 
         function cardOf(el) {
@@ -1023,25 +1067,36 @@ var exportexcelApi = (function (root) {
             syncBadge(c.$c, c.it);
             refresh();
         });
-        // Tìm trong danh sách (không phân biệt hoa thường, bỏ dấu)
-        $m.on("input", ".ee-q", function () {
-            var q = fold($(this).val()).trim(), $c = $(this).closest(".ee-card"), n = 0;
-            $c.find(".ee-opt").each(function () {
-                var show = !q || $(this).attr("data-f").indexOf(q) >= 0;
-                $(this).toggleClass("ee-hide", !show);
-                if (show) n++;
-            });
-            $c.find(".ee-empty").toggle(n === 0);
-        });
-        // Tích hết các mục đang hiện (sau khi tìm, VD gõ "13.10.1" rồi chọn cả nhóm lớp)
-        $m.on("click", ".ee-all", function () {
+        // Vẽ lại danh sách của 1 bộ lọc từ đầu theo it.view (sau khi tìm / đặt lại)
+        function repaintList(c) {
+            var $l = c.$c.find(".ee-list");
+            c.it.shown = 0;
+            $l.children(".ee-opt").remove();
+            $l.scrollTop(0);
+            $l.children(".ee-empty").before(optsHtml(c.it)).toggle(c.it.view.length === 0);
+        }
+        // Cuộn gần hết danh sách thì vẽ thêm 1 lô (scroll không nổi bọt lên nên gắn thẳng vào từng danh sách)
+        $m.find(".ee-list").on("scroll", function () {
             var c = cardOf(this);
-            c.$c.find(".ee-opt:not(.ee-hide)").each(function () {
-                var key = c.it.keys[parseInt($(this).attr("data-k"), 10)];
-                if (!c.it.selected[key]) { c.it.selected[key] = true; c.it.nSel++; }
-                $(this).addClass("on").find("input").prop("checked", true);
-            });
-            syncBadge(c.$c, c.it);
+            if (c.it.shown >= c.it.view.length) return;
+            if (this.scrollTop + this.clientHeight >= this.scrollHeight - 160) $(this).children(".ee-empty").before(optsHtml(c.it));
+        });
+        // Tìm trong danh sách (không phân biệt hoa thường, bỏ dấu); tìm trên dữ liệu chứ không trên các dòng đã vẽ
+        $m.on("input", ".ee-q", function () {
+            var c = cardOf(this), it = c.it, q = fold($(this).val()).trim();
+            if (!it.folds) { it.folds = []; for (var a = 0; a < it.keys.length; a++) it.folds.push(fold(it.keys[a])); }
+            it.view = !q ? it.order : it.order.filter(function (idx) { return it.folds[idx].indexOf(q) >= 0; });
+            repaintList(c);
+        });
+        // Tích hết các mục đang hiện (sau khi tìm, VD gõ "13.10.1" rồi chọn cả nhóm lớp): gồm cả các mục chưa vẽ vì chưa cuộn tới
+        $m.on("click", ".ee-all", function () {
+            var c = cardOf(this), it = c.it;
+            for (var a = 0; a < it.view.length; a++) {
+                var key = it.keys[it.view[a]];
+                if (!it.selected[key]) { it.selected[key] = true; it.nSel++; }
+            }
+            c.$c.find(".ee-opt").addClass("on").find("input").prop("checked", true);
+            syncBadge(c.$c, it);
             refresh();
         });
         $m.on("click", ".ee-none", function () {
@@ -1054,6 +1109,7 @@ var exportexcelApi = (function (root) {
         });
         $m.on("input", ".ee-kwin", function () {
             var g = groups[parseInt($(this).attr("data-g"), 10)];
+            ensureHay(g, specs[g.spec]);
             g.kw = $(this).val();
             g.tokens = fold(g.kw).split(/\s+/).filter(function (t) { return t !== ""; });
             refresh();
@@ -1067,14 +1123,11 @@ var exportexcelApi = (function (root) {
             }
             $m.find(".ee-card").each(function () {
                 var c = cardOf(this);
-                c.$c.find(".ee-opt").each(function () {
-                    var bOn = !!c.it.selected[c.it.keys[parseInt($(this).attr("data-k"), 10)]];
-                    $(this).removeClass("ee-hide").toggleClass("on", bOn).find("input").prop("checked", bOn);
-                });
+                c.it.view = c.it.order;
+                repaintList(c);
                 syncBadge(c.$c, c.it);
             });
             $m.find(".ee-q, .ee-kwin").val("");
-            $m.find(".ee-empty").hide();
             refresh();
         });
         $m.on("click", "#btnEduExporterOk", function () {
@@ -1087,6 +1140,7 @@ var exportexcelApi = (function (root) {
         // Mở chồng lên modal khác (VD "Danh sách không đăng ký"): nâng lớp hiển thị; đóng xong trả lại khóa cuộn trang của modal bên dưới
         var bChong = $(".modal.in").length > 0;
         $m.on("hidden.bs.modal", function () {
+            ASKING = 0;
             $m.remove();
             if ($(".modal.in").length > 0) $("body").addClass("modal-open");
         });
@@ -1114,7 +1168,7 @@ var exportexcelApi = (function (root) {
     }
 
     return {
-        version: "1.8.0",
+        version: "1.9.0",
 
         // Dựng file .xlsx (Uint8Array, không nén) mà không tải về — dùng cho kiểm thử hoặc gửi lên nơi khác
         buildXlsx: function (opts) {
@@ -1219,18 +1273,25 @@ var exportexcelApi = (function (root) {
                 });
                 return;
             }
+            var busyAt = 0;
             $(document).off("click.eduExp", "#" + id).on("click.eduExp", "#" + id, function (e) {
                 e.preventDefault();
-                var ack = (root.edu && root.edu.process && root.edu.process.ack) ? root.edu.process.ack(cfg.label || "Xuất Excel", "Đang nạp toàn bộ danh sách…") : null;
-                var fin = function () { if (ack) ack.close(); };
-                var p;
-                try { p = Promise.resolve(cfg.fetchAll()); } catch (ex) { fin(); warn("Không nạp được danh sách để xuất: " + ex.message); return; }
-                p.then(function (rows) {
-                    fin();
-                    if (!rows || rows.length === 0) { warn("Không có dữ liệu để xuất."); return; }
-                    var flt = typeof cfg.extraFilters === "function" ? cfg.extraFilters() : cfg.extraFilters;
-                    me.exportWithConfirm({ fileName: cfg.fileName || cfg.table, title: cfg.title, subTitles: lines(), columns: cfg.columns, data: rows, filters: flt, confirm: cfg.confirm });
-                }, function (ex) { fin(); warn("Không nạp được danh sách để xuất: " + (ex && ex.message ? ex.message : ex)); });
+                // Đang nạp danh sách / đang mở hộp thoại thì bỏ qua các lần bấm thêm (mỗi lần bấm thêm = 1 lần nạp lại toàn bộ + 1 hộp thoại chồng lên)
+                if ((busyAt && Date.now() - busyAt < 180000) || isAsking()) return;
+                busyAt = Date.now();
+                // Thẻ "Đã nhận lệnh" hiện NGAY; chờ trình duyệt vẽ xong mới bắt đầu dựng yêu cầu nạp dữ liệu
+                var ack = ackStart(cfg.label || "Xuất Excel", "Đang nạp toàn bộ danh sách từ máy chủ…");
+                var fin = function () { busyAt = 0; if (ack) ack.close(); };
+                paintThen(function () {
+                    var p;
+                    try { p = Promise.resolve(cfg.fetchAll()); } catch (ex) { fin(); warn("Không nạp được danh sách để xuất: " + ex.message); return; }
+                    p.then(function (rows) {
+                        fin();
+                        if (!rows || rows.length === 0) { warn("Không có dữ liệu để xuất."); return; }
+                        var flt = typeof cfg.extraFilters === "function" ? cfg.extraFilters() : cfg.extraFilters;
+                        me.exportWithConfirm({ fileName: cfg.fileName || cfg.table, title: cfg.title, subTitles: lines(), columns: cfg.columns, data: rows, filters: flt, confirm: cfg.confirm });
+                    }, function (ex) { fin(); warn("Không nạp được danh sách để xuất: " + (ex && ex.message ? ex.message : ex)); });
+                });
             });
         },
 
@@ -1238,10 +1299,13 @@ var exportexcelApi = (function (root) {
         exportWithConfirm: function (opts) {
             var me = this;
             if (opts.confirm === false) return me.exportData(opts);
+            if (isAsking()) return;
+            ASKING = Date.now();
             var ack = ackStart("Xuất Excel", "Đang lên phương án xuất dữ liệu…");
             paintThen(function () {
                 try { askExport(opts, function (o) { me.exportData(o); }, ack); }
                 catch (ex) {
+                    ASKING = 0;
                     if (ack) ack.close();
                     if (root.console) root.console.log("[edu.exporter] lỗi", ex);
                     warn("Không mở được hộp thoại xuất: " + ex.message);
