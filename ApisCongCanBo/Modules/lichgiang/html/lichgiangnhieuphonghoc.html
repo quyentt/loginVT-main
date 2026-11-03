@@ -1961,6 +1961,22 @@
         border-color: #ffffff !important;
     }
 
+    /* Đổi lịch dạy = hành động khác nhóm "xem lịch" → outline tone cam (nền header xanh đậm nên chữ/viền cam sáng) */
+    .lgnp-filter-card #btnDoiLichDay {
+        background: transparent !important;
+        border: 1px solid #ffa94d !important;
+        color: #ffc78a !important;
+    }
+
+    .lgnp-filter-card #btnDoiLichDay i {
+        color: #ffc78a !important;
+    }
+
+    .lgnp-filter-card #btnDoiLichDay:hover {
+        background: rgba(255, 169, 77, 0.18) !important;
+        border-color: #ffc78a !important;
+    }
+
     .lgnp-filter-card #btnExportExcel {
         background: #198754 !important;
         border: 1px solid #198754 !important;
@@ -3384,6 +3400,28 @@
 
     #modal_doilich .lgnp-dl-goiy-dong { margin-top: 2px; font-size: 12px; }
 
+    /* Ô tick "Bỏ qua SC" thẳng hàng với ô nhập "Sức chứa từ" bên cạnh (cao 38px) */
+    #modal_doilich .lgnp-dl-boqua .form-check {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        height: 38px;
+        margin: 0;
+        padding-left: 0;
+    }
+
+    #modal_doilich .lgnp-dl-boqua .form-check-input {
+        float: none;
+        margin: 0;
+        cursor: pointer;
+    }
+
+    #modal_doilich .lgnp-dl-boqua .form-check-label {
+        margin: 0;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
     @media (max-width: 575.98px) {
         #modal_doilich .dl-luoi { grid-template-columns: 38px repeat(7, minmax(0, 1fr)); }
         #modal_doilich .dl-luoi .dl-o { font-size: 0; padding: 0; }
@@ -3545,6 +3583,10 @@
                     </button>
                     <button class="btn btn-soft-info" id="btnViewAll">
                         <i class="fa-solid fa-th-list me-1"></i>Xem tất cả lịch phòng
+                    </button>
+                    <!-- Chọn lớp học phần cần đổi TRƯỚC → lưới chọn thời gian mới → phòng xếp được (không cần bấm ô Trống) -->
+                    <button class="btn btn-soft-warning" id="btnDoiLichDay" title="Chọn lớp học phần cần đổi, rồi chọn thời gian và phòng mới">
+                        <i class="fa-solid fa-calendar-lines-pen me-1"></i>Đổi lịch dạy
                     </button>
                     <button class="btn btn-success" id="btnExportExcel">
                         <i class="fa-solid fa-file-excel me-1"></i>Xuất Excel
@@ -4020,7 +4062,8 @@
                 <!-- Bộ lọc thời gian buổi dạy của giảng viên -->
                 <div class="lgnp-doi-loc-thoigian mb-3 p-3 bg-light rounded border">
                     <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
-                        <div class="lgnp-dl-tieude m-0">
+                        <!-- Nội dung do JS đặt theo cách vào modal (datCheDoChonLopDoi): từ ô Trống hay từ nút "Đổi lịch dạy" -->
+                        <div class="lgnp-dl-tieude m-0" id="lblDoi_TieuDeChon">
                             <i class="fa-solid fa-calendar-check me-1"></i>Chọn buổi dạy của bạn cần chuyển vào đây:
                         </div>
                         <div class="btn-group" role="group">
@@ -4039,6 +4082,11 @@
                             <i class="fa-solid fa-magnifying-glass me-1"></i>Tìm buổi dạy
                         </button>
                         <span class="text-muted ms-auto fw-semibold" id="lblDoi_SoBuoi"></span>
+                    </div>
+                    <!-- Lọc tại chỗ trong danh sách bên dưới (không gọi API, không phân biệt dấu) -->
+                    <div class="mt-2">
+                        <input type="search" class="form-control" id="txtDoi_TimLop" autocomplete="off"
+                            placeholder="Lọc nhanh theo học phần, lớp, phòng, ngày…">
                     </div>
                 </div>
                 <div class="lgnp-ds-lop" id="zoneDoi_DSLop"></div>
@@ -4113,13 +4161,27 @@
                                 <label>Tiết kết thúc</label>
                                 <input type="number" min="1" max="15" class="form-control" id="txtDL_TietKetThuc">
                             </div>
-                            <div class="col-md-8">
-                                <label>Phòng học</label>
-                                <select class="form-select" id="dropDL_PhongHoc"></select>
+                            <!-- Bộ lọc phòng: tòa nhà + sức chứa (để trống = sĩ số lớp; tick "Bỏ qua SC" = không lọc sức chứa) → rồi chọn phòng -->
+                            <div class="col-md-6">
+                                <label>Tòa nhà</label>
+                                <select class="form-select" id="dropDL_ToaNha">
+                                    <option value="">Tất cả tòa nhà</option>
+                                </select>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3 col-6">
                                 <label>Sức chứa từ</label>
                                 <input type="number" min="0" class="form-control" id="txtDL_SucChuaTu" placeholder="VD: 40">
+                            </div>
+                            <div class="col-md-3 col-6 lgnp-dl-boqua">
+                                <label>&nbsp;</label>
+                                <div class="form-check" title="Không lọc phòng theo sức chứa / sĩ số lớp">
+                                    <input type="checkbox" class="form-check-input" id="chkDL_BoQuaSC">
+                                    <label class="form-check-label" for="chkDL_BoQuaSC">Bỏ qua SC</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label>Phòng học</label>
+                                <select class="form-select" id="dropDL_PhongHoc"></select>
                             </div>
                             <div class="col-12 lgnp-dl-goiy-dong">
                                 <span class="lgnp-dl-goiy" id="lblDL_GoiYPhong"></span>
@@ -4154,7 +4216,7 @@
 </div>
 
 <!-- CDN không hoạt động, bỏ qua và dùng XLSX fallback trực tiếp -->
-<script src="modules/lichgiang/script/lichgiangnhieuphonghoc.js?v=3.14.0.0"></script>
+<script src="modules/lichgiang/script/lichgiangnhieuphonghoc.js?v=3.15.0.0"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         // Check if XLSX library is loaded
