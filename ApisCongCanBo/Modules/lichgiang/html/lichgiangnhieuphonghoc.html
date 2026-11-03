@@ -3285,6 +3285,66 @@
         border: 1px solid #ffb27a;
     }
 
+    /* Kết quả lặp hàm kiểm tra đổi lịch cho từng ô (class riêng, KHÔNG dùng "ok"/"loi" vì đã dành cho hiệu ứng rê chuột .xem-truoc):
+       trong = giảng viên rảnh (xanh nhạt, chưa/không kiểm tra được) → kiem = đang kiểm tra → doi-duoc = đổi được | vuong = vướng | ngan = không đủ tiết liên tiếp */
+    #modal_doilich .dl-lg.doi-duoc,
+    #modal_doilich .dl-luoi .dl-o.doi-duoc {
+        background: #b9e9cd;
+        border: 1px solid #2e9d5f;
+    }
+
+    #modal_doilich .dl-lg.vuong,
+    #modal_doilich .dl-luoi .dl-o.vuong {
+        background: #fffaf0;
+        border: 1px dashed #d9a441;
+    }
+
+    #modal_doilich .dl-luoi .dl-o.ngan {
+        background: #f8fafc;
+        border: 1px solid #eef2f6;
+    }
+
+    #modal_doilich .dl-luoi .dl-o.doi-duoc,
+    #modal_doilich .dl-luoi .dl-o.vuong { cursor: pointer; }
+    #modal_doilich .dl-luoi .dl-o.doi-duoc:hover { background: #9fdcb8; }
+    #modal_doilich .dl-luoi .dl-o.vuong:hover { background: #fff1d6; }
+    #modal_doilich .dl-luoi .dl-o.ngan { cursor: not-allowed; }
+
+    #modal_doilich .dl-luoi .dl-o.kiem {
+        background: linear-gradient(90deg, #e6f7ee 0%, #cdeedb 50%, #e6f7ee 100%);
+        background-size: 200% 100%;
+        animation: dl-kiem 1.2s linear infinite;
+    }
+
+    @keyframes dl-kiem {
+        from { background-position: 200% 0; }
+        to { background-position: -200% 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        #modal_doilich .dl-luoi .dl-o.kiem { animation: none; }
+    }
+
+    #modal_doilich .lgnp-dl-luoi-tiendo {
+        margin: 2px 0 6px;
+        min-height: 16px;
+        font-size: 12px;
+        color: #475569;
+    }
+
+    #modal_doilich .lgnp-dl-luoi-tiendo.xong { color: #1e6b3a; }
+    #modal_doilich .lgnp-dl-luoi-tiendo.dung { color: #b42318; }
+
+    #modal_doilich .lgnp-dl-luoi-tiendo .lgnp-kiemlai {
+        padding: 0 4px;
+        border: 0;
+        background: none;
+        color: #223771;
+        font-size: 12px;
+        font-weight: 600;
+        text-decoration: underline;
+    }
+
     #modal_doilich .dl-lg.da-chon {
         background: #1a7c42;
         border: 1px solid #1a7c42;
@@ -4134,12 +4194,15 @@
                                 <button type="button" id="btnDL_TuanCu" title="Quay về tuần của buổi học hiện tại">Tuần của buổi học</button>
                             </div>
                         </div>
+                        <!-- Ô xanh = hàm kiểm tra đổi lịch (KiemTraLichCanDoi) báo hợp lệ; chỉ lặp trong tuần đang xem (sếp 03/11: "1 tuần chọn để for thôi, cho đỡ nặng") -->
                         <div class="lgnp-dl-chuthich">
-                            <span><i class="dl-lg trong"></i>Giảng viên rảnh — bấm để chọn</span>
+                            <span><i class="dl-lg doi-duoc"></i>Đổi được — bấm để chọn</span>
+                            <span><i class="dl-lg vuong"></i>Vướng (sinh viên/phòng...) — rê chuột xem lý do</span>
                             <span><i class="dl-lg ban"></i>Giảng viên bận</span>
                             <span><i class="dl-lg hien-tai"></i>Buổi học hiện tại</span>
                             <span><i class="dl-lg da-chon"></i>Đã chọn</span>
                         </div>
+                        <div class="lgnp-dl-luoi-tiendo" id="zoneDL_LuoiTienDo"></div>
                         <div class="lgnp-dl-luoi-canhbao" id="zoneDL_LuoiCanhBao" style="display: none;"></div>
                         <div class="lgnp-dl-luoi-bang" id="zoneDL_LuoiBang"></div>
                         <div class="lgnp-dl-luoi-ghichu" id="zoneDL_LuoiGhiChu"></div>
@@ -4216,7 +4279,7 @@
 </div>
 
 <!-- CDN không hoạt động, bỏ qua và dùng XLSX fallback trực tiếp -->
-<script src="modules/lichgiang/script/lichgiangnhieuphonghoc.js?v=3.15.0.0"></script>
+<script src="modules/lichgiang/script/lichgiangnhieuphonghoc.js?v=3.16.0.0"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         // Check if XLSX library is loaded
