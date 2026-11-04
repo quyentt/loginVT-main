@@ -562,8 +562,32 @@ LichGiang.prototype = {
         var objLich = me.dtLichHoc.find(function (e) { return e.ID === strId; });
         if (!objLich) return;
         me.strLichHoc_Id = strId;
+        // [2026-11-04] Dùng modal "Yêu cầu đổi lịch" MỚI (lưới tuần chọn thời gian, lọc phòng, kiểm tra từng ô) — dùng chung với trang Lịch giảng đường.
+        // Chưa nạp đủ file dùng chung (doilich_modal.js + lichgiangnhieuphonghoc.js) thì quay về modal cũ để chức năng không chết.
+        if (typeof LichGiangNhieuPhong !== 'undefined' && typeof DoiLichModal !== 'undefined') {
+            me.moDoiLichMoi(objLich);
+            return;
+        }
+        // Modal cũ (#modalDoiLich) — giữ lại làm đường lui:
         $("#modalDoiLich").modal("show");
         me.getList_KhoiTaoDoiLich(objLich);
+    },
+    // Modal đổi lịch mới: lần đầu bấm thì nạp giao diện + sự kiện + danh mục tòa/phòng (initDoiLichRieng) rồi mới mở; các lần sau mở ngay.
+    // Gửi yêu cầu xong → làm mới bảng "yêu cầu đổi lịch" của trang này (getList_DoiLich) như modal cũ.
+    moDoiLichMoi: function (objLich) {
+        var me = this;
+        var fnMo = function (obj) {
+            me.doiLichMoi.fnSauKhiGuiDoiLich = function () { me.getList_DoiLich(); };
+            me.doiLichMoi.moDoiLich(obj, null);
+        };
+        if (me.doiLichMoi && me.doiLichMoiSan) { fnMo(objLich); return; }
+        me.doiLichCho = objLich;              // bấm liên tiếp lúc đang nạp: chỉ mở buổi bấm sau cùng
+        if (me.doiLichMoi) return;
+        me.doiLichMoi = new LichGiangNhieuPhong();
+        me.doiLichMoi.initDoiLichRieng(function () {
+            me.doiLichMoiSan = true;
+            fnMo(me.doiLichCho);
+        });
     },
 
     /*------------------------------------------
