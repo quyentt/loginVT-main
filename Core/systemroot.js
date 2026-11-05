@@ -9723,7 +9723,7 @@ systemroot.prototype = {
    TẠM ẨN (an: true): nút nổi chưa dựng, mở bằng console `btnYeuCauHoTro.hien()`. Bỏ ẩn: đổi an: false. Chế độ nhúng (nhung) như _v2.
    Đường dẫn tương đối gốc ứng dụng, ?v= ngẫu nhiên như loadPage() để không dính cache. */
 try {
-    if (!window.UMS_HOTRO_CONFIG) window.UMS_HOTRO_CONFIG = { nhung: true, an: true };
+    if (!window.UMS_HOTRO_CONFIG) window.UMS_HOTRO_CONFIG = { nhung: true, an: false };
     if (!document.querySelector('script[src*="btn-yeucau-hotro.js"]')) {
         var sHoTro = document.createElement('script');
         sHoTro.src = 'assets/plugin/btn-yeucau-hotro/btn-yeucau-hotro.js?v=' + Date.now();
