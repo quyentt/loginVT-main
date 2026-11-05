@@ -325,6 +325,7 @@ DiemHoc.prototype = {
             htmlBangDiem += '<span class="color-66">Tổng tín chỉ</span>';
             var temp = me.dtKetQua.rsDiemTrungBinhChung.find(element => element.DAOTAO_THOIGIANDAOTAO_ID !== null && element.LOAIDIEMTRUNGBINH_MA === 'TRUNGBINHCHUNG' && element.THUOCTINHLANTINH === 0 && element.THANGDIEM_MA === '10' && element.NAMHOC === strNamHoc && element.DAOTAO_THOIGIANDAOTAO_KY == strHocKy && element.DOTHOC === null && element.PHAMVITONGHOPDIEM_TEN == 'HOCKY');
             var diem = temp !== undefined ? edu.util.returnEmpty(temp.TONGSOTINCHI) : "...";
+            var tempChung10 = temp; // giữ bản ghi TRUNGBINHCHUNG/10: temp bị ghi đè bởi TRUNGBINHTICHLUY ở dưới, "Điểm trung bình hệ 10" cần dùng lại bản này
             //console.log("TONGSOTINCHI");
             //console.log(temp);
             htmlBangDiem += '<span>' + diem + '</span>';
@@ -341,7 +342,7 @@ DiemHoc.prototype = {
             htmlBangDiem += '<div class="col-12 col-md-6">';
             htmlBangDiem += '<div class="summary-row">';
             htmlBangDiem += '<span class="color-66">Điểm trung bình hệ 10</span>';
-            diem = temp !== undefined ? edu.util.returnEmpty(temp.DIEMTRUNGBINH) : "...";
+            diem = tempChung10 !== undefined ? edu.util.returnEmpty(tempChung10.DIEMTRUNGBINH) : "...";
             htmlBangDiem += '<span>' + diem + '</span>';
             htmlBangDiem += '</div>';
             htmlBangDiem += '</div>';

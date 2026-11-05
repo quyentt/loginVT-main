@@ -118,10 +118,38 @@ var exportexcelApi = (function (root) {
         }
         return t;
     })();
+    function crcUpdate(crc, bytes, from, to) {
+        for (var i = from; i < to; i++) crc = CRC_TABLE[(crc ^ bytes[i]) & 0xFF] ^ (crc >>> 8);
+        return crc;
+    }
     function crc32(bytes) {
-        var crc = 0xFFFFFFFF;
-        for (var i = 0; i < bytes.length; i++) crc = CRC_TABLE[(crc ^ bytes[i]) & 0xFF] ^ (crc >>> 8);
-        return (crc ^ 0xFFFFFFFF) >>> 0;
+        return (crcUpdate(0xFFFFFFFF, bytes, 0, bytes.length) ^ 0xFFFFFFFF) >>> 0;
+    }
+
+    // Chạy fn(từ, đến) lần lượt cho các lô của [0, n) và NHƯỜNG luồng cho trình duyệt giữa các lô (mỗi lượt chạy tối đa SLICE_MS).
+    // Dữ liệu hàng chục nghìn dòng mà dựng 1 mạch thì trang đứng nhiều giây (máy yếu: quá 15 giây -> Chrome báo "Page Unresponsive");
+    // chia lô thì vòng quay/% tiến độ vẫn chạy và vẫn bấm được. step = số phần tử mỗi lô; onProgress(đã xong, n) gọi sau mỗi lượt.
+    var SLICE_MS = 30;
+    function nowMs() { return (root.performance && root.performance.now) ? root.performance.now() : Date.now(); }
+    function sliceRun(n, fn, onProgress, step) {
+        return new Promise(function (resolve, reject) {
+            var at = 0, size = step || 200;
+            (function run() {
+                var t0 = nowMs();
+                try {
+                    do { var to = Math.min(n, at + size); fn(at, to); at = to; } while (at < n && nowMs() - t0 < SLICE_MS);
+                } catch (ex) { reject(ex); return; }
+                if (onProgress) onProgress(at, n);
+                if (at >= n) { resolve(); return; }
+                setTimeout(run, 0);
+            })();
+        });
+    }
+    // Ghép nhiều Uint8Array thành 1
+    function concatBytes(chunks, total) {
+        var out = new Uint8Array(total), pos = 0;
+        for (var i = 0; i < chunks.length; i++) { out.set(chunks[i], pos); pos += chunks[i].length; }
+        return out;
     }
     // files: [{ name, data }]; file nào có thêm .packed (deflate-raw của data) thì ghi dạng nén, còn lại ghi nguyên
     function zipStore(files) {
@@ -130,7 +158,8 @@ var exportexcelApi = (function (root) {
         var dosDate = ((now.getFullYear() - 1980) << 9) | ((now.getMonth() + 1) << 5) | now.getDate();
         var parts = [], central = [], offset = 0, cdSize = 0, i;
         for (i = 0; i < files.length; i++) {
-            var name = utf8(files[i].name), data = files[i].data, crc = crc32(data);
+            // file lớn đã được tính sẵn crc theo từng lô (files[i].crc) thì dùng luôn
+            var name = utf8(files[i].name), data = files[i].data, crc = files[i].crc !== undefined ? files[i].crc : crc32(data);
             var body = files[i].packed || data, method = files[i].packed ? 8 : 0;
             var lh = new Uint8Array(30 + name.length), lv = new DataView(lh.buffer);
             lv.setUint32(0, 0x04034b50, true); lv.setUint16(4, 20, true); lv.setUint16(6, 0x0800, true); lv.setUint16(8, method, true);
@@ -248,7 +277,9 @@ var exportexcelApi = (function (root) {
         return widths;
     }
 
-    function buildSheet(sh, styles, sheetIndex) {
+    // Kế hoạch dựng 1 sheet gồm 3 bước để chạy được theo từng lô: doRows(từ, đến) dựng các dòng dữ liệu, finishParts() dựng phần còn lại
+    // và trả { head, rows[], tail } (XML = head + rows.join("") + tail). buildSheet() chạy 1 mạch cho các nơi gọi đồng bộ.
+    function sheetPlan(sh, styles, sheetIndex) {
         var n = sh.cols.length, widths = calcWidths(sh), totalWidth = 0, rows = [], merges = [], r = 0, c, i;
         for (c = 0; c < n; c++) totalWidth += widths[c];
         var lastCol = n - 1;
@@ -318,81 +349,94 @@ var exportexcelApi = (function (root) {
         }
         var sums = [], hasSum = false;
         for (c = 0; c < n; c++) { sums.push(0); if (sh.cols[c].sum) hasSum = true; }
-        for (i = 0; i < sh.rows.length; i++) {
-            var cells = "", row = sh.rows[i];
-            for (c = 0; c < n; c++) {
-                var col = sh.cols[c], v = row[c], st = dataStyle(col);
-                if (col.type === "number") {
-                    var num = toNumber(v);
-                    if (num !== null) {
-                        cells += '<c r="' + ref(r, c) + '" s="' + st + '"><v>' + num + '</v></c>';
-                        if (col.sum) sums[c] += num;
-                        continue;
+        function doRows(from, to) {
+            for (var i = from; i < to; i++) {
+                var cells = "", row = sh.rows[i];
+                for (var c = 0; c < n; c++) {
+                    var col = sh.cols[c], v = row[c], st = dataStyle(col);
+                    if (col.type === "number") {
+                        var num = toNumber(v);
+                        if (num !== null) {
+                            cells += '<c r="' + ref(r, c) + '" s="' + st + '"><v>' + num + '</v></c>';
+                            if (col.sum) sums[c] += num;
+                            continue;
+                        }
+                    }
+                    cells += strCell(r, c, v, st);
+                }
+                addRow(cells);
+            }
+        }
+        function finishParts() {
+            var dataLast = r - 1;
+
+            // Dòng Tổng
+            if (hasSum && sh.rows.length > 0) {
+                var firstSum = -1;
+                for (c = 0; c < n; c++) if (sh.cols[c].sum) { firstSum = c; break; }
+                var sLabel = styles.get({ font: "bold", fill: "sum", border: true, align: "center", valign: "center" });
+                var sBlank = styles.get({ font: "bold", fill: "sum", border: true });
+                var scells = "";
+                for (c = 0; c < n; c++) {
+                    if (c === 0) { scells += strCell(r, c, "Tổng", sLabel); continue; }
+                    if (sh.cols[c].sum) {
+                        var sn = styles.get({ font: "bold", fill: "sum", border: true, align: "right", valign: "center", fmt: sh.cols[c].format || "general" });
+                        scells += '<c r="' + ref(r, c) + '" s="' + sn + '"><f>SUM(' + ref(dataStart, c) + ':' + ref(dataLast, c) + ')</f><v>' + sums[c] + '</v></c>';
+                    } else {
+                        scells += '<c r="' + ref(r, c) + '" s="' + sBlank + '"/>';
                     }
                 }
-                cells += strCell(r, c, v, st);
+                if (firstSum > 1) merges.push(ref(r, 0) + ":" + ref(r, firstSum - 1));
+                addRow(scells, 20);
             }
-            addRow(cells);
-        }
-        var dataLast = r - 1;
 
-        // Dòng Tổng
-        if (hasSum && sh.rows.length > 0) {
-            var firstSum = -1;
-            for (c = 0; c < n; c++) if (sh.cols[c].sum) { firstSum = c; break; }
-            var sLabel = styles.get({ font: "bold", fill: "sum", border: true, align: "center", valign: "center" });
-            var sBlank = styles.get({ font: "bold", fill: "sum", border: true });
-            var scells = "";
-            for (c = 0; c < n; c++) {
-                if (c === 0) { scells += strCell(r, c, "Tổng", sLabel); continue; }
-                if (sh.cols[c].sum) {
-                    var sn = styles.get({ font: "bold", fill: "sum", border: true, align: "right", valign: "center", fmt: sh.cols[c].format || "general" });
-                    scells += '<c r="' + ref(r, c) + '" s="' + sn + '"><f>SUM(' + ref(dataStart, c) + ':' + ref(dataLast, c) + ')</f><v>' + sums[c] + '</v></c>';
-                } else {
-                    scells += '<c r="' + ref(r, c) + '" s="' + sBlank + '"/>';
-                }
+            // Chân file: số bản ghi, ngày xuất, người xuất
+            var foot = sh.footer || [];
+            if (foot.length > 0) {
+                addRow("", 8);
+                for (i = 0; i < foot.length; i++) addRow(strCell(r, 0, foot[i], sNote));
             }
-            if (firstSum > 1) merges.push(ref(r, 0) + ":" + ref(r, firstSum - 1));
-            addRow(scells, 20);
-        }
 
-        // Chân file: số bản ghi, ngày xuất, người xuất
-        var foot = sh.footer || [];
-        if (foot.length > 0) {
-            addRow("", 8);
-            for (i = 0; i < foot.length; i++) addRow(strCell(r, 0, foot[i], sNote));
+            // Ghép XML sheet (thứ tự phần tử theo chuẩn OOXML)
+            var xml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+                + '<worksheet xmlns="' + NS_MAIN + '" xmlns:r="' + NS_REL + '">'
+                + '<sheetPr><pageSetUpPr fitToPage="1"/></sheetPr>'
+                + '<dimension ref="A1:' + ref(Math.max(r - 1, 0), Math.max(lastCol, 0)) + '"/>'
+                + '<sheetViews><sheetView workbookViewId="0" showGridLines="0"' + (sheetIndex === 0 ? ' tabSelected="1"' : '') + '>';
+            if (sh.freeze !== false && headLast >= 0) {
+                xml += '<pane ySplit="' + (headLast + 1) + '" topLeftCell="A' + (headLast + 2) + '" activePane="bottomLeft" state="frozen"/>'
+                    + '<selection pane="bottomLeft" activeCell="A' + (headLast + 2) + '" sqref="A' + (headLast + 2) + '"/>';
+            }
+            xml += '</sheetView></sheetViews><sheetFormatPr defaultRowHeight="15"/><cols>';
+            for (c = 0; c < n; c++) xml += '<col min="' + (c + 1) + '" max="' + (c + 1) + '" width="' + widths[c] + '" customWidth="1"/>';
+            xml += '</cols><sheetData>';
+            var head = xml;
+            xml = '</sheetData>';
+            if (sh.filter !== false && sh.rows.length > 0) {
+                xml += '<autoFilter ref="' + ref(headLast, 0) + ':' + ref(dataLast, lastCol) + '"/>';
+            }
+            if (merges.length > 0) {
+                xml += '<mergeCells count="' + merges.length + '">';
+                for (i = 0; i < merges.length; i++) xml += '<mergeCell ref="' + merges[i] + '"/>';
+                xml += '</mergeCells>';
+            }
+            xml += '<pageMargins left="0.4" right="0.4" top="0.6" bottom="0.6" header="0.3" footer="0.3"/>'
+                + '<pageSetup paperSize="9" orientation="landscape" fitToWidth="1" fitToHeight="0"/>'
+                + '<headerFooter><oddFooter>&amp;CTrang &amp;P / &amp;N</oddFooter></headerFooter>';
+            // Mã số/CCCD... cố ý lưu dạng chữ: tắt tam giác xanh cảnh báo "số lưu dạng chữ" của Excel
+            if (sh.rows.length > 0) {
+                xml += '<ignoredErrors><ignoredError sqref="' + ref(dataStart, 0) + ':' + ref(dataLast, lastCol) + '" numberStoredAsText="1"/></ignoredErrors>';
+            }
+            xml += '</worksheet>';
+            return { head: head, rows: rows, tail: xml, headStart: headStart, headLast: headLast };
         }
-
-        // Ghép XML sheet (thứ tự phần tử theo chuẩn OOXML)
-        var xml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
-            + '<worksheet xmlns="' + NS_MAIN + '" xmlns:r="' + NS_REL + '">'
-            + '<sheetPr><pageSetUpPr fitToPage="1"/></sheetPr>'
-            + '<dimension ref="A1:' + ref(Math.max(r - 1, 0), Math.max(lastCol, 0)) + '"/>'
-            + '<sheetViews><sheetView workbookViewId="0" showGridLines="0"' + (sheetIndex === 0 ? ' tabSelected="1"' : '') + '>';
-        if (sh.freeze !== false && headLast >= 0) {
-            xml += '<pane ySplit="' + (headLast + 1) + '" topLeftCell="A' + (headLast + 2) + '" activePane="bottomLeft" state="frozen"/>'
-                + '<selection pane="bottomLeft" activeCell="A' + (headLast + 2) + '" sqref="A' + (headLast + 2) + '"/>';
-        }
-        xml += '</sheetView></sheetViews><sheetFormatPr defaultRowHeight="15"/><cols>';
-        for (c = 0; c < n; c++) xml += '<col min="' + (c + 1) + '" max="' + (c + 1) + '" width="' + widths[c] + '" customWidth="1"/>';
-        xml += '</cols><sheetData>' + rows.join("") + '</sheetData>';
-        if (sh.filter !== false && sh.rows.length > 0) {
-            xml += '<autoFilter ref="' + ref(headLast, 0) + ':' + ref(dataLast, lastCol) + '"/>';
-        }
-        if (merges.length > 0) {
-            xml += '<mergeCells count="' + merges.length + '">';
-            for (i = 0; i < merges.length; i++) xml += '<mergeCell ref="' + merges[i] + '"/>';
-            xml += '</mergeCells>';
-        }
-        xml += '<pageMargins left="0.4" right="0.4" top="0.6" bottom="0.6" header="0.3" footer="0.3"/>'
-            + '<pageSetup paperSize="9" orientation="landscape" fitToWidth="1" fitToHeight="0"/>'
-            + '<headerFooter><oddFooter>&amp;CTrang &amp;P / &amp;N</oddFooter></headerFooter>';
-        // Mã số/CCCD... cố ý lưu dạng chữ: tắt tam giác xanh cảnh báo "số lưu dạng chữ" của Excel
-        if (sh.rows.length > 0) {
-            xml += '<ignoredErrors><ignoredError sqref="' + ref(dataStart, 0) + ':' + ref(dataLast, lastCol) + '" numberStoredAsText="1"/></ignoredErrors>';
-        }
-        xml += '</worksheet>';
-        return { xml: xml, headStart: headStart, headLast: headLast };
+        return { n: sh.rows.length, doRows: doRows, finishParts: finishParts };
+    }
+    function buildSheet(sh, styles, sheetIndex) {
+        var plan = sheetPlan(sh, styles, sheetIndex);
+        plan.doRows(0, plan.n);
+        var x = plan.finishParts();
+        return { xml: x.head + x.rows.join("") + x.tail, headStart: x.headStart, headLast: x.headLast };
     }
 
     function safeSheetName(name, idx, used) {
@@ -409,9 +453,22 @@ var exportexcelApi = (function (root) {
     }
 
     // Nén deflate-raw bằng CompressionStream có sẵn trong trình duyệt (Promise<Uint8Array>)
+    // Đưa dữ liệu vào bộ nén từng mẩu 512KB, giữa 2 mẩu nhường luồng cho trình duyệt: nén nguyên 1 khối hàng chục MB là 1 lượt chạy liền,
+    // máy yếu đứng vài giây
     function deflateRaw(bytes) {
-        var stream = new Blob([bytes]).stream().pipeThrough(new CompressionStream("deflate-raw"));
-        return new Response(stream).arrayBuffer().then(function (b) { return new Uint8Array(b); });
+        var CHUNK_BYTES = 524288, at = 0;
+        var source = new ReadableStream({
+            pull: function (controller) {
+                return new Promise(function (resolve) {
+                    setTimeout(function () {
+                        if (at >= bytes.length) controller.close();
+                        else { controller.enqueue(bytes.subarray(at, Math.min(bytes.length, at + CHUNK_BYTES))); at += CHUNK_BYTES; }
+                        resolve();
+                    }, 0);
+                });
+            }
+        });
+        return new Response(source.pipeThrough(new CompressionStream("deflate-raw"))).arrayBuffer().then(function (b) { return new Uint8Array(b); });
     }
 
     // Dựng danh sách file XML bên trong .xlsx. sheets: mảng sheet model
@@ -421,7 +478,47 @@ var exportexcelApi = (function (root) {
             sheets[i].name = safeSheetName(sheets[i].name, i, used);
             built.push(buildSheet(sheets[i], styles, i));
         }
-        var files = [];
+        return assembleFiles(sheets, built, styles, function (k) { return { bytes: utf8(built[k].xml) }; });
+    }
+
+    // Như buildFiles nhưng chạy theo lô, nhường luồng cho trình duyệt giữa các lô (xem sliceRun); onProgress(0..1)
+    function buildFilesCoop(sheets, onProgress) {
+        var styles = new Styles(), used = {}, built = [], encoded = [], chain = Promise.resolve(), total = 0, done = 0;
+        sheets.forEach(function (sh) { total += sh.rows.length; });
+        function tick(f) { if (onProgress) onProgress(Math.min(1, f)); }
+        sheets.forEach(function (sh, i) {
+            chain = chain.then(function () {
+                sh.name = safeSheetName(sh.name, i, used);
+                var plan = sheetPlan(sh, styles, i), base = done;
+                return sliceRun(plan.n, plan.doRows, function (a) { tick((base + a * 0.6) / (total || 1)); }).then(function () {
+                    built[i] = plan.finishParts();
+                    return encodeCoop(built[i], function (f) { tick((base + plan.n * (0.6 + 0.4 * f)) / (total || 1)); });
+                }).then(function (enc) { encoded[i] = enc; done += plan.n; });
+            });
+        });
+        return chain.then(function () { return assembleFiles(sheets, built, styles, function (k) { return encoded[k]; }); });
+    }
+    // XML 1 sheet (đã tách head / các dòng / tail) -> byte UTF-8 + CRC32, mỗi lô vài trăm dòng; Promise<{ bytes, crc }>
+    function encodeCoop(p, onProgress) {
+        var chunks = [utf8(p.head)], total = chunks[0].length;
+        return sliceRun(p.rows.length, function (a, b) {
+            var u = utf8(p.rows.slice(a, b).join(""));
+            chunks.push(u);
+            total += u.length;
+        }, function (a, n) { if (onProgress) onProgress(0.7 * a / (n || 1)); }).then(function () {
+            var t = utf8(p.tail);
+            chunks.push(t);
+            total += t.length;
+            var bytes = concatBytes(chunks, total), crc = 0xFFFFFFFF;
+            return sliceRun(bytes.length, function (a, b) { crc = crcUpdate(crc, bytes, a, b); }, function (a, n) {
+                if (onProgress) onProgress(0.7 + 0.3 * a / (n || 1));
+            }, 262144).then(function () { return { bytes: bytes, crc: (crc ^ 0xFFFFFFFF) >>> 0 }; });
+        });
+    }
+
+    // Ghép các file của .xlsx. encOf(i) = { bytes, crc? } của file XML sheet thứ i
+    function assembleFiles(sheets, built, styles, encOf) {
+        var files = [], i;
         var ct = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
             + '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
             + '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
@@ -438,7 +535,8 @@ var exportexcelApi = (function (root) {
                 defNames += '<definedName name="_xlnm.Print_Titles" localSheetId="' + i + '">\'' + esc(sheets[i].name.replace(/'/g, "''")) + '\'!$'
                     + (built[i].headStart + 1) + ':$' + (built[i].headLast + 1) + '</definedName>';
             }
-            files.push({ name: "xl/worksheets/sheet" + (i + 1) + ".xml", data: utf8(built[i].xml) });
+            var enc = encOf(i);
+            files.push({ name: "xl/worksheets/sheet" + (i + 1) + ".xml", data: enc.bytes, crc: enc.crc });
         }
         wbRels += '<Relationship Id="rId' + (sheets.length + 1) + '" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>';
         ct += '</Types>';
@@ -509,7 +607,8 @@ var exportexcelApi = (function (root) {
         return defs;
     }
 
-    function fromData(opts) {
+    // Kế hoạch đổi mảng dữ liệu thành sheet model, chạy được theo lô: fill(từ, đến) đổi các dòng dữ liệu, done() ghép tiêu đề + chân file
+    function fromDataPlan(opts) {
         var defs = opts.columns || (opts.aoColumns ? columnsFromTable(opts.table, opts.aoColumns, opts.colOptions) : []);
         var data = opts.data || [], useStt = opts.stt !== false;
         var cols = [], head = [], rows = [], i, j;
@@ -525,50 +624,60 @@ var exportexcelApi = (function (root) {
             });
             head.push(d.header);
         }
-        for (i = 0; i < data.length; i++) {
-            var r = [];
-            if (useStt) r.push(i + 1);
-            for (j = 0; j < defs.length; j++) {
-                var def = defs[j], v;
-                if (typeof def.render === "function") v = def.render(data[i], i);
-                else if (def.field) v = data[i][def.field];
-                else v = "";
-                if (def.html) v = htmlToText(v);
-                r.push(v);
-            }
-            rows.push(r);
-        }
-        // Cột có group: thêm 1 dòng tiêu đề nhóm ("Thông tin sinh viên", "Thông tin đăng ký"...) gộp ngang các cột liên tiếp cùng nhóm;
-        // cột không thuộc nhóm nào gộp dọc 2 dòng như cột STT
-        var header = [head], merges = [], hasGroup = false;
-        for (j = 0; j < defs.length; j++) if (defs[j].group) hasGroup = true;
-        if (hasGroup) {
-            var off = useStt ? 1 : 0, g0 = [], g1 = [];
-            if (useStt) { g0.push(head[0]); g1.push(""); merges.push([0, 0, 1, 0]); }
-            for (j = 0; j < defs.length; j++) {
-                if (defs[j].group) {
-                    g0.push((j === 0 || defs[j - 1].group !== defs[j].group) ? defs[j].group : "");
-                    g1.push(defs[j].header);
-                } else {
-                    g0.push(defs[j].header);
-                    g1.push("");
-                    merges.push([0, off + j, 1, off + j]);
+        function fill(from, to) {
+            for (var i = from; i < to; i++) {
+                var r = [];
+                if (useStt) r.push(i + 1);
+                for (var j = 0; j < defs.length; j++) {
+                    var def = defs[j], v;
+                    if (typeof def.render === "function") v = def.render(data[i], i);
+                    else if (def.field) v = data[i][def.field];
+                    else v = "";
+                    if (def.html) v = htmlToText(v);
+                    r.push(v);
                 }
+                rows.push(r);
             }
-            for (j = 0; j < defs.length;) {
-                if (!defs[j].group) { j++; continue; }
-                var kEnd = j;
-                while (kEnd + 1 < defs.length && defs[kEnd + 1].group === defs[j].group) kEnd++;
-                if (kEnd > j) merges.push([0, off + j, 0, off + kEnd]);
-                j = kEnd + 1;
-            }
-            header = [g0, g1];
         }
-        return {
-            name: opts.name, title: opts.title, subTitles: subTitlesOf(opts),
-            header: header, headerMerges: merges, cols: cols, rows: rows,
-            footer: buildFooter(opts, rows.length), filter: opts.filter, freeze: opts.freeze
-        };
+        function done() {
+            // Cột có group: thêm 1 dòng tiêu đề nhóm ("Thông tin sinh viên", "Thông tin đăng ký"...) gộp ngang các cột liên tiếp cùng nhóm;
+            // cột không thuộc nhóm nào gộp dọc 2 dòng như cột STT
+            var header = [head], merges = [], hasGroup = false;
+            for (j = 0; j < defs.length; j++) if (defs[j].group) hasGroup = true;
+            if (hasGroup) {
+                var off = useStt ? 1 : 0, g0 = [], g1 = [];
+                if (useStt) { g0.push(head[0]); g1.push(""); merges.push([0, 0, 1, 0]); }
+                for (j = 0; j < defs.length; j++) {
+                    if (defs[j].group) {
+                        g0.push((j === 0 || defs[j - 1].group !== defs[j].group) ? defs[j].group : "");
+                        g1.push(defs[j].header);
+                    } else {
+                        g0.push(defs[j].header);
+                        g1.push("");
+                        merges.push([0, off + j, 1, off + j]);
+                    }
+                }
+                for (j = 0; j < defs.length;) {
+                    if (!defs[j].group) { j++; continue; }
+                    var kEnd = j;
+                    while (kEnd + 1 < defs.length && defs[kEnd + 1].group === defs[j].group) kEnd++;
+                    if (kEnd > j) merges.push([0, off + j, 0, off + kEnd]);
+                    j = kEnd + 1;
+                }
+                header = [g0, g1];
+            }
+            return {
+                name: opts.name, title: opts.title, subTitles: subTitlesOf(opts),
+                header: header, headerMerges: merges, cols: cols, rows: rows,
+                footer: buildFooter(opts, rows.length), filter: opts.filter, freeze: opts.freeze
+            };
+        }
+        return { n: data.length, fill: fill, done: done };
+    }
+    function fromData(opts) {
+        var plan = fromDataPlan(opts);
+        plan.fill(0, plan.n);
+        return plan.done();
     }
 
     function cellText(td) {
@@ -738,39 +847,43 @@ var exportexcelApi = (function (root) {
         g.hay = haystackOf(spec);
     }
 
-    // Mỗi sheet có filters + data -> 1 nhóm; mỗi bộ lọc giữ sẵn giá trị chuẩn hóa của từng dòng để đếm nhanh
-    function filterGroupsOf(specs) {
-        var groups = [];
+    // Mỗi sheet có filters + data -> 1 nhóm; mỗi bộ lọc giữ sẵn giá trị chuẩn hóa của từng dòng để đếm nhanh.
+    // Trả { groups, tasks }: mỗi task dựng 1 bộ lọc (duyệt hết các dòng), chạy lần lượt theo thứ tự là xong; người gọi chạy từng task
+    // bằng sliceRun để nhường luồng cho trình duyệt giữa các bộ lọc.
+    function filterGroupsPlan(specs) {
+        var groups = [], tasks = [];
         for (var s = 0; s < specs.length; s++) {
             var spec = specs[s];
             if (!spec.data || !spec.filters || spec.filters.length === 0) continue;
             var g = { spec: s, name: spec.name || "", total: spec.data.length, items: [], kw: "", tokens: [], hay: null };
-            for (var f = 0; f < spec.filters.length; f++) {
-                var def = spec.filters[f], vals = [], counts = Object.create(null), keys = [];
-                for (var r = 0; r < spec.data.length; r++) {
-                    var raw = typeof def.get === "function" ? def.get(spec.data[r]) : spec.data[r][def.field];
-                    var t = toText(raw).replace(/\s+/g, " ").trim();
-                    vals.push(t);
-                    if (counts[t] === undefined) { counts[t] = 0; keys.push(t); }
-                    counts[t]++;
-                }
-                if (keys.length === 0) continue;
-                // 1 bộ so sánh dùng cho cả lần sắp xếp (localeCompare tự dựng bộ so sánh MỖI lần gọi: 8 nghìn người thu mất vài trăm ms)
-                keys.sort(COLLATOR ? COLLATOR.compare : function (a, b) { return a.localeCompare(b, "vi", { numeric: true }); });
-                // Mặc định theo bộ lọc đã chọn ngoài màn hình tìm kiếm (khớp không phân biệt hoa/thường, dấu):
-                // chọn gì ngoài thì tích sẵn đúng cái đó; không chọn gì thì để trống (= xuất tất cả). Mọi bộ lọc cùng 1 quy tắc.
-                var want = presetOf(def), sel = Object.create(null), defSel = Object.create(null), nSel = 0, order = [], rest = [];
-                for (var q = 0; q < keys.length; q++) {
-                    if (want.length > 0 && want.indexOf(fold(keys[q])) >= 0) { sel[keys[q]] = true; defSel[keys[q]] = true; nSel++; order.push(q); }
-                    else rest.push(q);
-                }
-                // Danh sách dài chỉ vẽ từng lô khi cuộn nên các mục đã tích sẵn được xếp lên đầu để luôn nhìn thấy
-                g.items.push({ label: def.label || def.field || "", vals: vals, keys: keys, counts: counts, selected: sel, nSel: nSel, def: defSel, defN: nSel, order: order.concat(rest) });
-            }
-            // Chuỗi tìm theo từ khóa chỉ dựng khi người dùng gõ ô từ khóa lần đầu (ensureHay): dựng cho vài chục nghìn dòng mất cả trăm ms
             groups.push(g);
+            for (var f = 0; f < spec.filters.length; f++) tasks.push(filterItemTask(g, spec, spec.filters[f]));
         }
-        return groups;
+        return { groups: groups, tasks: tasks };
+    }
+    function filterItemTask(g, spec, def) {
+        return function () {
+            var vals = [], counts = Object.create(null), keys = [];
+            for (var r = 0; r < spec.data.length; r++) {
+                var raw = typeof def.get === "function" ? def.get(spec.data[r]) : spec.data[r][def.field];
+                var t = toText(raw).replace(/\s+/g, " ").trim();
+                vals.push(t);
+                if (counts[t] === undefined) { counts[t] = 0; keys.push(t); }
+                counts[t]++;
+            }
+            if (keys.length === 0) return;
+            // 1 bộ so sánh dùng cho cả lần sắp xếp (localeCompare tự dựng bộ so sánh MỖI lần gọi: 8 nghìn người thu mất vài trăm ms)
+            keys.sort(COLLATOR ? COLLATOR.compare : function (a, b) { return a.localeCompare(b, "vi", { numeric: true }); });
+            // Mặc định theo bộ lọc đã chọn ngoài màn hình tìm kiếm (khớp không phân biệt hoa/thường, dấu):
+            // chọn gì ngoài thì tích sẵn đúng cái đó; không chọn gì thì để trống (= xuất tất cả). Mọi bộ lọc cùng 1 quy tắc.
+            var want = presetOf(def), sel = Object.create(null), defSel = Object.create(null), nSel = 0, order = [], rest = [];
+            for (var q = 0; q < keys.length; q++) {
+                if (want.length > 0 && want.indexOf(fold(keys[q])) >= 0) { sel[keys[q]] = true; defSel[keys[q]] = true; nSel++; order.push(q); }
+                else rest.push(q);
+            }
+            // Danh sách dài chỉ vẽ từng lô khi cuộn nên các mục đã tích sẵn được xếp lên đầu để luôn nhìn thấy
+            g.items.push({ label: def.label || def.field || "", vals: vals, keys: keys, counts: counts, selected: sel, nSel: nSel, def: defSel, defN: nSel, order: order.concat(rest) });
+        };
     }
     function rowMatches(g, r) {
         var i;
@@ -895,6 +1008,8 @@ var exportexcelApi = (function (root) {
         + '#modalEduExporter .ee-result.zero{border-color:#fecdca;background:#fef3f2;color:#b42318}'
         + '#modalEduExporter .ee-result i{font-size:20px}'
         + '#modalEduExporter .ee-result b{font-size:18px}'
+        + '#modalEduExporter .ee-warn{margin:0 0 16px;padding:10px 16px;border:1px solid #fedf89;border-left:4px solid #f79009;border-radius:6px;background:#fffaeb;line-height:1.55;color:#93370d}'
+        + '#modalEduExporter .ee-warn b{color:#7a2e0e}'
         + '#modalEduExporter .ee-note{display:none;margin:0 0 12px;padding:8px 12px;border:1px solid #fedf89;border-radius:6px;background:#fffaeb;color:#b54708}'
         + '#modalEduExporter .modal-footer .btn i{margin-right:7px}'
         + '#modalEduExporter .modal-footer .btn + .btn{margin-left:12px}';
@@ -951,9 +1066,9 @@ var exportexcelApi = (function (root) {
         return false;
     }
 
-    // Hỏi "có muốn xuất không" (kèm các ô lọc thêm nếu có); đồng ý thì gọi fnOk(opts đã lọc)
-    function askExport(opts, fnOk, ack) {
-        var $ = root.$, specs = opts.sheets || [opts], groups = filterGroupsOf(specs), i, j, k;
+    // Hỏi "có muốn xuất không" (kèm các ô lọc thêm nếu có); đồng ý thì gọi fnOk(opts đã lọc). groups: kết quả filterGroupsPlan đã chạy xong
+    function askExport(opts, fnOk, ack, groups) {
+        var $ = root.$, specs = opts.sheets || [opts], i, j, k;
         if (!$ || !$.fn || !$.fn.modal) {
             if (ack) ack.close();
             ASKING = 0;
@@ -981,6 +1096,8 @@ var exportexcelApi = (function (root) {
             for (i = 0; i < lines.length; i++) h += '<div class="ee-line">' + esc(lines[i]).replace(/(^|; )([^:;]+?):/g, "$1<b>$2:</b>") + '</div>';
             h += '</div>';
         }
+        // Lưu ý do trang truyền vào (VD tổng các dòng lệch tổng máy chủ trả về): hiện nổi bật nhưng KHÔNG chặn việc xuất; chỉ hiện trong hộp thoại
+        if (opts.notice) h += '<div class="ee-warn"><i class="fa fa-exclamation-triangle"></i> ' + esc(opts.notice).replace(/\n/g, "<br>") + '</div>';
         if (groups.length > 0) {
             h += '<div class="ee-sec"><div class="ee-cap">Lọc thêm khi xuất<small>mặc định theo bộ lọc đã chọn ở ngoài; không tích gì là xuất tất cả</small></div>'
                 + '<a class="ee-link ee-clear" style="display:none" title="Quay về đúng những gì đã chọn ở ngoài màn hình tìm kiếm"><i class="fa fa-undo"></i> Đặt lại mặc định</a></div>'
@@ -1134,7 +1251,8 @@ var exportexcelApi = (function (root) {
             if (bDone) return;
             bDone = true;
             var o2 = filteredOpts(opts, groups);
-            $m.modal("hide");
+            // Đóng ngay, không hiệu ứng mờ dần: thẻ "Đã nhận lệnh" hiện liền sau đó, để hộp thoại + lớp nền còn đang mờ dần thì 2 lớp mờ chồng lên nhau
+            $m.removeClass("fade").modal("hide");
             fnOk(o2);
         });
         // Mở chồng lên modal khác (VD "Danh sách không đăng ký"): nâng lớp hiển thị; đóng xong trả lại khóa cuộn trang của modal bên dưới
@@ -1166,9 +1284,38 @@ var exportexcelApi = (function (root) {
         }
         return sheets;
     }
+    // Như modelsOf nhưng đổi dữ liệu theo từng lô (nhường luồng giữa các lô); Promise<mảng sheet model>
+    function modelsOfCoop(opts, onProgress) {
+        var specs = opts.sheets || [opts], sheets = [], chain = Promise.resolve();
+        specs.forEach(function (spec, idx) {
+            chain = chain.then(function () {
+                for (var k in { user: 1, footer: 1, filter: 1, freeze: 1, stt: 1 }) if (spec[k] === undefined && opts[k] !== undefined) spec[k] = opts[k];
+                if (!(spec.data || spec.columns || spec.aoColumns)) { sheets.push(toModel(spec)); return null; }
+                var plan = fromDataPlan(spec);
+                return sliceRun(plan.n, plan.fill, function (a, n) {
+                    if (onProgress) onProgress((idx + a / (n || 1)) / specs.length);
+                }).then(function () { sheets.push(plan.done()); });
+            });
+        });
+        return chain.then(function () { return sheets; });
+    }
+    // Nén (nếu trình duyệt có CompressionStream) rồi đóng gói zip; Promise<Uint8Array>
+    function packFiles(files) {
+        if (typeof CompressionStream === "undefined" || typeof ReadableStream === "undefined" || typeof Response === "undefined") {
+            return Promise.resolve(zipStore(files));
+        }
+        var jobs = [];
+        for (var i = 0; i < files.length; i++) {
+            (function (f) { jobs.push(deflateRaw(f.data).then(function (p) { f.packed = p; })); })(files[i]);
+        }
+        return Promise.all(jobs).then(function () { return zipStore(files); }, function () {
+            for (var j = 0; j < files.length; j++) delete files[j].packed;
+            return zipStore(files);
+        });
+    }
 
     return {
-        version: "1.9.0",
+        version: "1.9.3",
 
         // Dựng file .xlsx (Uint8Array, không nén) mà không tải về — dùng cho kiểm thử hoặc gửi lên nơi khác
         buildXlsx: function (opts) {
@@ -1177,17 +1324,18 @@ var exportexcelApi = (function (root) {
 
         // Như buildXlsx nhưng nén (nhỏ hơn ~10 lần) nếu trình duyệt có CompressionStream; trả về Promise<Uint8Array>
         buildXlsxAsync: function (opts) {
-            var files = buildFiles(modelsOf(opts));
-            if (typeof CompressionStream === "undefined" || typeof Blob === "undefined" || typeof Response === "undefined") {
-                return Promise.resolve(zipStore(files));
-            }
-            var jobs = [];
-            for (var i = 0; i < files.length; i++) {
-                (function (f) { jobs.push(deflateRaw(f.data).then(function (p) { f.packed = p; })); })(files[i]);
-            }
-            return Promise.all(jobs).then(function () { return zipStore(files); }, function () {
-                for (var j = 0; j < files.length; j++) delete files[j].packed;
-                return zipStore(files);
+            return packFiles(buildFiles(modelsOf(opts)));
+        },
+
+        // Như buildXlsxAsync nhưng dựng theo từng lô nhỏ và nhường luồng cho trình duyệt giữa các lô nên dữ liệu hàng chục nghìn dòng
+        // không làm trang đứng ("Page Unresponsive"); onProgress(0..1) báo tiến độ. Kết quả file giống hệt buildXlsxAsync.
+        buildXlsxCoop: function (opts, onProgress) {
+            function part(from, to) { return function (f) { if (onProgress) onProgress(from + (to - from) * f); }; }
+            return modelsOfCoop(opts, part(0, 0.4)).then(function (sheets) {
+                return buildFilesCoop(sheets, part(0.4, 0.95));
+            }).then(function (files) {
+                if (onProgress) onProgress(0.95);
+                return packFiles(files);
             });
         },
 
@@ -1205,7 +1353,9 @@ var exportexcelApi = (function (root) {
             }
             var name = toText(opts.fileName || (opts.sheets ? opts.sheets[0].name : opts.name) || "BaoCao").replace(/[\\\/:*?"<>|]/g, "_");
             var ack = ackStart("Xuất Excel", "Đang tạo file Excel…");
-            // thẻ được vẽ xong rồi mới dựng file (dựng XML cho hàng chục nghìn dòng chiếm trình duyệt vài giây)
+            // % tiến độ ghi ngay trên thẻ "Đã nhận lệnh" (thẻ cũ chưa có update thì thôi, không ảnh hưởng việc xuất)
+            var onProg = (ack && typeof ack.update === "function") ? function (f) { ack.update("Đang tạo file Excel…", f * 100); } : null;
+            // thẻ được vẽ xong rồi mới dựng file; dựng theo từng lô nhỏ để trang không đứng khi có hàng chục nghìn dòng
             return new Promise(function (resolve) {
                 function fin(bOk, strErr) {
                     if (ack) ack.close();
@@ -1214,7 +1364,7 @@ var exportexcelApi = (function (root) {
                 }
                 paintThen(function () {
                     var p;
-                    try { p = me.buildXlsxAsync(opts); }
+                    try { p = me.buildXlsxCoop(opts, onProg); }
                     catch (ex) {
                         if (root.console) root.console.log("[edu.exporter] lỗi", ex);
                         fin(false, ex.message);
@@ -1247,6 +1397,7 @@ var exportexcelApi = (function (root) {
         //        paged (true: bảng có phân trang nên chỉ gồm trang đang hiển thị -> ghi rõ trên nút và trong file),
         //        fetchAll + columns (bảng có phân trang mà muốn xuất ĐỦ: fetchAll() trả Promise<mảng dòng> nạp toàn bộ bằng cùng API
         //        với pageSize lớn; columns khai như exportData; có ack "Đã nhận lệnh" trong lúc nạp),
+        //        notice (chỉ đi cùng fetchAll: chuỗi hoặc hàm (rows) => chuỗi; khác rỗng thì hiện khung lưu ý màu cam trong hộp thoại xuất, không chặn xuất),
         //        extraFilters (chỉ đi cùng fetchAll; mảng hoặc hàm trả mảng [{ label, field | get(row), selected[] | from }] — các danh sách
         //        "lọc thêm khi xuất" trong hộp thoại, cùng quy tắc mặc định như exportData.filters; hàm được gọi MỖI LẦN bấm nút)
         //   Gọi nhiều lần cho cùng 1 bảng thì chỉ có 1 nút.
@@ -1289,7 +1440,9 @@ var exportexcelApi = (function (root) {
                         fin();
                         if (!rows || rows.length === 0) { warn("Không có dữ liệu để xuất."); return; }
                         var flt = typeof cfg.extraFilters === "function" ? cfg.extraFilters() : cfg.extraFilters;
-                        me.exportWithConfirm({ fileName: cfg.fileName || cfg.table, title: cfg.title, subTitles: lines(), columns: cfg.columns, data: rows, filters: flt, confirm: cfg.confirm });
+                        var note = "";
+                        try { note = typeof cfg.notice === "function" ? (cfg.notice(rows) || "") : (cfg.notice || ""); } catch (ex) { note = ""; }
+                        me.exportWithConfirm({ fileName: cfg.fileName || cfg.table, title: cfg.title, subTitles: lines(), columns: cfg.columns, data: rows, filters: flt, notice: note, confirm: cfg.confirm });
                     }, function (ex) { fin(); warn("Không nạp được danh sách để xuất: " + (ex && ex.message ? ex.message : ex)); });
                 });
             });
@@ -1303,13 +1456,18 @@ var exportexcelApi = (function (root) {
             ASKING = Date.now();
             var ack = ackStart("Xuất Excel", "Đang lên phương án xuất dữ liệu…");
             paintThen(function () {
-                try { askExport(opts, function (o) { me.exportData(o); }, ack); }
-                catch (ex) {
+                function fail(ex) {
                     ASKING = 0;
                     if (ack) ack.close();
                     if (root.console) root.console.log("[edu.exporter] lỗi", ex);
                     warn("Không mở được hộp thoại xuất: " + ex.message);
                 }
+                var plan;
+                try { plan = filterGroupsPlan(opts.sheets || [opts]); } catch (ex) { fail(ex); return; }
+                // đếm giá trị của từng bộ lọc (duyệt hết các dòng), nhường luồng giữa các bộ lọc để trang không đứng
+                sliceRun(plan.tasks.length, function (a, b) { for (var t = a; t < b; t++) plan.tasks[t](); }, null, 1)
+                    .then(function () { askExport(opts, function (o) { me.exportData(o); }, ack, plan.groups); })
+                    .then(null, fail);
             });
         },
 
