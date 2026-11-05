@@ -4532,7 +4532,9 @@ PhieuThuKhac.prototype = {
             var strSoTien = edu.util.getValById('txtSoTien' + e.QLSV_NGUOIHOC_ID);
             var dSoTien = parseFloat(String(strSoTien == undefined ? '' : strSoTien).replace(/[,\s]/g, ''));
             if (!isNaN(dSoTien) && dSoTien > 0) {
-                arrLuu.push({ id: e.QLSV_NGUOIHOC_ID, ten: e.QLSV_NGUOIHOC_HOTEN, soTien: strSoTien });
+                //truoc: "Tổng tiền đã phân bổ" trước khi lưu, để đối chiếu sau khi nạp lại
+                var dTruoc = parseFloat(String(e.TONGTIENDAPHANBO == null ? 0 : e.TONGTIENDAPHANBO).replace(/[,\s]/g, '')) || 0;
+                arrLuu.push({ id: e.QLSV_NGUOIHOC_ID, ten: e.QLSV_NGUOIHOC_HOTEN, soTien: strSoTien, truoc: dTruoc });
             }
         });
         if (arrLuu.length == 0) {
@@ -4547,6 +4549,7 @@ PhieuThuKhac.prototype = {
                 iXong++;
                 if (bOk) {
                     iOk++;
+                    r.msg = strMessage;
                     arrDongOk.push(r);
                 }
                 else {
@@ -4571,6 +4574,21 @@ PhieuThuKhac.prototype = {
                                 .css({ "background": "#f0fdf4", "border-color": "#16a34a", "color": "#166534", "font-weight": "600" });
                         });
                         arrDongLoi.forEach(function (r) { $("#txtSoTien" + r.id).val(r.soTien); });
+                        //Đối chiếu: máy chủ báo thành công nhưng "Tổng tiền đã phân bổ" (vừa nạp lại) có tăng đúng số vừa lưu không?
+                        //Trước đây chỉ tin cờ Success nên có thể báo "đã lưu" trong khi thực tế không ghi được gì.
+                        var arrKhongTang = [];
+                        arrDongOk.forEach(function (r) {
+                            var objDong = (me.dtLoaiPhanBo || []).find(function (e) { return e.QLSV_NGUOIHOC_ID == r.id; });
+                            if (!objDong) return;
+                            var dSau = parseFloat(String(objDong.TONGTIENDAPHANBO == null ? 0 : objDong.TONGTIENDAPHANBO).replace(/[,\s]/g, '')) || 0;
+                            var dLuu = parseFloat(String(r.soTien).replace(/[,\s]/g, '')) || 0;
+                            if (dSau < r.truoc + dLuu) arrKhongTang.push((r.ten || r.id) + ': ' + r.truoc + ' → ' + dSau + ' (đã lưu ' + dLuu + ')');
+                        });
+                        if (arrKhongTang.length > 0) {
+                            var strMsgBE = (arrDongOk[0] && arrDongOk[0].msg) ? ' BE trả: "' + arrDongOk[0].msg + '".' : '';
+                            me.showKetQua_PhanBo('w', 'Máy chủ báo lưu thành công nhưng "Tổng tiền đã phân bổ" CHƯA tăng ở ' + arrKhongTang.length + '/' + arrDongOk.length +
+                                ' dòng (' + arrKhongTang.slice(0, 2).join('; ') + (arrKhongTang.length > 2 ? '; ...' : '') + ').' + strMsgBE + ' Cần kiểm tra lại với BE.');
+                        }
                     });
                     me.getList_HopDong();
                 }
@@ -4623,6 +4641,9 @@ PhieuThuKhac.prototype = {
             'strQLSV_NguoiHoc_DoiTac_Id': me.strHSSV_Id,
             'strQLSV_NguoiHoc_Id': strQLSV_NguoiHoc_Id,
             'strTaiChinh_DaNop_Id': me.strKhoanThu_Id,
+            // Hợp đồng đang chọn: cột "Tổng tiền đã phân bổ" (LayDanhSach) được tính theo cặp (đối tác, hợp đồng),
+            // trước đây lệnh lưu không gửi hợp đồng => nghi BE không gắn được phân bổ vào hợp đồng (vào lại vẫn 0). CHƯA xác minh với BE.
+            'strTaiChinh_NguoiHoc_HD_Id': edu.util.getValById('dropHopDong'),
             'dSoTien': strSoTien,
             'strNguoiThucHien_Id': edu.system.userId,
         };
@@ -4630,6 +4651,7 @@ PhieuThuKhac.prototype = {
 
         edu.system.makeRequest({
             success: function (data) {
+                console.log('[thutienkhac.save_LoaiPhanBo] ' + strQLSV_NguoiHoc_Id, '| payload =', JSON.stringify(obj_save), '| response =', JSON.stringify(data));
                 if (fnDone) fnDone(!!data.Success, data.Message);
             },
             error: function (er) {
