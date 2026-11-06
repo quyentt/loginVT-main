@@ -23,6 +23,11 @@ UyQuyenCaNhan.prototype = {
     strTuKhoa: '',      // từ khóa của lần LayDS gần nhất
     strTrangThai: '',   // trạng thái của lần LayDS gần nhất ('', 'CONHAN', 'HETHAN')
     iTong: undefined,   // tổng số bản ghi khi không lọc (để hiện "x / tổng")
+    // Cờ dchi_conhieuluc gửi cho trường hợp "lấy tất cả". Quy ước ban đầu: 0 = tất cả, 1 = chỉ còn hiệu lực.
+    // TẠM 06/11/2026: sếp BE báo hàm trả 0 dòng với cờ 0 dù DB có 1 bản ghi (response Success=true, Data=[]) → bảo "truyền 1",
+    // sếp đang sửa where. Khi sếp báo sửa xong: đổi lại về 0 (chỉ sửa đúng dòng này). Trong lúc truyền 1 mà BE hiểu
+    // "chỉ còn hiệu lực" thì bản ghi đã hết hạn sẽ không hiện, và ô Trạng thái = "Hết hạn" sẽ rỗng.
+    CO_HIEULUC_TAT_CA: 1,
 
     API: {
         LAYDS: { action: 'CMS_QuanTri04_MH/JTQtKCQ0Hg8FHhEXHg0gOAUS', func: 'PKG_CORE_QUANTRI_04.dulieu_ND_PV_LayDS' },
@@ -34,6 +39,12 @@ UyQuyenCaNhan.prototype = {
 
     init: function () {
         var me = this;
+        // Xuất Excel bằng chuẩn chung (edu.exporter)
+        PQ.attachExport({
+            table: 'tblUyQuyenK3', title: 'DANH SÁCH ỦY QUYỀN CÁ NHÂN (KÊNH 3)', fileName: 'UyQuyenCaNhan',
+            subTitles: function () { return me.strTuKhoa ? ['Từ khóa: ' + me.strTuKhoa] : []; },
+            filters: [[{ label: 'Hiệu lực', id: 'dropSearch_UQ_HieuLuc' }, { label: 'Trạng thái', id: 'dropSearch_UQ_TrangThai' }]]
+        });
         // Nạp song song 2 danh mục (đổ ô chọn + tra tên hiển thị trong bảng), xong mới tải danh sách.
         PQ.whenAll([PQ.loadChucNang, PQ.loadLoaiDoiTuong], function (kq) {
             var dtCn = kq[0], dtLoai = kq[1];
@@ -70,6 +81,8 @@ UyQuyenCaNhan.prototype = {
         me.pickerND = PQ.pickerNguoiDung({
             txt: "txtUQ_TimNguoiDung", btn: "btnUQ_TimNguoiDung", drop: "dropUQ_NguoiDung", hint: "hintUQ_NguoiDung"
         });
+        // Chọn loại đối tượng → hiện bảng danh sách đối tượng để chọn (không bắt người dùng nhớ ID)
+        me.pickDT = PQ.pickerDoiTuong({ drop: 'dropUQ_LoaiDoiTuong', txt: 'txtUQ_DoiTuong' });
         $("#tblUyQuyenK3").delegate(".btnEdit", "click", function () {
             me.popup_Sua($(this).attr("data-id"));
         });
@@ -125,8 +138,8 @@ UyQuyenCaNhan.prototype = {
         var strTrangThai = edu.util.getValById('dropSearch_UQ_TrangThai');
         PQ.call(me.API.LAYDS, {
             'strtukhoa': strTuKhoa,
-            // Cột số của Oracle: luôn gửi 0/1, không gửi rỗng
-            'dchi_conhieuluc': strTrangThai === 'CONHAN' ? 1 : 0
+            // Cột số của Oracle: luôn gửi 0/1, không gửi rỗng ("tất cả" xem CO_HIEULUC_TAT_CA ở trên)
+            'dchi_conhieuluc': strTrangThai === 'CONHAN' ? 1 : me.CO_HIEULUC_TAT_CA
         }, function (data) {
             if (!data.Success) {
                 edu.system.alert(data.Message, "w");
@@ -211,7 +224,7 @@ UyQuyenCaNhan.prototype = {
                 }
             ]
         };
-        edu.system.loadToTable_data(jsonForm);
+        PQ.veBang(jsonForm);
     },
 
     /*------------------------------------------
@@ -225,6 +238,7 @@ UyQuyenCaNhan.prototype = {
         PQ.setDrop("dropUQ_ChucNang", "");
         PQ.setDrop("dropUQ_LoaiDoiTuong", "");
         edu.util.viewValById("txtUQ_DoiTuong", "");
+        me.pickDT.dong();
         PQ.setDrop("dropUQ_HieuLuc", "");
         edu.util.viewValById("txtUQ_TuNgay", "");
         edu.util.viewValById("txtUQ_DenNgay", "");
@@ -281,6 +295,7 @@ UyQuyenCaNhan.prototype = {
         edu.util.viewValById("txtUQ_DenNgay", PQ.dmy(PQ.g(row, 'DENNGAY')));
         $("#titleAction_UyQuyen").text("Sửa");
         $("#titleUyQuyen").text(strNhanNd + " × " + me._tenChucNang(strCn));
+        me.pickDT.dongBo();   // loại + mã đã điền bằng code: thu gọn bảng, chỉ hiện "Đã chọn: ..."
         $("#myModalUyQuyen").modal("show");
     },
 

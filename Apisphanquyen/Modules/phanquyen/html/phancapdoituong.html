@@ -5,6 +5,7 @@
                     <div class="box-header with-border">
                         <h3 class="box-title"><i class="fa fa-sitemap"></i> Phân cấp đối tượng (Closure)<small class="pq-tbl">dulieu_phancap_doituong</small><span class="pq-chip pq-chip-grey">Tự động + thủ công</span></h3>
                     <div class="pull-right">
+                        <a class="btn pq-btn-build" id="btnBuild_Closure" href="javascript:void(0)" title="Chạy job tạo lại dữ liệu phân cấp đối tượng (closure)"><i class="fa fa-database"></i> Tạo dữ liệu</a>
                         <a class="btn btn-primary btnAdd" id="btnAdd_Closure" href="javascript:void(0)"><i class="fa fa-plus"></i> Thêm thủ công</a>
                     </div>
                     </div>
@@ -24,15 +25,17 @@
                                 <thead>
                                     <tr>
                                         <th class="td-center td-fixed">Stt</th>
-                                        <th class="td-center">Loại cha / Mã cha</th>
-                                        <th class="td-center">Loại con / Mã con</th>
                                         <th class="td-center">Quan hệ</th>
+                                        <th class="td-center">Loại cha</th>
+                                        <th class="td-center">Mã cha</th>
+                                        <th class="td-center">Loại con</th>
+                                        <th class="td-center">Mã con</th>
                                         <th class="td-center">Nguồn tạo</th>
                                         <th class="td-center pq-col-act">Xóa</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr><td colspan="6" class="td-center pq-empty">Chọn loại đối tượng con rồi bấm Tìm kiếm để xem dữ liệu</td></tr>
+                                    <tr><td colspan="8" class="td-center pq-empty">Chọn loại đối tượng con rồi bấm Tìm kiếm để xem dữ liệu</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -240,6 +243,16 @@
     .modal .select2-container--open, .modal .select2-container--open .select2-dropdown { z-index: 100060 !important; }
     .modal .select2-results__options { max-height: 220px !important; overflow-y: auto !important; }
 </style>
+<style>
+    /* Riêng trang Phân cấp đối tượng: mỗi ô 1 dòng (không xuống dòng) để các cột Quan hệ / Cha / Con thẳng hàng; bảng rộng thì cuộn ngang */
+    .aps-pq-phancapdoituong table.pq-table > tbody > tr > td:not([colspan]) { white-space: nowrap; }
+    /* Nút "Tạo dữ liệu" (chạy job build closure): hành động phụ → viền cam (khác tone nút chính "Thêm thủ công"), cách nút chính 10px.
+       Không dùng class btn-default vì shell ép .box-header .pull-right > a.btn-default trong suốt + chữ trắng (indexi.aspx ~998). */
+    html body.skin-blue #main-content-wrapper .aps-pq-phancapdoituong .box-header .pull-right { display: flex; align-items: center; gap: 10px; }
+    html body.skin-blue #main-content-wrapper .aps-pq-phancapdoituong .box-header .pull-right > a.pq-btn-build { display: inline-flex; align-items: center; gap: 6px; background: #fff !important; color: #b45309 !important; border: 1px solid #f59e0b !important; font-weight: 600; }
+    html body.skin-blue #main-content-wrapper .aps-pq-phancapdoituong .box-header .pull-right > a.pq-btn-build:hover { background: #f59e0b !important; color: #fff !important; border-color: #f59e0b !important; }
+    html body.skin-blue #main-content-wrapper .aps-pq-phancapdoituong .box-header .pull-right > a.pq-btn-build i { color: inherit !important; }
+</style>
 
 <script>
     (function () {
@@ -256,8 +269,8 @@
     })();
 </script>
 <!-- page script -->
-<script src="modules/phanquyen/script/pqcommon.js?v=1.0.0.8"></script>
-<script src="modules/phanquyen/script/phancapdoituong.js?v=1.0.0.1"></script>
+<script src="modules/phanquyen/script/pqcommon.js?v=1.0.0.13"></script>
+<script src="modules/phanquyen/script/phancapdoituong.js?v=1.0.0.6"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['PhanCapDoiTuong'] = new PhanCapDoiTuong();

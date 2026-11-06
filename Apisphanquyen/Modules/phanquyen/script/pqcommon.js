@@ -18,16 +18,98 @@ var PQ = {
 
     // Gọi 1 hàm BE đã mã hoá (func + iM): makeRequest tự mã hoá request, giải mã data.Data, bật/tắt overlay
     call: function (api, params, fnOk, fnErr) {
+        var op = PQ.reqParams(api, params);
+        op.success = function (data) { fnOk(data); };
+        op.error = function (er) { if (fnErr) fnErr(er); };
+        edu.system.makeRequest(op, false, false, false, null);
+    },
+
+    // Tham số của edu.system.makeRequest cho 1 hàm BE đã mã hoá. Dùng chung cho PQ.call và form tiến trình chuẩn
+    // (edu.process: request() trả đúng cấu trúc này) để mọi chỗ gửi giống hệt nhau, kể cả bản vá strChucNang_Id bên dưới.
+    reqParams: function (api, params) {
         var obj = $.extend({ 'action': api.action, 'func': api.func, 'iM': edu.system.iM }, params);
-        edu.system.makeRequest({
-            success: function (data) { fnOk(data); },
-            error: function (er) { if (fnErr) fnErr(er); },
-            type: "POST",
-            action: obj.action,
-            contentType: true,
-            data: obj,
-            fakedb: []
-        }, false, false, false, null);
+        // makeRequest (Corei/systemroot.js:563) tự thêm vào CUỐI payload strChucNang_Id = chức năng ĐANG LÀM VIỆC (màn hình hiện tại)
+        // nếu payload chưa có. BE (Json.NET) khớp tên KHÔNG phân biệt hoa/thường, khóa sau đè khóa trước →
+        // strChucNang_Id đè lên strchucnang_id (chức năng người dùng CHỌN trong danh sách) → BE lưu/tra/xóa nhầm theo chức năng
+        // đang làm việc (ca 06/11/2026: chọn QLDN.NQHHT nhưng lưu ra PQ.UQCN). Gán trước cùng giá trị để makeRequest không ghi đè.
+        if (obj.strchucnang_id !== undefined && obj.strchucnang_id !== null && String(obj.strchucnang_id) !== '' && !obj.strChucNang_Id) {
+            obj.strChucNang_Id = obj.strchucnang_id;
+        }
+        return { type: "POST", action: obj.action, contentType: true, data: obj, fakedb: [] };
+    },
+
+    // Các bảng danh sách đang vẽ: id bảng → jsonForm (aaData + aoColumns). Mọi màn vẽ bảng bằng PQ.veBang (thay cho gọi thẳng
+    // edu.system.loadToTable_data) để nút "Xuất Excel" dùng ĐÚNG cột và dữ liệu đang hiển thị, không khai báo cột 2 lần.
+    bang: {},
+    veBang: function (jsonForm) {
+        PQ.bang[jsonForm.strTable_Id] = jsonForm;
+        edu.system.loadToTable_data(jsonForm);
+    },
+
+    // Gắn nút "Xuất Excel" CHUẨN của hệ thống (edu.exporter.attachTable, Corei/exportexcel.js) cho 1 bảng danh sách: hỏi trước khi xuất,
+    // file có tiêu đề + dòng điều kiện + dòng tổng + ngày xuất. Cột xuất = cột của bảng (tiêu đề lấy từ <th>), bỏ cột thao tác (Sửa/Xóa/Xem).
+    //   cfg: table (id bảng), title, fileName,
+    //        rows()      (tùy chọn) toàn bộ dòng cần xuất — mặc định đúng các dòng bảng đang vẽ; màn nào CẮT số dòng vẽ (closure, hiệu lực,
+    //                    nhật ký) phải khai để xuất ĐỦ, không chỉ phần đang hiện
+    //        subTitles() (tùy chọn) các dòng điều kiện, VD ["Từ khóa: ..."]; filters [[{label,id}]] = các ô chọn trên màn hình
+    //        colOptions  (tùy chọn) ghi đè cột theo chỉ số trong aoColumns (0 = cột đầu sau STT), VD { 2: { render: function (row) {...} } }
+    // Máy khách chưa có exportexcel.js thì không gắn nút (trang vẫn chạy bình thường).
+    attachExport: function (cfg) {
+        if (!(window.edu && edu.exporter && typeof edu.exporter.attachTable === 'function' && typeof edu.exporter.columnsFromTable === 'function')) return;
+        var omit = cfg.omit || ['Sửa', 'Xóa', 'Xem'];
+        var o = {
+            table: cfg.table, before: '.scroll-table-x:has(#' + cfg.table + ')', block: true,
+            fileName: cfg.fileName, title: cfg.title, subTitles: cfg.subTitles, filters: cfg.filters,
+            // Dữ liệu đã nạp sẵn trong trình duyệt (kết quả LayDS gần nhất) nên không gọi lại máy chủ
+            fetchAll: function () {
+                var f = PQ.bang[cfg.table];
+                return Promise.resolve((typeof cfg.rows === 'function' ? cfg.rows() : (f && f.aaData)) || []);
+            }
+        };
+        // Cột lấy lúc bấm nút (bảng có thể vừa được vẽ lại)
+        Object.defineProperty(o, 'columns', {
+            enumerable: true,
+            get: function () {
+                var f = PQ.bang[cfg.table];
+                if (!f) return [];
+                return $.grep(edu.exporter.columnsFromTable(cfg.table, f.aoColumns, cfg.colOptions), function (d) { return $.inArray(d.header, omit) < 0; });
+            }
+        });
+        edu.exporter.attachTable(o);
+    },
+
+    // Chạy 1 lệnh BE cho cả hệ thống (job tạo/đồng bộ dữ liệu) bằng FORM TIẾN TRÌNH CHUẨN của hệ thống (edu.process.runJob,
+    // Corei/processrun.js): Bước 1 xác nhận, RUN, kết quả + thời gian + ghi chú, xuất Excel kết quả (qua edu.exporter) — không tự viết lẻ.
+    //   cfg: title, what (dòng nội dung xử lý), api (PQ.API-kiểu {action, func}), params (đối tượng hoặc hàm), okMessage,
+    //        notes (mảng lưu ý ở Bước 1), fileName, subTitles, refresh (hàm: chạy khi đóng form nếu thành công), onSuccess
+    // Máy khách chưa có edu.process (chưa copy Corei/processrun.js + indexi.aspx mới) → dự phòng: hộp xác nhận + 1 lời gọi như bản cũ.
+    chayJob: function (cfg) {
+        var params = function () { return typeof cfg.params === 'function' ? cfg.params() : (cfg.params || {}); };
+        if (window.edu && edu.process && typeof edu.process.runJob === 'function') {
+            edu.process.runJob({
+                title: cfg.title, what: cfg.what || cfg.title, unit: cfg.unit,
+                request: function () { return PQ.reqParams(cfg.api, params()); },
+                okMessage: cfg.okMessage, notes: cfg.notes, fileName: cfg.fileName, subTitles: cfg.subTitles,
+                refresh: cfg.refresh, onSuccess: cfg.onSuccess
+            });
+            return;
+        }
+        edu.system.confirm("<b>" + PQ.esc(cfg.title) + "</b>?" + $.map(cfg.notes || [], function (n) { return "<br/>" + PQ.esc(n); }).join(''), "q");
+        $("#btnYes").off("click.pqjob").on("click.pqjob", function () {
+            // Hộp xác nhận của hệ thống xóa sạch nội dung khi bấm Có → không để màn trống/đứng đờ trong lúc job chạy
+            $("#alert_content").html('<p class="text-center"><i class="fa fa-spinner fa-spin"></i> Đang thực hiện, vui lòng chờ...</p>');
+            PQ.call(cfg.api, params(), function (data) {
+                if (data.Success) {
+                    edu.system.afterComfirm({ title: "", content: cfg.okMessage || "Đã thực hiện", code: "" });
+                    if (typeof cfg.onSuccess === 'function') cfg.onSuccess();
+                    if (typeof cfg.refresh === 'function') cfg.refresh();
+                } else {
+                    edu.system.afterComfirm({ title: "", content: data.Message || "Không thành công.", code: "w" });
+                }
+            }, function (er) {
+                edu.system.afterComfirm({ title: "", content: PQ.msgLoi(er), code: "w" });
+            });
+        });
     },
 
     // Thông báo lỗi từ response lỗi HTTP (BE trả Message trong body kể cả khi 500)
@@ -296,6 +378,240 @@ var PQ = {
         }
         return (o.TEN ? PQ.esc(o.TEN) : '')
             + (o.TK ? (o.TEN ? ' <span class="pq-mono pq-sub">(' + PQ.esc(o.TK) + ')</span>' : '<span class="pq-mono">' + PQ.esc(o.TK) + '</span>') : '');
+    },
+
+    /*------------------------------------------
+    --Chọn ĐỐI TƯỢNG từ bảng danh sách (thay cho việc gõ "Mã đối tượng" là chuỗi ID mà người dùng không thể biết)
+    -------------------------------------------*/
+    // Nguồn danh sách theo MÃ LOẠI đối tượng (dm_loaidoituong.MA, không phân biệt hoa/thường). Dùng đúng các hàm CHUẨN của hệ thống
+    // (edu.system.getList_*, Corei/systemroot.js): nạp 1 lần cho mỗi loại, tìm + phân trang ngay trên trình duyệt như các ô chọn khác.
+    // Mỗi hàm gọi done(mảng dòng có ID, MA, TEN). Loại chưa khai ở đây (chưa có hàm chuẩn) → không hiện bảng, người dùng nhập mã tay như cũ.
+    NGUON_DOITUONG: {
+        CSDT: function (done) { edu.system.getList_CoSoDaoTao({ strNguoiThucHien_Id: '', strTuKhoa: '', pageIndex: 1, pageSize: 100000 }, done); },
+        CTDT: function (done) { edu.system.getList_ChuongTrinhDaoTao({ strNguoiThucHien_Id: '', strTuKhoa: '', pageIndex: 1, pageSize: 100000 }, done); },
+        DAOTAO_HEDAOTAO: function (done) { edu.system.getList_HeDaoTao({ strTuKhoa: '', pageIndex: 1, pageSize: 100000 }, done); },
+        DAOTAO_KHOADAOTAO: function (done) { edu.system.getList_KhoaDaoTao({ strTuKhoa: '', pageIndex: 1, pageSize: 100000 }, done); },
+        DAOTAO_LOPQUANLY: function (done) { edu.system.getList_LopQuanLy({ strNguoiThucHien_Id: '', strTuKhoa: '', pageIndex: 1, pageSize: 100000 }, done); },
+        DONVI: function (done) { edu.system.getList_CoCauToChuc({ strCCTC_Loai_Id: '', strCCTC_Cha_Id: '', iTrangThai: 1 }, done); }
+    },
+    // Mỗi hàm chuẩn của hệ thống đặt tên cột mã/tên khác nhau (MA/TEN, MAKHOA/TENKHOA, MACHUONGTRINH/TENCHUONGTRINH, TENHEDAOTAO, TENLOP...)
+    // nên không đọc cứng MA/TEN: lấy theo thứ tự cột đúng chuẩn → cột bắt đầu bằng MA/TEN → cột kết thúc bằng _MA/_TEN (bỏ cột *ID).
+    // Không có mã thì chỉ có tên; không có tên thì dùng mã/ID. Trả { ID, MA, TEN }.
+    cotDanhMuc: function (r) {
+        var keys = [], k, i, j;
+        for (k in r) if (Object.prototype.hasOwnProperty.call(r, k)) keys.push(k);
+        var val = function (key) { var v = r[key]; return (v === null || v === undefined) ? '' : String(v); };
+        var tim = function (arrExact, arrRe) {
+            for (i = 0; i < arrExact.length; i++) {
+                for (j = 0; j < keys.length; j++) if (keys[j].toUpperCase() === arrExact[i] && val(keys[j]) !== '') return val(keys[j]);
+            }
+            for (i = 0; i < arrRe.length; i++) {
+                for (j = 0; j < keys.length; j++) {
+                    var K = keys[j].toUpperCase();
+                    if (arrRe[i].test(K) && !/ID$/.test(K) && val(keys[j]) !== '') return val(keys[j]);
+                }
+            }
+            return '';
+        };
+        var id = tim(['ID'], []), ma = tim(['MA'], [/^MA[A-Z0-9_]*$/, /_MA$/]), ten = tim(['TEN'], [/^TEN[A-Z0-9_]*$/, /_TEN$/]);
+        return { ID: id, MA: ma, TEN: ten || ma || id };
+    },
+    cacheDoiTuong: {},   // mã loại (hoa) → danh sách đã chuẩn hóa, giữ trong phiên làm việc (nút "tải lại" để nạp mới)
+    nguonDoiTuong: function (strMaLoai) {
+        var k = String(strMaLoai === null || strMaLoai === undefined ? '' : strMaLoai).toUpperCase();
+        return Object.prototype.hasOwnProperty.call(PQ.NGUON_DOITUONG, k) ? PQ.NGUON_DOITUONG[k] : null;
+    },
+    // Chữ thường, bỏ dấu — để tìm "lop" ra "Lớp", "dao tao" ra "Đào tạo"
+    boDau: function (s) {
+        s = String(s === null || s === undefined ? '' : s).toLowerCase();
+        try { s = s.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); } catch (e) { }
+        return s.replace(/đ/g, 'd');
+    },
+    _cssPick: function () {
+        if ($('#pqPickCss').length) return;
+        $('head').append('<style id="pqPickCss">' + [
+            '.pq-pick{margin-top:8px;border:1px solid #dfe6f1;border-radius:10px;background:#fff;overflow:hidden}',
+            '.pq-pick .pq-pick-head{display:flex;align-items:center;gap:10px;padding:8px 10px;background:#f8fafc;border-bottom:1px solid #edf1f7}',
+            '.pq-pick .pq-pick-search{position:relative;flex:1 1 auto;min-width:0}',
+            'html body .pq-pick .pq-pick-search input.form-control{height:34px !important}',
+            '.pq-pick .pq-pick-count{font-size:12px;color:#64748b;white-space:nowrap}',
+            '.pq-pick .pq-pick-reload{cursor:pointer;color:#475569;padding:4px 6px}.pq-pick .pq-pick-reload:hover{color:#223771}',
+            '.pq-pick .pq-pick-tbl{width:100%;margin:0;border-collapse:collapse}',
+            '.pq-pick .pq-pick-tbl>thead>tr>th{padding:7px 10px;background:#f3f6fc;border-bottom:1px solid #dfe6f1;font-size:11.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#334155;text-align:left}',
+            '.pq-pick .pq-pick-tbl>tbody>tr>td{padding:7px 10px;border-top:1px solid #edf1f7;font-size:13px;color:#0f172a;vertical-align:middle;text-align:left}',
+            '.pq-pick .pq-pick-tbl>tbody>tr.pq-pick-r{cursor:pointer}',
+            '.pq-pick .pq-pick-tbl>tbody>tr.pq-pick-r:hover>td{background:#f1f5fb}',
+            '.pq-pick .pq-pick-tbl>tbody>tr.pq-pick-on>td{background:#e7efff;font-weight:600}',
+            '.pq-pick .pq-pick-tbl td.pq-pick-act{text-align:right;white-space:nowrap}',
+            '.pq-pick .pq-pick-do{display:inline-block;padding:3px 12px;border:1px solid #223771;border-radius:6px;font-size:12px;font-weight:700;color:#223771;cursor:pointer}',
+            '.pq-pick .pq-pick-r:hover .pq-pick-do{background:#223771;color:#fff}',
+            '.pq-pick .pq-pick-tbl td.pq-pick-empty{padding:18px 10px;text-align:center;color:#64748b}',
+            '.pq-pick .pq-pick-foot{display:flex;align-items:center;justify-content:flex-end;gap:6px;padding:6px 10px;border-top:1px solid #edf1f7;background:#fcfdff;font-size:12.5px;color:#475569}',
+            '.pq-pick .pq-pg{display:inline-block;min-width:28px;padding:3px 8px;border:1px solid #dfe6f1;border-radius:6px;background:#fff;color:#223771;text-align:center;cursor:pointer;user-select:none}',
+            '.pq-pick .pq-pg:hover{background:#eef3ff}.pq-pick .pq-pg.off{opacity:.4;pointer-events:none}',
+            '.pq-pick-sel{margin-top:8px;padding:7px 12px;border:1px solid #abefc6;border-radius:8px;background:#ecfdf3;color:#067647;font-size:13px}',
+            '.pq-pick-sel .pq-pick-again{margin-left:10px;color:#223771;font-weight:600;cursor:pointer}',
+            '.pq-pick-note{margin-top:6px;font-size:12px;color:#b45309}'
+        ].join('') + '</style>');
+    },
+    // Bảng chọn đối tượng đặt ngay dưới ô "Mã đối tượng": chọn LOẠI đối tượng → hiện bảng (ô tìm theo mã/tên + phân trang) → bấm dòng
+    // để điền giá trị khóa (ID) vào ô. Đổi loại thì xóa mã cũ (mã của loại khác không còn đúng). Vẫn nhập tay được.
+    //   cfg: drop (id ô chọn loại), txt (id ô mã đối tượng), pageSize (mặc định 8)
+    // Trả về { dong() — đưa về trạng thái trống khi mở form mới, dongBo() — gọi sau khi form Sửa đã điền loại + mã bằng code:
+    //          thu gọn bảng, chỉ hiện dòng "Đã chọn: tên (mã)" }
+    pickerDoiTuong: function (cfg) {
+        PQ._cssPick();
+        var $drop = $('#' + cfg.drop), $txt = $('#' + cfg.txt), SZ = cfg.pageSize || 8;
+        var st = { loai: '', rows: [], list: [], byId: {}, page: 1, token: 0, open: false, timer: null };
+        var $sel = $('<div class="pq-pick-sel" style="display:none"></div>');
+        var $note = $('<div class="pq-pick-note" style="display:none"><i class="fa fa-info-circle"></i> Loại này chưa có danh sách để chọn — nhập mã (giá trị khóa) của đối tượng vào ô trên.</div>');
+        var $panel = $('<div class="pq-pick" style="display:none">'
+            + '<div class="pq-pick-head"><div class="pq-pick-search">'
+            + '<input type="text" class="form-control pq-pick-q" placeholder="Tìm theo mã hoặc tên..." autocomplete="off" /></div>'
+            + '<span class="pq-pick-count"></span><a class="pq-pick-reload" title="Tải lại danh sách"><i class="fa fa-refresh"></i></a></div>'
+            + '<div class="pq-pick-box"><table class="pq-pick-tbl"><thead><tr><th style="width:30%">Mã</th><th>Tên</th><th style="width:80px"></th></tr></thead><tbody></tbody></table></div>'
+            + '<div class="pq-pick-foot"><a class="pq-pg" data-p="first" title="Trang đầu"><i class="fa fa-angle-double-left"></i></a>'
+            + '<a class="pq-pg" data-p="prev" title="Trang trước"><i class="fa fa-angle-left"></i></a><span class="pq-pick-pg"></span>'
+            + '<a class="pq-pg" data-p="next" title="Trang sau"><i class="fa fa-angle-right"></i></a>'
+            + '<a class="pq-pg" data-p="last" title="Trang cuối"><i class="fa fa-angle-double-right"></i></a></div></div>');
+        $txt.after($note); $txt.after($panel); $txt.after($sel);   // thứ tự: ô nhập, dòng "đã chọn", bảng, ghi chú
+
+        var so = function (n) { return Number(n).toLocaleString('vi-VN'); };
+        var chuan = function (dt) {
+            return $.map(dt || [], function (r) {
+                var o = PQ.cotDanhMuc(r);
+                o.s = PQ.boDau(o.MA + ' ' + o.TEN);
+                return [o];
+            });
+        };
+        var tomTat = function () {
+            var id = $.trim($txt.val());
+            var r = (id !== '' && Object.prototype.hasOwnProperty.call(st.byId, id)) ? st.byId[id] : null;
+            if (!r) { $sel.hide().empty(); return; }
+            $sel.html('<i class="fa fa-check-circle"></i> Đã chọn: <b>' + PQ.esc(r.TEN) + '</b> <span class="pq-mono">' + PQ.esc(r.MA)
+                + '</span> <a class="pq-pick-again">Chọn lại</a>').show();
+        };
+        var ve = function () {
+            var tong = st.list.length, soTrang = Math.max(1, Math.ceil(tong / SZ)), cur = $.trim($txt.val()), h = '', i;
+            if (st.page > soTrang) st.page = soTrang;
+            if (st.page < 1) st.page = 1;
+            for (i = (st.page - 1) * SZ; i < Math.min(tong, st.page * SZ); i++) {
+                var r = st.list[i];
+                h += '<tr class="pq-pick-r' + (cur !== '' && r.ID === cur ? ' pq-pick-on' : '') + '" data-id="' + PQ.esc(r.ID) + '"><td>' + (r.MA !== '' ? '<span class="pq-mono">' + PQ.esc(r.MA) + '</span>' : '<span class="pq-sub">—</span>') + '</td><td>' + PQ.esc(r.TEN) + '</td><td class="pq-pick-act"><a class="pq-pick-do">Chọn</a></td></tr>';
+            }
+            if (!h) h = '<tr><td colspan="3" class="pq-pick-empty">' + (st.rows.length ? 'Không tìm thấy đối tượng phù hợp.' : 'Loại này chưa có đối tượng nào.') + '</td></tr>';
+            $panel.find('tbody').html(h);
+            $panel.find('.pq-pick-count').text(tong === st.rows.length ? so(tong) + ' đối tượng' : so(tong) + ' / ' + so(st.rows.length) + ' đối tượng');
+            $panel.find('.pq-pick-pg').text('Trang ' + so(st.page) + ' / ' + so(soTrang));
+            $panel.find('[data-p="first"],[data-p="prev"]').toggleClass('off', st.page <= 1);
+            $panel.find('[data-p="next"],[data-p="last"]').toggleClass('off', st.page >= soTrang);
+        };
+        var loc = function () {
+            var q = PQ.boDau($.trim($panel.find('.pq-pick-q').val()));
+            st.list = q === '' ? st.rows : $.grep(st.rows, function (r) { return r.s.indexOf(q) >= 0; });
+            st.page = 1;
+        };
+        var dat = function (rows) {
+            st.rows = rows;
+            st.byId = {};
+            $.each(rows, function (i, r) { st.byId[r.ID] = r; });
+            loc();
+            ve();
+            tomTat();
+            $panel.toggle(st.open);
+        };
+        var bao = function (strLoi) {
+            st.rows = []; st.list = []; st.byId = {};
+            $panel.find('tbody').html('<tr><td colspan="3" class="pq-pick-empty">' + PQ.esc(strLoi) + '</td></tr>');
+            $panel.find('.pq-pick-count').text(''); $panel.find('.pq-pick-pg').text('');
+            $panel.toggle(st.open);
+        };
+        var nap = function (bEp) {
+            var key = st.loai.toUpperCase(), src = PQ.nguonDoiTuong(st.loai), tok = ++st.token;
+            st.rows = []; st.list = []; st.byId = {};
+            $panel.find('.pq-pick-q').val('');
+            if (!bEp && PQ.cacheDoiTuong[key]) { dat(PQ.cacheDoiTuong[key]); return; }
+            $panel.find('tbody').html('<tr><td colspan="3" class="pq-pick-empty"><i class="fa fa-spinner fa-spin"></i> Đang tải danh sách...</td></tr>');
+            $panel.find('.pq-pick-count').text(''); $panel.find('.pq-pick-pg').text('');
+            $panel.toggle(st.open);
+            clearTimeout(st.timer);
+            // Hàm chuẩn của hệ thống tự báo lỗi (edu.system.alert) và KHÔNG gọi lại done → có hạn chờ để bảng không quay mãi
+            st.timer = setTimeout(function () { if (tok === st.token) bao('Không tải được danh sách — kiểm tra kết nối hoặc nhập mã tay ở ô trên.'); }, 60000);
+            try {
+                src(function (dt) {
+                    if (tok !== st.token) return;   // đã đổi sang loại khác
+                    clearTimeout(st.timer);
+                    if (window.console && dt && dt.length > 0) {
+                        var f0 = PQ.cotDanhMuc(dt[0]);
+                        if (f0.ID === '' || f0.TEN === '' || f0.TEN === f0.ID) console.warn('[pq] Danh sách đối tượng "' + st.loai + '": không nhận ra cột ID/tên — các cột nhận được:', Object.keys(dt[0]));
+                    }
+                    PQ.cacheDoiTuong[key] = chuan(dt);
+                    dat(PQ.cacheDoiTuong[key]);
+                });
+            } catch (e) { clearTimeout(st.timer); bao('Không tải được danh sách: ' + e.message); }
+        };
+        var chon = function (id) {
+            $txt.val(id).trigger('change');
+            st.open = false;
+            $panel.hide();
+            tomTat();
+        };
+
+        // select2 4.0.3 gắn khóa cuộn (scroll.select2) lên các khung cha; chọn loại làm bảng hiện ra/nội dung đổi độ cao nên lúc đóng không gỡ
+        // được khóa → modal "kéo xuống không được". Gỡ ngay khi đóng danh sách (xem reference-select2-scroll-lock).
+        $drop.closest('.modal').off('select2:close.pqpick').on('select2:close.pqpick', 'select', function () {
+            $(this).parents().off('scroll.select2');
+        });
+        $drop.on('change.pqpick', function () {
+            var ma = $.trim($drop.val());
+            if (ma === st.loai) return;   // select2 có thể bắn change nhiều lần
+            st.loai = ma;
+            st.token++;
+            $txt.val('');                 // mã của loại cũ không thuộc loại mới
+            $sel.hide().empty();
+            st.open = true;
+            if (ma === '') { $panel.hide(); $note.hide(); return; }
+            if (!PQ.nguonDoiTuong(ma)) { $panel.hide(); $note.show(); return; }
+            $note.hide();
+            nap(false);
+        });
+        $txt.on('input.pqpick change.pqpick', function () { tomTat(); if (st.open && $panel.is(':visible')) ve(); });
+        var tre = null;
+        $panel.on('input keyup', '.pq-pick-q', function () {
+            clearTimeout(tre);
+            tre = setTimeout(function () { loc(); ve(); }, 120);
+        });
+        $panel.on('click', '.pq-pick-r', function () { chon($(this).attr('data-id')); });
+        $panel.on('click', '.pq-pick-reload', function () { if (st.loai !== '') nap(true); });
+        $panel.on('click', '.pq-pg', function () {
+            var soTrang = Math.max(1, Math.ceil(st.list.length / SZ)), k = $(this).attr('data-p');
+            if (k === 'first') st.page = 1;
+            else if (k === 'prev') st.page = Math.max(1, st.page - 1);
+            else if (k === 'next') st.page = Math.min(soTrang, st.page + 1);
+            else st.page = soTrang;
+            ve();
+        });
+        $sel.on('click', '.pq-pick-again', function () {
+            st.open = true;
+            $panel.show();
+            ve();
+            $panel.find('.pq-pick-q').trigger('focus');
+        });
+
+        return {
+            dong: function () {
+                st.loai = ''; st.token++; st.open = false; st.rows = []; st.list = []; st.byId = {};
+                clearTimeout(st.timer);
+                $panel.hide(); $note.hide(); $sel.hide().empty(); $panel.find('.pq-pick-q').val('');
+            },
+            dongBo: function () {
+                st.open = false;
+                $panel.hide();
+                tomTat();
+                var ma = $.trim($drop.val());
+                if (ma !== '' && !PQ.nguonDoiTuong(ma)) $note.show();
+            }
+        };
     },
 
     // Ô chọn người dùng trong modal: gõ từ khóa + Tìm (hoặc Enter) → đổ kết quả vào ô chọn.

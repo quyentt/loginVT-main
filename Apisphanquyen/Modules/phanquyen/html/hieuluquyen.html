@@ -4,6 +4,9 @@
             <div class="box box-solid">
                     <div class="box-header with-border">
                         <h3 class="box-title"><i class="fa fa-eye"></i> Hiệu lực quyền (xem)<small class="pq-tbl">phanquyen_phamvi_hieuluc</small><span class="pq-chip pq-chip-grey">Chỉ xem</span></h3>
+                    <div class="pull-right">
+                        <a class="btn pq-btn-build" id="btnDongBo_HieuLuc" href="javascript:void(0)" title="Chạy đồng bộ lại toàn bộ dữ liệu quyền"><i class="fa fa-refresh"></i> Đồng bộ dữ liệu quyền</a>
+                    </div>
                     </div>
                     <div class="box-body pd20">
                         <p class="pq-mota">Bảng DUY NHẤT mọi lần CHECK quyền đọc tới — gộp từ mọi kênh (2/3/4/thủ công), tự động refresh. Không chỉnh sửa trực tiếp ở đây: muốn đổi quyền, vào đúng màn quản lý nguồn tương ứng (Kênh 2/3 hoặc Quản lý thủ công). Bảng rất lớn nên không tự tải toàn bộ: nhập từ khóa (ít nhất 2 ký tự) hoặc chọn Nguồn gốc / Hiệu lực rồi bấm Tìm kiếm.</p>
@@ -206,9 +209,17 @@
     .pq-modal table.pq-kv-raw td:last-child { word-break: break-all; }
     .pq-modal .pq-kv-title { margin: 6px 0; font-size: 12px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: #475569; }
 </style>
+<style>
+    /* Nút "Đồng bộ dữ liệu quyền" (chạy job): hành động phụ → viền cam, cùng kiểu nút "Tạo dữ liệu" ở trang Phân cấp đối tượng.
+       Không dùng class btn-default vì shell ép .box-header .pull-right > a.btn-default trong suốt + chữ trắng (indexi.aspx ~998). */
+    html body.skin-blue #main-content-wrapper .aps-pq-hieuluquyen .box-header .pull-right { display: flex; align-items: center; gap: 10px; }
+    html body.skin-blue #main-content-wrapper .aps-pq-hieuluquyen .box-header .pull-right > a.pq-btn-build { display: inline-flex; align-items: center; gap: 6px; background: #fff !important; color: #b45309 !important; border: 1px solid #f59e0b !important; font-weight: 600; }
+    html body.skin-blue #main-content-wrapper .aps-pq-hieuluquyen .box-header .pull-right > a.pq-btn-build:hover { background: #f59e0b !important; color: #fff !important; border-color: #f59e0b !important; }
+    html body.skin-blue #main-content-wrapper .aps-pq-hieuluquyen .box-header .pull-right > a.pq-btn-build i { color: inherit !important; }
+</style>
 <!-- page script -->
-<script src="modules/phanquyen/script/pqcommon.js?v=1.0.0.8"></script>
-<script src="modules/phanquyen/script/hieuluquyen.js?v=1.0.0.0"></script>
+<script src="modules/phanquyen/script/pqcommon.js?v=1.0.0.13"></script>
+<script src="modules/phanquyen/script/hieuluquyen.js?v=1.0.0.3"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['HieuLucQuyen'] = new HieuLucQuyen();

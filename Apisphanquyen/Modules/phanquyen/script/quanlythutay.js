@@ -44,6 +44,19 @@ QuanLyThuTay.prototype = {
 
     init: function () {
         var me = this;
+        // Chọn loại đối tượng → hiện bảng danh sách đối tượng để chọn (cả form Gán thẳng lẫn Điều kiện bổ sung)
+        me.pickGTDT = PQ.pickerDoiTuong({ drop: 'dropGT_LoaiDoiTuong', txt: 'txtGT_DoiTuong' });
+        me.pickDKDT = PQ.pickerDoiTuong({ drop: 'dropDK_LoaiDoiTuong', txt: 'txtDK_DoiTuong' });
+        // Xuất Excel bằng chuẩn chung (edu.exporter) cho cả 2 bảng
+        PQ.attachExport({
+            table: 'tblGanThang', title: 'DANH SÁCH GÁN QUYỀN THẲNG (THỦ CÔNG)', fileName: 'GanQuyenThang',
+            subTitles: function () { return me.strTuKhoa ? ['Từ khóa: ' + me.strTuKhoa] : []; }
+        });
+        PQ.attachExport({
+            table: 'tblDieuKienBoSung', title: 'DANH SÁCH ĐIỀU KIỆN BỔ SUNG', fileName: 'DieuKienBoSung',
+            subTitles: function () { return me.strTuKhoaDK ? ['Từ khóa: ' + me.strTuKhoaDK] : []; },
+            filters: [[{ label: 'Loại nguồn', id: 'dropSearch_DK_NguonLoai' }]]
+        });
         // Nạp song song 2 danh mục (đổ ô chọn + tra tên hiển thị trong bảng), xong mới tải danh sách của cả 2 tab.
         PQ.whenAll([PQ.loadChucNang, PQ.loadLoaiDoiTuong], function (kq) {
             var dtCn = kq[0], dtLoai = kq[1];
@@ -183,7 +196,7 @@ QuanLyThuTay.prototype = {
                 }
             ]
         };
-        edu.system.loadToTable_data(jsonForm);
+        PQ.veBang(jsonForm);
     },
 
     /*------------------------------------------
@@ -197,6 +210,7 @@ QuanLyThuTay.prototype = {
         PQ.setDrop("dropGT_ChucNang", "");
         PQ.setDrop("dropGT_LoaiDoiTuong", "");
         edu.util.viewValById("txtGT_DoiTuong", "");
+        me.pickGTDT.dong();
         PQ.setDrop("dropGT_HieuLuc", "");
         $("#chkGT_LanXuongCon").prop("checked", false);
         edu.util.viewValById("txtGT_TuNgay", "");
@@ -425,15 +439,17 @@ QuanLyThuTay.prototype = {
                 }
             ]
         };
-        edu.system.loadToTable_data(jsonForm);
+        PQ.veBang(jsonForm);
     },
 
     resetForm_DieuKien: function () {
+        var me = this;
         $("#btnNotifyModal").remove();
         PQ.setDrop("dropDK_NguonLoai", "");
         edu.util.viewValById("txtDK_NguonId", "");
         PQ.setDrop("dropDK_LoaiDoiTuong", "");
         edu.util.viewValById("txtDK_DoiTuong", "");
+        me.pickDKDT.dong();
         edu.util.viewValById("txtDK_GhiChu", "");
         $("#titleDieuKien").text("");
     },

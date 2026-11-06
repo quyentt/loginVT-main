@@ -33,6 +33,12 @@ QuyenTheoVaiTro.prototype = {
 
     init: function () {
         var me = this;
+        // Xuất Excel bằng chuẩn chung (edu.exporter)
+        PQ.attachExport({
+            table: 'tblVaiTroK2', title: 'DANH SÁCH QUYỀN THEO VAI TRÒ (KÊNH 2)', fileName: 'QuyenTheoVaiTro',
+            subTitles: function () { return me.strTuKhoa ? ['Từ khóa: ' + me.strTuKhoa] : []; },
+            filters: [[{ label: 'Hiệu lực', id: 'dropSearch_VT_HieuLuc' }]]
+        });
         // Nạp song song 3 danh mục (đổ ô chọn + tra tên hiển thị trong bảng), xong mới tải danh sách.
         // Danh mục nào lỗi thì bảng hiện mã thay cho tên, màn hình vẫn dùng được.
         PQ.whenAll([PQ.loadVaiTro, PQ.loadChucNang, PQ.loadLoaiDoiTuong], function (kq) {
@@ -67,6 +73,8 @@ QuyenTheoVaiTro.prototype = {
         $("#btnSave_VaiTro").click(function () {
             me.save_VaiTro();
         });
+        // Chọn loại đối tượng → hiện bảng danh sách đối tượng để chọn (kiểu Tĩnh)
+        me.pickDT = PQ.pickerDoiTuong({ drop: 'dropVT_LoaiDoiTuong', txt: 'txtVT_DoiTuong' });
         $("#tblVaiTroK2").delegate(".btnEdit", "click", function () {
             me.popup_Sua($(this).attr("data-id"));
         });
@@ -211,7 +219,7 @@ QuyenTheoVaiTro.prototype = {
                 }
             ]
         };
-        edu.system.loadToTable_data(jsonForm);
+        PQ.veBang(jsonForm);
     },
 
     /*------------------------------------------
@@ -227,6 +235,7 @@ QuyenTheoVaiTro.prototype = {
         PQ.setDrop("dropVT_Kieu", "");           // kích hoạt ẩn cả 2 nhóm trường (script K2 trong html)
         edu.util.viewValById("txtVT_NguonTruyVan", "");
         edu.util.viewValById("txtVT_DoiTuong", "");
+        me.pickDT.dong();
         PQ.setDrop("dropVT_HieuLuc", "");
         $("#titleVaiTro").text("");
     },
@@ -278,6 +287,7 @@ QuyenTheoVaiTro.prototype = {
         PQ.setDrop("dropVT_HieuLuc", me._hieuLuc(row));
         $("#titleAction_VaiTro").text("Sửa");
         $("#titleVaiTro").text(me._nhanVaiTro(strVt) + " × " + me._tenChucNang(strCn));
+        me.pickDT.dongBo();   // loại + mã đã điền bằng code: thu gọn bảng, chỉ hiện "Đã chọn: ..."
         $("#myModalVaiTro").modal("show");
     },
 
