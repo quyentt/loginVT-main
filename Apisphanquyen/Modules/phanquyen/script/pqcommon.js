@@ -74,6 +74,38 @@ var PQ = {
         $("#" + strModalId).modal("hide");
     },
 
+    // Kết quả ghi (Them/Sua/Xoa) của BE có ghi thành công hay không.
+    // Đo thật 06/11/2026: dm_loaidoituong_Them trả {Success:false, Message:"lop", Data:null, Id:null} và dm_quanhe_phancap_Them
+    // trả Message="qh_sv" nhưng bản ghi ĐÃ vào DB (BE đưa khóa vừa ghi vào Message nên cờ Success sai).
+    // Coi là THÀNH CÔNG khi:
+    //   (1) Success=true; hoặc
+    //   (2) Message (cắt khoảng trắng, không phân biệt hoa/thường) trùng đúng 1 giá trị chuỗi đã gửi lên (arrKhoa: mảng khóa,
+    //       hoặc cả đối tượng params — chỉ xét giá trị chuỗi dài >= 2, bỏ cờ số 0/1); hoặc
+    //   (3) Message chỉ là 1 ID 32 ký tự hex (định dạng ID do BE tự sinh của hệ thống) — SUY ĐOÁN cho hàm BE tự sinh ID (K2/K3/điều kiện),
+    //       chưa có log thật; câu lỗi thật không bao giờ là 1 chuỗi hex trần.
+    // Câu lỗi thật (kể cả khi có chứa khóa) và Message rỗng vẫn là lỗi. Có console.warn mỗi lần rơi vào (2)/(3) để dễ lần ra.
+    // CẦN BÁO BE: trả Success=true và đưa khóa/ID vào trường Id; khi BE sửa xong thì hàm này vẫn đúng, không cần gỡ.
+    ghiOk: function (data, arrKhoa) {
+        if (!data) return false;
+        if (data.Success) return true;
+        var m = $.trim(String(data.Message === null || data.Message === undefined ? '' : data.Message)).toLowerCase();
+        if (!m) return false;
+        var dsKhoa = $.isArray(arrKhoa) ? arrKhoa : $.map(arrKhoa || {}, function (v) { return v; });
+        for (var i = 0; i < dsKhoa.length; i++) {
+            if (typeof dsKhoa[i] === 'number') continue;
+            var k = $.trim(String(dsKhoa[i] === null || dsKhoa[i] === undefined ? '' : dsKhoa[i])).toLowerCase();
+            if (k.length >= 2 && m === k) {
+                if (window.console) console.warn('[pq] BE trả Success=false nhưng Message = giá trị vừa gửi ("' + data.Message + '") → coi là đã ghi thành công.', data);
+                return true;
+            }
+        }
+        if (/^[0-9a-f]{32}$/.test(m)) {
+            if (window.console) console.warn('[pq] BE trả Success=false nhưng Message là 1 ID 32 hex ("' + data.Message + '") → coi là đã ghi thành công.', data);
+            return true;
+        }
+        return false;
+    },
+
     // Danh mục loại đối tượng (dm_loaidoituong_LayDS) → [{MA, TEN}]; lỗi thì trả [] (màn vẫn chạy, chỉ hiện mã)
     loadLoaiDoiTuong: function (fnDone) {
         PQ.call(PQ.API.LOAIDOITUONG_LAYDS, { 'strtukhoa': '' }, function (data) {

@@ -279,7 +279,7 @@ GhiDeDuongLanTruyen.prototype = {
             'dap_dung_chan': parseInt(strChan, 10) === 1 ? 1 : 0
         };
         PQ.call(bSua ? me.API.SUA : me.API.THEM, params, function (data) {
-            if (data.Success) {
+            if (PQ.ghiOk(data, params)) {   // BE có thể trả Success=false + Message = khóa vừa ghi dù đã ghi thành công
                 PQ.alertSauKhiDongModal("myModalGhiDe", bSua ? "Cập nhật thành công!" : "Thêm mới thành công!");
                 me.getList_GhiDe();
             } else {
@@ -308,7 +308,7 @@ GhiDeDuongLanTruyen.prototype = {
     delete_GhiDe: function (strCn, strQh) {
         var me = this;
         PQ.call(me.API.XOA, { 'strchucnang_id': strCn, 'strdm_quanhe_phancap_id': strQh }, function (data) {
-            if (data.Success) {
+            if (PQ.ghiOk(data, [strCn, strQh])) {
                 edu.system.afterComfirm({ title: "", content: "Xóa dữ liệu thành công!", code: "" });
                 me.getList_GhiDe();
             } else {

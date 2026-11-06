@@ -261,7 +261,7 @@ QuanLyThuTay.prototype = {
             'strdenngay': strDen
         };
         PQ.call(me.API.GT_THEM, params, function (data) {
-            if (data.Success) {
+            if (PQ.ghiOk(data, params)) {   // BE có thể trả Success=false + Message = khóa/ID vừa ghi dù đã ghi thành công
                 PQ.alertSauKhiDongModal("myModalGanThang", "Thêm mới thành công!");
                 me.getList_GanThang();
             } else {
@@ -302,7 +302,7 @@ QuanLyThuTay.prototype = {
             'strloai_hieuluc': PQ.g(row, 'LOAI_HIEULUC')
         };
         PQ.call(me.API.GT_XOA, params, function (data) {
-            if (data.Success) {
+            if (PQ.ghiOk(data, params)) {
                 edu.system.afterComfirm({ title: "", content: "Xóa dữ liệu thành công!", code: "" });
                 me.getList_GanThang();
             } else {
@@ -467,7 +467,7 @@ QuanLyThuTay.prototype = {
             'strghichu': strGhiChu      // Thêm: BE tự sinh strid nên không gửi
         };
         PQ.call(me.API.DK_THEM, params, function (data) {
-            if (data.Success) {
+            if (PQ.ghiOk(data, params)) {   // BE có thể trả Success=false + Message = khóa/ID vừa ghi dù đã ghi thành công
                 PQ.alertSauKhiDongModal("myModalDieuKien", "Thêm mới thành công!");
                 me.getList_DieuKien();
             } else {
@@ -495,7 +495,7 @@ QuanLyThuTay.prototype = {
     delete_DieuKien: function (strId) {
         var me = this;
         PQ.call(me.API.DK_XOA, { 'strid': strId }, function (data) {
-            if (data.Success) {
+            if (PQ.ghiOk(data, [strId])) {
                 edu.system.afterComfirm({ title: "", content: "Xóa dữ liệu thành công!", code: "" });
                 me.getList_DieuKien();
             } else {

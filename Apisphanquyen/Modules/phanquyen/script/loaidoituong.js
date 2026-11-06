@@ -87,8 +87,9 @@ LoaiDoiTuong.prototype = {
             strTable_Id: "tblLoaiDoiTuong",
             aaData: data,
             // Cột 0 là STT do hệ thống tự thêm: 0 Stt | 1 Sửa | 2 Mã | 3 Tên | 4 Bảng nguồn | 5 Cột khóa chính | 6 Xóa
+            // Căn giữa cả 7 cột để dữ liệu thẳng hàng với tiêu đề (tiêu đề của shell căn giữa)
             colPos: {
-                center: [0, 1, 6]
+                center: [0, 1, 2, 3, 4, 5, 6]
             },
             aoColumns: [
                 {
@@ -211,7 +212,7 @@ LoaiDoiTuong.prototype = {
 
         var params = { 'strma': strMa, 'strten': strTen, 'strbang_nguon': strBangNguon, 'strcot_id': strCotId };
         PQ.call(bSua ? me.API.SUA : me.API.THEM, params, function (data) {
-            if (data.Success) {
+            if (PQ.ghiOk(data, [strMa])) {   // BE có thể trả Success=false + Message = mã vừa ghi dù đã ghi thành công
                 PQ.alertSauKhiDongModal("myModalLoaiDoiTuong", bSua ? "Cập nhật thành công!" : "Thêm mới thành công!");
                 me.getList_LoaiDoiTuong();
             } else {
@@ -242,7 +243,7 @@ LoaiDoiTuong.prototype = {
     delete_LoaiDoiTuong: function (strMa) {
         var me = this;
         PQ.call(me.API.XOA, { 'strma': strMa }, function (data) {
-            if (data.Success) {
+            if (PQ.ghiOk(data, [strMa])) {
                 edu.system.afterComfirm({ title: "", content: "Xóa dữ liệu thành công!", code: "" });
                 me.getList_LoaiDoiTuong();
             } else {

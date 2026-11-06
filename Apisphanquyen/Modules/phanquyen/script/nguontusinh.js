@@ -261,7 +261,7 @@ NguonTuSinh.prototype = {
             'dlam_tuoi_phut': parseInt(strPhut, 10)
         };
         PQ.call(bSua ? me.API.SUA : me.API.THEM, params, function (data) {
-            if (data.Success) {
+            if (PQ.ghiOk(data, params)) {   // BE có thể trả Success=false + Message = mã vừa ghi dù đã ghi thành công
                 PQ.alertSauKhiDongModal("myModalNguon", bSua ? "Cập nhật thành công!" : "Thêm mới thành công!");
                 me.getList_Nguon();
             } else {
@@ -291,7 +291,7 @@ NguonTuSinh.prototype = {
     delete_Nguon: function (strId) {
         var me = this;
         PQ.call(me.API.XOA, { 'strid': strId }, function (data) {
-            if (data.Success) {
+            if (PQ.ghiOk(data, [strId])) {
                 edu.system.afterComfirm({ title: "", content: "Xóa dữ liệu thành công!", code: "" });
                 me.getList_Nguon();
             } else {

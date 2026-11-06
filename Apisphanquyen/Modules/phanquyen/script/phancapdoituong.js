@@ -224,7 +224,7 @@ PhanCapDoiTuong.prototype = {
             'strdm_quanhe_phancap_id': strQh
         };
         PQ.call(me.API.THEM, params, function (data) {
-            if (data.Success) {
+            if (PQ.ghiOk(data, params)) {   // BE có thể trả Success=false + Message = khóa/ID vừa ghi dù đã ghi thành công
                 PQ.alertSauKhiDongModal("myModalClosure", "Thêm mới thành công!");
                 // Chuyển bộ lọc sang đúng đối tượng con vừa thêm để người dùng thấy dòng mới trong danh sách các cấp cha của nó
                 PQ.setDrop("dropSearch_PC_LoaiCon", strLoaiCon);
@@ -270,7 +270,7 @@ PhanCapDoiTuong.prototype = {
             'strdm_quanhe_phancap_id': PQ.g(row, 'DM_QUANHE_PHANCAP_ID')
         };
         PQ.call(me.API.XOA, params, function (data) {
-            if (data.Success) {
+            if (PQ.ghiOk(data, params)) {
                 edu.system.afterComfirm({ title: "", content: "Xóa dữ liệu thành công!", code: "" });
                 if (me.objTim) me.getList_Closure(me.objTim);
             } else {

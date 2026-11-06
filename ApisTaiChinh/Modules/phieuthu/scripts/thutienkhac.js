@@ -865,12 +865,69 @@ PhieuThuKhac.prototype = {
         var me = this;
         me["dtNutHDDT"] = data;
         var defaultIcons = ['fa fa-file-text-o', 'fa fa-cloud-upload', 'fa fa-file-o', 'fa fa-paper-plane', 'fa fa-share-square-o'];
+        // Class icon trong danh mục (THONGTIN1) có thể không tồn tại trong bộ Font Awesome đang nạp
+        // → thẻ <i> rỗng, nút "mất icon". Kiểm tra bằng ::before, không có glyph thì dùng icon mặc định theo vị trí.
+        function iconCoGlyph(strClass) {
+            var $t = $('<i>').addClass(strClass).css({ position: 'absolute', left: '-9999px', top: 0, visibility: 'hidden' }).appendTo('body');
+            var c = '';
+            try { c = window.getComputedStyle($t[0], '::before').getPropertyValue('content'); } catch (ex) { }
+            $t.remove();
+            return !!c && c !== 'none' && c !== 'normal' && c !== '""' && c !== "''";
+        }
         var row = '';
         for (var i = 0; i < data.length; i++) {
             var iconClass = data[i].THONGTIN1 && data[i].THONGTIN1.trim() ? data[i].THONGTIN1 : defaultIcons[i % defaultIcons.length];
+            if (!iconCoGlyph(iconClass)) iconClass = defaultIcons[i % defaultIcons.length];
             row += '<div class="btnXuat_HDDT" id="' + data[i].ID + '" title="' + data[i].MA + '" name="' + data[i].THONGTIN2 + '" style="width:85px; text-align:center; background-color: #fff; border-bottom: 1px solid #f1f1f1"><a title="' + data[i].TEN + '" class="btn" ><i style="' + data[i].THONGTIN3 + '" class="' + iconClass + ' fa-4x"></i></a><a class="color-active bold lbsymbolHD">' + data[i].TEN + '</a></div>';
         }
         me.strHDDT = row;
+    },
+
+    /*------------------------------------------
+    --Discription: Thông báo lỗi khi xuất hóa đơn / thu tiền
+    --  Nhà cung cấp HĐĐT trả nguyên chuỗi JSON, vd:
+    --  {"code":400,"message":"INVOICE_VALID_INPUT_INVALID_BUYER_TAX_CODE","data":"Mã số thuế người mua không hợp lệ","errorCode":null}
+    --  parseLoiHoaDon: bóc ra mô tả (data), mã lỗi (message), mã HTTP (code) và gợi ý xử lý (nếu biết mã lỗi).
+    --  alertLoiHoaDon: hiện hộp thông báo gọn gàng thay cho "Lỗi: {json}".
+    -------------------------------------------*/
+    parseLoiHoaDon: function (strMessage) {
+        var s = (strMessage === null || strMessage === undefined) ? "" : String(strMessage).trim();
+        var res = { raw: s, title: s, code: "", http: "", hint: "" };
+        // Gợi ý theo mã lỗi đã gặp thực tế (thêm dần khi gặp mã mới)
+        var objGoiY = {
+            "INVOICE_VALID_INPUT_INVALID_BUYER_TAX_CODE": "Kiểm tra lại Mã số thuế của đối tượng (người mua): sai định dạng hoặc thừa ký tự. Nếu người mua là cá nhân không có mã số thuế thì để trống ô này, rồi xuất lại."
+        };
+        var i = s.indexOf("{"), j = s.lastIndexOf("}");
+        if (i !== -1 && j > i) {
+            try {
+                var o = JSON.parse(s.substring(i, j + 1));
+                if (o && typeof o === "object") {
+                    var strMoTa = (typeof o.data === "string") ? o.data.trim() : "";
+                    var strMa = (typeof o.message === "string") ? o.message.trim() : "";
+                    if (strMoTa) res.title = strMoTa;
+                    else if (strMa) res.title = "Nhà cung cấp hóa đơn từ chối yêu cầu";
+                    res.code = strMa;
+                    if (o.code !== null && o.code !== undefined && o.code !== "") res.http = "HTTP " + o.code;
+                    if (strMa && objGoiY[strMa]) res.hint = objGoiY[strMa];
+                }
+            } catch (ex) { /* không phải JSON hợp lệ → giữ nguyên chuỗi gốc */ }
+        }
+        return res;
+    },
+    alertLoiHoaDon: function (strMessage, strTieuDe) {
+        var me = this;
+        var r = me.parseLoiHoaDon(strMessage);
+        // edu.system.alert nhận HTML → mọi chuỗi từ máy chủ phải escape
+        var esc = function (s) { return $('<div>').text(s === null || s === undefined ? '' : String(s)).html(); };
+        var h = '<div class="aps-loi-hd">';
+        h += '<div class="aps-loi-hd-icon"><i class="fa fa-exclamation"></i></div>';
+        h += '<div class="aps-loi-hd-body">';
+        h += '<div class="aps-loi-hd-title">' + esc(strTieuDe || 'Không thực hiện được') + '</div>';
+        h += '<div class="aps-loi-hd-msg">' + esc(r.title || 'Máy chủ không trả về nội dung lỗi') + '</div>';
+        if (r.hint) h += '<div class="aps-loi-hd-hint"><i class="fa fa-lightbulb-o"></i><span>' + esc(r.hint) + '</span></div>';
+        if (r.code) h += '<div class="aps-loi-hd-tech">Mã lỗi: <b>' + esc(r.code) + '</b>' + (r.http ? ' · ' + esc(r.http) : '') + '</div>';
+        h += '</div></div>';
+        edu.system.alert(h, "w");
     },
 
     /*------------------------------------------
@@ -3489,8 +3546,8 @@ PhieuThuKhac.prototype = {
                         edu.extend.notifyBeginLoading('Thực hiện thu tiền thành công', 'notifications_PhieuThu');
                     }
                     else {
-                        edu.system.alert("Lỗi: " + data.Message, "w");
-                        edu.extend.notifyBeginLoading(data.Message);
+                        me.alertLoiHoaDon(data.Message, "Không xuất được hóa đơn");
+                        edu.extend.notifyBeginLoading(me.parseLoiHoaDon(data.Message).title);
                     }
                     edu.system.endLoading();
                 },
@@ -3655,8 +3712,8 @@ PhieuThuKhac.prototype = {
                         }
                     }
                     else {
-                        edu.system.alert("Lỗi: " + data.Message, "w");
-                        edu.extend.notifyBeginLoading(data.Message);
+                        me.alertLoiHoaDon(data.Message, "Không thực hiện được thu tiền");
+                        edu.extend.notifyBeginLoading(me.parseLoiHoaDon(data.Message).title);
                     }
                     edu.system.endLoading();
                 },
@@ -3686,8 +3743,8 @@ PhieuThuKhac.prototype = {
                         informSaveSuccess(d.Message);
                     }
                     else {
-                        edu.system.alert("Lỗi: " + d.Message, "w");
-                        edu.extend.notifyBeginLoading(d.Message, undefined, 5000);
+                        me.alertLoiHoaDon(d.Message, "Không xuất được hóa đơn điện tử");
+                        edu.extend.notifyBeginLoading(me.parseLoiHoaDon(d.Message).title, undefined, 5000);
                         informSaveSuccess(d.Message);
                         me.closePhieu();
                     }
@@ -3726,8 +3783,8 @@ PhieuThuKhac.prototype = {
                         else edu.system.alert("Vui lòng cho phép mở tab mới trên trình duyệt và thử lại!");
                     }
                     else {
-                        edu.system.alert("Lỗi: " + d.Message, "w");
-                        edu.extend.notifyBeginLoading(d.Message, undefined, 5000);
+                        me.alertLoiHoaDon(d.Message, "Không tạo được bản nháp hóa đơn");
+                        edu.extend.notifyBeginLoading(me.parseLoiHoaDon(d.Message).title, undefined, 5000);
                     }
                 },
                 error: function (er) {

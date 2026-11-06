@@ -333,7 +333,7 @@ UyQuyenCaNhan.prototype = {
         if (bSua) params.strid = me.strId_Sua;   // Thêm: BE tự sinh strid nên không gửi
 
         PQ.call(bSua ? me.API.SUA : me.API.THEM, params, function (data) {
-            if (data.Success) {
+            if (PQ.ghiOk(data, params)) {   // BE có thể trả Success=false + Message = khóa/ID vừa ghi dù đã ghi thành công
                 PQ.alertSauKhiDongModal("myModalUyQuyen", bSua ? "Cập nhật thành công!" : "Thêm mới thành công!");
                 me.getList_UyQuyen();
             } else {
@@ -365,7 +365,7 @@ UyQuyenCaNhan.prototype = {
     delete_UyQuyen: function (strId) {
         var me = this;
         PQ.call(me.API.XOA, { 'strid': strId }, function (data) {
-            if (data.Success) {
+            if (PQ.ghiOk(data, [strId])) {
                 edu.system.afterComfirm({ title: "", content: "Xóa dữ liệu thành công!", code: "" });
                 me.getList_UyQuyen();
             } else {

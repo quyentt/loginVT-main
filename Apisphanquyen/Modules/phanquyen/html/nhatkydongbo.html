@@ -109,19 +109,19 @@
     html body.skin-blue #main-content-wrapper .aps-phanquyen .scroll-table-x { border: 1px solid #e2e8f0; border-radius: 10px; background: #fff; }
     html body.skin-blue #main-content-wrapper .aps-phanquyen table.pq-table { margin: 0 !important; border: 0; }
     html body.skin-blue #main-content-wrapper .aps-phanquyen table.pq-table > thead > tr > th { padding: 12px 14px !important; border: 0 !important; border-bottom: 1px solid #dfe6f1 !important; background: #f3f6fc !important; color: #334155 !important; font-size: 12px !important; font-weight: 800 !important; letter-spacing: .045em; text-transform: uppercase; white-space: nowrap; vertical-align: middle; }
-    html body.skin-blue #main-content-wrapper .aps-phanquyen table.pq-table > tbody > tr > td { padding: 11px 14px !important; border: 0 !important; border-top: 1px solid #edf1f7 !important; vertical-align: middle; color: #0f172a !important; }
+    html body.skin-blue #main-content-wrapper .aps-phanquyen table.pq-table > tbody > tr > td { padding: 11px 14px !important; border: 0 !important; border-top: 1px solid #edf1f7 !important; vertical-align: middle; text-align: center; color: #0f172a !important; }
     html body.skin-blue #main-content-wrapper .aps-phanquyen table.pq-table > tbody > tr:first-child > td { border-top: 0 !important; }
     html body.skin-blue #main-content-wrapper .aps-phanquyen table.pq-table > tbody > tr:nth-child(even) > td { background: #fafbfe; }
     html body.skin-blue #main-content-wrapper .aps-phanquyen table.pq-table.table-hover > tbody > tr:hover,
     html body.skin-blue #main-content-wrapper .aps-phanquyen table.pq-table.table-hover > tbody > tr:hover > td { background: #eef2ff !important; }
     .aps-phanquyen table.pq-table .pq-col-act { width: 64px; text-align: center; }
     .aps-phanquyen table.pq-table td.pq-empty { color: #64748b; }
-    /* Nút thao tác trong dòng: vuông gọn, hover mới ngả màu (Sửa = xanh, Xóa = đỏ). Giữ class chuẩn btnEdit/btnDelete của shell. */
+    /* Nút thao tác trong dòng: vuông gọn; icon Xóa luôn đỏ, Sửa ngả xanh khi rê chuột. Giữ class chuẩn btnEdit/btnDelete của shell. Dữ liệu các cột căn giữa cho thẳng tiêu đề. */
     html body.skin-blue #main-content-wrapper .aps-phanquyen table.pq-table td .btn { width: 32px; height: 32px; padding: 0 !important; justify-content: center; border: 1px solid transparent !important; border-radius: 8px !important; background: transparent !important; box-shadow: none !important; transition: background .12s, border-color .12s; }
     html body.skin-blue #main-content-wrapper .aps-phanquyen table.pq-table td .btn i { font-size: 15px; }
     html body.skin-blue #main-content-wrapper .aps-phanquyen table.pq-table td .btn.btnEdit:hover,
     html body.skin-blue #main-content-wrapper .aps-phanquyen table.pq-table td .btn.btnRefresh:hover { border-color: #c7d2fe !important; background: #e0e7ff !important; }
-    html body.skin-blue #main-content-wrapper .aps-phanquyen table.pq-table td .btn.btnDelete i { color: #64748b !important; }
+    html body.skin-blue #main-content-wrapper .aps-phanquyen table.pq-table td .btn.btnDelete i { color: #dc2626 !important; }
     html body.skin-blue #main-content-wrapper .aps-phanquyen table.pq-table td .btn.btnDelete:hover { border-color: #fecaca !important; background: #fee2e2 !important; }
     html body.skin-blue #main-content-wrapper .aps-phanquyen table.pq-table td .btn.btnDelete:hover i { color: #dc2626 !important; }
     /* Dòng thông báo "không có dữ liệu" (colspan) → trạng thái rỗng có hình, không chỉ 1 dòng chữ */
@@ -231,7 +231,7 @@
     .pq-modal .pq-kv-title { margin: 6px 0; font-size: 12px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: #475569; }
 </style>
 <!-- page script -->
-<script src="modules/phanquyen/script/pqcommon.js?v=1.0.0.6"></script>
+<script src="modules/phanquyen/script/pqcommon.js?v=1.0.0.8"></script>
 <script src="modules/phanquyen/script/nhatkydongbo.js?v=1.0.0.0"></script>
 <script type="text/javascript">
     var main_doc = {};
