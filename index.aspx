@@ -2534,6 +2534,13 @@
             var m = /\[nhom:([a-z0-9_]+)\]/i.exec(moTa || '');
             return m ? m[1].toLowerCase() : '';
           }
+          // Thứ tự trong nhóm: thẻ [stt:N] (số nguyên dương) trong MOTA, cũng do trang CMS "Cấu hình nhóm vai trò" ghi.
+          // Số nhỏ đứng trước; không có thẻ → null (đứng sau các vai trò có số, giữ thứ tự API = theo tên).
+          function sttFromMoTa(moTa) {
+            var m = /\[stt:(\d+)\]/i.exec(moTa || '');
+            var n = m ? parseInt(m[1], 10) : 0;
+            return n > 0 ? n : null;
+          }
 
           // Trả về { group, icon, matched }. Thứ tự ưu tiên nhóm:
           //   thẻ [nhom:..] trong MOTA (admin chọn) > ROLE_GROUP (tên chính xác) > RULES (từ khóa) > Khác.
@@ -2567,7 +2574,7 @@
 
           function enrich(list) {
             var unmatched = [];
-            var out = (list || []).map(function (r) {
+            var out = (list || []).map(function (r, idx) {
               var meta = classify(r);
               var iconClass = (r.TENANH && /^fa[-\s]/.test(r.TENANH))
                 ? r.TENANH
@@ -2578,7 +2585,9 @@
                 name: r.TENVAITRO || r.TENUNGDUNG || 'Vai trò',
                 code: r.MAVAITRO || r.MAUNGDUNG || '',
                 group: meta.group,
-                icon: iconClass
+                icon: iconClass,
+                stt: sttFromMoTa(r.MOTA), // thứ tự trong nhóm (null = chưa đặt)
+                idx: idx                  // vị trí gốc từ API, để giữ thứ tự ổn định khi bằng nhau / chưa đặt
               };
             });
             if (unmatched.length) console.warn('[role-picker] Chưa phân nhóm được:', unmatched);
@@ -2587,13 +2596,15 @@
 
           var state = { roles: [], query: '', filter: 'all', rendered: false };
 
-          // Tiện ích chỉnh nhóm: F12 > Console > rolePickerDump() → bảng "Vai trò | Mã vai trò | Nhóm".
-          // Dùng để đối chiếu tên vai trò thật với ROLE_GROUP ở trên rồi chép tên vào đúng nhóm.
+          // Tiện ích chỉnh nhóm: F12 > Console > rolePickerDump() → bảng "Vai trò | Mã vai trò | Nhóm | Thứ tự" theo đúng
+          // thứ tự đang hiển thị. Dùng để đối chiếu tên vai trò thật với ROLE_GROUP ở trên rồi chép tên vào đúng nhóm.
           window.rolePickerDump = function () {
-            var rows = state.roles.map(function (r) {
-              return { 'Vai trò': r.name, 'Mã vai trò': r.code, 'Nhóm': GROUPS[r.group].label };
+            var list = state.roles.slice().sort(function (a, b) {
+              return (GROUP_ORDER.indexOf(a.group) - GROUP_ORDER.indexOf(b.group)) || byRoleOrder(a, b);
             });
-            rows.sort(function (a, b) { return a['Nhóm'].localeCompare(b['Nhóm'], 'vi') || a['Vai trò'].localeCompare(b['Vai trò'], 'vi'); });
+            var rows = list.map(function (r) {
+              return { 'Vai trò': r.name, 'Mã vai trò': r.code, 'Nhóm': GROUPS[r.group].label, 'Thứ tự': r.stt === null ? '' : r.stt };
+            });
             if (console.table) console.table(rows);
             return rows.length + ' vai trò';
           };
@@ -2602,7 +2613,9 @@
           // GROUPS ở đầu hàm là danh sách CÓ SẴN, luôn dùng làm dự phòng khi danh mục lỗi/trống. Quy tắc gộp:
           //  - Mã đã có sẵn: lấy TÊN trong danh mục làm nhãn (đổi tên nhóm không cần sửa code).
           //  - Mã mới: thêm nhóm mới, xếp trước "Khác", màu lấy lần lượt từ NEW_GROUP_COLORS.
-          //  - Thứ tự: nhóm có sẵn theo GROUP_ORDER; nhóm mới theo thứ tự danh mục trả về.
+          //  - Thứ tự nhóm: mặc định = nhóm có sẵn theo GROUP_ORDER, rồi nhóm mới (theo thứ tự danh mục trả về), rồi "Khác".
+          //    Dòng nào ở danh mục có số thứ tự (cột HeSo1 > 0, hoặc thẻ [stt:N] ở ô Mô tả) thì xếp theo số đó và đứng
+          //    TRƯỚC các dòng chưa có số. Thứ tự VAI TRÒ trong từng nhóm: thẻ [stt:N] ở MOTA của vai trò (xem byRoleOrder).
           //  - Không bao giờ XÓA nhóm có sẵn (vai trò gắn nhóm đó vẫn phải có chỗ hiển thị); nhóm không có vai trò thì tự ẩn.
           // Chờ danh mục đọc xong (tối đa 3s) rồi mới vẽ lần đầu để vai trò không nhảy nhóm; đến muộn thì vẽ lại.
           var NHOM_DM_MA = 'nhomvaitro';
@@ -2616,21 +2629,43 @@
             var n = parseInt(String(hex).replace('#', ''), 16);
             return 'rgba(' + ((n >> 16) & 255) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')';
           }
+          // Số thứ tự của 1 dòng nhóm trong danh mục: cột HeSo1 (> 0) trước, không có thì thẻ [stt:N] ở ô Mô tả; không có = null
+          function orderOfDm(r) {
+            var h = parseFloat(r && r.HESO1);
+            if (isFinite(h) && h > 0) return h;
+            var m = /\[stt:(\d+)\]/i.exec((r && r.MOTA) || '');
+            return m ? parseInt(m[1], 10) : null;
+          }
           function mergeNhomDanhMuc(rows) {
+            var dmOrder = {}, seen = {};
             (rows || []).forEach(function (r) {
               var code = String((r && r.MA) || '').trim().toLowerCase();
               var label = String((r && r.TEN) || '').trim();
-              if (!code || !label) return;
+              if (!code || !label || seen[code]) return;
               if (!/^[a-z0-9_]+$/.test(code)) {
                 console.warn('[role-picker] Bỏ qua mã nhóm không hợp lệ trong danh mục "' + NHOM_DM_MA + '": "' + r.MA + '" (chỉ dùng a-z, 0-9, _).');
                 return;
               }
+              seen[code] = true;
+              var o = orderOfDm(r);
+              if (o !== null) dmOrder[code] = o;
               if (GROUPS[code]) { GROUPS[code].label = label; return; }
               var c = NEW_GROUP_COLORS[dmExtra.length % NEW_GROUP_COLORS.length];
               GROUPS[code] = { label: label, bg: hexToRgba(c, 0.16), fg: c, chipBg: hexToRgba(c, 0.08), chipFg: c };
               dmExtra.push(code);
             });
-            GROUP_ORDER = BASE_GROUP_ORDER.filter(function (g) { return g !== 'khac'; }).concat(dmExtra, ['khac']);
+            // Thứ tự nhóm: mặc định = nhóm có sẵn rồi nhóm mới rồi "Khác". Dòng nào ở danh mục có số thứ tự thì xếp theo
+            // số đó và đứng TRƯỚC các dòng chưa có số; bằng nhau / chưa có số giữ thứ tự mặc định.
+            var list = BASE_GROUP_ORDER.filter(function (g) { return g !== 'khac'; }).concat(dmExtra, ['khac']);
+            var pos = {};
+            list.forEach(function (g, i) { pos[g] = i; });
+            var has = function (g) { return Object.prototype.hasOwnProperty.call(dmOrder, g); };
+            GROUP_ORDER = list.slice().sort(function (a, b) {
+              if (has(a) && has(b)) return (dmOrder[a] - dmOrder[b]) || (pos[a] - pos[b]);
+              if (has(a)) return -1;
+              if (has(b)) return 1;
+              return pos[a] - pos[b];
+            });
           }
           function loadNhomDanhMuc() {
             if (!(window.edu && edu.system && typeof edu.system.makeRequest === 'function')) return false;
@@ -2705,6 +2740,14 @@
               '</div>';
           }
 
+          // Thứ tự vai trò trong 1 nhóm: có [stt:N] thì theo N tăng dần và đứng TRƯỚC; chưa có thì đứng sau, giữ thứ tự gốc từ API
+          function byRoleOrder(a, b) {
+            if (a.stt !== null && b.stt !== null) return (a.stt - b.stt) || (a.idx - b.idx);
+            if (a.stt !== null) return -1;
+            if (b.stt !== null) return 1;
+            return a.idx - b.idx;
+          }
+
           function renderGrid(items) {
             if (!items.length) {
               $grid.html('<div class="role-empty">Không tìm thấy vai trò phù hợp.</div>').addClass('role-picker-ready');
@@ -2718,6 +2761,7 @@
               GROUP_ORDER.forEach(function (g) {
                 var arr = byGroup[g];
                 if (!arr || !arr.length) return;
+                arr = arr.slice().sort(byRoleOrder); // theo thứ tự admin đặt ([stt:N]); chưa đặt thì giữ thứ tự API
                 html += '<section class="role-group">' +
                   '<h3 class="role-group-title" style="--g:' + GROUPS[g].fg + '"><span>' + escapeHtml(GROUPS[g].label) + '</span>' +
                   '<span class="role-group-count">(' + arr.length + ')</span></h3>' +

@@ -31,6 +31,16 @@
     }
     .aps-nhomvt .aps-nhomvt-tool .nvt-search { flex: 1 1 280px; max-width: 460px; }
     .aps-nhomvt .aps-nhomvt-tool .nvt-loc { flex: 0 0 290px; }
+    .aps-nhomvt .aps-nhomvt-tool .nvt-sort { flex: 0 0 240px; }
+    /* Dòng tiêu đề từng nhóm (chế độ "Sắp theo nhóm và thứ tự") */
+    .aps-nhomvt #tblNhomVaiTro tr.nvt-grp td { background: #f1f5f9 !important; padding: 8px 12px; font-size: 14px; color: #0f172a; border-top: 2px solid #cbd5e1; }
+    .aps-nhomvt #tblNhomVaiTro tr.nvt-grp .nvt-grp-n { color: #64748b; font-weight: 600; }
+    /* Ô thứ tự: ▲ [số] ▼ */
+    .aps-nhomvt .nvt-ord { display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .aps-nhomvt .nvt-ord .in-sttvt { width: 58px; height: 30px !important; text-align: center; padding: 0 4px !important; line-height: 28px !important; }
+    .aps-nhomvt .nvt-arrow { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 30px; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; color: #334155; font-size: 11px; line-height: 1; cursor: pointer; user-select: none; text-decoration: none; }
+    .aps-nhomvt .nvt-arrow:hover { background: #eef2ff; border-color: #6366f1; color: #3730a3; text-decoration: none; }
+    .aps-nhomvt .nvt-arrow.nvt-dis { opacity: .3; pointer-events: none; }
     /* Ô chọn nhóm dạng select2: chấm màu nhóm trước tên (cùng màu nhóm trên trang chủ).
        Danh sách xổ ra gắn ở body nên các class này KHÔNG nằm dưới .aps-nhomvt. */
     .nvt-opt { white-space: nowrap; }
@@ -90,7 +100,7 @@
         <div class="col-sm-12">
             <div class="box box-solid box-shadow">
                 <div class="box-header with-border">
-                    <h3 class="box-title"><i class="fa-light fa-layer-group"></i> Cấu hình nhóm vai trò</h3>
+                    <h3 class="box-title"><i class="fa-light fa-layer-group"></i> Cấu hình nhóm và thứ tự vai trò</h3>
                     <span class="pull-right badge bg-light-blue"><span id="lblNhomVT_Tong">0</span> vai trò</span>
                 </div>
                 <div class="box-body">
@@ -98,11 +108,20 @@
                         Chọn nhóm để mỗi vai trò hiện đúng nhóm trên màn hình <b>Danh sách vai trò</b> ở trang chủ.
                         Để <b>"Theo mặc định hệ thống"</b> thì vai trò giữ nhóm mặc định. Thay đổi áp dụng cho <b>toàn hệ thống</b>,
                         người dùng thấy sau khi tải lại trang.<br />
-                        Nhóm được lưu dưới dạng thẻ <code>[nhom:...]</code> ở cuối ô <b>Mô tả</b> của vai trò (trang Vai trò) — vui lòng không xóa thẻ này.
+                        <b>Sắp thứ tự:</b> bấm <b>▲ ▼</b> để đưa vai trò lên/xuống trong nhóm, hoặc gõ số vào ô <b>Thứ tự</b> rồi nhấn <b>Enter</b>
+                        (số nhỏ đứng trước; vai trò chưa có số đứng sau, theo tên). Thứ tự các <b>nhóm</b> chỉnh ở danh mục dữ liệu <code>nhomvaitro</code>
+                        (cột Thứ tự / HeSo1).<br />
+                        Nhóm và thứ tự được lưu dưới dạng thẻ <code>[nhom:...]</code> <code>[stt:...]</code> ở cuối ô <b>Mô tả</b> của vai trò (trang Vai trò) — vui lòng không xóa các thẻ này.
                     </div>
                     <div id="divNhomVT_Banner"></div>
                     <div class="aps-nhomvt-tool">
                         <input id="txtNhomVT_TuKhoa" class="form-control nvt-search" placeholder="Tìm theo tên hoặc mã vai trò..." autocomplete="off" />
+                        <div class="nvt-sort">
+                        <select id="dropNhomVT_SapXep" class="form-control" style="width:100%">
+                            <option value="nhom">Sắp theo nhóm và thứ tự</option>
+                            <option value="ten">Sắp theo tên A–Z</option>
+                        </select>
+                        </div>
                         <div class="nvt-loc">
                         <select id="dropNhomVT_Loc" class="form-control" style="width:100%">
                             <option value="">Tất cả vai trò</option>
@@ -125,6 +144,7 @@
                                     <th>Mã vai trò</th>
                                     <th>Vai trò cha</th>
                                     <th style="width:330px">Nhóm hiển thị ở trang chủ</th>
+                                    <th class="td-center" style="width:150px">Thứ tự trong nhóm</th>
                                     <th class="td-center" style="width:110px">Trạng thái</th>
                                 </tr>
                             </thead>
