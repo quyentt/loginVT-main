@@ -10,7 +10,11 @@
       "mcp__claude_ai_Claude_Docs__guide",
       "mcp__claude_ai_Claude_Docs__read",
       "mcp__claude_ai_Claude_Docs__update",
-      "mcp__claude_ai_Claude_Docs__export"
+      "mcp__claude_ai_Claude_Docs__export",
+      "Bash(xargs ls -la)",
+      "Bash(awk '{print $5, $9}')",
+      "Bash(awk -F: '{print $1}')",
+      "Bash(grep -n -E \"^\\(edu|var edu\\)|^\\\\s{4}\\(util|system|extend\\)\\\\s*:|^\\\\s{0,4}\\(util|system\\)\\\\s*[:=]\" Corei/systemroot.js)"
     ]
   }
 }

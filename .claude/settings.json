@@ -23,7 +23,24 @@
       "mcp__claude_ai_Claude_Docs__batch",
       "mcp__claude_ai_Claude_Docs__update",
       "mcp__claude_ai_Claude_Docs__read",
-      "mcp__claude_ai_Claude_Docs__export"
+      "mcp__claude_ai_Claude_Docs__export",
+      "Bash(grep -c \"^\\\\s*//\" cthp.js)",
+      "Bash(grep -v \"edu.system.alert\\\\|//\")",
+      "Bash(grep -vE \"^\\\\s*$\")",
+      "Bash(grep -vE \"^\\\\S+:\\\\s*[0-9]+:\\\\s*//\")",
+      "Bash(awk -F: '{print $1}')",
+      "Bash(awk '/^    confirm: function/{f=1} f{print NR\": \"$0} /^    },/{if\\(f\\){exit}}' systemroot.js)",
+      "Bash(awk -F: '{printf \"%s:%s  \", $1, $2} END{print \"\"}')",
+      "Bash(grep -nE \"\\\\.box-body\\\\s*\\\\{|\\\\.box-body,\" assets/css/styles.css assets/css-new/main.css assets/css/calendar.css App_Themes/Cms/Custom_V1/styles.css App_Themes/Cms/adminlte/css/AdminLTE.min.css)",
+      "Bash(python patch_footer2.py)",
+      "Bash(python build2.py)",
+      "Bash(PYTHONIOENCODING=utf-8 python checkx.py x4 x6)",
+      "Bash(bash shot2.sh s3 1600 900 v7_modal.png)",
+      "Read(//c/Users/HP/AppData/Local/Temp/claude/5665a7cf6d98c88d/029a2e59-4831-4370-8790-1fe64fd25b8e/scratchpad/**)",
+      "Bash(python -I patch_steps2.py)",
+      "Bash(node --check canhbaotckt.js)",
+      "Bash(node --check steps.js)",
+      "Bash(python -I -)"
     ]
   }
 }
