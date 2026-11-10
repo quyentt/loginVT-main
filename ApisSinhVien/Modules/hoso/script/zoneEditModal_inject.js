@@ -1434,16 +1434,63 @@ if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype._zeXhdHooked) {
                 var inv = rows[0];
                 if (dx._zeXhdPersonId === personId) dx._currentInvoiceId = inv.ID || '';
                 dx._zeFixDoiTuongTuMa(inv.BUYER_TYPE_LOAI);
-                // Hoá đơn cá nhân: không có MST và không có tên đơn vị kiểu tổ chức
-                // → BUYER_NAME chính là họ tên người mua.
+
+                /* -----------------------------------------------------------------
+                -- Bảng PERSON_INVOICE_INFO chỉ có MỘT cột tên (BUYER_NAME) trong khi
+                -- form có HAI ô: "Họ tên người mua hàng" và "Tên đơn vị / Công ty".
+                -- Luồng gốc luôn đổ cột đó vào ô Tên đơn vị, còn bản vá lúc lưu thì
+                -- mượn ô Tên đơn vị để gửi họ tên người mua (xem đoạn 1a ở trên).
+                -- Hệ quả người dùng báo 10/11/2026: ô "Tên đơn vị / Công ty" KHÔNG
+                -- hề gõ gì, bấm Lưu xong mở lại thì tự có họ tên sinh viên.
+                --
+                -- Phân biệt cột tên đó đang mang nghĩa gì:
+                --   có MST, hoặc đối tượng xuất hoá đơn là tổ chức/cơ quan
+                --        → là TÊN ĐƠN VỊ thật, giữ nguyên ô Tên đơn vị.
+                --   ngược lại (cá nhân)
+                --        → là HỌ TÊN NGƯỜI MUA, đưa về đúng ô và trả ô Tên đơn vị
+                --          về trống cho hiện lại placeholder.
+                -- Chỉ dọn khi ô đang mang ĐÚNG chữ vừa nạp lên và người dùng chưa
+                -- tự tay gõ vào — không bao giờ xoá chữ của người dùng.
+                ------------------------------------------------------------------ */
                 var ten = inv.BUYER_NAME_TENNM || inv.BUYER_NAME || '';
-                if (edu.util.checkValue(ten) && !edu.util.checkValue(inv.BUYER_TAX_MST)) {
-                    var dat = function () {
-                        if (!$('#txtKQ_HD_NguoiMua').val()) edu.util.viewValById('txtKQ_HD_NguoiMua', ten);
+                if (edu.util.checkValue(ten)) {
+                    var laToChuc = function () {
+                        if (edu.util.checkValue(inv.BUYER_TAX_MST)) return true;
+                        if (edu.util.checkValue(inv.BUYER_BUDGET_MAQHNS)) return true;
+                        // BUYER_TYPE_LOAI có máy khách lưu mã chữ, có máy lưu GUID
+                        // → xét thêm chữ hiển thị của option đang được chọn.
+                        var t = ((inv.BUYER_TYPE_LOAI || '') + '');
+                        var $o = $('#ddlKQ_HD_DoiTuong option:selected');
+                        if ($o.length && $o.val()) t += ' ' + (($o.text() || '') + '');
+                        return /T[OỔ][_ ]?CH[UỨ]C|C[OƠ][_ ]?QUAN|DOANH[_ ]?NGHI[EỆ]P|DON[_ ]?VI/i.test(t);
                     };
+                    var dat = function () {
+                        if (laToChuc()) return;              // tên đó là tên đơn vị thật
+                        if (!$('#txtKQ_HD_NguoiMua').val()) edu.util.viewValById('txtKQ_HD_NguoiMua', ten);
+                        var $dv = $('#txtKQ_HD_TenDonVi');
+                        if (!$dv.length) return;
+                        if ($dv.attr('data-user-touched')) return;   // người dùng đang gõ, không đụng
+                        if ((($dv.val() || '') + '').trim() === ((ten || '') + '').trim()) $dv.val('');
+                    };
+
+                    /* Luồng gốc (dexuathoso.js:5946) đổ BUYER_NAME vào ô Tên đơn vị ở
+                    -- 3 mốc 0 / 500 / 1500ms tính từ RESPONSE CỦA NÓ — một request
+                    -- khác, về sớm muộn không chừng. Đặt 3 mốc cố định ở đây là đánh
+                    -- cược vào thứ tự hai response: nó về chậm hơn 300ms là mốc
+                    -- 1500ms của nó rơi sau mốc cuối của mình → chữ hiện lại.
+                    -- Nên quét đều mỗi 250ms trong 4 giây cho chắc chắn phủ hết,
+                    -- dừng sớm khi người dùng chạm vào ô hoặc đã đổi sang hồ sơ khác. */
                     dat();
-                    setTimeout(dat, 700);
-                    setTimeout(dat, 1700);
+                    var hetHan = Date.now() + 4000;
+                    var dongHo = setInterval(function () {
+                        if (Date.now() > hetHan
+                            || dx._currentInvoiceId !== inv.ID
+                            || $('#txtKQ_HD_TenDonVi').attr('data-user-touched')) {
+                            clearInterval(dongHo);
+                            return;
+                        }
+                        dat();
+                    }, 250);
                 }
             },
             error: function () { },
