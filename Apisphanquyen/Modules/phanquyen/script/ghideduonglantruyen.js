@@ -29,6 +29,12 @@ GhiDeDuongLanTruyen.prototype = {
 
     init: function () {
         var me = this;
+        // Xuất Excel bằng chuẩn chung (edu.exporter)
+        PQ.attachExport({
+            table: 'tblGhiDe', title: 'DANH SÁCH GHI ĐÈ ĐƯỜNG LAN TRUYỀN', fileName: 'GhiDeDuongLanTruyen',
+            subTitles: function () { return me.strTuKhoa ? ['Từ khóa: ' + me.strTuKhoa] : []; },
+            filters: [[{ label: 'Áp dụng chặn', id: 'dropSearch_GD_ApDungChan' }]]
+        });
         // Nạp song song 3 danh mục (đổ ô chọn + tra tên hiển thị trong bảng), xong mới tải danh sách.
         // Danh mục nào lỗi thì bảng hiện ID thay cho tên, màn hình vẫn dùng được.
         PQ.whenAll([PQ.loadChucNang, PQ.loadQuanHe, PQ.loadLoaiDoiTuong], function (kq) {
@@ -188,7 +194,7 @@ GhiDeDuongLanTruyen.prototype = {
                 }
             ]
         };
-        edu.system.loadToTable_data(jsonForm);
+        PQ.veBang(jsonForm);
     },
 
     /*------------------------------------------

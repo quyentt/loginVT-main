@@ -29,6 +29,11 @@ NguonTuSinh.prototype = {
 
     init: function () {
         var me = this;
+        // Xuất Excel bằng chuẩn chung (edu.exporter)
+        PQ.attachExport({
+            table: 'tblNguonTuSinh', title: 'DANH SÁCH NGUỒN TỰ SINH', fileName: 'NguonTuSinh',
+            subTitles: function () { return me.strTuKhoa ? ['Từ khóa: ' + me.strTuKhoa] : []; }
+        });
         // Nạp song song 2 danh mục (đổ ô chọn + tra tên hiển thị trong bảng), xong mới tải danh sách.
         // Danh mục nào lỗi thì bảng hiện mã thay cho tên, màn hình vẫn dùng được.
         PQ.whenAll([PQ.loadChucNang, PQ.loadLoaiDoiTuong], function (kq) {
@@ -159,7 +164,7 @@ NguonTuSinh.prototype = {
                 }
             ]
         };
-        edu.system.loadToTable_data(jsonForm);
+        PQ.veBang(jsonForm);
     },
 
     /*------------------------------------------

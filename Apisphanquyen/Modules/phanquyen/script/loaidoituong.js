@@ -22,6 +22,11 @@ LoaiDoiTuong.prototype = {
 
     init: function () {
         var me = this;
+        // Xuất Excel bằng chuẩn chung (edu.exporter): đúng cột + dòng bảng đang hiển thị
+        PQ.attachExport({
+            table: 'tblLoaiDoiTuong', title: 'DANH SÁCH LOẠI ĐỐI TƯỢNG', fileName: 'LoaiDoiTuong',
+            subTitles: function () { return me.strTuKhoa ? ['Từ khóa: ' + me.strTuKhoa] : []; }
+        });
         me.getList_LoaiDoiTuong();
 
         $("#btnSearch_LoaiDoiTuong").click(function () {
@@ -69,6 +74,7 @@ LoaiDoiTuong.prototype = {
             }
             var dt = data.Data || [];
             me.dtLoaiDoiTuong = dt;
+            me.strTuKhoa = strTuKhoa;   // để nút Xuất Excel ghi điều kiện tìm kiếm
             if (dt.length > 0 && PQ.g(dt[0], 'MA') === '' && window.console) {
                 console.warn('[loaidoituong] Response LayDS không có cột MA — các cột nhận được:', Object.keys(dt[0]));
             }
@@ -124,7 +130,7 @@ LoaiDoiTuong.prototype = {
                 }
             ]
         };
-        edu.system.loadToTable_data(jsonForm);
+        PQ.veBang(jsonForm);
     },
 
     /*------------------------------------------

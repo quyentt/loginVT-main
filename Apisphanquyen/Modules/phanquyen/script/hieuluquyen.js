@@ -26,11 +26,21 @@ HieuLucQuyen.prototype = {
 
     API: {
         LAYDS: { action: 'CMS_QuanTri04_MH/MTAeMSkgLDcoHikoJDQtNCIeDSA4BRIP', func: 'PKG_CORE_QUANTRI_04.pq_phamvi_hieuluc_LayDS' },
-        LAYTT: { action: 'CMS_QuanTri04_MH/MTAeMSkgLDcoHikoJDQtNCIeDSA4FRUP', func: 'PKG_CORE_QUANTRI_04.pq_phamvi_hieuluc_LayTT' }
+        LAYTT: { action: 'CMS_QuanTri04_MH/MTAeMSkgLDcoHikoJDQtNCIeDSA4FRUP', func: 'PKG_CORE_QUANTRI_04.pq_phamvi_hieuluc_LayTT' },
+        // Đồng bộ lại TOÀN BỘ dữ liệu quyền. Nhận strNguoiThucHien_Id; có 2 tham số ra (dSoDongThanhCong, dSoDongLoi) nhưng
+        // controller KHÔNG đưa vào response (chỉ Success + Message) nên màn hình không hiện được số dòng — cần BE bổ sung.
+        DONGBO: { action: 'CMS_QuanTri04_MH/BS4vJgMuDSAoFS4gLwMu', func: 'PKG_CORE_QUANTRI_04.DongBoLaiToanBo' }
     },
 
     init: function () {
         var me = this;
+        // Xuất Excel bằng chuẩn chung (edu.exporter): xuất ĐỦ kết quả tìm (bảng chỉ vẽ tối đa MAX_HIEN_THI dòng)
+        PQ.attachExport({
+            table: 'tblHieuLuc', title: 'HIỆU LỰC QUYỀN', fileName: 'HieuLucQuyen',
+            rows: function () { return me.dtAll; },
+            subTitles: function () { return me.strTuKhoa ? ['Từ khóa: ' + me.strTuKhoa] : []; },
+            filters: [[{ label: 'Nguồn gốc', id: 'dropSearch_HL_Nguon' }, { label: 'Hiệu lực', id: 'dropSearch_HL_HieuLuc' }]]
+        });
         // Nạp danh mục để hiện tên thay cho ID. KHÔNG tải dữ liệu hiệu lực ở đây.
         PQ.whenAll([PQ.loadChucNang, PQ.loadLoaiDoiTuong], function (kq) {
             me.mapLoai = PQ.mapOf(kq[1], 'MA', 'TEN');
@@ -51,6 +61,27 @@ HieuLucQuyen.prototype = {
         });
         $("#tblHieuLuc").delegate(".btnXem", "click", function () {
             me.popup_Xem($(this).attr("data-i"));
+        });
+        $("#btnDongBo_HieuLuc").click(function () {
+            me.confirm_DongBo();
+        });
+    },
+
+    /*------------------------------------------
+    --Đồng bộ dữ liệu quyền — chạy hàm DongBoLaiToanBo bằng form tiến trình chuẩn edu.process (qua PQ.chayJob)
+    -------------------------------------------*/
+    confirm_DongBo: function () {
+        var me = this;
+        PQ.chayJob({
+            title: "Đồng bộ dữ liệu quyền",
+            what: "Đồng bộ lại toàn bộ dữ liệu quyền — toàn hệ thống",
+            api: me.API.DONGBO,
+            params: { 'strNguoiThucHien_Id': edu.system.userId },
+            okMessage: "Đã đồng bộ dữ liệu quyền",
+            notes: ["Đồng bộ chạy trên toàn hệ thống và có thể chạy lâu do dữ liệu lớn — vui lòng không đóng trang trong lúc chạy."],
+            fileName: "DongBoDuLieuQuyen",
+            // Đang xem kết quả của 1 lần tìm → tải lại để thấy dữ liệu mới
+            refresh: function () { if (me.daTim) me.getList_HieuLuc(); }
         });
     },
 
@@ -121,6 +152,7 @@ HieuLucQuyen.prototype = {
             }
             me.daTim = true;
             me.dtAll = data.Data || [];
+            me.strTuKhoa = strTuKhoa;   // để nút Xuất Excel ghi điều kiện tìm kiếm
             if (me.dtAll.length > 0 && PQ.g(me.dtAll[0], 'NGUOIDUNG_ID') === '' && PQ.g(me.dtAll[0], 'CHUCNANG_ID') === '' && window.console) {
                 console.warn('[hieuluquyen] Response LayDS không có cột NGUOIDUNG_ID/CHUCNANG_ID — các cột nhận được:', Object.keys(me.dtAll[0]));
             }
@@ -189,7 +221,7 @@ HieuLucQuyen.prototype = {
                 }
             ]
         };
-        edu.system.loadToTable_data(jsonForm);
+        PQ.veBang(jsonForm);
     },
 
     /*------------------------------------------

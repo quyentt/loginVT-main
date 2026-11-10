@@ -35,6 +35,7 @@ NhatKyDongBo.prototype = {
     dtAll: [],          // mọi lượt trong khoảng ngày, đã sắp mới → cũ
     vanBan: [],         // chuỗi chữ thường của từng dòng dtAll (để tìm từ khóa), cùng chỉ số với dtAll
     dtShow: [],         // đúng các dòng đang vẽ (nút Xem tra theo chỉ số trong mảng này)
+    dtLoc: [],          // mọi lượt sau khi lọc (chưa cắt MAX_HIEN_THI) — dùng cho nút Xuất Excel
     objKhoang: null,    // {tu: Date, den: Date} của lần tải gần nhất
     bDaCanhBaoCot: false,
 
@@ -45,6 +46,18 @@ NhatKyDongBo.prototype = {
 
     init: function () {
         var me = this;
+        // Xuất Excel bằng chuẩn chung (edu.exporter): xuất ĐỦ các lượt sau khi lọc (bảng chỉ vẽ tối đa MAX_HIEN_THI lượt)
+        PQ.attachExport({
+            table: 'tblNhatKy', title: 'NHẬT KÝ ĐỒNG BỘ DỮ LIỆU QUYỀN', fileName: 'NhatKyDongBo',
+            rows: function () { return me.dtLoc; },
+            subTitles: function () {
+                var a = [], kw = $.trim(edu.util.getValById('txtSearch_NhatKy'));
+                if (me.objKhoang) a.push('Khoảng ngày: ' + PQ.dmyDate(me.objKhoang.tu) + ' - ' + PQ.dmyDate(me.objKhoang.den));
+                if (kw) a.push('Từ khóa: ' + kw);
+                return a;
+            },
+            filters: [[{ label: 'Nguồn loại', id: 'dropSearch_NK_NguonLoai' }, { label: 'Trạng thái', id: 'dropSearch_NK_TrangThai' }]]
+        });
         var homNay = PQ.homNay();
         var tu = new Date(homNay.getFullYear(), homNay.getMonth(), homNay.getDate() - (me.SO_NGAY_MACDINH - 1));
         edu.util.viewValById("txtSearch_NK_TuNgay", PQ.dmyDate(tu));
@@ -215,6 +228,7 @@ NhatKyDongBo.prototype = {
         var strDem = bLoc
             ? me._so(dt.length) + ' / ' + me._so(me.dtAll.length) + ' lượt'
             : me._so(me.dtAll.length) + ' lượt';
+        me.dtLoc = dt;
         if (dt.length > me.MAX_HIEN_THI) {
             strDem += ' — chỉ hiển thị ' + me._so(me.MAX_HIEN_THI) + ' lượt mới nhất, hãy thu hẹp khoảng ngày hoặc ô lọc';
             dt = dt.slice(0, me.MAX_HIEN_THI);
@@ -271,7 +285,7 @@ NhatKyDongBo.prototype = {
                 }
             ]
         };
-        edu.system.loadToTable_data(jsonForm);
+        PQ.veBang(jsonForm);
     },
 
     /*------------------------------------------

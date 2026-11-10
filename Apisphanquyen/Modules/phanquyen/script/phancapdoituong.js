@@ -17,17 +17,37 @@ PhanCapDoiTuong.prototype = {
     MAX_HIEN_THI: 1000,
     dtAll: [],          // kết quả LayDS của lần tìm gần nhất (chưa lọc Quan hệ / Nguồn tạo)
     dtShow: [],         // đúng các dòng đang vẽ trên bảng (nút Xóa tra theo chỉ số trong mảng này)
+    dtLoc: [],          // mọi dòng sau khi lọc Quan hệ / Nguồn tạo (chưa cắt MAX_HIEN_THI) — dùng cho nút Xuất Excel
     mapLoai: {},        // mã loại đối tượng → tên
     objTim: null,       // {loaiCon, maCon} của lần tìm gần nhất — dùng để tải lại sau Thêm/Xóa
 
     API: {
         LAYDS: { action: 'CMS_QuanTri04_MH/JTQtKCQ0HjEpIC8iIDEeBRUeDSA4BRIP', func: 'PKG_CORE_QUANTRI_04.dulieu_phancap_DT_LayDS' },
         THEM: { action: 'CMS_QuanTri04_MH/JTQtKCQ0HjEpIC8iIDEeBRUeFSkkLAPP', func: 'PKG_CORE_QUANTRI_04.dulieu_phancap_DT_Them' },
-        XOA: { action: 'CMS_QuanTri04_MH/JTQtKCQ0HjEpIC8iIDEeBRUeGS4g', func: 'PKG_CORE_QUANTRI_04.dulieu_phancap_DT_Xoa' }
+        XOA: { action: 'CMS_QuanTri04_MH/JTQtKCQ0HjEpIC8iIDEeBRUeGS4g', func: 'PKG_CORE_QUANTRI_04.dulieu_phancap_DT_Xoa' },
+        // Job build lại toàn bộ closure (proc BuildDuLieuPhanCapDoiTuong(ParamNguoiThucHien_Id, ParamErr out)); lỗi = Message
+        BUILD: { action: 'CMS_QuanTri04_MH/AzQoLSUFNA0oJDQRKSAvAiAxBS4oFTQuLyYP', func: 'PKG_CORE_QUANTRI_04.BuildDuLieuPhanCapDoiTuong' }
     },
 
     init: function () {
         var me = this;
+        // Chọn loại đối tượng cha/con → hiện bảng danh sách đối tượng để chọn (không bắt người dùng nhớ ID)
+        me.pickCha = PQ.pickerDoiTuong({ drop: 'dropPC_LoaiCha', txt: 'txtPC_DoiTuongCha' });
+        me.pickCon = PQ.pickerDoiTuong({ drop: 'dropPC_LoaiCon', txt: 'txtPC_DoiTuongCon' });
+        // Xuất Excel bằng chuẩn chung (edu.exporter): xuất ĐỦ các dòng sau khi lọc (bảng chỉ vẽ tối đa MAX_HIEN_THI dòng)
+        PQ.attachExport({
+            table: 'tblClosure', title: 'DỮ LIỆU PHÂN CẤP ĐỐI TƯỢNG (CLOSURE)', fileName: 'PhanCapDoiTuong',
+            rows: function () { return me.dtLoc; },
+            subTitles: function () {
+                var a = [];
+                if (me.objTim) {
+                    a.push('Loại đối tượng con: ' + me._tenLoai(me.objTim.loaiCon));
+                    if (me.objTim.maCon) a.push('Mã đối tượng con: ' + me.objTim.maCon);
+                }
+                return a;
+            },
+            filters: [[{ label: 'Quan hệ', id: 'dropSearch_PC_QuanHe' }, { label: 'Nguồn tạo', id: 'dropSearch_PC_NguonTao' }]]
+        });
         // Nạp danh mục (loại đối tượng, quan hệ) cho các ô chọn + tra tên hiển thị. KHÔNG tải dữ liệu closure ở đây.
         PQ.whenAll([PQ.loadLoaiDoiTuong, PQ.loadQuanHe], function (kq) {
             var dtLoai = kq[0], dtQh = kq[1];
@@ -57,6 +77,9 @@ PhanCapDoiTuong.prototype = {
         $("#btnSave_Closure").click(function () {
             me.save_Closure();
         });
+        $("#btnBuild_Closure").click(function () {
+            me.confirm_Build();
+        });
         $("#tblClosure").delegate(".btnDelete", "click", function () {
             me.confirm_Xoa($(this).attr("data-i"));
         });
@@ -68,10 +91,7 @@ PhanCapDoiTuong.prototype = {
     _tenLoai: function (strMa) {
         return (PQ.has(this.mapLoai, strMa) && this.mapLoai[strMa]) ? this.mapLoai[strMa] : strMa;
     },
-    // "Tên loại / mã đối tượng" cho ô bảng và câu xác nhận
-    _doiTuongHtml: function (strLoai, strId) {
-        return '<span>' + PQ.esc(this._tenLoai(strLoai)) + '</span> <span class="pq-sub">/</span> <span class="pq-mono">' + PQ.esc(strId) + '</span>';
-    },
+    // "Tên loại / mã đối tượng" cho câu xác nhận xóa
     _doiTuongText: function (strLoai, strId) {
         return this._tenLoai(strLoai) + " / " + strId;
     },
@@ -80,6 +100,42 @@ PhanCapDoiTuong.prototype = {
     },
     _so: function (n) {
         return Number(n).toLocaleString('vi-VN');
+    },
+    // Sắp xếp theo: Quan hệ → Loại cha → Mã cha → Loại con → Mã con (sắp 1 lần khi tải; lọc sau đó giữ nguyên thứ tự).
+    // Quan hệ và tên loại là chữ tiếng Việt, chỉ có ít giá trị khác nhau → xếp hạng các giá trị đó 1 lần rồi so số nguyên;
+    // mã đối tượng (GUID/mã) so thẳng chuỗi. Không đổi nội dung dòng, chỉ đổi thứ tự.
+    _sapXep: function (arr) {
+        var me = this;
+        var xepHang = function (dsGiaTri) {
+            var seen = {}, u = [], i;
+            for (i = 0; i < dsGiaTri.length; i++) {
+                if (!Object.prototype.hasOwnProperty.call(seen, dsGiaTri[i])) { seen[dsGiaTri[i]] = true; u.push(dsGiaTri[i]); }
+            }
+            u.sort(function (a, b) { return a.localeCompare(b, 'vi'); });
+            var rank = {};
+            for (i = 0; i < u.length; i++) rank[u[i]] = i;
+            return rank;
+        };
+        var ds = [], qh = [], loai = [], i, r;
+        for (i = 0; i < arr.length; i++) {
+            r = arr[i];
+            var o = {
+                r: r, i: i,
+                qh: String(PQ.g(r, 'DM_QUANHE_PHANCAP_ID')),
+                lc: me._tenLoai(PQ.g(r, 'LOAI_CHA_MA')), mc: String(PQ.g(r, 'DOITUONGCHA_ID')),
+                lk: me._tenLoai(PQ.g(r, 'LOAI_CON_MA')), mk: String(PQ.g(r, 'DOITUONGCON_ID'))
+            };
+            ds.push(o); qh.push(o.qh); loai.push(o.lc); loai.push(o.lk);
+        }
+        var rQh = xepHang(qh), rLoai = xepHang(loai);
+        var so = function (a, b) { return a < b ? -1 : (a > b ? 1 : 0); };
+        ds.sort(function (a, b) {
+            return (rQh[a.qh] - rQh[b.qh]) || (rLoai[a.lc] - rLoai[b.lc]) || so(a.mc, b.mc)
+                || (rLoai[a.lk] - rLoai[b.lk]) || so(a.mk, b.mk) || (a.i - b.i);
+        });
+        var kq = [];
+        for (i = 0; i < ds.length; i++) kq.push(ds[i].r);
+        return kq;
     },
 
     /*------------------------------------------
@@ -99,7 +155,7 @@ PhanCapDoiTuong.prototype = {
                 edu.system.alert(data.Message, "w");
                 return;
             }
-            me.dtAll = data.Data || [];
+            me.dtAll = me._sapXep(data.Data || []);
             me.objTim = { loaiCon: strLoaiCon, maCon: strMaCon };
             if (me.dtAll.length > 0 && PQ.g(me.dtAll[0], 'LOAI_CON_MA') === '' && PQ.g(me.dtAll[0], 'DOITUONGCON_ID') === '' && window.console) {
                 console.warn('[phancapdoituong] Response LayDS không có cột LOAI_CON_MA/DOITUONGCON_ID — các cột nhận được:', Object.keys(me.dtAll[0]));
@@ -124,6 +180,7 @@ PhanCapDoiTuong.prototype = {
         var strDem = (strQh !== '' || strNguon !== '')
             ? me._so(dt.length) + ' / ' + me._so(me.dtAll.length) + ' dòng'
             : me._so(me.dtAll.length) + ' dòng';
+        me.dtLoc = dt;
         if (dt.length > me.MAX_HIEN_THI) {
             strDem += ' — chỉ hiển thị ' + me._so(me.MAX_HIEN_THI) + ' dòng đầu, hãy nhập Mã đối tượng con hoặc lọc Quan hệ/Nguồn tạo để thu hẹp';
             dt = dt.slice(0, me.MAX_HIEN_THI);
@@ -137,24 +194,35 @@ PhanCapDoiTuong.prototype = {
         var jsonForm = {
             strTable_Id: "tblClosure",
             aaData: data,
-            // Cột 0 là STT do hệ thống tự thêm: 0 Stt | 1 Loại cha / Mã cha | 2 Loại con / Mã con | 3 Quan hệ | 4 Nguồn tạo | 5 Xóa
+            // Cột 0 là STT do hệ thống tự thêm: 0 Stt | 1 Quan hệ | 2 Loại cha | 3 Mã cha | 4 Loại con | 5 Mã con | 6 Nguồn tạo | 7 Xóa
+            // (thứ tự cột = thứ tự sắp xếp: Quan hệ → Cha → Con). Căn giữa từng cột; tên loại và mã tách cột riêng nên luôn thẳng hàng.
             colPos: {
-                center: [0, 4, 5]
+                center: [0, 1, 2, 3, 4, 5, 6, 7]
             },
             aoColumns: [
                 {
                     "mRender": function (nRow, aData) {
-                        return me._doiTuongHtml(PQ.g(aData, 'LOAI_CHA_MA'), PQ.g(aData, 'DOITUONGCHA_ID'));
-                    }
-                },
-                {
-                    "mRender": function (nRow, aData) {
-                        return me._doiTuongHtml(PQ.g(aData, 'LOAI_CON_MA'), PQ.g(aData, 'DOITUONGCON_ID'));
-                    }
-                },
-                {
-                    "mRender": function (nRow, aData) {
                         return '<span class="pq-mono">' + PQ.esc(PQ.g(aData, 'DM_QUANHE_PHANCAP_ID')) + '</span>';
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return PQ.esc(me._tenLoai(PQ.g(aData, 'LOAI_CHA_MA')));
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return '<span class="pq-mono">' + PQ.esc(PQ.g(aData, 'DOITUONGCHA_ID')) + '</span>';
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return PQ.esc(me._tenLoai(PQ.g(aData, 'LOAI_CON_MA')));
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return '<span class="pq-mono">' + PQ.esc(PQ.g(aData, 'DOITUONGCON_ID')) + '</span>';
                     }
                 },
                 {
@@ -173,18 +241,21 @@ PhanCapDoiTuong.prototype = {
                 }
             ]
         };
-        edu.system.loadToTable_data(jsonForm);
+        PQ.veBang(jsonForm);
     },
 
     /*------------------------------------------
     --[2] Popup Thêm thủ công (không có Sửa)
     -------------------------------------------*/
     resetForm: function () {
+        var me = this;
         $("#btnNotifyModal").remove();
         PQ.setDrop("dropPC_LoaiCha", "");
         edu.util.viewValById("txtPC_DoiTuongCha", "");
+        me.pickCha.dong();
         PQ.setDrop("dropPC_LoaiCon", "");
         edu.util.viewValById("txtPC_DoiTuongCon", "");
+        me.pickCon.dong();
         PQ.setDrop("dropPC_QuanHe", "");
         $("#titleClosure").text("");
     },
@@ -235,6 +306,26 @@ PhanCapDoiTuong.prototype = {
             }
         }, function (er) {
             edu.system.alertOnModal({ type: "w", content: PQ.msgLoi(er) });
+        });
+    },
+
+    /*------------------------------------------
+    --[5] Tạo dữ liệu — chạy job build lại closure (BuildDuLieuPhanCapDoiTuong) bằng form tiến trình chuẩn edu.process
+    -------------------------------------------*/
+    confirm_Build: function () {
+        var me = this;
+        // Form tiến trình chuẩn của hệ thống (edu.process.runJob qua PQ.chayJob): Bước 1 xác nhận → RUN → kết quả/thời gian/xuất Excel
+        PQ.chayJob({
+            title: "Tạo dữ liệu phân cấp đối tượng",
+            what: "Tạo lại dữ liệu phân cấp đối tượng (closure) — toàn hệ thống",
+            api: me.API.BUILD,
+            params: { 'strNguoiThucHien_Id': edu.system.userId },
+            okMessage: "Đã tạo dữ liệu phân cấp đối tượng",
+            notes: ["Job chạy trên toàn hệ thống và có thể chạy lâu do dữ liệu lớn — vui lòng không đóng trang trong lúc chạy.",
+                "Các dòng THU_CONG (thêm tay) không bị job đụng tới."],
+            fileName: "TaoDuLieuPhanCapDoiTuong",
+            // Đang xem kết quả của 1 lần tìm → tải lại để thấy dữ liệu mới
+            refresh: function () { if (me.objTim) me.getList_Closure(me.objTim); }
         });
     },
 

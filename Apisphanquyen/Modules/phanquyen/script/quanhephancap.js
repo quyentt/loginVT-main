@@ -26,6 +26,14 @@ QuanHePhanCap.prototype = {
 
     init: function () {
         var me = this;
+        // Xuất Excel bằng chuẩn chung (edu.exporter). Cột "Con → Cha": mũi tên là biểu tượng nên ghi lại thành chữ
+        var chu = function (strMa) { return $('<div>').html(me._nhanLoaiHtml(strMa)).text(); };
+        PQ.attachExport({
+            table: 'tblQuanHePhanCap', title: 'DANH SÁCH QUAN HỆ PHÂN CẤP', fileName: 'QuanHePhanCap',
+            subTitles: function () { return me.strTuKhoa ? ['Từ khóa: ' + me.strTuKhoa] : []; },
+            filters: [[{ label: 'Mặc định dùng phân quyền', id: 'dropSearch_QH_MacDinh' }]],
+            colOptions: { 2: { render: function (row) { return chu(PQ.g(row, 'LOAI_CON_MA')) + ' → ' + chu(PQ.g(row, 'LOAI_CHA_MA')); } } }
+        });
         // Nạp danh mục loại đối tượng trước (đổ 2 ô chọn + hiện "Tên (mã)" trong bảng), xong mới tải danh sách.
         // Nếu nạp lỗi thì bảng chỉ hiện mã, màn hình vẫn dùng được.
         PQ.loadLoaiDoiTuong(function (dt) {
@@ -171,7 +179,7 @@ QuanHePhanCap.prototype = {
                 }
             ]
         };
-        edu.system.loadToTable_data(jsonForm);
+        PQ.veBang(jsonForm);
     },
 
     /*------------------------------------------
