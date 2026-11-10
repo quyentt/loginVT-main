@@ -112,9 +112,16 @@ ThucHienIn.prototype = {
             link.click();
         }
         $("#btnLuuAnh").click(function () {
-            //const element = document.getElementById("zoneMotherPhoi");
-
-            saveAsImage();
+            var x = $("#zoneMotherPhoi .zoneCon");
+            //me.arrPrint = [];
+            //for (var i = 0; i < x.length; i++) {
+            //    me.arrPrint.push(x[i].id);
+            //}
+            //me.checkPrint();
+            if (x.length > 0) {
+                me.printHTML("zoneMotherPhoi");
+                // me.save_InBang(x[0].id.substring(6));
+            }
         });
 
         $("#btnCheDoTest").off('click').on('click', function () {
@@ -180,6 +187,8 @@ ThucHienIn.prototype = {
             'dDoiTuongBenNgoai': edu.util.getValById('dropSearch_DoiTuong'),
             'strTinhTrangXacNhan_Id': edu.util.getValById('dropAAAA'),
             'strTN_KeHoach_Id': edu.util.getValById('dropSearch_KeHoach'),
+			'strSoHieuBatDau' : edu.system.getValById('txtSoHieuBatDau'),
+			'strSoHieuKetThuc' : edu.system.getValById('txtSoHieuKetThuc'),
         };
         //
         edu.system.makeRequest({
@@ -832,7 +841,8 @@ ThucHienIn.prototype = {
         //mywindow.close();//chrome bị lỗi phải comment lại
         setTimeout(function () {
             mywindow.close();//chrome bị lỗi phải comment lại
-            $("#" + divId).remove();
+
+            if(divId != "zoneMotherPhoi")$("#" + divId).remove();
             //me.arrPrint.shift();
             //me.checkPrint();
         }, 2000);
