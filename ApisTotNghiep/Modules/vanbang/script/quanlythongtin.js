@@ -1073,6 +1073,12 @@ QuanLyThongTin.prototype = {
                     }
                 },
                 {
+                    // Họ tên tiếng Anh = QLSV_NGUOIHOC_HODEM_TA + " " + QLSV_NGUOIHOC_TEN_TA
+                    "mRender": function (nRow, aData) {
+                        return (edu.util.returnEmpty(aData.QLSV_NGUOIHOC_HODEM_TA) + " " + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_TEN_TA)).trim();
+                    }
+                },
+                {
                     "mRender": function (nRow, aData) {
 
                         return edu.util.returnEmpty(aData.QLSV_NGUOIHOC_NGAYSINH) + "/" + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_THANGSINH) + "/" + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_NAMSINH);
@@ -1089,6 +1095,12 @@ QuanLyThongTin.prototype = {
                 },
                 {
                     "mDataProp": "QLSV_NGUOIHOC_NGANHNGHE"
+                },
+                {
+                    // Ngành tiếng Anh: tên cột NGANH_TA theo yêu cầu; form Sửa của trang đang đọc QLSV_NGUOIHOC_NGANHNGHE_TA nên lấy cả 2
+                    "mRender": function (nRow, aData) {
+                        return edu.util.returnEmpty(aData.NGANH_TA || aData.QLSV_NGUOIHOC_NGANHNGHE_TA || aData.QLSV_NGUOIHOC_NGANH_TA);
+                    }
                 },
                 {
                     "mDataProp": "DAOTAO_LOPQUANLY_TEN"
