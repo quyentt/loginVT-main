@@ -643,6 +643,9 @@ ThucHienIn.prototype = {
                         var strhead = '<style>.phoi{font-family:"' + dtReRult[0].FONT + '";position:absolute;cursor: pointer; font-size: ' + dtReRult[0].COCHU + 'px}</style>';
                         $("#" + zoneMauIn).html(strhead);
                         var strAnhNen = dtReRult[0].DUONGDANFILE;
+                        if(dataIn && dataIn.length > 0 && dataIn[0].DUONGDANPHOIIN){
+                            strAnhNen = dataIn[0].DUONGDANPHOIIN;
+                        }
                         var strMagin = dtReRult[0].MARGIN_TOP ? 'margin-top: ' + dtReRult[0].MARGIN_TOP + 'px; margin-left: ' + dtReRult[0].MARGIN_LEFT + 'px;' : '';
                         if (strAnhNen != null && strAnhNen.indexOf("_") != -1) {
                             arrTemp = strAnhNen.split("_");
@@ -725,9 +728,15 @@ ThucHienIn.prototype = {
     genData_ChiTiet: function (zoneMauIn, aData, dataPhoi) {
         var me = this;
         try{
-            if(aData.DUONGDANFILEPHOIINBANG){
+            if(aData.DUONGDANPHOIIN){
+                var strAnhNen = aData.DUONGDANFILE;
+                if (strAnhNen != null && strAnhNen.indexOf("_") != -1) {
+                    arrTemp = strAnhNen.split("_");
+                }
                 $("#" + zoneMauIn + " .pr-containt").css({
-                    background: 'url(' + edu.system.getRootPathImg(aData.DUONGDANFILEPHOIINBANG) + ')'
+                    background: 'url(' + edu.system.getRootPathImg(aData.DUONGDANPHOIIN) + ')',
+                    'background-repeat': 'no-repeat',
+                    'background-size': arrTemp[1] + 'px'
                 })
             }
         }catch(ex){}
