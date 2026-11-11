@@ -646,13 +646,13 @@ ThucHienIn.prototype = {
                             $("#" + zoneMauIn).css({ width: (parseInt(arrTemp[1]) + 40) })
                             for (var i = 0; i < iMaxTrang + 1; i++) {
                                 $("#" + zoneMauIn).append('<div class="pr-containt" style="background: url(' + edu.system.getRootPathImg(strAnhNen) + ');background-repeat: no-repeat; background-size: ' + arrTemp[1] + 'px;height: ' + arrTemp[2] + 'px; ' + strMagin + '" ></div>');
-                                if (i < iMaxTrang) $("#" + zoneMauIn).append('<p style="page-break-before: always;">&nbsp;</p>');
+                                // if (i < iMaxTrang) $("#" + zoneMauIn).append('<p style="page-break-before: always;">&nbsp;</p>');
                             }
                         } else {
 
                             for (var i = 0; i < iMaxTrang + 1; i++) {
                                 $("#" + zoneMauIn).append('<div class="pr-containt" style="' + strMagin + '"></div>');
-                                if (i < iMaxTrang) $("#" + zoneMauIn).append('<p style="page-break-before: always;">&nbsp;</p>');
+                                // if (i < iMaxTrang) $("#" + zoneMauIn).append('<p style="page-break-before: always;">&nbsp;</p>');
                             }
                         }
 
@@ -710,7 +710,7 @@ ThucHienIn.prototype = {
         pointMauIn.html("");
         for (var i = 0; i < dataIn.length; i++) {
             pointMauIn.append('<div id="zoneIn' + dataIn[i].ID + '" class="zoneCon">' + htmlPhoi + '</div>');
-            if (i < dataIn.length - 1) $("#" + zoneMauIn).append('<p style="page-break-before: always;">&nbsp;</p>');
+            // if (i < dataIn.length - 1) $("#" + zoneMauIn).append('<p style="page-break-before: always;">&nbsp;</p>');
         }
         setTimeout(function () {
             for (var i = 0; i < dataIn.length; i++) {
@@ -721,6 +721,13 @@ ThucHienIn.prototype = {
     },
     genData_ChiTiet: function (zoneMauIn, aData, dataPhoi) {
         var me = this;
+        try{
+            if(aData.DUONGDANFILEPHOIINBANG){
+                $("#" + zoneMauIn + " .pr-containt").css({
+                    background: 'url(' + edu.system.getRootPathImg(aData.DUONGDANFILEPHOIINBANG) + ')'
+                })
+            }
+        }catch(ex){}
         var khoangcach = 30;
         if (dataPhoi.length > 0 && dataPhoi[0].KHOGIAY != null) khoangcach = dataPhoi[0].KHOGIAY;
         var bTest = me.isCheDoTestOn();
@@ -962,7 +969,6 @@ ThucHienIn.prototype = {
     },
     getList_TaoQR: function (strDivId, strNoiDung, dChieuDai) {
         var me = this;
-        console.log(strDivId)
         //--Edit
         var obj_list = {
             'action': 'CTT_Token/TaoQRCode',
