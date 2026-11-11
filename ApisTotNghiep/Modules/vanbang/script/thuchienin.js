@@ -43,6 +43,8 @@ ThucHienIn.prototype = {
         //me.getList_KhoaQuanLy();
         //me.getList_PhanLoai();
         edu.system.loadToCombo_DanhMucDuLieu("TN.PHANLOAI", "dropSearch_PhanLoai,dropPhanLoai");
+        // Sắp xếp thứ tự in (VD theo lớp quản lý) — cùng danh mục với trang Thông tin văn bằng (quanlythongtin.js)
+        edu.system.loadToCombo_DanhMucDuLieu("TN.THONGTINVANBANG.SAPXEP", "dropSearch_TieuChiSapXep", "", "", "Chọn tiêu chí sắp xếp");
 
         $("#btnSearch").click(function (e) {
             me.getList_ThucHienIn();
@@ -187,6 +189,7 @@ ThucHienIn.prototype = {
             'dDoiTuongBenNgoai': edu.util.getValById('dropSearch_DoiTuong'),
             'strTinhTrangXacNhan_Id': edu.util.getValById('dropAAAA'),
             'strTN_KeHoach_Id': edu.util.getValById('dropSearch_KeHoach'),
+            'strTieuChiSapXep': edu.util.getValById('dropSearch_TieuChiSapXep'),
 			'strSoHieuBatDau' : edu.system.getValById('txtSoHieuBatDau'),
 			'strSoHieuKetThuc' : edu.system.getValById('txtSoHieuKetThuc'),
         };
