@@ -886,6 +886,13 @@
     #my_calendar .summary-atten .btn {
         white-space: nowrap;
     }
+    /* [2026-11-12] Nút đang chờ máy chủ (JS gắn .dang-xu-ly + disabled): giữ nguyên màu, không mờ 65% như .btn:disabled
+       của Bootstrap, để spinner "Đang điểm danh tự động..." nhìn rõ. Spinner chung #overlay nằm dưới modal nên không thấy. */
+    #my_calendar .summary-atten .btn.dang-xu-ly,
+    #modalDoiLich .btn.dang-xu-ly {
+        opacity: 1 !important;
+        cursor: progress;
+    }
     @media (min-width: 992px) {
         /* 2 nút lưu bằng nhau => mép trái/phải của chúng thẳng hàng giữa hai thanh */
         #my_calendar #btnDiemDanhTuDong,
@@ -1605,7 +1612,7 @@
 <!-- Modal "Yêu cầu đổi lịch" MỚI dùng chung với trang Lịch giảng đường: giao diện (doilich_modal.js) + xử lý (LichGiangNhieuPhong). Thiếu 1 trong 2 file thì tự quay về modal cũ. -->
 <script src="modules/lichgiang/script/doilich_modal.js?v=1.0.0.0"></script>
 <script src="modules/lichgiang/script/lichgiangnhieuphonghoc.js?v=3.19.0.0"></script>
-<script src="modules/lichgiang/script/lichgiang.js?v=1.0.0.7"></script>
+<script src="modules/lichgiang/script/lichgiang.js?v=1.0.0.9"></script>
 <script src="modules/lichgiang/script/jquery-searchbox.js"></script>
 <script type="text/javascript">
     var main_doc = {};

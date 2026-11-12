@@ -380,7 +380,8 @@ LichGiang.prototype = {
             var strSV_Id = strid.substring(6);
             var ele = $("#chkSelect" + strSV_Id);
             var checked_status = false;
-            if (point.val() != "") {
+            // [2026-11-12] point là phần tử DOM => point.val() ném "point.val is not a function" (khách chụp F12); phải bọc $()
+            if ($(point).val() != "") {
                 checked_status = true;
             }
             $(ele).attr('checked', checked_status);
@@ -1276,9 +1277,24 @@ LichGiang.prototype = {
         edu.system.alert("Không thực hiện được do lỗi kết nối máy chủ" + strMa + ". Vui lòng thử lại.", "w");
     },
     // Gọi API thao tác (lưu / gửi yêu cầu): thành công, thất bại (kể cả Message rỗng), lỗi mạng, response rỗng đều có thông báo.
-    goiThaoTac: function (obj_save, strThanhCong, fnThanhCong) {
+    // [2026-11-12] strNut/strDangChay (tùy chọn): trong lúc chờ máy chủ, nút bấm hiện spinner + chữ "Đang..." và bị khóa.
+    //   Lý do: spinner chung #overlay (index.aspx, z-index 2051) nằm DƯỚI modal (.modal.show 10055) nên mở modal là không thấy
+    //   => khách bấm "Lưu điểm danh tự động" thấy im lặng, tưởng không chạy, refresh trước khi máy chủ trả kết quả.
+    goiThaoTac: function (obj_save, strThanhCong, fnThanhCong, strNut, strDangChay) {
         var me = this;
         var bDaPhanHoi = false;
+        var $nut = strNut ? $(strNut) : $();
+        if ($nut.length) {
+            if ($nut.data("dangChay")) return; // đang chờ máy chủ => bỏ qua lần bấm thêm (tránh gửi trùng)
+            $nut.data("dangChay", true).data("htmlGoc", $nut.html())
+                .prop("disabled", true).addClass("dang-xu-ly").attr("aria-busy", "true")
+                .html('<i class="fas fa-spinner fa-spin"></i><span>' + (strDangChay || "Đang xử lý...") + '</span>');
+        }
+        var fnTraNut = function () {
+            if (!$nut.length) return;
+            $nut.html($nut.data("htmlGoc")).prop("disabled", false).removeClass("dang-xu-ly").removeAttr("aria-busy")
+                .removeData("dangChay").removeData("htmlGoc");
+        };
         edu.system.makeRequest({
             success: function (data) {
                 bDaPhanHoi = true;
@@ -1295,6 +1311,7 @@ LichGiang.prototype = {
                 me.thongBaoLoi(er);
             },
             complete: function () {
+                fnTraNut();
                 if (!bDaPhanHoi) edu.system.alert("Máy chủ không trả về dữ liệu. Vui lòng thử lại.", "w");
             },
             type: "POST",
@@ -1447,7 +1464,7 @@ LichGiang.prototype = {
             'strNoiDungTuGhiNhan': edu.util.getValById('txtTuKhoaDiemDanh'),
             'strNguoiThucHien_Id': edu.system.userId,
         };
-        me.goiThaoTac(obj_save, "Thực hiện thành công!");
+        me.goiThaoTac(obj_save, "Thực hiện thành công!", null, "#btnSaveTuKhoa", "Đang lưu...");
     },
     save_DiemDanhTuDong: function (strId) {
         var me = this;
@@ -1468,7 +1485,7 @@ LichGiang.prototype = {
         me.goiThaoTac(obj_save, "Thực hiện thành công!", function () {
             me.getDetail_SiSo();
             me.getList_SinhVien();
-        });
+        }, "#btnDiemDanhTuDong", "Đang điểm danh tự động...");
     },
 
     /*------------------------------------------
@@ -1519,7 +1536,7 @@ LichGiang.prototype = {
         };
         me.goiThaoTac(obj_save, "Gửi yêu cầu thành công", function () {
             me.getList_DoiLich();
-        });
+        }, "#btnGuiYeuCau", "Đang gửi...");
     },
     getList_DoiLich: function (strDanhSach_Id) {
         var me = this;
