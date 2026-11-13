@@ -12,8 +12,57 @@
     .aps-phanconglop .col-TT-batbuoc,
     .aps-phanconglop .aps-form-item,
     .aps-phanconglop .aps-form-input,
+    .aps-phanconglop .pcl-loc-hocphan,
     .aps-phanconglop .row {
         overflow: visible !important;
+    }
+    /* Khung "Loc ra hoc phan to chuc lop" (Khoa to chuc / Nganh to chuc / Hoc phan) —
+       tieu de nam tren vien de tach han khoi hang Co so / Hoc ky / He / Khoa dao tao. */
+    .aps-phanconglop .pcl-loc-hocphan {
+        position: relative;
+        border: 1px solid #9fb3dd;
+        border-radius: 8px;
+        background: #f5f8ff;
+        padding: 20px 14px 12px 14px;
+        margin: 14px 0 6px 0;
+    }
+    .aps-phanconglop .pcl-loc-hocphan-title {
+        position: absolute;
+        top: -11px;
+        left: 12px;
+        padding: 1px 10px;
+        line-height: 20px;
+        background: #ffffff;
+        border: 1px solid #9fb3dd;
+        border-radius: 6px;
+        color: #223771;
+        font-size: 13px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+    .aps-phanconglop .pcl-loc-hocphan-title i {
+        color: #223771 !important;
+        margin-right: 4px;
+    }
+    .aps-phanconglop .pcl-loc-hocphan-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.4fr);
+        gap: 12px;
+    }
+    .aps-phanconglop .pcl-loc-item {
+        min-width: 0;
+    }
+    .aps-phanconglop .pcl-loc-label {
+        display: block;
+        margin: 0 0 4px 0;
+        color: #475569;
+        font-size: 12px;
+        font-weight: 600;
+    }
+    @media (max-width: 767px) {
+        .aps-phanconglop .pcl-loc-hocphan-grid {
+            grid-template-columns: minmax(0, 1fr);
+        }
     }
     /* Badge "Thong tin pham vi" / "Thong tin bat buoc" — text mac dinh toi tren nen xanh
        dam gay kho doc. Ep chu trang + padding thoang. */
@@ -365,33 +414,46 @@
                                     <select id="dropKhoaDaoTao_MK" class="select-opt"
                                         style="width:100% !important"></select>
                                 </div>
-                                <div class="col-sm-3 aps-lable-name">
-                                    <select id="dropKhoaToChuc" class="select-opt"
-                                        style="width:100% !important"></select>
-                                </div>
-                                <div class="col-sm-3 pr0">
-                                    <select id="dropNganhDaoTao" class="select-opt"
-                                        style="width:100% !important"></select>
-                                </div>
                                 <!--<div class="col-sm-2">
                                     <div class="group-title-name">
                                         Học phần <span class="title-colon">:</span>
                                     </div>
                                 </div>-->
                             </div>
-                            <div class="row col-TT-batbuoc-check">
-                                <div class="col-sm-3 aps-lable-name">
-                                    <select id="dropHocPhan" class="select-opt" style="width:100% !important"></select>
+                            <!-- Khung "Loc ra hoc phan to chuc lop": Khoa to chuc -> Nganh to chuc -> Hoc phan.
+                                 Tach rieng de khong nham voi dropKhoaDaoTao_MK (Khoa dao tao) o hang tren.
+                                 Giu nguyen id select -> JS khong doi. -->
+                            <div class="pcl-loc-hocphan">
+                                <div class="pcl-loc-hocphan-title">
+                                    <i class="fa fa-filter"></i> Lọc ra học phần tổ chức lớp
                                 </div>
-                                <div class="col-sm-3  checkbox-inline user-check-print pl20" style="padding-top: 13px;">
+                                <div class="pcl-loc-hocphan-grid">
+                                    <div class="pcl-loc-item">
+                                        <label class="pcl-loc-label" for="dropKhoaToChuc">Khóa tổ chức</label>
+                                        <select id="dropKhoaToChuc" class="select-opt"
+                                            style="width:100% !important"></select>
+                                    </div>
+                                    <div class="pcl-loc-item">
+                                        <label class="pcl-loc-label" for="dropNganhDaoTao">Ngành tổ chức</label>
+                                        <select id="dropNganhDaoTao" class="select-opt"
+                                            style="width:100% !important"></select>
+                                    </div>
+                                    <div class="pcl-loc-item">
+                                        <label class="pcl-loc-label" for="dropHocPhan">Học phần</label>
+                                        <select id="dropHocPhan" class="select-opt" style="width:100% !important"></select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row col-TT-batbuoc-check">
+                                <div class="col-sm-4 checkbox-inline user-check-print pl20" style="padding-top: 13px;">
                                     <input style="float: left" type="checkbox" id="dChuaPhanCong" />
                                     <span>Chỉ hiện các lớp chưa phân công</span>
                                 </div>
-                                <div class="col-sm-4 checkbox-inline user-check-print pl20" style="padding-top: 13px;">
+                                <div class="col-sm-5 checkbox-inline user-check-print pl20" style="padding-top: 13px;">
                                     <input style="float: left" type="checkbox" id="dLocCTDT" />
                                     <span>Lọc theo học phần mở theo chương trình</span>
                                 </div>
-                                <div class="col-sm-2">
+                                <div class="col-sm-3 text-right">
                                     <a id="btnSearchPhanCong" class="btn btn-default btn-search">
                                         <i class="fa fa-search"></i><span class="lang" key="">Tìm kiếm</span></a>
                                 </div>
