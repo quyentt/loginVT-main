@@ -711,8 +711,14 @@ LichGiangNhieuPhong.prototype = {
         // Chọn phòng xong → tự kiểm tra trùng lịch giảng viên/sinh viên (khỏi phải bấm thêm nút)
         $("#dropDL_PhongHoc").on("change", function () {
             if (!$(this).val()) return;
+            var t = me.getThayDoiDoiLich(); // chưa đổi gì (VD chọn lại đúng phòng hiện tại) thì khỏi kiểm tra
+            if (!t.gv && !t.phong && !t.thoigian) return;
             clearTimeout(me.tHenKiemTra);
             me.tHenKiemTra = setTimeout(function () { me.save_KiemTraTrungLich(); }, 300);
+        });
+        // Dòng tóm tắt "Đang đổi: Giảng viên · Phòng · Thời gian" cập nhật theo mọi thay đổi (sửa tay hoặc chọn từ lưới)
+        $("#txtDL_Ngay, #txtDL_TietBatDau, #txtDL_TietKetThuc, #dropDL_PhongHoc").on("change input", function () {
+            me.capNhatTomTatDoi();
         });
         // Ô xanh tính theo phòng đang chọn → đổi phòng thì vẽ lại lưới từ dữ liệu đã có rồi lặp kiểm tra lại (kết quả từng ô đã cache theo phòng)
         $("#dropDL_PhongHoc").on("change", function () {
@@ -724,6 +730,7 @@ LichGiangNhieuPhong.prototype = {
         $("#zoneDL_GiangVien").on("change", "select", function () {
             me.iTokenKiemTra++;
             $("#zoneDL_KetQua").hide();
+            me.capNhatTomTatDoi();
             me.veLuoiDoiLich();
         });
         // Có ô chưa kiểm tra được (lỗi kết nối) → kiểm tra lại: chỉ các ô lỗi bị gọi lại, ô đã có kết quả lấy từ cache
@@ -2368,6 +2375,7 @@ LichGiangNhieuPhong.prototype = {
         $("#zoneDL_Form").show();
         $("#btnDL_KiemTra, #btnDL_Gui").prop("disabled", false);
         me.bFormDoiSan = true;
+        me.capNhatTomTatDoi(); // giảng viên đã dựng xong → tóm tắt "đang đổi gì" (mở ra thì chưa đổi gì, trừ khi vào từ ô trống)
 
         // Lưới chọn thời gian mới: mở ở tuần chứa ngày đang điền sẵn (ô trống đã bấm, hoặc ngày buổi học)
         me.strTuanDoi = me.formatVnDate(me.layThuHai(me.toDate(strNgay) || new Date()));
@@ -2379,22 +2387,80 @@ LichGiangNhieuPhong.prototype = {
     genCombo_PhongDoiLich: function (dtPhong, strPhongChon) {
         var me = this;
         var dtPhongCache = me.objCachePhong[''] || [];
+        var strHienTai = me.objLopDoi ? String(me.objLopDoi.IDPHONGHOC || '') : '';
+        // Phòng hiện tại của buổi lên đầu danh sách (đổi lịch không bắt buộc đổi phòng)
+        var arrPhong = dtPhong.slice();
+        for (var i = 0; i < arrPhong.length; i++) {
+            if (strHienTai && String(arrPhong[i].ID) === strHienTai) { arrPhong.unshift(arrPhong.splice(i, 1)[0]); break; }
+        }
         var htmlPhong = '<option value="">Chọn phòng học</option>';
-        dtPhong.forEach(function (p) {
+        arrPhong.forEach(function (p) {
             var r = dtPhongCache.find(function (x) { return String(x.ID) === String(p.ID); });
             var strThem = '';
             if (r) {
                 var iSucChua = me.getSucChua(r);
                 strThem = (iSucChua !== null ? ' · ' + iSucChua + ' chỗ' : '') + (me.getLoaiPhongDoi(r) ? ' · ' + me.getLoaiPhongDoi(r) : '');
             }
-            htmlPhong += '<option value="' + p.ID + '">' + (p.TENPHONGHOC || p.MA || '') + strThem + '</option>';
+            if (strHienTai && String(p.ID) === strHienTai) strThem += ' — phòng hiện tại';
+            htmlPhong += '<option value="' + me.escAttr(p.ID) + '">' + me.escAttr(p.TENPHONGHOC || p.MA || '') + strThem + '</option>';
         });
         var $dropPhong = $("#dropDL_PhongHoc");
         if ($dropPhong.hasClass("select2-hidden-accessible")) $dropPhong.select2("destroy");
         var bCon = dtPhong.some(function (p) { return String(p.ID) === String(strPhongChon); });
         $dropPhong.html(htmlPhong).val(bCon ? strPhongChon : '');
         $dropPhong.select2({ dropdownParent: $("#modal_doilich"), width: '100%' });
+        me.capNhatTomTatDoi(); // phòng được chọn bằng code (không bắn change) → cập nhật dòng tóm tắt "đang đổi gì"
         return bCon;
+    },
+
+    // ═══ Đổi lịch KHÔNG có nghĩa là phải đổi phòng (sếp 13/11/2026). Một yêu cầu có thể chỉ gồm 1 trong các nhánh:
+    //   1. chỉ đổi GIẢNG VIÊN (ngày, tiết, phòng giữ nguyên)   2. đổi PHÒNG   3. đổi THỜI GIAN (kèm hoặc không kèm đổi phòng)
+    // Nhánh nào cũng không bắt buộc chọn "phòng mới": ô Phòng học mặc định là phòng hiện tại và luôn chọn được khi giữ nguyên ngày + tiết.
+
+    // Form đang giữ NGUYÊN ngày + tiết của buổi hiện tại?
+    giuNguyenThoiGian: function () {
+        var me = this;
+        var objLop = me.objLopDoi;
+        var k = objLop ? me.getKhoangTiet(objLop) : null;
+        if (!k) return false;
+        return me.isoToVn($("#txtDL_Ngay").val()) === objLop.NGAYHOC
+            && parseInt($("#txtDL_TietBatDau").val(), 10) === k.tu
+            && parseInt($("#txtDL_TietKetThuc").val(), 10) === k.den;
+    },
+
+    // Đang đổi những gì so với buổi hiện tại: { gv, phong, thoigian }
+    getThayDoiDoiLich: function () {
+        var me = this;
+        var objLop = me.objLopDoi;
+        if (!objLop) return { gv: false, phong: false, thoigian: false };
+        var strPhong = $("#dropDL_PhongHoc").val();
+        return {
+            gv: (me.dtGiangVienThayDoi || []).some(function (gv) {
+                var strMoi = $("#dropDL_GiangVien" + gv.ID).val();
+                return !!strMoi && String(strMoi) !== String(gv.ID);
+            }),
+            phong: !!strPhong && String(strPhong) !== String(objLop.IDPHONGHOC),
+            thoigian: !me.giuNguyenThoiGian()
+        };
+    },
+
+    // Dòng tóm tắt phía trên form: "Đang đổi: Giảng viên · Phòng · Thời gian" (hoặc nhắc chưa đổi gì)
+    capNhatTomTatDoi: function () {
+        var me = this;
+        var $z = $("#zoneDL_TomTat");
+        if (!$z.length || !me.objLopDoi) return;
+        var t = me.getThayDoiDoiLich();
+        var arr = [];
+        if (t.gv) arr.push('Giảng viên');
+        if (t.phong) arr.push('Phòng');
+        if (t.thoigian) arr.push('Thời gian');
+        $z.toggleClass("rong", arr.length === 0).empty();
+        if (arr.length === 0) {
+            $z.append($('<span>').text('Chưa thay đổi gì — chọn đổi giảng viên, phòng và/hoặc thời gian (không bắt buộc đổi phòng).'));
+            return;
+        }
+        $z.append($('<span class="nhan">').text('Đang đổi:'));
+        arr.forEach(function (s) { $z.append($('<span class="chip">').text(s)); });
     },
 
     // Khung giờ tiết (mỗi tiết 50 phút) — dùng khi trên lưới chưa có lịch thật của tiết đó để lấy giờ
@@ -2758,10 +2824,24 @@ LichGiangNhieuPhong.prototype = {
     // Mã quy tắc BE trả trong Message của KiemTraLichCanDoi / GuiYeuCauDoiLich (Success=false) → câu tiếng Việt. Mã lạ giữ nguyên để còn tra.
     objMaLoiKiemTra: {
         'BanKhongDuocPhepXepVuotQuaCaSang': 'Buổi học vắt qua ca sáng — không được xếp vượt ca (chọn tiết bắt đầu sao cho cả buổi nằm trong 1 ca)',
-        'BanKhongDuocPhepXepVuotQuaCaChieu': 'Buổi học vắt qua ca chiều — không được xếp vượt ca (chọn tiết bắt đầu sao cho cả buổi nằm trong 1 ca)'
+        'BanKhongDuocPhepXepVuotQuaCaChieu': 'Buổi học vắt qua ca chiều — không được xếp vượt ca (chọn tiết bắt đầu sao cho cả buổi nằm trong 1 ca)',
+        'DaBiTrungLich': 'Đã bị trùng lịch'
     },
-    dichMaLoiKiemTra: function (strMa) {
-        return this.objMaLoiKiemTra[strMa] || strMa;
+    // BE còn trả mã kèm chi tiết, VD "DaBiTrungLich. Phong: VPC1-407; Thu: 2; Tiet: 1 -> 3" (đo 13/11/2026) → "Đã bị trùng lịch — Phòng VPC1-407 · Thứ 2 · Tiết 1 → 3"
+    reMaQuyTac: /^((?:[A-Z][a-z0-9]+){2,})(?:\.\s*(.*))?$/,
+    dichMaLoiKiemTra: function (strMsg) {
+        var m = this.reMaQuyTac.exec($.trim(strMsg || ''));
+        if (!m) return strMsg;
+        var strDich = this.objMaLoiKiemTra[m[1]] || m[1];
+        if (!m[2]) return strDich;
+        var objKhoa = { Phong: 'Phòng', Thu: 'Thứ', Tiet: 'Tiết', Ngay: 'Ngày', GiangVien: 'Giảng viên', LopHocPhan: 'Lớp học phần' };
+        var arr = m[2].split(/;\s*/).map(function (p) {
+            var kv = /^([^:]+):\s*(.*)$/.exec(p);
+            if (!kv) return p;
+            var strKhoa = $.trim(kv[1]);
+            return (objKhoa[strKhoa] || strKhoa) + ' ' + kv[2].replace(/\s*->\s*/g, ' → ');
+        });
+        return strDich + ' — ' + arr.join(' · ');
     },
 
     // 1 ô = 1 lần gọi KiemTraLichCanDoi. callback({ ok, ly, ca }) hoặc callback(null, strLoi) khi lỗi / không trả dữ liệu
@@ -2784,10 +2864,11 @@ LichGiangNhieuPhong.prototype = {
         edu.system.makeRequest({
             success: function (data) {
                 var strMa = data.Message || '';
-                // Success=false + Message là MÃ QUY TẮC dạng 1 từ liền (VD BanKhongDuocPhepXepVuotQuaCaSang: buổi học vắt qua ca sáng) = BE trả lời
-                // "ô này không đổi được" — đây là KẾT QUẢ kiểm tra, không phải lỗi máy chủ (đã đo trên BE thật 04/11/2026: tiết 4-8, 5-9, 6-10, 9-13).
-                // Lỗi hệ thống (ORA-..., có dấu cách/ký tự lạ, hoặc không có Message) mới tính là lỗi.
-                if (!data.Success && /^[A-Za-z][A-Za-z0-9_]*$/.test(strMa)) {
+                // Success=false + Message bắt đầu bằng MÃ QUY TẮC dạng PascalCase (VD BanKhongDuocPhepXepVuotQuaCaSang = buổi vắt qua ca sáng;
+                // DaBiTrungLich. Phong: VPC1-407; Thu: 2; Tiet: 1 -> 3 = trùng lịch, có chi tiết phía sau) = BE trả lời "ô này không đổi được" —
+                // đây là KẾT QUẢ kiểm tra, không phải lỗi máy chủ (đo trên BE thật 04/11 và 13/11/2026). Lỗi hệ thống (ORA-..., chữ thường có dấu cách,
+                // không có Message) mới tính là lỗi → dừng vòng lặp khi lỗi liên tiếp.
+                if (!data.Success && me.reMaQuyTac.test($.trim(strMa))) {
                     var kqTuChoi = { ok: false, ly: me.dichMaLoiKiemTra(strMa), ca: /^BanKhongDuocPhepXepVuotQuaCa/.test(strMa) };
                     me.objCacheLich[strKey] = { t: new Date().getTime(), data: kqTuChoi };
                     callback(kqTuChoi);
@@ -2885,7 +2966,7 @@ LichGiangNhieuPhong.prototype = {
                         o.$c.removeClass('trong').addClass('ngan').attr('data-ly', kq.ly).attr('title', strMoTa + ' — ' + kq.ly);
                     } else {
                         o.$c.removeClass('trong').addClass('vuong').attr('data-ly', kq.ly || 'Không đổi được')
-                            .attr('title', strMoTa + ' — không đổi được: ' + (kq.ly || 'vướng lịch') + '\n(bấm để chọn nếu muốn đổi phòng khác)');
+                            .attr('title', strMoTa + ' — không đổi được: ' + (kq.ly || 'vướng lịch') + '\n(bấm để chọn, rồi đổi sang phòng khác nếu vướng do phòng)');
                     }
                 }
                 if (iXong % 5 === 0 && !bDung) me.capNhatTienDoKiemLuoi('dang', iXong, iTong, strTenPhong);
@@ -3089,6 +3170,13 @@ LichGiangNhieuPhong.prototype = {
             return iSucChua !== null && iSucChua >= iMin;
         });
         if (me.objPhongToaNhaDoi) dt = dt.filter(function (p) { return me.objPhongToaNhaDoi[String(p.ID)]; });
+        // Giữ NGUYÊN ngày + tiết → phòng hiện tại luôn chọn được (VD chỉ đổi giảng viên). KHÔNG dựa vào danh sách "phòng trống" của BE:
+        // đo trên BE thật 13/11/2026, phòng đang xếp cho chính buổi này bị tính là có lịch nên không bao giờ nằm trong danh sách đó → ô Phòng học trống, không gửi được.
+        var bGiuNguyen = me.giuNguyenThoiGian();
+        var bThemHienTai = bGiuNguyen && !!strPhongDangHoc
+            && (!me.objPhongToaNhaDoi || !!me.objPhongToaNhaDoi[strPhongDangHoc])
+            && !dt.some(function (p) { return String(p.ID) === strPhongDangHoc; });
+        if (bThemHienTai) dt = [{ ID: me.objLopDoi.IDPHONGHOC, TENPHONGHOC: me.objLopDoi.TENPHONGHOC || '' }].concat(dt);
         var strChon = strChonMoi !== undefined ? strChonMoi : $("#dropDL_PhongHoc").val();
         me.genCombo_PhongDoiLich(dt, strChon);
         if (strChon && !$("#dropDL_PhongHoc").val()) { // phòng đang chọn bị loại → kết quả kiểm tra cũ hết đúng
@@ -3097,15 +3185,17 @@ LichGiangNhieuPhong.prototype = {
         }
         if (!me.dtPhongTrongDoi) return; // chưa có kết quả phòng trống → giữ nguyên nhãn hiện tại
         var strLoai = me.strLoaiPhongDoi ? me.getTenLoaiPhong(me.strLoaiPhongDoi) : '';
-        var bConTrong = !strChon || me.dtPhongTrongDoi.some(function (p) { return String(p.ID) === String(strChon); });
+        var bConTrong = !strChon || (bGiuNguyen && String(strChon) === strPhongDangHoc)
+            || me.dtPhongTrongDoi.some(function (p) { return String(p.ID) === String(strChon); });
         var strToa = '';
         if (me.strToaNhaDoi) {
             var strTenToa = $.trim($("#dropDL_ToaNha option:selected").text());
             strToa = me.objPhongToaNhaDoi ? ', ' + (/^tòa/i.test(strTenToa) ? strTenToa : 'tòa ' + strTenToa) : ' (chưa lọc được theo tòa nhà)'; // tên tòa đã có chữ "Tòa" thì không lặp
         }
-        $("#lblDL_GoiYPhong").text('— ' + dt.length + ' phòng ' + (strLoai || '') + ' trống ' + me.strKhungPhongDoi
+        $("#lblDL_GoiYPhong").text('— ' + (dt.length - (bThemHienTai ? 1 : 0)) + ' phòng ' + (strLoai || '') + ' trống ' + me.strKhungPhongDoi
             + (isNaN(iMin) ? '' : ', sức chứa từ ' + iMin + (bTuDong ? ' (= sĩ số lớp)' : ''))
             + strToa
+            + (bGiuNguyen ? ' · giữ nguyên ngày/tiết nên vẫn chọn được phòng hiện tại' : '')
             + (bConTrong ? '' : ' (phòng vừa chọn đã có lịch, chọn phòng khác)'));
     },
 
@@ -3123,13 +3213,19 @@ LichGiangNhieuPhong.prototype = {
             return false;
         }
         if (!$("#dropDL_PhongHoc").val()) {
-            me.hienKetQuaDoiLich('loi', 'Chọn phòng học mới (danh sách chỉ gồm phòng còn trống ở ngày/tiết đã chọn).');
+            me.hienKetQuaDoiLich('loi', 'Chọn phòng học: giữ phòng hiện tại (nếu không đổi phòng) hoặc chọn phòng khác còn trống ở ngày/tiết đã chọn.');
             return false;
         }
         // Chốt chặn: không cho đổi sang phòng khác loại (TH ↔ LT)
         var strLoaiMoi = me.getKieuPhong($("#dropDL_PhongHoc").val());
         if (me.strLoaiPhongDoi && strLoaiMoi && strLoaiMoi !== me.strLoaiPhongDoi) {
             me.hienKetQuaDoiLich('loi', 'Lớp đang học phòng ' + me.getTenLoaiPhong(me.strLoaiPhongDoi) + ' — không đổi sang phòng ' + me.getTenLoaiPhong(strLoaiMoi) + ' được.');
+            return false;
+        }
+        // Yêu cầu phải đổi ít nhất 1 thứ (giảng viên / phòng / thời gian) — không đổi gì thì không có gì để duyệt
+        var t = me.getThayDoiDoiLich();
+        if (!t.gv && !t.phong && !t.thoigian) {
+            me.hienKetQuaDoiLich('loi', 'Chưa có thay đổi nào so với buổi hiện tại — hãy đổi giảng viên, phòng hoặc thời gian.');
             return false;
         }
         return true;

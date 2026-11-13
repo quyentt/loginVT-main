@@ -100,6 +100,42 @@
     .aps-thilai #btnXoaKeHoachXuLy.btn i {
         color: #ffffff !important;
     }
+    /* 13/11/2026 — hang nut Xu ly vi pham / Huy xu ly vi pham (zoneSinhVien: duoi thanh tim kiem;
+       modalChuaDangKy: tren bang). Canh phai. Ca 2 nut solid nhu Duyet/Tinh phi; Xu ly = do, Huy = xam dam (hoan tac). */
+    .aps-thilai-vipham-bar {
+        justify-content: flex-end !important;
+        align-items: center;
+    }
+    .zoneSinhVien .aps-thilai-vipham-bar {
+        padding-right: 0 !important;
+        margin-top: 10px;
+    }
+    .modalChuaDangKy .aps-thilai-vipham-bar {
+        margin-bottom: 10px;
+    }
+    .aps-thilai-vipham-bar .btn.btn-vipham {
+        background: #dc3545 !important;
+        background-image: none !important;
+        border: 1px solid #dc3545 !important;
+        color: #ffffff !important;
+    }
+    .aps-thilai-vipham-bar .btn.btn-vipham:hover {
+        background: #c82333 !important;
+        border-color: #bd2130 !important;
+    }
+    .aps-thilai-vipham-bar .btn.btn-huyvipham {
+        background: #475569 !important;
+        background-image: none !important;
+        border: 1px solid #475569 !important;
+        color: #ffffff !important;
+    }
+    .aps-thilai-vipham-bar .btn.btn-huyvipham:hover {
+        background: #334155 !important;
+        border-color: #334155 !important;
+    }
+    .aps-thilai-vipham-bar .btn i {
+        color: #ffffff !important;
+    }
 </style>
 <section class="content aps-dangkyhoc">
     <div class="row aps-thilai">
@@ -699,6 +735,15 @@
                                             </a>
                                             <a class="btn btn-warning btnTinhPhi ml-0" id="btnTinhPhi">
                                                 <i class="fa-solid fa-calculator"></i>Tính phí
+                                            </a>
+                                        </div>
+                                        <!-- 13/11/2026: Xử lý vi phạm / Hủy xử lý vi phạm theo các dòng đang tick (hàng dưới ô tìm kiếm) -->
+                                        <div class="col-sm-12 aps-gap-10 aps-thilai-vipham-bar">
+                                            <a class="btn btn-danger btn-vipham ml-0" id="btnXuLyViPham">
+                                                <i class="fa-solid fa-gavel"></i>Xử lý vi phạm
+                                            </a>
+                                            <a class="btn btn-huyvipham ml-0" id="btnHuyXuLyViPham">
+                                                <i class="fa-solid fa-rotate-left"></i>Hủy xử lý vi phạm
                                             </a>
                                         </div>
                                     </div>
@@ -1540,6 +1585,15 @@
                         <i class="fa-solid fa-users-between-lines"></i>Danh sách Chưa đăng ký </span> </h4>
             </div>
             <div class="modal-body" id="modal_body">
+                <!-- 13/11/2026: Xử lý vi phạm / Hủy xử lý vi phạm cho SV trong phạm vi nhưng không đăng ký (dòng đang tick) -->
+                <div class="aps-gap-10 aps-thilai-vipham-bar">
+                    <a class="btn btn-danger btn-vipham ml-0" id="btnXuLyViPham_ChuaDK">
+                        <i class="fa-solid fa-gavel"></i>Xử lý vi phạm
+                    </a>
+                    <a class="btn btn-huyvipham ml-0" id="btnHuyXuLyViPham_ChuaDK">
+                        <i class="fa-solid fa-rotate-left"></i>Hủy xử lý vi phạm
+                    </a>
+                </div>
                 <div class="row aps-table-select pl0 pr0">
                     <table id="tblChuaDangKy"
                         class="table table-hover table-bordered tblChuaDangKy table-noborder mb-0">
@@ -1646,7 +1700,7 @@
 </div>
 
 <!-- --------------------- -->
-<script src="modules/thilai/script/kehoach.js?v=1.0.0.0"></script>
+<script src="modules/thilai/script/kehoach.js?v=1.0.0.2"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['KeHoachXuLy'] = new KeHoachXuLy();

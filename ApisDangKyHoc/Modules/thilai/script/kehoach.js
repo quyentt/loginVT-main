@@ -476,6 +476,11 @@ KeHoachXuLy.prototype = {
                 me.tinhPhiThiTuDong(aData.QLSV_NGUOIHOC_ID, aData.ID);
             });
         });
+        // 13/11/2026: Xử lý vi phạm / Hủy xử lý vi phạm theo các dòng đang tick
+        $("#btnXuLyViPham").click(function () { me.xuLyViPham(false); });
+        $("#btnHuyXuLyViPham").click(function () { me.xuLyViPham(true); });
+        $("#btnXuLyViPham_ChuaDK").click(function () { me.xuLyViPham_ChuaDangKy(false); });
+        $("#btnHuyXuLyViPham_ChuaDK").click(function () { me.xuLyViPham_ChuaDangKy(true); });
         $("#zoneBtnXacNhan").delegate('.btnxacnhan', 'click', function () {
             var strTinhTrang = this.id;
             var strMoTa = edu.util.getValById("txtNoiDungXacNhanSanPham");
@@ -1036,6 +1041,159 @@ KeHoachXuLy.prototype = {
             data: obj_save,
             fakedb: []
         }, false, false, false, null);
+    },
+    /*------------------------------------------
+    --Discription: Xử lý vi phạm / Hủy xử lý vi phạm (13/11/2026)
+    --  2 nơi, cùng bộ tham số, mỗi dòng tick = 1 lần gọi PKG_DANGKYTHI_MONTHI_DIEM.<func> qua form tiến trình chung edu.process:
+    --   1. "Danh sách đã đăng ký" (#zoneSinhVien, tblInput_DTSV_SinhVien, dữ liệu me.dtKetQua)
+    --      → XuLyViPhamTheoKetQuaDangKy | HuyXuLyViPhamTheoKetQuaDangKy
+    --   2. "Danh sách Chưa đăng ký" (#modalChuaDangKy, tblChuaDangKy, dữ liệu me.dtChuaDangKy)
+    --      → XuLyViPhamTheoKoTheoDangKy | HuyXuLyViPhamTheoKoTheoDangKy
+    --  strDangKy_Thi_HP_KeHoach_Id = ID bản ghi kế hoạch đang mở (me.strKeHoachXuLy_Id); các tham số khác lấy từ dòng.
+    --  Bước 1 của form (bấm RUN) là bước xác nhận; đóng form có bản ghi thành công thì nạp lại danh sách.
+    -------------------------------------------*/
+    VIPHAM_API: {
+        'XuLyViPhamTheoKetQuaDangKy': 'GTQNOBcoESkgLBUpJC4KJDUQNCAFIC8mCjgP',
+        'HuyXuLyViPhamTheoKetQuaDangKy': 'CTQ4GTQNOBcoESkgLBUpJC4KJDUQNCAFIC8mCjgP',
+        'XuLyViPhamTheoKoTheoDangKy': 'GTQNOBcoESkgLBUpJC4KLhUpJC4FIC8mCjgP',
+        'HuyXuLyViPhamTheoKoTheoDangKy': 'CTQ4GTQNOBcoESkgLBUpJC4KLhUpJC4FIC8mCjgP'
+    },
+    // 1. Danh sách đã đăng ký
+    xuLyViPham: function (bHuy) {
+        var me = this;
+        var v = edu.util.returnEmpty;
+        me._runViPham({
+            bHuy: bHuy,
+            strFunc: bHuy ? "HuyXuLyViPhamTheoKetQuaDangKy" : "XuLyViPhamTheoKetQuaDangKy",
+            strTitle: "theo kết quả đăng ký thi",
+            strTable_Id: "tblInput_DTSV_SinhVien",
+            dtData: me.dtKetQua,
+            fileName: bHuy ? "KetQuaHuyXuLyViPham" : "KetQuaXuLyViPham",
+            param: function (r) {
+                return {
+                    strKeHoach_Id: r.DANGKY_THI_HOCPHAN_KEHOACH_ID,
+                    strThoiGian_Id: r.DAOTAO_THOIGIANDAOTAO_ID,
+                    strChuongTrinh_Id: r.DAOTAO_TOCHUCCHUONGTRINH_ID,
+                    strNguoiHoc_Id: r.QLSV_NGUOIHOC_ID,
+                    strHocPhan_Id: r.DAOTAO_HOCPHAN_ID,
+                    lanHoc: r.LANHOC,
+                    lanThi: r.LANTHI
+                };
+            },
+            columns: [
+                { header: "Mã số", render: function (r) { return v(r.QLSV_NGUOIHOC_MASO); } },
+                { header: "Họ tên", render: function (r) { return (v(r.QLSV_NGUOIHOC_HODEM) + " " + v(r.QLSV_NGUOIHOC_TEN)).trim(); } },
+                { header: "Lớp", render: function (r) { return v(r.DAOTAO_LOPQUANLY_TEN); } },
+                { header: "Học phần", render: function (r) { return v(r.DAOTAO_HOCPHAN_TEN) + " (" + v(r.DAOTAO_HOCPHAN_MA) + ")"; } },
+                { header: "Lần học", render: function (r) { return v(r.LANHOC); } },
+                { header: "Lần thi", render: function (r) { return v(r.LANTHI); } }
+            ],
+            refresh: function () { me.getList_SinhVien(); }
+        });
+    },
+    // 2. Danh sách Chưa đăng ký (trong phạm vi nhưng không đăng ký) — dòng của LayDSDKTrongPhamViNhungChuaDK
+    xuLyViPham_ChuaDangKy: function (bHuy) {
+        var me = this;
+        var v = edu.util.returnEmpty;
+        me._runViPham({
+            bHuy: bHuy,
+            strFunc: bHuy ? "HuyXuLyViPhamTheoKoTheoDangKy" : "XuLyViPhamTheoKoTheoDangKy",
+            strTitle: "(sinh viên chưa đăng ký)",
+            strTable_Id: "tblChuaDangKy",
+            dtData: me.dtChuaDangKy,
+            fileName: bHuy ? "KetQuaHuyXuLyViPham_ChuaDangKy" : "KetQuaXuLyViPham_ChuaDangKy",
+            param: function (r) {
+                return {
+                    strKeHoach_Id: r.DANGKY_THI_HOCPHAN_KEHOACH_ID,
+                    strThoiGian_Id: r.DAOTAO_THOIGIANDAOTAO_ID,
+                    strChuongTrinh_Id: r.DAOTAO_CHUONGTRINH_ID || r.DAOTAO_TOCHUCCHUONGTRINH_ID,
+                    strNguoiHoc_Id: r.QLSV_NGUOIHOC_ID,
+                    strHocPhan_Id: r.DAOTAO_HOCPHAN_ID,
+                    lanHoc: r.LANHOC,
+                    lanThi: r.LANTHI
+                };
+            },
+            columns: [
+                { header: "Mã số", render: function (r) { return v(r.MASO); } },
+                { header: "Họ tên", render: function (r) { return (v(r.HODEM) + " " + v(r.TEN)).trim(); } },
+                { header: "Học phần", render: function (r) { return v(r.TENHOCPHAN) + " (" + v(r.MAHOCPHAN) + ")"; } },
+                { header: "Lớp đăng ký", render: function (r) { return v(r.LOPDANGKY); } },
+                { header: "Lần học", render: function (r) { return v(r.LANHOC); } },
+                { header: "Lần thi", render: function (r) { return v(r.LANTHI); } }
+            ],
+            // form không mở chồng modal: đóng #modalChuaDangKy trước, đóng form thì mở lại
+            hideModal: "#modalChuaDangKy",
+            reopenModal: "#modalChuaDangKy",
+            refresh: function () { me.getList_ChuaDangKy(); }
+        });
+    },
+    _runViPham: function (cfg) {
+        var me = this;
+        if (!edu.process) {
+            edu.system.alert("Chưa cập nhật form tiến trình (thiếu Corei/processrun.js hoặc indexi.aspx).", "w");
+            return;
+        }
+        var arrRow = edu.process.selectedRows(cfg.strTable_Id, cfg.dtData || []);
+        if (arrRow.length === 0) {
+            edu.system.alert("Vui lòng chọn đối tượng?");
+            return;
+        }
+        var v = edu.util.returnEmpty;
+        var aKeHoach = (me.dtKeHoachXuLy || []).find(function (e) { return e.ID == me.strKeHoachXuLy_Id; }) || {};
+        var strTenKeHoach = v(aKeHoach.TENKEHOACH) || v(arrRow[0].DANGKY_THI_HOCPHAN_KEHOACH_TEN);
+        edu.process.run({
+            title: (cfg.bHuy ? "Hủy xử lý vi phạm " : "Xử lý vi phạm ") + cfg.strTitle,
+            subTitles: ["Kế hoạch: " + strTenKeHoach],
+            unit: "bản ghi",
+            fileName: cfg.fileName,
+            notes: [
+                "Mỗi dòng đã tick (sinh viên × học phần × lần học/lần thi) = 1 lần gọi PKG_DANGKYTHI_MONTHI_DIEM." + cfg.strFunc + "."
+            ],
+            items: arrRow,
+            columns: cfg.columns,
+            request: function (r) { return me.req_ViPham(cfg.strFunc, cfg.param(r)); },
+            hideModal: cfg.hideModal,
+            reopenModal: cfg.reopenModal,
+            refresh: cfg.refresh
+        });
+    },
+    // p: { strKeHoach_Id, strThoiGian_Id, strChuongTrinh_Id, strNguoiHoc_Id, strHocPhan_Id, lanHoc, lanThi }
+    req_ViPham: function (strFunc, p) {
+        var me = this;
+        var v = edu.util.returnEmpty;
+        var strKey = me.VIPHAM_API[strFunc];
+        if (!strKey) throw new Error("Chưa khai báo API cho " + strFunc + ".");
+        //Id bản ghi kế hoạch đang mở; thiếu (không xảy ra khi mở từ nút của dòng kế hoạch) thì lấy theo dòng
+        var strKeHoach_Id = me.strKeHoachXuLy_Id || v(p.strKeHoach_Id);
+        if (!edu.util.checkValue(strKeHoach_Id)) throw new Error("Không xác định được kế hoạch.");
+        if (!edu.util.checkValue(p.strNguoiHoc_Id)) throw new Error("Dòng không có QLSV_NGUOIHOC_ID.");
+        if (!edu.util.checkValue(p.strHocPhan_Id)) throw new Error("Dòng không có DAOTAO_HOCPHAN_ID.");
+        //Oracle NUMBER: rỗng phải gửi null, không gửi ''
+        var toNum = function (x) {
+            if (x === '' || x == null) return null;
+            var n = Number(x);
+            return isNaN(n) ? null : n;
+        };
+        var obj_save = {
+            'action': 'D_DKT_MonThi_Diem_MH/' + strKey,
+            'func': 'PKG_DANGKYTHI_MONTHI_DIEM.' + strFunc,
+            'iM': edu.system.iM,
+            'strDangKy_Thi_HP_KeHoach_Id': strKeHoach_Id,
+            'strDaoTao_ThoiGianDaoTao_Id': v(p.strThoiGian_Id),
+            'strDaoTao_ChuongTrinh_Id': v(p.strChuongTrinh_Id),
+            'strQLSV_NguoiHoc_Id': p.strNguoiHoc_Id,
+            'strDaoTao_HocPhan_Id': p.strHocPhan_Id,
+            'dLanHoc': toNum(p.lanHoc),
+            'dLanThi': toNum(p.lanThi),
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        return {
+            type: 'POST',
+            action: obj_save.action,
+            contentType: true,
+            data: obj_save,
+            fakedb: []
+        };
     },
     save_Lop: function (strXLDH_KeHoach_Id, strDaoTao_LopQuanLy_Id) {
         var me = this;
@@ -4471,6 +4629,7 @@ KeHoachXuLy.prototype = {
                     var dtResult = [];
                     var iPager = 0;
                     dtResult = data.Data;
+                    me.dtChuaDangKy = dtResult || [];//dùng cho Xử lý vi phạm / Hủy (tra dòng tick theo ID)
                     me.genTable_ChuaDangKy(dtResult);
                 }
                 else {
