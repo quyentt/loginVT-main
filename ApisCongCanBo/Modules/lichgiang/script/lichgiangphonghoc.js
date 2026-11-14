@@ -831,7 +831,9 @@ LichGiang.prototype = {
             html += '<div class="task-header">';
             html += '<div class="text">';
             html += '<div class="title">' + e.TENHOCPHAN + '</div>';
-            html += '<div class="task-date">' + me.returnTwo(e.GIOBATDAU) + ':' + me.returnTwo(e.PHUTBATDAU) + ' - ' + me.returnTwo(e.GIOKETTHUC) + ':' + me.returnTwo(e.PHUTKETTHUC) + ' (Tiết ' + edu.util.returnEmpty(e.TIETBATDAU) + '-' + edu.util.returnEmpty(e.TIETKETTHUC) + ')</div>';
+            // Lịch không phải lớp học (lịch bận / mượn phòng theo giờ) BE trả tiết 0 → bỏ "(Tiết 0-0)", chỉ hiện giờ
+            var bCoTiet = parseInt(e.TIETBATDAU, 10) > 0;
+            html += '<div class="task-date">' + me.returnTwo(e.GIOBATDAU) + ':' + me.returnTwo(e.PHUTBATDAU) + ' - ' + me.returnTwo(e.GIOKETTHUC) + ':' + me.returnTwo(e.PHUTKETTHUC) + (bCoTiet ? ' (Tiết ' + edu.util.returnEmpty(e.TIETBATDAU) + '-' + edu.util.returnEmpty(e.TIETKETTHUC) + ')' : '') + '</div>';
             html += '</div>';
             //html += '<a class="student-num btnKhoiTaoDoiLich" style="color: #d93625;" title="Yêu cầu đổi lịch" id="' + e.ID + '">';
             //html += '<i class="fas fa-calendar-alt"></i>';
@@ -841,7 +843,12 @@ LichGiang.prototype = {
             //html += '</div>';
             html += '</div>';
             html += '<div class="task-description">';
-            html += e.THONGTINGIANGVIEN;
+            // THONGTINGIANGVIEN = "GV - mã<br>Sĩ số…" do BE ghép; lịch bận/mượn phòng không có lớp → null, trước in thẳng ra chữ "null"
+            var strThongTinGV = edu.util.returnEmpty(e.THONGTINGIANGVIEN);
+            if (String(strThongTinGV).trim() === '' || String(strThongTinGV).trim().toLowerCase() === 'null') {
+                strThongTinGV = '<span class="color-66 fst-italic">Chưa có thông tin</span>';
+            }
+            html += strThongTinGV;
             html += '<div class="eval eval-gv" id="listIcon' + e.ID + '"><div class="eval-gv-list"></div></div>';
             html += '</div>';
             html += '</div>';
