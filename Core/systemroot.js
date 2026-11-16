@@ -912,7 +912,11 @@ systemroot.prototype = {
             var isWhitelisted = arrSpaWhitelist.some(function (p) {
                 return strRootPath && strRootPath.toLowerCase().indexOf(p.toLowerCase()) >= 0;
             });
-            if (isWhitelisted) {
+            // Cổng sinh viên viết toàn bộ bằng Bootstrap 5 (cần assets/css/styles.css của index.aspx)
+            // → luôn chạy ở index.aspx, KHÔNG xét icon. DB để icon mặc định "fa fa-angle-double-right"
+            // nên trước đây bị đẩy sang indexi.aspx (BS3) → vỡ giao diện + mất vai khi đang thủ vai (16/11).
+            var isCongSinhVien = objChucNang.MAUNGDUNG === 'ApisCongSinhVien';
+            if (isWhitelisted || isCongSinhVien) {
                 console.log('[SPA-MIGRATE] load in SPA shell:', strRootPath);
             } else if ((objChucNang.DUONGDANFILE && strTenAnh && strTenAnh.indexOf('fa ') == 0)) {
                 location.href = "./indexi.aspx"
