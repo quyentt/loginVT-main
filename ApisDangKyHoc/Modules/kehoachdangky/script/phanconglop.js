@@ -31,6 +31,11 @@ PhanCongLop.prototype = {
         me.getList_KhoaDaoTao();
         me.getList_KhoaQuanLy();
         me.getList_CoSoDaoTao();
+        // Khoi "Co so dao tao ap dung" trong modal Chi tiet (dung chung voi phancongphamvi)
+        if (typeof PhanCongCSDT === "function") {
+            me.csdt = new PhanCongCSDT({ loai: 'LHP', zone: 'zoneCSDT_LHP', modal: 'myModal' });
+            me.csdt.init();
+        }
 
         $("#btnSearch").click(function (e) {
             me.getList_PhanCongLop();
@@ -141,6 +146,13 @@ PhanCongLop.prototype = {
                 name: this.name
             };
             me.getList_QuanSoTheoLop();
+            // Ke hoach + pham vi cho khoi Co so dao tao lay tu ban ghi dong vua bam
+            if (me.csdt) {
+                var strPhamVi_Id = this.id, strPhanCap_Id = this.name;
+                var oBanGhi = me.dtPhanCongLop.find(e => e.PHAMVIAPDUNG_ID === strPhamVi_Id && e.PHANCAPAPDUNG_ID === strPhanCap_Id)
+                    || me.dtPhanCongLop.find(e => e.PHAMVIAPDUNG_ID === strPhamVi_Id);
+                me.csdt.open(oBanGhi);
+            }
         });
         $("#zonePhanCong").delegate('.checkAllTable', 'click', function (e) {
             var strTable_Id = this.id.replace("chkSelectAll_", "tblPhanCong");

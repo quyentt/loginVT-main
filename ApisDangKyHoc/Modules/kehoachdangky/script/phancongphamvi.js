@@ -32,6 +32,11 @@ PhanCongPhamVi.prototype = {
         me.getList_KhoaDaoTao();
         me.getList_KhoaQuanLy();
         me.getList_HocPhan();
+        // Khoi "Co so dao tao ap dung" trong modal Chi tiet (dung chung voi phanconglop)
+        if (typeof PhanCongCSDT === "function") {
+            me.csdt = new PhanCongCSDT({ loai: 'PV', zone: 'zoneCSDT_PV', modal: 'myModal' });
+            me.csdt.init();
+        }
 
         $("#btnSearch").click(function (e) {
             me.getList_PhanCongPhamVi();
@@ -120,6 +125,8 @@ PhanCongPhamVi.prototype = {
             } else me.viewForm_PhanCongPhamVi([]);
             me.strPhanCongPhamVi_Id = this.id;
             me.getList_QuanSoTheoLop();
+            // Ke hoach + pham vi cho khoi Co so dao tao lay tu ban ghi dong vua bam
+            if (me.csdt) me.csdt.open(dataX);
         });
         $("#btnSave_QuanSo").click(function () {
             $("#myModal").modal("hide");

@@ -3,6 +3,17 @@
     .radio-inline+.radio-inline {
         margin-left: 0px;
     }
+    /* Ten pham vi (nut .btnDetail) trong bang #zonePhanCong: styles.css ep
+       ".table td .btn { height:28px !important }" + indexi.aspx ep inline-flex/align-items:center
+       -> ten dai xuong 2-4 dong bi can giua roi TRAN LEN dong header (KHOAHOC...).
+       Cho nut cao tu dong theo noi dung, chi trong trang nay. */
+    .aps-phancongphamvi #zonePhanCong .table td .btn.btnDetail {
+        height: auto !important;
+        min-height: 28px;
+        white-space: normal !important;
+        text-align: left !important;
+        line-height: 20px !important;
+    }
 </style>
 <section class="content aps-dangkyhoc">
     <div class="row aps-phancongphamvi">
@@ -570,6 +581,9 @@
                             </div>
 
                         </div>
+                        <!-- Co so dao tao ap dung cho pham vi (PKG_DANGKY_PHANCONG_CSDT.*_PV_CSDT) - render tu phancong_csdt.js.
+                             Them/Bo luu ngay, khong phu thuoc nut "Luu" cua modal. -->
+                        <div id="zoneCSDT_PV"></div>
                     </div>
                     <div class="col col-md-6 col-lg-6 pd20 table-ds-hocphan">
                         <div class="row aps-add-new">
@@ -614,7 +628,8 @@
         </div>
     </div>
 </div>
-<script src="modules/kehoachdangky/script/PhanCongPhamVi.js?v=1.0.0.0"></script>
+<script src="modules/kehoachdangky/script/phancong_csdt.js?v=1.0.0.0"></script>
+<script src="modules/kehoachdangky/script/PhanCongPhamVi.js?v=1.0.0.1"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['PhanCongPhamVi'] = new PhanCongPhamVi();
