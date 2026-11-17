@@ -1757,6 +1757,9 @@ KeHoachXuLy.prototype = {
                 ,
                 {
                     "mDataProp": "TINHTRANG_TEN"
+                },
+                {
+                    "mDataProp": "TINHTRANG_NGAYDUYET"
                 }
                 , {
                     "mRender": function (nRow, aData) {
