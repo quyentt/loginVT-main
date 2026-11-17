@@ -267,13 +267,46 @@ PhanCongCSDT.prototype = {
         $list.html(html);
         $zone.find('.pc-csdt-count').html(me.dtDaGan.length + ' cơ sở');
     },
+    /* Bam X tren chip -> popup hoi lai. Popup ve NGAY TRONG .modal-content (khong dung edu.system.confirm):
+       mo them 1 modal BS3 chong len modal "Chi tiet" se go body.modal-open -> modal chinh tu dong/lech.
+       Nut dung <button> class rieng (khong .btn) de khong dinh handler spinner 1s toan cuc (systemroot.js:144). */
     _askXoa: function ($chip) {
         var me = this;
         if (!$chip.length) return;
+        var strId = $chip.attr('data-id');
         var strTen = $chip.find('.pc-csdt-chip-ten').text();
-        $chip.addClass('is-confirm').html(
-            '<span class="pc-csdt-chip-ten">Bỏ ' + me._esc(strTen) + '?</span>' +
-            '<a class="pc-csdt-yes">Bỏ</a><a class="pc-csdt-no">Không</a>');
+        var $host = $('#' + me.modalId + ' .modal-content').first();
+        if (!$host.length) $host = $('#' + me.zoneId);
+        $host.find('.pc-csdt-pop').remove();
+        var $pop = $(
+            '<div class="pc-csdt-pop" role="dialog" aria-modal="true">' +
+                '<div class="pc-csdt-pop-box">' +
+                    '<div class="pc-csdt-pop-body">' +
+                        '<div class="pc-csdt-pop-icon"><i class="fa fa-trash"></i></div>' +
+                        '<div>' +
+                            '<p class="pc-csdt-pop-title">Bỏ cơ sở đào tạo?</p>' +
+                            '<p class="pc-csdt-pop-text">Bỏ <b>' + me._esc(strTen) + '</b> khỏi phạm vi áp dụng này?<br/>Thao tác được lưu ngay, không cần bấm Lưu.</p>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="pc-csdt-pop-foot">' +
+                        '<button type="button" class="pc-csdt-pop-yes"><i class="fa fa-trash"></i> Bỏ cơ sở</button>' +
+                        '<button type="button" class="pc-csdt-pop-no"><i class="fa fa-times"></i> Không</button>' +
+                    '</div>' +
+                '</div>' +
+            '</div>');
+        var fnClose = function () { $pop.remove(); };
+        $pop.on('click', function (e) { if (e.target === this) fnClose(); });   // bam ra ngoai = Khong
+        $pop.on('click', '.pc-csdt-pop-no', fnClose);
+        $pop.on('click', '.pc-csdt-pop-yes', function () {
+            fnClose();
+            me.xoa(strId);
+        });
+        // Esc chi dong popup: chan lan len modal (BS3 keyboard:true se dong ca modal "Chi tiet")
+        $pop.on('keydown', function (e) {
+            if (e.which === 27) { e.preventDefault(); e.stopPropagation(); fnClose(); }
+        });
+        $host.append($pop);
+        $pop.find('.pc-csdt-pop-no').trigger('focus');
     },
     _msg: function (str, bErr) {
         var $m = $('#' + this.zoneId).find('.pc-csdt-msg');
@@ -326,6 +359,24 @@ PhanCongCSDT.prototype = {
             '.pc-csdt-chip.is-confirm{border-color:#fca5a5;background:#fff5f5}' +
             '.pc-csdt-yes{color:#dc3545 !important;font-weight:700;cursor:pointer}' +
             '.pc-csdt-no{color:#475569 !important;cursor:pointer}' +
+            /* popup hoi lai khi bo co so (ve trong .modal-content) */
+            m + ' .modal-content{position:relative}' +
+            '.pc-csdt-pop{position:absolute;top:0;right:0;bottom:0;left:0;z-index:1060;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(15,23,42,.45);border-radius:inherit}' +
+            '.pc-csdt-pop-box{width:100%;max-width:420px;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 20px 45px rgba(15,23,42,.28)}' +
+            '.pc-csdt-pop-body{display:flex;gap:14px;padding:20px 20px 16px}' +
+            '.pc-csdt-pop-icon{flex:0 0 42px;width:42px;height:42px;border-radius:50%;background:#fee2e2;display:flex;align-items:center;justify-content:center}' +
+            '.pc-csdt-pop-icon i{color:#dc2626 !important;font-size:17px}' +
+            '.pc-csdt-pop-title{margin:2px 0 6px;color:#0f172a;font-size:15px;font-weight:700}' +
+            '.pc-csdt-pop-text{margin:0;color:#475569;font-size:13px;line-height:1.55}' +
+            '.pc-csdt-pop-text b{color:#0f172a}' +
+            '.pc-csdt-pop-foot{display:flex;justify-content:space-between;gap:10px;padding:12px 20px;background:#f8fafc;border-top:1px solid #e2e8f0}' +
+            '.pc-csdt-pop-foot button{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 16px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer}' +
+            '.pc-csdt-pop-yes{background:#dc2626;border:1px solid #dc2626;color:#fff}' +
+            '.pc-csdt-pop-yes:hover{background:#b91c1c;border-color:#b91c1c}' +
+            '.pc-csdt-pop-yes i{color:#fff !important}' +
+            '.pc-csdt-pop-no{background:#fff;border:1px solid #cbd5e1;color:#334155}' +
+            '.pc-csdt-pop-no:hover{background:#f1f5f9}' +
+            '.pc-csdt-pop-no i{color:#334155 !important}' +
             '.pc-csdt.is-disabled .pc-csdt-row,.pc-csdt.is-busy .pc-csdt-row,.pc-csdt.is-busy .pc-csdt-list{opacity:.55;pointer-events:none}' +
             /* popup select2 nam trong modal (dropdownParent) */
             m + '>.select2-container--open,' + m + '>.select2-container--open .select2-dropdown{z-index:100060 !important}' +
