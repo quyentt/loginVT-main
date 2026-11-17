@@ -227,7 +227,8 @@ PhanCongCSDT.prototype = {
     --Discription: [0] GEN HTML
     -------------------------------------------*/
     _html: function () {
-        return '' +
+        // .pc-csdt (div zone) chi lo clear float + khoang cach; giao dien the nam o .pc-csdt-card
+        return '<div class="pc-csdt-card">' +
             '<div class="pc-csdt-head">' +
                 '<span class="pc-csdt-title"><i class="fa fa-building"></i> Cơ sở đào tạo áp dụng</span>' +
                 '<span class="pc-csdt-count"></span>' +
@@ -237,7 +238,8 @@ PhanCongCSDT.prototype = {
                 '<a class="btn btn-primary pc-csdt-add"><i class="fa fa-plus"></i> Thêm</a>' +
             '</div>' +
             '<div class="pc-csdt-msg"></div>' +
-            '<div class="pc-csdt-list"></div>';
+            '<div class="pc-csdt-list"></div>' +
+            '</div>';
     },
     _renderList: function (strEmpty, bLoading, bErr) {
         var me = this;
@@ -296,20 +298,26 @@ PhanCongCSDT.prototype = {
         if (document.getElementById(strStyleId)) return;
         var m = '#' + this.modalId;
         var css = '' +
-            '.pc-csdt{border:1px solid #9fb3dd;border-radius:8px;background:#f5f8ff;padding:10px 12px;margin-top:12px}' +
-            '.pc-csdt-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}' +
-            '.pc-csdt-title{color:#223771;font-weight:600;font-size:13px}' +
-            '.pc-csdt-title i{color:#223771 !important;margin-right:4px}' +
-            '.pc-csdt-count{color:#475569;font-size:12px;font-weight:600;white-space:nowrap}' +
-            '.pc-csdt-row{display:flex;align-items:center;gap:10px}' +
+            /* clear:both — thanh phan trang duoi bang (systemroot pagInfoRender: .zone-pag-footer float:right width:100%)
+               khong duoc clear: khoi bi float de len mep tren, con dong tieu de (flex = BFC) phai ne float rong 100%
+               nen co ve ~0px, chu "Co so dao tao ap dung" rot tung tu mot.
+               Khoang cach dung padding-top cua lop boc: sau khi clear float, margin-top bi "nuot" (khoi dinh sat thanh phan trang). */
+            '.pc-csdt{clear:both;padding-top:16px}' +
+            '.pc-csdt-card{border:1px solid #dbe3f4;border-radius:10px;background:#fff;overflow:hidden;box-shadow:0 1px 2px rgba(15,23,42,.04)}' +
+            '.pc-csdt-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;background:#f5f8ff;border-bottom:1px solid #e3e9f6}' +
+            '.pc-csdt-title{display:inline-flex;align-items:center;gap:8px;color:#223771;font-weight:700;font-size:13.5px;white-space:nowrap}' +
+            '.pc-csdt-title i{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:6px;background:#223771;color:#fff !important;font-size:13px;margin:0}' +
+            '.pc-csdt-count{background:#e0e7ff;color:#223771;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:600;white-space:nowrap}' +
+            '.pc-csdt-count:empty{display:none}' +
+            '.pc-csdt-row{display:flex;align-items:center;gap:10px;padding:12px 14px 0}' +
             '.pc-csdt-select{flex:1 1 auto;min-width:0}' +
-            '.pc-csdt-row .btn{flex:0 0 auto;white-space:nowrap;margin:0 !important}' +
-            '.pc-csdt-msg{font-size:12px;font-weight:600;margin-top:6px}' +
+            '.pc-csdt-row .btn{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;margin:0 !important}' +
+            '.pc-csdt-msg{font-size:12px;font-weight:600;margin-top:8px;padding:0 14px}' +
             '.pc-csdt-msg:empty{display:none}' +
             '.pc-csdt-msg.is-ok{color:#15803d}' +
             '.pc-csdt-msg.is-err{color:#b91c1c}' +
-            '.pc-csdt-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}' +
-            '.pc-csdt-empty{color:#64748b;font-size:12.5px;font-weight:500}' +
+            '.pc-csdt-list{display:flex;flex-wrap:wrap;gap:6px;padding:10px 14px 12px}' +
+            '.pc-csdt-empty{color:#64748b;font-size:12.5px;font-weight:500;font-style:italic}' +
             '.pc-csdt-empty.is-err{color:#b45309;font-weight:600}' +
             '.pc-csdt-chip{display:inline-flex;align-items:center;gap:6px;max-width:100%;background:#fff;border:1px solid #c7d2fe;border-radius:14px;padding:3px 6px 3px 10px;color:#0f172a;font-size:12.5px;font-weight:600;line-height:20px}' +
             '.pc-csdt-chip-ten{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}' +
