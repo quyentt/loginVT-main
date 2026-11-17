@@ -242,6 +242,22 @@
                                 </p>
                             </div>
 
+                            <!-- Co so dao tao: chi dung cho nut "Them Co so dao tao - khoa hoc" (ghep ID co so + ID khoa).
+                                 Khong co nut "Them" rieng -> giu o trong (visibility:hidden) de select thang hang cac dong duoi. -->
+                            <div class="row  aps-form-item mb-10">
+                                <div class="col-sm-3 aps-lable-name">
+                                    <div class="group-title-name">
+                                        Cơ sở đào tạo <span class="title-colon">:</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-9 aps-form-input d-flex">
+                                    <select id="dropCoSoDaoTao_PhamVi" class="select-opt"
+                                        style="width:100% !important"></select>
+                                    <div class="box-tools pull-right" style="visibility: hidden" aria-hidden="true">
+                                        <a class="btn btn-primary" tabindex="-1"><i class="fa fa-plus"></i>Thêm</a>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row  aps-form-item mb-10">
                                 <div class="col-sm-3 aps-lable-name">
                                     <div class="group-title-name">
@@ -375,6 +391,12 @@
                                 <a id="addKhoaQuanKyKhoaHoc" class="btn btn-primary"
                                     title="Thêm Khoa quản lý - khóa học">
                                     <i class="fa fa-plus"></i> Thêm Khoa quản lý - khóa học
+                                </a>
+                            </div>
+                            <div class="row mb-10 text-right">
+                                <a id="addCoSoDaoTaoKhoaHoc" class="btn btn-primary"
+                                    title="Thêm Cơ sở đào tạo - khóa học">
+                                    <i class="fa fa-plus"></i> Thêm Cơ sở đào tạo - khóa học
                                 </a>
                             </div>
                             <div class="row aps-form-item mb-10">
@@ -591,7 +613,7 @@
 </div>
 <!-- ------------------------- -->
 <script src="modules/kehoachdangky/script/phancong_csdt.js?v=1.0.0.2"></script>
-<script src="modules/kehoachdangky/script/phanconglop.js?v=1.0.0.1"></script>
+<script src="modules/kehoachdangky/script/phanconglop.js?v=1.0.0.2"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['PhanCongLop'] = new PhanCongLop();

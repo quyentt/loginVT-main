@@ -42,6 +42,8 @@
 --  group (tên nhóm cột: các cột liên tiếp cùng group có thêm dòng tiêu đề nhóm gộp ngang),
 --  type ("text" mặc định | "number"), format ("general" | "int" | "dec2"), sum (true: có dòng Tổng)
 --Lưu ý: chỉ cột khai type:"number" mới ghi số; mã số/CCCD... luôn là chữ để không mất số 0 đầu.
+--Shell: indexi.aspx (Bootstrap 3) nạp sẵn file này; index.aspx (Bootstrap 5) chưa nạp -> trang tự nạp khi cần
+--  (VD ApisCongCanBo/Modules/nhapdiem/script/inbangdiem.js: _ensureExporter). Hộp thoại tự nhận Bootstrap 3/5 (từ 1.9.4).
 ----------------------------------------------*/
 var exportexcelApi = (function (root) {
     var MAX_CELL_LEN = 32000;
@@ -1053,6 +1055,16 @@ var exportexcelApi = (function (root) {
         return h;
     }
 
+    // Shell index.aspx dùng Bootstrap 5 (đóng hộp thoại bằng data-bs-dismiss, modal đang mở có class .show);
+    // indexi.aspx dùng Bootstrap 3 (data-dismiss, .in). Hộp thoại xuất phải chạy được ở cả hai.
+    function isBs5() {
+        try {
+            var b = root.bootstrap;
+            return !!(b && b.Modal && /^5\./.test(String(b.Modal.VERSION || "")));
+        } catch (ex) { return false; }
+    }
+    var MODAL_OPEN = ".modal.in, .modal.show";
+
     // Hộp thoại hỏi trước khi xuất đang được dựng/đang mở: bấm thêm nút xuất lần nữa thì bỏ qua. Nếu không chặn, mỗi lần bấm dựng thêm 1 hộp thoại
     // và lớp nền mờ của hộp thoại cũ bị bỏ lại -> cả màn hình bị phủ mờ, không bấm được gì.
     var ASKING = 0;
@@ -1084,10 +1096,14 @@ var exportexcelApi = (function (root) {
         }
 
         ensureAskCss();
+        var bBs5 = isBs5();
         var h = '<div class="modal fade" id="modalEduExporter" tabindex="-1" role="dialog">'
             + '<div class="modal-dialog"><div class="modal-content">'
-            + '<div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button>'
-            + '<h4 class="modal-title"><i class="fa fa-file-excel-o"></i> Xuất Excel</h4></div>'
+            + (bBs5
+                ? '<div class="modal-header"><h5 class="modal-title"><i class="fa fa-file-excel-o"></i> Xuất Excel</h5>'
+                + '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button></div>'
+                : '<div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button>'
+                + '<h4 class="modal-title"><i class="fa fa-file-excel-o"></i> Xuất Excel</h4></div>')
             + '<div class="modal-body">'
             + '<div class="ee-ask"><i class="fa fa-file-excel-o"></i><span>' + ASK_TEXT + '</span></div>';
         if (lines.length > 0) {
@@ -1132,7 +1148,7 @@ var exportexcelApi = (function (root) {
         // Số bản ghi sẽ xuất đặt ở chân hộp thoại để luôn nhìn thấy dù danh sách lọc dài phải cuộn
         h += '</div><div class="modal-footer">'
             + '<div class="ee-result" id="eduExporterCount"><i class="fa fa-check-circle"></i><span class="ee-rt"></span></div>'
-            + '<button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle"></i>Đóng</button>'
+            + '<button type="button" class="btn btn-default" data-dismiss="modal" data-bs-dismiss="modal"><i class="fa fa-times-circle"></i>Đóng</button>'
             + '<button type="button" class="btn btn-success" id="btnEduExporterOk"><i class="fa fa-file-excel-o"></i>Xuất Excel</button>'
             + '</div></div></div></div>';
 
@@ -1141,8 +1157,10 @@ var exportexcelApi = (function (root) {
         if ($old.length > 0) {
             var oldBs = $old.data("bs.modal");
             if (oldBs && oldBs.$backdrop) oldBs.$backdrop.remove();
+            // Bootstrap 5: dispose() gỡ luôn lớp nền mờ của hộp thoại cũ
+            if (bBs5) { try { var oldB5 = root.bootstrap.Modal.getInstance($old[0]); if (oldB5) oldB5.dispose(); } catch (ex) { } }
             $old.off().remove();
-            if ($(".modal.in").length === 0) $("body").removeClass("modal-open").css("padding-right", "");
+            if ($(MODAL_OPEN).length === 0) $("body").removeClass("modal-open").css("padding-right", "");
         }
         var $m = $(h).appendTo(document.body), bDone = false;
 
@@ -1256,11 +1274,11 @@ var exportexcelApi = (function (root) {
             fnOk(o2);
         });
         // Mở chồng lên modal khác (VD "Danh sách không đăng ký"): nâng lớp hiển thị; đóng xong trả lại khóa cuộn trang của modal bên dưới
-        var bChong = $(".modal.in").length > 0;
+        var bChong = $(MODAL_OPEN).length > 0;
         $m.on("hidden.bs.modal", function () {
             ASKING = 0;
             $m.remove();
-            if ($(".modal.in").length > 0) $("body").addClass("modal-open");
+            if ($(MODAL_OPEN).length > 0) $("body").addClass("modal-open");
         });
         $m.on("shown.bs.modal", function () { if (ack) ack.close(); $m.find(".ee-kwin").first().trigger("focus"); });
         refresh();
@@ -1315,7 +1333,7 @@ var exportexcelApi = (function (root) {
     }
 
     return {
-        version: "1.9.3",
+        version: "1.9.4",
 
         // Dựng file .xlsx (Uint8Array, không nén) mà không tải về — dùng cho kiểm thử hoặc gửi lên nơi khác
         buildXlsx: function (opts) {
