@@ -2057,13 +2057,13 @@ GiayTo.prototype = {
                     me.dtNguoiDung = dtResult;
                 }
                 else {
-                    edu.system.alert("CMS_NguoiDung/LayDanhSach: " + data.Message);
+                    edu.system.alert(" " + data.Message);
                 }
 
             },
             error: function (er) {
 
-                edu.system.alert("CMS_NguoiDung/LayDanhSach (er): " + JSON.stringify(er), "w");
+                edu.system.alert(" (er): " + JSON.stringify(er), "w");
             },
             type: 'GET',
             action: obj_list.action,

@@ -4787,8 +4787,9 @@ systemroot.prototype = {
         var pageSize = edu.util.returnZero(obj.pageSize);
 
         var obj_list = {
-            'action': 'CMS_NguoiDung/LayDanhSach',
-
+			'action': 'CMS_QuanLyNguoiDung_MH/DSA4BSAvKRIgIikPJjQuKAU0LyYP',
+			'func': 'pkg_chung_quanlynguoidung.LayDanhSachNguoiDung',
+			'iM' : edu.system.iM,
 
             'dTrangThai': iTrangThai,
             'strNguoiThucHien_Id': strNguoiThucHien_Id,
