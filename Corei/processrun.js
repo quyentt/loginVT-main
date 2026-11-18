@@ -466,7 +466,10 @@ var processrunApi = (function (root) {
             + '<span class="pr-tab" data-f="err">Lỗi (<span class="t-err">0</span>)</span>'
             + '<span class="pr-tab" data-f="pend">Chưa chạy (<span class="t-pend">0</span>)</span>'
             + '<label class="pr-auto"><input type="checkbox" class="pr-autochk" checked> Tự cuộn theo dòng đang chạy</label></div>'
-            + '<div class="pr-box"><div class="pr-in" style="--cols:64px repeat(' + cols.length + ',minmax(130px,1fr)) 104px 104px 150px minmax(200px,1.4fr)">'
+            // min-width = tổng bề rộng tối thiểu các cột: thiếu nó thì nhiều cột (VD 5 cột thông tin = 1.392px) tràn khỏi .pr-in,
+            // dòng .pr-r (contain:paint, rộng bằng .pr-in) cắt mất cột Ghi chú và nền tiêu đề dừng giữa chừng → dải trắng bên phải.
+            // Ghi chú (nội dung lỗi) tối thiểu 320px (cũ 200px) và ăn phần dư gấp đôi cột thông tin (2fr).
+            + '<div class="pr-box"><div class="pr-in" style="min-width:' + (64 + cols.length * 130 + 104 + 104 + 150 + 320) + 'px;--cols:64px repeat(' + cols.length + ',minmax(130px,1fr)) 104px 104px 150px minmax(320px,2fr)">'
             + '<div class="pr-head"><div>STT</div>';
         for (c = 0; c < cols.length; c++) h += '<div>' + esc(cols[c].header || "") + '</div>';
         h += '<div>Thời gian bắt đầu</div><div>Thời gian kết thúc</div><div>Kết quả</div><div>Ghi chú</div></div><div class="pr-vp"></div></div></div>'

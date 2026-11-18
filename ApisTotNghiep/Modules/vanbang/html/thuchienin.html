@@ -103,6 +103,8 @@
 <section class="content aps-TotNghiep">
     <div class="row aps-thuchienin">
         <div class="zone-bus" id="zonebatdau">
+            <!-- Banner khi mở từ trang Quy trình phôi in (ApisCMS) -->
+            <div id="zoneQuyTrinhPhoi" style="display:none"></div>
             <!--Tìm kiếm-->
             <div class="box box-solid box-search pd20 pb10">
                 <div class="box-body pd0">
@@ -226,6 +228,8 @@
                     </div>
                 </div>
                 <div class="clear"></div>
+                <!-- Cảnh báo: máy này có tọa độ test đè tọa độ mẫu khi in (capNhatCanhBaoToaDoTest) -->
+                <div id="zoneCanhBaoToaDoTest" style="display:none"></div>
                 <div id="zoneTestPhoi" class="box box-solid mb-10 zoneTestPhoi" style="display:none">
                     <div class="box-header with-border">
                         <h4 class="box-title"><i class="fa fa-flask"></i> Chế độ test — Nhập giá trị & Căn tọa độ các ô trên phôi</h4>
@@ -267,7 +271,7 @@
 </section>
 
 <!-- page script -->
-<script src="modules/vanbang/script/thuchienin.js?v=1.0.0.1"></script>
+<script src="modules/vanbang/script/thuchienin.js?v=1.0.0.3"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script type="text/javascript">
     var main_doc = {};

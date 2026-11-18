@@ -153,6 +153,11 @@ ThucHienIn.prototype = {
         });
 
         me._bindDragPhoi();
+        me._veBannerQuyTrinh();
+        $("#zoneCanhBaoToaDoTest").off('click').on('click', '.btnResetToaDoNhanh', function (e) {
+            e.preventDefault();
+            me.resetAllPos();
+        });
 
         // Khôi phục trạng thái toggle từ lần trước
         if (me.isCheDoTestOn()) {
@@ -927,6 +932,11 @@ ThucHienIn.prototype = {
             title: "Chọn mẫu phôi"
         };
         edu.system.loadToCombo_data(obj);
+        // Mở từ Quy trình phôi in (ApisCMS): chọn sẵn mẫu đang làm
+        var c = me._ctxQuyTrinh();
+        if (c && c.mauId && (data || []).some(function (e) { return e.ID === c.mauId; })) {
+            $("#dropSearch_Phoi").val(c.mauId).trigger("change");
+        }
         me.getList_ThucHienIn();
     },
 
@@ -978,6 +988,11 @@ ThucHienIn.prototype = {
             title: "Chọn mẫu bản sao"
         };
         edu.system.loadToCombo_data(obj);
+        // Mở từ Quy trình phôi in với mẫu bản sao: chọn sẵn (khi mẫu không nằm ở danh sách bản chính)
+        var c = me._ctxQuyTrinh();
+        if (c && c.mauId && !$("#dropSearch_Phoi").val() && (data || []).some(function (e) { return e.ID === c.mauId; })) {
+            $("#dropMauPhoi_BanSao").val(c.mauId).trigger("change");
+        }
     },
     getList_TaoQR: function (strDivId, strNoiDung, dChieuDai) {
         var me = this;
@@ -1230,6 +1245,76 @@ ThucHienIn.prototype = {
             drag.$el.removeClass('dragging');
             drag.active = false;
             drag.$el = null;
+            me.capNhatCanhBaoToaDoTest();
+        });
+    },
+    /*------------------------------------------
+    --Cảnh báo tọa độ test (18/11/2026): getList_NoiDungTheoMa áp tọa độ kéo ở Chế độ test (localStorage) cho MỌI lần in,
+    --kể cả khi đã tắt Chế độ test -> máy này in khác máy khác, sửa mẫu xong vẫn in lệch như cũ. Hiện banner + nút Reset.
+    -------------------------------------------*/
+    capNhatCanhBaoToaDoTest: function () {
+        var me = this, $z = $("#zoneCanhBaoToaDoTest");
+        if (!$z.length) return;
+        var arr = me.dtPhoi_current || [], n = 0, i;
+        for (i = 0; i < arr.length; i++) if (me.getTestPos(arr[i].ID)) n++;
+        if (!n) { $z.hide().html(""); return; }
+        var esc = function (s) { return $("<div>").text(s == null ? "" : String(s)).html(); };
+        $z.html('<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:#fffbeb;border:1px solid #fcd34d;border-left:4px solid #d97706;border-radius:8px;padding:10px 14px;margin:8px 0;color:#78350f;font-size:13px;line-height:1.45">'
+            + '<i class="fa fa-exclamation-triangle" style="color:#d97706;font-size:16px"></i>'
+            + '<div style="flex:1 1 360px;min-width:0"><b>Máy này đang có ' + n + '/' + arr.length + ' ô dùng tọa độ test</b> (lưu trong trình duyệt, tài khoản ' + esc(me._getUserKey()) + '). '
+            + 'Khi in, các ô này đặt theo tọa độ test — KHÔNG theo mẫu đã lưu, kể cả khi đã tắt Chế độ test — nên máy khác sẽ in khác máy này. '
+            + 'Muốn chốt tọa độ cho mọi máy: sửa ở màn Mẫu phôi in.</div>'
+            + '<a href="#" class="btnResetToaDoNhanh" style="display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #d97706;color:#b45309;border-radius:6px;padding:7px 14px;font-weight:600;text-decoration:none"><i class="fa fa-crosshairs"></i> Reset tọa độ test</a>'
+            + '</div>').show();
+    },
+    /*------------------------------------------
+    --Mở từ trang Quy trình phôi in (ApisCMS/danhmuc/quytrinhphoiin): ngữ cảnh ở sessionStorage "PHOIIN_FLOW_CTX".
+    --Bản rút gọn của PhoiInFlow (ApisCMS/Modules/danhmuc/script/phoiinflow.js) — khác app nên không nạp chéo script.
+    -------------------------------------------*/
+    _ctxQuyTrinh: function () {
+        try {
+            var c = JSON.parse(sessionStorage.getItem("PHOIIN_FLOW_CTX") || "null");
+            if (!c || !c.ts || Date.now() - c.ts > 4 * 60 * 60 * 1000) return null;
+            return c;
+        } catch (e) { return null; }
+    },
+    _veBannerQuyTrinh: function () {
+        var me = this, c = me._ctxQuyTrinh(), $z = $("#zoneQuyTrinhPhoi");
+        if (!$z.length) return;
+        if (!c) { $z.hide().html(""); return; }
+        var esc = function (s) { return $("<div>").text(s == null ? "" : String(s)).html(); };
+        $z.html('<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:#eff6ff;border:1px solid #bfdbfe;border-left:4px solid #2563eb;border-radius:8px;padding:10px 14px;margin:0 0 12px 0;color:#0f172a;font-size:13px;line-height:1.45">'
+            + '<i class="fa fa-sitemap" style="color:#2563eb;font-size:16px"></i>'
+            + '<div style="flex:1 1 320px;min-width:0"><div style="font-weight:600">Đang làm theo quy trình: ' + esc(c.tenQuyTrinh) + '</div>'
+            + '<div style="color:#334155">Bước ' + esc(c.thuTu) + '/' + esc(c.tong) + ' · <b>' + esc(c.tenBuoc) + '</b>'
+            + (c.maPhoi ? ' · Mẫu <b>' + esc(c.maPhoi) + '</b> đã chọn sẵn — lọc 1–2 người học rồi bấm Tìm kiếm' : '')
+            + (c.veVaiTroId && c.veVaiTroTen && c.veVaiTroId !== edu.system.appId ? ' · Về quy trình sẽ chuyển lại vai trò <b>' + esc(c.veVaiTroTen) + '</b>' : '') + '</div></div>'
+            + '<a href="javascript:void(0)" class="qtpBack" style="display:inline-flex;align-items:center;gap:6px;background:#2563eb;color:#fff;border-radius:6px;padding:7px 14px;font-weight:600;text-decoration:none"><i class="fa fa-arrow-left"></i> Về quy trình</a>'
+            + '<a href="javascript:void(0)" class="qtpClose" title="Ẩn (thoát chế độ làm theo quy trình)" style="color:#64748b;padding:4px 6px;text-decoration:none"><i class="fa fa-times"></i></a>'
+            + '</div>').show();
+        $z.off("click").on("click", ".qtpBack", function () {
+            var list = (edu.system && edu.system.dtChucNang) || [], cn = null, i;
+            for (i = 0; i < list.length; i++) {
+                if (list[i].DUONGDANFILE && String(list[i].DUONGDANFILE).toLowerCase().replace(/\\/g, "/").indexOf("danhmuc/html/quytrinhphoiin.html") !== -1) { cn = list[i]; break; }
+            }
+            if (cn) {
+                edu.system.initMain("#" + (String(cn.ID) + (edu.system.appId || "")).toLowerCase(), cn.DUONGDANFILE, cn.ID);
+                return;
+            }
+            // Trang quy trình ở vai trò khác (vd "Quản trị hệ thống"): đổi lại vai trò đó như bấm ở khung chọn vai trò,
+            // đặt trước strChucNang_Id để menu mới vẽ xong shell tự mở trang quy trình (giống PhoiInFlow.chuyenVaiTro)
+            var c2 = me._ctxQuyTrinh() || c, vt = null, ds = edu.system.dtUngDung || [];
+            for (i = 0; i < ds.length; i++) if (ds[i] && ds[i].ID === c2.veVaiTroId) { vt = ds[i]; break; }
+            if (!vt || !c2.veChucNangId || typeof edu.system.setUngDung !== "function") {
+                edu.system.alert("Vai trò đang đăng nhập chưa có chức năng «Quy trình phôi in» trong menu — đổi về vai trò có trang Quy trình phôi in.", "w");
+                return;
+            }
+            try { sessionStorage.setItem("strChucNang_Id", c2.veChucNangId); } catch (e) { }
+            $("#lbLogo_mini, #lbLogo_large").html(esc(vt.TENVAITRO));
+            edu.system.setUngDung(vt);
+        }).on("click", ".qtpClose", function () {
+            try { sessionStorage.removeItem("PHOIIN_FLOW_CTX"); } catch (e) { }
+            $z.hide().html("");
         });
     },
     renderPanelTest: function (dataPhoi, aDataSample) {
@@ -1285,5 +1370,6 @@ ThucHienIn.prototype = {
             html += '</tr>';
             $tbody.append(html);
         }
+        me.capNhatCanhBaoToaDoTest();
     },
 }
