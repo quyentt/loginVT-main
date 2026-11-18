@@ -5055,6 +5055,8 @@ systemroot.prototype = {
                     else {
                         edu.system.alert(obj_save.action + " (er): " + data.Message);
                     }
+                    
+                    if (me.objApi["checkUser"]) me.getList_checkUser();
                 },
                 error: function (er) {
                     //edu.system.alertOnModal(obj_notify);
@@ -9271,6 +9273,43 @@ systemroot.prototype = {
         }, false, false, false, null);
     },
 
+    getList_checkUser: function () {
+        var me = this;
+        //--Edit
+        var obj_save = {
+            'action': 'CMS_QuanLyNguoiDung_MH/DSA4FSkuLyYVKC8PJjQuKAU0LyYP',
+            'func': 'pkg_chung_quanlynguoidung.LayThongTinNguoiDung',
+            'iM': edu.system.iM,
+            'strId': edu.system.userId,
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var obUser = {
+                        EMAIL: data.Data[0].EMAIL,
+                        TAIKHOAN: data.Data[0].TAIKHOAN,
+                        TAIKHOANNGUOIDUNG: data.Data[0].TAIKHOANNGUOIDUNG,
+                        TENDAYDU: data.Data[0].TENDAYDU,
+                        TENDONVI: data.Data[0].TENDONVI
+                    };
+                    localStorage.setItem("ckUser", JSON.stringify(obUser));
+                    //sessionStorage.setItem("ckUser", JSON.stringify(obUser));
+                }
+
+            },
+            error: function (er) {
+            },
+            type: 'POST',
+
+            contentType: true,
+            complete: function () {
+            },
+            action: obj_save.action,
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
     save_KiemTraThongBao: function () {
         var me = this;
         $("body").append('<div class="noti-fix-screen" id="zoneThongBao"></div>');

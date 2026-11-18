@@ -2074,53 +2074,14 @@
 
           function loadAllApps() {
             if (_allApps.length) return;
-            edu.system.makeRequest({
-              type: 'GET',
-              action: 'CMS_UngDung/LayDanhSach',
-              contentType: true,
-              data: { strTuKhoa: '', pageIndex: 1, pageSize: 1000, dTrangThai: 1 },
-              success: function (data) {
-                if (data && data.Success && data.Data) {
-                  _allApps = data.Data;
-                  console.log('[global-search] loaded', _allApps.length, 'apps. Sample:', _allApps[0]);
-                }
-              },
-              error: function () { },
-              fakedb: []
-            }, false, false, false, null);
+            
           }
 
           function loadAllScreens(cb) {
             if (_loading) return;
             if (_allScreens.length) { cb && cb(); return; }
             _loading = true;
-            edu.system.makeRequest({
-              type: 'GET',
-              action: 'CMS_ChucNang/LayDanhSach',
-              contentType: true,
-              data: {
-                action: 'CMS_ChucNang/LayDanhSach',
-                versionAPI: 'v1.0',
-                strTuKhoa: '',
-                strChung_UngDung_Id: '',
-                strCHUCNANGCHA_Id: '',
-                pageIndex: 1,
-                pageSize: 5000,
-                strNGUONTRUYCAP_Id: '',
-                dTrangThai: 1
-              },
-              success: function (data) {
-                _loading = false;
-                if (data && data.Success && data.Data) {
-                  _allScreensRaw = data.Data;
-                  _allScreens = data.Data.filter(function (e) { return e && e.DUONGDANFILE; });
-                  console.log('[global-search] loaded', _allScreens.length, 'screens. Sample:', _allScreens[0]);
-                  cb && cb();
-                }
-              },
-              error: function () { _loading = false; },
-              fakedb: []
-            }, false, false, false, null);
+            
           }
 
           function resolveAppCode(obj) {

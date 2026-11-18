@@ -22,9 +22,9 @@ ChinhSachPhanTram.prototype = {
         me.getList_TrangThaiSV();
 
         me.getList_HeDaoTao();
-        me.getList_KhoaDaoTao();
-        me.getList_ChuongTrinhDaoTao();
-        me.getList_LopQuanLy();
+        // me.getList_KhoaDaoTao();
+        // me.getList_ChuongTrinhDaoTao();
+        // me.getList_LopQuanLy();
         me.getList_ThoiGianDaoTao();
         me.getList_DMLKT();
         edu.system.loadToCombo_DanhMucDuLieu("KHDT.DIEM.KIEUHOC", "dropSearch_KieuHoc");
@@ -49,14 +49,14 @@ ChinhSachPhanTram.prototype = {
         $('#dropSearch_HeDaoTao').on('select2:select', function (e) {
 
             me.getList_KhoaDaoTao();
-            me.getList_ChuongTrinhDaoTao();
-            me.getList_LopQuanLy();
+            // me.getList_ChuongTrinhDaoTao();
+            // me.getList_LopQuanLy();
             me.resetCombobox(this);
         });
         $('#dropSearch_KhoaDaoTao').on('select2:select', function (e) {
 
             me.getList_ChuongTrinhDaoTao();
-            me.getList_LopQuanLy();
+            // me.getList_LopQuanLy();
             me.resetCombobox(this);
         });
         $('#dropSearch_ChuongTrinh').on('select2:select', function (e) {
