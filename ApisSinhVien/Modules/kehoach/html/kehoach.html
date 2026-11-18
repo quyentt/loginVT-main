@@ -112,6 +112,16 @@
                                 <input id="txtDenNgay" class="form-control input-datepicker" placeholder="dd/mm/yyyy" />
                             </div>
                         </div>
+                        <!--row 3: ParamTuDongCapNhatVeHoSo (0|1)-->
+                        <div class="row aps-form-item">
+                            <div class="col-sm-2 aps-form-lable">Cập nhật về hồ sơ</div>
+                            <div class="col-sm-4 aps-form-input">
+                                <select id="dropTuDongCapNhatVeHoSo" class="form-control">
+                                    <option value="0">Không tự động cập nhật</option>
+                                    <option value="1">Tự động cập nhật</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- 2.  Cán bộ phân công xét -->
@@ -294,7 +304,7 @@
     </div>
 </div>
 
-<script src="modules/kehoach/script/kehoach.js?v=1.0.0.0"></script>
+<script src="modules/kehoach/script/kehoach.js?v=1.0.0.1"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['KeHoachXuLy'] = new KeHoachXuLy();

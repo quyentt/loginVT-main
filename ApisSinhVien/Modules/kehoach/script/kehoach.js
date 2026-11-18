@@ -274,6 +274,7 @@ KeHoachXuLy.prototype = {
         edu.util.viewValById("dropThoiGianDaoTao", edu.util.getValById("dropSearch_ThoiGianDaoTao"));
         edu.util.viewValById("txtTuNgay", "");
         edu.util.viewValById("txtDenNgay", "");
+        edu.util.viewValById("dropTuDongCapNhatVeHoSo", "0"); // mặc định = DB default 0
         $("#tblInput_DTSV_SinhVien tbody").html("");
         $("#tblInputDanhSachNhanSu tbody").html("");
     },
@@ -332,30 +333,34 @@ KeHoachXuLy.prototype = {
     },
     save_KeHoachXuLy: function () {
         var me = this;
-        //--Edit
+        var bThemMoi = !edu.util.checkValue(me.strKeHoachXuLy_Id);
+        //--Edit: API mã hoá SV_KeHoach_MH (có 'iM' → makeRequest tự XOR + ép POST)
         var obj_save = {
-            'action': 'SV_KeHoach_NguoiHoc/ThemMoi',
-            
-            'strId': me.strKeHoachXuLy_Id,
+            'action': 'SV_KeHoach_MH/FSkkLB4QDRIXHgokCS4gIikeDyY0LigJLiIP',
+            'func': 'pkg_hososinhvien_kehoach.Them_QLSV_KeHoach_NguoiHoc',
+            'iM': edu.system.iM,
             'strChucNang_Id': edu.system.strChucNang_Id,
-            'strTen': edu.util.getValById('txtTen'),
             'strMoTa': edu.util.getValById('txtTen'),
             'strTuNgay': edu.util.getValById('txtTuNgay'),
             'strDenNgay': edu.util.getValById('txtDenNgay'),
             'dXacNhanThongTin': 1,
+            // 0: Không tự động cập nhật | 1: Tự động cập nhật về hồ sơ
+            'dTuDongCapNhatVeHoSo': edu.util.getValById('dropTuDongCapNhatVeHoSo') == "1" ? 1 : 0,
             'strNguoiThucHien_Id': edu.system.userId,
         };
-        if (obj_save.strId != "") {
-            obj_save.action = 'SV_KeHoach_NguoiHoc/CapNhat';
+        if (!bThemMoi) {
+            obj_save.action = 'SV_KeHoach_MH/EjQgHhANEhceCiQJLiAiKR4PJjQuKAkuIgPP';
+            obj_save.func = 'pkg_hososinhvien_kehoach.Sua_QLSV_KeHoach_NguoiHoc';
+            obj_save.strId = me.strKeHoachXuLy_Id;
         }
         //default
-        
+
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
                     var strKeHoachXuLy_Id = "";
-                    
-                    if (obj_save.strId == "") {
+
+                    if (bThemMoi) {
                         edu.system.alert("Thêm mới thành công!");
                         strKeHoachXuLy_Id = data.Id;
                     }
@@ -390,13 +395,13 @@ KeHoachXuLy.prototype = {
                 me.getList_KeHoachXuLy();
             },
             error: function (er) {
-                edu.system.alert("XLHV_KeHoachXuLy/ThemMoi (er): " + JSON.stringify(er), "w");
-                
+                edu.system.alert(obj_save.func + " (er): " + JSON.stringify(er), "w");
+
             },
             type: 'POST',
-            
+
             contentType: true,
-            
+
             action: obj_save.action,
             data: obj_save,
             fakedb: [
@@ -662,6 +667,11 @@ KeHoachXuLy.prototype = {
         edu.util.viewValById("txtTen", data.MOTA);
         edu.util.viewValById("txtTuNgay", data.TUNGAY);
         edu.util.viewValById("txtDenNgay", data.DENNGAY);
+        // Tên cột TUDONGCAPNHATVEHOSO là đoán theo ParamTuDongCapNhatVeHoSo — API danh sách chưa xác nhận trả cột này
+        if (data.TUDONGCAPNHATVEHOSO === undefined) {
+            console.warn("[kehoach] API danh sách không trả TUDONGCAPNHATVEHOSO → form hiện mặc định 0; Lưu sẽ ghi 0.", data);
+        }
+        edu.util.viewValById("dropTuDongCapNhatVeHoSo", (data.TUDONGCAPNHATVEHOSO == 1) ? "1" : "0");
         me.strKeHoachXuLy_Id = data.ID;
 
         me.arrLop = [];
