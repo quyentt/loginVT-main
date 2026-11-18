@@ -854,10 +854,9 @@ InBangDiem.prototype = {
         if (data.length != 1) $("#dropSearch_KhoaQuanLy_QD").val(data[0].ID).trigger("change");
     },
 
-    getList_SinhVien: function (strDanhSach_Id) {
-        var me = this;
-        me.showView('DSSV');
-        var obj_save = {
+    // Tham số API danh sách SV (chưa có trang) — dùng chung cho nạp từng trang và Xuất Excel toàn bộ
+    _req_DSSV: function () {
+        return {
             'action': 'D_BaoCao_MH/DSA4BSAvKRIgIikJLhIuDykoJDQPJiAvKQPP',
             'func': 'pkg_diem_baocao.LayDanhSachHoSoNhieuNganh',
             'iM': edu.system.iM,
@@ -872,9 +871,18 @@ InBangDiem.prototype = {
             'strChucNang_Id': edu.system.strChucNang_Id,
             'strTN_KeHoach_Id': edu.util.getValById('dropSearch_KeHoachXet'),
             'strNguoiThucHien_Id': edu.system.userId,
-            'pageIndex': edu.system.pageIndex_default,
-            'pageSize': edu.system.pageSize_default,
         };
+    },
+
+    getList_SinhVien: function (strDanhSach_Id) {
+        var me = this;
+        me.showView('DSSV');
+        var obj_save = me._req_DSSV();
+        // Giữ điều kiện của lần nạp gần nhất: Xuất Excel nạp lại TOÀN BỘ đúng điều kiện đang hiển thị (không đọc lại ô lọc lúc bấm)
+        me.objLoc_DSSV = $.extend({}, obj_save);
+        me.snapLoc_DSSV = me._snapLoc();
+        obj_save.pageIndex = edu.system.pageIndex_default;
+        obj_save.pageSize = edu.system.pageSize_default;
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
@@ -931,11 +939,103 @@ InBangDiem.prototype = {
     },
 
     /*------------------------------------------
-    --Discription: Xuất Excel theo dữ liệu DSSV đang hiển thị (đã apply filter tài chính)
-    --Nguồn: me.dtQuyetDinh
-    --Lib: XLSX (SheetJS) - load lazy từ CDN trong inbangdiem.html
+    --Discription: Xuất Excel danh sách sinh viên qua chuẩn chung edu.exporter (cùng hộp thoại với "Danh sách còn nợ môn"):
+    --  nạp lại TOÀN BỘ danh sách theo điều kiện của lần tìm kiếm gần nhất (không chỉ trang đang xem) rồi hỏi trước khi xuất,
+    --  LỌC THÊM KHI XUẤT: Tài chính (còn nợ / không nợ), Trạng thái, Hệ, Khóa, Chương trình, Lớp + ô từ khóa chung;
+    --  mặc định tích sẵn theo bộ lọc ngoài màn hình ("Chỉ SV còn nợ tài chính" -> tích sẵn "Còn nợ tài chính").
     -------------------------------------------*/
     exportExcel_DSSinhVien: function () {
+        var me = this;
+        if (!me.objLoc_DSSV) {
+            edu.system.alert('Không có dữ liệu để xuất. Vui lòng tìm kiếm trước.', 'w');
+            return;
+        }
+        if (me._bNapXuat_DSSV) return;  // đang nạp toàn bộ: bỏ qua các lần bấm thêm (mỗi lần = 1 lần nạp lại + 1 hộp thoại)
+        me._ensureExporter(function (exp) {
+            me._napToanBo_DSSV(function (rows, iTong) {
+                if (!rows.length) {
+                    edu.system.alert('Không có sinh viên nào theo điều kiện tìm kiếm hiện tại.', 'w');
+                    return;
+                }
+                exp.exportWithConfirm(me._optsExport_DSSV(rows, iTong));
+            });
+        });
+    },
+    // Nạp toàn bộ danh sách (cùng API, cùng điều kiện, pageSize lớn). Giữ kết quả 5 phút: mở lại hộp thoại không nạp lại;
+    // bấm Tìm kiếm / đổi bộ lọc (reload_DanhSach) thì bỏ.
+    _napToanBo_DSSV: function (cb) {
+        var me = this;
+        var strKhoa = JSON.stringify(me.objLoc_DSSV);
+        var c = me._cacheXuat_DSSV;
+        if (c && c.key === strKhoa && Date.now() - c.at < 5 * 60 * 1000) { cb(c.rows, c.iTong); return; }
+        var obj_save = $.extend({}, me.objLoc_DSSV, { 'pageIndex': 1, 'pageSize': 1000000 });
+        me._bNapXuat_DSSV = true;
+        edu.system.makeRequest({
+            success: function (data) {
+                me._bNapXuat_DSSV = false;
+                if (data.Success) {
+                    var rows = data.Data || [];
+                    var iTong = parseInt(data.Pager, 10) || rows.length;
+                    me._cacheXuat_DSSV = { key: strKhoa, rows: rows, iTong: iTong, at: Date.now() };
+                    cb(rows, iTong);
+                }
+                else {
+                    edu.system.alert("Xuất Excel danh sách sinh viên: " + data.Message, "w");
+                }
+            },
+            error: function (er) {
+                me._bNapXuat_DSSV = false;
+                edu.system.alert("Xuất Excel danh sách sinh viên (er): " + JSON.stringify(er), "w");
+            },
+            type: "POST",
+            action: obj_save.action,
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
+    _optsExport_DSSV: function (rows, iTong) {
+        var me = this;
+        var snap = me.snapLoc_DSSV || { sel: {}, parts: [], trangThai: [] };
+        var CON_NO = "Còn nợ tài chính", KHONG_NO = "Không nợ";
+        return {
+            fileName: "DSSV_InBangDiem",
+            title: "DANH SÁCH SINH VIÊN",
+            subTitles: snap.parts.length ? [snap.parts.join("; ")] : [],
+            // Máy chủ trả thiếu so với tổng số (giới hạn số dòng phía BE) thì báo rõ, không giả vờ xuất đủ
+            notice: rows.length < iTong ? ("Máy chủ chỉ trả " + rows.length.toLocaleString("vi-VN") + " / " + iTong.toLocaleString("vi-VN")
+                + " sinh viên — file sẽ thiếu. Hãy thu hẹp điều kiện tìm kiếm rồi xuất lại.") : "",
+            columns: [
+                { header: "Mã số", field: "QLSV_NGUOIHOC_MASO" },
+                { header: "Họ đệm", field: "QLSV_NGUOIHOC_HODEM" },
+                { header: "Tên", field: "QLSV_NGUOIHOC_TEN" },
+                { header: "Ngày sinh", field: "QLSV_NGUOIHOC_NGAYSINH", align: "center" },
+                { header: "Trạng thái", field: "QLSV_TRANGTHAINGUOIHOC_TEN" },
+                { header: "Tài chính (còn nợ)", field: "TONGNOPHI", type: "number", format: "int", sum: true },
+                { header: "Lớp", field: "DAOTAO_LOPQUANLY_TEN" },
+                { header: "Chương trình", field: "DAOTAO_CHUONGTRINH_TEN" },
+                { header: "Khóa", field: "DAOTAO_KHOADAOTAO_TEN" },
+                { header: "Hệ", field: "DAOTAO_HEDAOTAO_TEN" },
+                { header: "ĐTBTL Hệ 4", field: "DTBTICHLUYHE4TOANKHOA", type: "number", align: "center" },
+                { header: "ĐTBTL Hệ 10", field: "DTBTICHLUYHE10TOANKHOA", type: "number", align: "center" },
+                { header: "Số TCTL", field: "SOTCTICHLUYTOANKHOA", align: "center" }
+            ],
+            data: rows,
+            filters: [
+                { label: "Tài chính", get: function (r) { return (Number(r.TONGNOPHI) || 0) > 0 ? CON_NO : KHONG_NO; }, selected: $("#chkFilterCongNo").is(":checked") ? [CON_NO] : [] },
+                { label: "Trạng thái", field: "QLSV_TRANGTHAINGUOIHOC_TEN", selected: snap.trangThai || [] },
+                { label: "Hệ đào tạo", field: "DAOTAO_HEDAOTAO_TEN", selected: snap.sel.dropSearch_HeDaoTao_QD || [] },
+                { label: "Khóa", field: "DAOTAO_KHOADAOTAO_TEN", selected: snap.sel.dropSearch_KhoaDaoTao_QD || [] },
+                { label: "Chương trình", field: "DAOTAO_CHUONGTRINH_TEN", selected: snap.sel.dropSearch_ChuongTrinh_QD || [] },
+                { label: "Lớp", field: "DAOTAO_LOPQUANLY_TEN", selected: snap.sel.dropSearch_Lop_QD || [] }
+            ]
+        };
+    },
+
+    /* CŨ (SheetJS nạp CDN, chỉ xuất TRANG ĐANG XEM) — thay bằng exportExcel_DSSinhVien ở trên (edu.exporter, xuất toàn bộ).
+       Giữ lại để mở lại khi cần.
+    exportExcel_DSSinhVien_SheetJS: function () {
         var me = this;
         if (typeof XLSX === 'undefined') {
             edu.system.alert('Thư viện Excel chưa load xong. Vui lòng thử lại sau vài giây.', 'w');
@@ -993,6 +1093,7 @@ InBangDiem.prototype = {
         var fileName = 'DSSV_InBangDiem' + tag + '_' + stamp + '.xlsx';
         XLSX.writeFile(wb, fileName);
     },
+    */
 
     /*------------------------------------------
     --Discription: Gửi Email KQHT / công nợ (theo pattern sinhviennotien.js)
@@ -3765,6 +3866,7 @@ InBangDiem.prototype = {
     },
     reload_DanhSach: function () {
         var me = this;
+        me._cacheXuat_DSSV = null;  // tìm kiếm lại = muốn số liệu mới: Xuất Excel lần sau nạp lại từ máy chủ
         if (me.strView === 'NOMON') me.getList_SinhVienNoMon();
         else me.getList_SinhVien();
     },

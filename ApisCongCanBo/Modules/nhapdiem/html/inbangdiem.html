@@ -266,7 +266,7 @@
                     <i class="fa-solid fa-envelope mr-5"></i>Gửi Email
                 </div>
                     <div id="btnXuatExcel_DSSV" class="btn btn-success"
-                        title="Xuất danh sách theo dữ liệu đang hiển thị (Ctrl+G). Đổi 'Hiển thị' sang số lớn hơn để xuất nhiều dòng hơn."
+                        title="Xuất TOÀN BỘ danh sách theo điều kiện tìm kiếm (không chỉ trang đang xem), chọn lọc thêm trước khi xuất (Ctrl+G)."
                         style="background:#1e8e3e;border-color:#1e8e3e;color:#fff;font-weight:500;">
                         <i class="fa-solid fa-file-excel mr-5" style="color:#fff;"></i>Xuất Excel
                         <kbd style="background:rgba(255,255,255,.22);color:#fff;border:0;padding:3px 6px;border-radius:3px;font-size:11px;margin-left:6px;">Ctrl+G</kbd>
@@ -1570,7 +1570,8 @@
 </div>
 
 <!-- ---------Script------- -->
-<!-- XLSX (SheetJS) - phục vụ Xuất Excel DSSV. Load 1 lần, idempotent. -->
+<!-- ẨN: XLSX (SheetJS) nạp CDN — chỉ phục vụ bản Xuất Excel DSSV cũ (trang đang xem). Nút Xuất Excel nay dùng chung
+     edu.exporter (Corei/exportexcel.js, inbangdiem.js tự nạp) nên không cần nữa. Giữ code để mở lại khi cần.
 <script>
     (function loadXLSX_InBangDiem() {
         if (typeof XLSX !== 'undefined') return;
@@ -1591,7 +1592,8 @@
         tryNext();
     })();
 </script>
-<script src="modules/nhapdiem/script/inbangdiem.js?v=1.0.0.5"></script>
+-->
+<script src="modules/nhapdiem/script/inbangdiem.js?v=1.0.0.6"></script>
 <script src="modules/nhapdiem/script/chuongtrinhhoc.js?v=1.0.0.2"></script>
 <script type="text/javascript">
     var main_doc = {};
