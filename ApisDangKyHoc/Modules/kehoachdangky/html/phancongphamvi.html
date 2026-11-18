@@ -3,6 +3,17 @@
     .radio-inline+.radio-inline {
         margin-left: 0px;
     }
+    /* Ten pham vi (nut .btnDetail) trong bang #zonePhanCong: styles.css ep
+       ".table td .btn { height:28px !important }" + indexi.aspx ep inline-flex/align-items:center
+       -> ten dai xuong 2-4 dong bi can giua roi TRAN LEN dong header (KHOAHOC...).
+       Cho nut cao tu dong theo noi dung, chi trong trang nay. */
+    .aps-phancongphamvi #zonePhanCong .table td .btn.btnDetail {
+        height: auto !important;
+        min-height: 28px;
+        white-space: normal !important;
+        text-align: left !important;
+        line-height: 20px !important;
+    }
 </style>
 <section class="content aps-dangkyhoc">
     <div class="row aps-phancongphamvi">
@@ -164,6 +175,22 @@
                                     <span class="badge color-blue fz16">Thông tin phạm vi </span>
                                 </p>
                             </div>
+                            <!-- Co so dao tao: chi dung cho nut "Them Co so dao tao - khoa hoc" (ghep ID co so + ID khoa).
+                                 Khong co nut "Them" rieng -> giu o trong (visibility:hidden) de select thang hang cac dong duoi. -->
+                            <div class="row mb-10 aps-form-item">
+                                <div class="col-sm-3 aps-lable-name">
+                                    <div class="title-name">
+                                        Cơ sở đào tạo <span class="title-colon">:</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-9 d-flex aps-form-input">
+                                    <select id="dropCoSoDaoTao_PhamVi" class="select-opt"
+                                        style="width:100% !important"></select>
+                                    <div class="box-tools pull-right" style="visibility: hidden" aria-hidden="true">
+                                        <a class="btn btn-primary" tabindex="-1"><i class="fa fa-plus"></i>Thêm</a>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row mb-10 aps-form-item">
                                 <div class="col-sm-3 aps-lable-name">
                                     <div class="title-name">
@@ -267,6 +294,12 @@
                                 <a id="addKhoaQuanKyKhoaHoc" class="btn btn-primary"
                                     title="Thêm Khoa quản lý - khóa học">
                                     <i class="fa fa-plus"></i>Thêm Khoa quản lý - khóa học</a>
+                            </div>
+                            <div class="clear"></div>
+                            <div class="row pull-right mt-10">
+                                <a id="addCoSoDaoTaoKhoaHoc" class="btn btn-primary"
+                                    title="Thêm Cơ sở đào tạo - khóa học">
+                                    <i class="fa fa-plus"></i>Thêm Cơ sở đào tạo - khóa học</a>
                             </div>
                             <div class="clear"></div>
                             <!-- Row 3 -->
@@ -570,6 +603,9 @@
                             </div>
 
                         </div>
+                        <!-- Co so dao tao ap dung cho pham vi (PKG_DANGKY_PHANCONG_CSDT.*_PV_CSDT) - render tu phancong_csdt.js.
+                             Them/Bo luu ngay, khong phu thuoc nut "Luu" cua modal. -->
+                        <div id="zoneCSDT_PV"></div>
                     </div>
                     <div class="col col-md-6 col-lg-6 pd20 table-ds-hocphan">
                         <div class="row aps-add-new">
@@ -614,7 +650,8 @@
         </div>
     </div>
 </div>
-<script src="modules/kehoachdangky/script/PhanCongPhamVi.js?v=1.0.0.0"></script>
+<script src="modules/kehoachdangky/script/phancong_csdt.js?v=1.0.0.2"></script>
+<script src="modules/kehoachdangky/script/PhanCongPhamVi.js?v=1.0.0.2"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['PhanCongPhamVi'] = new PhanCongPhamVi();

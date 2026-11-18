@@ -64,6 +64,8 @@ KeHoachChiTiet.prototype = {
         $("#tblKeHoachChiTiet").delegate('.btnNhanSu', 'click', function (e) {
             var strId = this.id;
             me.strKeHoachChiTiet_Id = strId;
+            me.dtCanBoChiTiet = [];
+            $("#tblCanBo tbody").html("");
             me.getList_NhanSuChiTiet(strId);
             $("#myModalCanBo").modal("show");
         });
@@ -121,31 +123,104 @@ KeHoachChiTiet.prototype = {
         });
 
 
+        /*------------------------------------------
+        --Discription: Nhân sự tham gia kế hoạch chi tiết (modal #myModalCanBo)
+        -- Thêm cán bộ: đóng #myModalCanBo -> mở modal chọn nhân sự dùng chung -> form tiến trình (mỗi cán bộ 1 lời gọi Them_KLGD_KeHoachChiTiet_NS)
+        -- Xóa: các dòng đang tick -> form tiến trình (mỗi dòng 1 lời gọi Xoa_KLGD_KeHoachChiTiet_NS); Bước 1 của form thay hộp "Bạn có chắc chắn"
+        -- Đóng form thì nạp lại danh sách nhân sự (nếu có bản ghi thành công) và mở lại #myModalCanBo
+        -------------------------------------------*/
         $("#btnAdd_PhanCong").click(function () {
-            edu.extend.genModal_NguoiDung(arrChecked_Id => {
-                edu.system.alert('<div id="zoneprocessXXXX"></div>');
-                edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
-                for (var i = 0; i < arrChecked_Id.length; i++) {
-                    me.save_PhanCong(arrChecked_Id[i]);
-                }
-            });
-            edu.extend.getList_NguoiDungP();
-        });
-        $("#btnDelete_PhanCong").click(function () {
-            var arrChecked_Id = edu.util.getArrCheckedIds("tblCanBo", "checkX");
-            if (arrChecked_Id.length == 0) {
-                edu.system.alert("Vui lòng chọn đối tượng cần xóa?");
+            var strKeHoach_Id = me.strKeHoachChiTiet_Id;
+            if (!strKeHoach_Id) {
+                me._notifyCanBo("Chưa xác định kế hoạch, vui lòng đóng và mở lại danh sách nhân sự.");
                 return;
             }
-            edu.system.confirm("Bạn có chắc chắn xóa dữ liệu không?");
-            $("#btnYes").click(function (e) {
-                edu.system.alert('<div id="zoneprocessXXXX"></div>');
-                edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
-                for (var i = 0; i < arrChecked_Id.length; i++) {
-                    me.delete_PhanCong(arrChecked_Id[i]);
-                }
+            var bDaChon = false;
+            var openPicker = function () {
+                // Đóng modal chọn mà không chọn ai -> mở lại danh sách nhân sự
+                $("#modal_nhansu").off("hidden.bs.modal.khctns").one("hidden.bs.modal.khctns", function () {
+                    if (!bDaChon) $("#myModalCanBo").modal("show");
+                });
+                edu.extend.genModal_NguoiDung(function (arrChecked_Id) {
+                    if (arrChecked_Id.length == 0) {
+                        $("#modal_nhansu #zoneprocessProGes").html('<div class="alert alert-warning mt-10 mb-10">Vui lòng tick chọn cán bộ cần thêm.</div>');
+                        return;
+                    }
+                    bDaChon = true;
+                    var map = {};
+                    (edu.extend.dtNguoiDung || []).forEach(function (r) { map[r.ID] = r; });
+                    me._run({
+                        hideModal: "#modal_nhansu",
+                        reopenModal: "#myModalCanBo",
+                        title: "Thêm nhân sự tham gia kế hoạch", unit: "cán bộ", fileName: "KetQuaThemNhanSu_KeHoachChiTiet",
+                        subTitles: ["Kế hoạch: " + me._tenKeHoach(strKeHoach_Id)],
+                        items: arrChecked_Id.map(function (id) { return { ID: id, row: map[id] || {} }; }),
+                        columns: [
+                            { header: "Tài khoản", render: function (it) { return it.row.TAIKHOAN || it.ID; } },
+                            { header: "Họ tên", render: function (it) { return it.row.TENDAYDU; } }
+                        ],
+                        request: function (it) { return me.req_PhanCong(it.ID, strKeHoach_Id); },
+                        refresh: function () { me.getList_NhanSuChiTiet(strKeHoach_Id); }
+                    });
+                });
+                edu.extend.getList_NguoiDungP();
+            };
+            // Không mở modal chồng modal (BS3 mất body.modal-open): đóng hẳn #myModalCanBo rồi mới mở modal chọn
+            var $m = $("#myModalCanBo"), inst = $m.data("bs.modal");
+            if (inst && inst.isShown) {
+                $m.one("hidden.bs.modal", openPicker);
+                $m.modal("hide");
+            }
+            else openPicker();
+        });
+        $("#btnDelete_PhanCong").click(function () {
+            var strKeHoach_Id = me.strKeHoachChiTiet_Id;
+            var arrSelected = me._selected("tblCanBo", me.dtCanBoChiTiet);
+            if (arrSelected.length == 0) {
+                me._notifyCanBo("Vui lòng chọn đối tượng cần xóa.");
+                return;
+            }
+            me._run({
+                hideModal: "#myModalCanBo",
+                reopenModal: "#myModalCanBo",
+                title: "Xóa nhân sự tham gia kế hoạch", unit: "cán bộ", fileName: "KetQuaXoaNhanSu_KeHoachChiTiet",
+                subTitles: ["Kế hoạch: " + me._tenKeHoach(strKeHoach_Id)],
+                notes: ["Thao tác xóa các cán bộ trong danh sách khỏi nhân sự tham gia kế hoạch."],
+                items: arrSelected,
+                columns: [
+                    { header: "Mã số", render: function (r) { return r.NGUOIDUNG_MASO; } },
+                    { header: "Họ tên", render: function (r) { return edu.util.returnEmpty(r.NGUOIDUNG_HODEM) + " " + edu.util.returnEmpty(r.NGUOIDUNG_TEN); } }
+                ],
+                request: function (it) { return me.req_PhanCong_Xoa(it.ID); },
+                refresh: function () { me.getList_NhanSuChiTiet(strKeHoach_Id); }
             });
         });
+    },
+
+    /*------------------------------------------
+    --Discription: Chạy hàng loạt qua form tiến trình chung (Corei/processrun.js, edu.process)
+    -------------------------------------------*/
+    _run: function (cfg) {
+        if (!edu.process) {
+            edu.system.alert("Chưa cập nhật form tiến trình (thiếu Corei/processrun.js hoặc indexi.aspx).", "w");
+            return;
+        }
+        edu.process.run(cfg);
+    },
+    // Các dòng đang tick ở bảng strTableId, lấy đủ dữ liệu từ arrData (tra theo ID)
+    _selected: function (strTableId, arrData) {
+        if (edu.process) return edu.process.selectedRows(strTableId, arrData);
+        var map = {};
+        (arrData || []).forEach(function (r) { map[r.ID] = r; });
+        return edu.util.getArrCheckedIds(strTableId, "checkX").map(function (id) { return map[id]; }).filter(function (r) { return !!r; });
+    },
+    _tenKeHoach: function (strId) {
+        var r = edu.util.objGetDataInData(strId, this.dtKeHoachChiTiet || [], "ID")[0];
+        return r ? edu.util.returnEmpty(r.TEN) : "";
+    },
+    // Thông báo ngay trong modal nhân sự (alert popup chồng lên modal BS3 làm hỏng modal bên dưới)
+    _notifyCanBo: function (strNoiDung) {
+        edu.system.alertOnModal({ type: "w", content: strNoiDung, prePos: "#myModalCanBo #notify" });
     },
 
     rewrite: function () {
@@ -722,7 +797,7 @@ KeHoachChiTiet.prototype = {
             'type': 'GET',
             'strTuKhoa': edu.util.getValById('txtAAAA'),
             'strNguoiDung_Id': edu.util.getValById('dropAAAA'),
-            'strKLGD_KeHoachChiTiet_Id': me.strKeHoachChiTiet_Id,
+            'strKLGD_KeHoachChiTiet_Id': strKLGD_KeHoachChiTiet_Id || me.strKeHoachChiTiet_Id,
             'strNguoiThucHien_Id': edu.system.userId,
             'pageIndex': 1,
             'pageSize': 100000,
@@ -732,6 +807,7 @@ KeHoachChiTiet.prototype = {
             success: function (data) {
                 if (data.Success) {
                     var dtReRult = data.Data;
+                    me.dtCanBoChiTiet = dtReRult;
                     me.genTable_CanBoChiTiet(dtReRult, data.Pager);
                 }
                 else {
@@ -754,10 +830,12 @@ KeHoachChiTiet.prototype = {
     },
 
 
-    save_PhanCong: function (strId) {
+    /*------------------------------------------
+    --Discription: Dựng tham số 1 lời gọi cho form tiến trình (edu.process gọi makeRequest, tự báo Thành công/Không thành công)
+    -- Giữ nguyên action/func/tham số của save_PhanCong/delete_PhanCong cũ
+    -------------------------------------------*/
+    req_PhanCong: function (strNguoiDung_Id, strKLGD_KeHoachChiTiet_Id) {
         var me = this;
-        //--Edit
-
         //var obj_save = {
         //    'action': 'NS_KLGD_KeHoach_MH/FSkkLB4KDQYFHhUuLyYJLjEKDR4PKSAvEjQP',
         //    'func': 'PKG_KLGV_V2_KEHOACH.Them_KLGD_TongHopKL_NhanSu',
@@ -770,79 +848,21 @@ KeHoachChiTiet.prototype = {
             'action': 'NS_KLGD_KeHoach_MH/FSkkLB4KDQYFHgokCS4gIikCKSgVKCQ1Hg8S',
             'func': 'PKG_KLGV_V2_KEHOACH.Them_KLGD_KeHoachChiTiet_NS',
             'iM': edu.system.iM,
-            'strNguoiDung_Id': strId,
-            'strKLGD_KeHoachChiTiet_Id': me.strKeHoachChiTiet_Id,
+            'strNguoiDung_Id': strNguoiDung_Id,
+            'strKLGD_KeHoachChiTiet_Id': strKLGD_KeHoachChiTiet_Id || me.strKeHoachChiTiet_Id,
             'strNguoiThucHien_Id': edu.system.userId,
         };
-        //
-
-        edu.system.makeRequest({
-            success: function (data) {
-                if (data.Success) {
-                    edu.system.alert("Thực hiện thành công");
-                }
-                else {
-                    edu.system.alert(obj_save.action + " : " + data.Message, "s");
-                }
-
-            },
-            error: function (er) {
-
-                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
-            },
-            type: "POST",
-            action: obj_save.action,
-            complete: function () {
-                edu.system.start_Progress("zoneprocessXXXX", function () {
-                    me.getList_NhanSuChiTiet();
-                });
-            },
-            contentType: true,
-            data: obj_save,
-            fakedb: [
-
-            ]
-        }, false, false, false, null);
+        return { action: obj_save.action, type: "POST", contentType: true, data: obj_save };
     },
-    delete_PhanCong: function (strGiangVien_Id) {
-        var me = this;
-        //--Edit
+    req_PhanCong_Xoa: function (strId) {
         var obj_save = {
             'action': 'NS_KLGD_KeHoach_MH/GS4gHgoNBgUeCiQJLiAiKQIpKBUoJDUeDxIP',
             'func': 'PKG_KLGV_V2_KEHOACH.Xoa_KLGD_KeHoachChiTiet_NS',
             'iM': edu.system.iM,
-            'strIds': strGiangVien_Id,
+            'strIds': strId,
             'strNguoiThucHien_Id': edu.system.userId,
         };
-        //
-
-        edu.system.makeRequest({
-            success: function (data) {
-                if (data.Success) {
-                    edu.system.alert("Xóa thành công");
-                }
-                else {
-                    edu.system.alert(obj_save.action + " : " + data.Message, "s");
-                }
-
-            },
-            error: function (er) {
-
-                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
-            },
-            type: "POST",
-            action: obj_save.action,
-            complete: function () {
-                edu.system.start_Progress("zoneprocessXXXX", function () {
-                    me.getList_NhanSuChiTiet();
-                });
-            },
-            contentType: true,
-            data: obj_save,
-            fakedb: [
-
-            ]
-        }, false, false, false, null);
+        return { action: obj_save.action, type: "POST", contentType: true, data: obj_save };
     },
     genTable_CanBo: function (data, iPager) {
         var me = this;
@@ -876,6 +896,7 @@ KeHoachChiTiet.prototype = {
     },
     genTable_CanBoChiTiet: function (data, iPager) {
         var me = this;
+        $("#chkSelectAll_CanBo").prop("checked", false);
         var jsonForm = {
             strTable_Id: "tblCanBo",
 

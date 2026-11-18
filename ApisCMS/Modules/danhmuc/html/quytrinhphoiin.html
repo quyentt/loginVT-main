@@ -1,0 +1,326 @@
+<style>
+    /* ===== Quy trình phôi in — CSS gói gọn trong #qtpWrap =====
+       Không dùng .row/.col/.box/.btn của vỏ (indexi đặt .box-body padding 0, .btn spinner 1s + cao 28px !important)
+       -> tự dựng grid + nút riêng .qtp-btn. */
+    #qtpWrap {
+        --ink: #0f172a; --ink2: #334155; --mute: #64748b; --line: #e2e8f0; --soft: #f8fafc;
+        --blue: #2563eb; --blue-d: #1d4ed8; --blue-50: #eff6ff; --blue-100: #dbeafe;
+        --green: #16a34a; --green-50: #f0fdf4; --green-100: #dcfce7;
+        --amber: #b45309; --amber-50: #fffbeb; --amber-100: #fef3c7;
+        --red: #dc2626; --red-50: #fef2f2; --purple: #7c3aed; --purple-50: #f5f3ff;
+        display: flex; flex-direction: column; gap: 16px;
+        color: var(--ink); font-size: 13.5px; line-height: 1.5;
+    }
+    #qtpWrap *, #qtpWrap *::before, #qtpWrap *::after { box-sizing: border-box; }
+    #qtpWrap h2, #qtpWrap h3, #qtpWrap h4 { margin: 0; color: var(--ink); }
+    #qtpWrap code { background: #f1f5f9; color: #0f172a; border-radius: 4px; padding: 1px 5px; font-size: 12px; white-space: normal; word-break: break-word; }
+    #qtpWrap a { cursor: pointer; }
+    #qtpWrap .qtp-card { background: #fff; border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 1px 2px rgba(15, 23, 42, .05); }
+
+    /* --- Nút --- */
+    #qtpWrap .qtp-btn {
+        display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+        height: auto; min-height: 36px; padding: 7px 14px; border-radius: 8px;
+        border: 1px solid var(--line); background: #fff; color: var(--ink2);
+        font-size: 13px; font-weight: 600; line-height: 1.2; cursor: pointer; white-space: nowrap;
+        transition: background .12s, border-color .12s, color .12s, box-shadow .12s; text-decoration: none;
+    }
+    #qtpWrap .qtp-btn:hover { background: var(--soft); border-color: #cbd5e1; color: var(--ink); }
+    #qtpWrap .qtp-btn:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+    #qtpWrap .qtp-btn[disabled] { opacity: .5; cursor: not-allowed; }
+    #qtpWrap .qtp-btn-primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+    #qtpWrap .qtp-btn-primary:hover { background: var(--blue-d); border-color: var(--blue-d); color: #fff; }
+    #qtpWrap .qtp-btn-success { background: var(--green); border-color: var(--green); color: #fff; min-height: 40px; padding: 9px 18px; font-size: 13.5px; }
+    #qtpWrap .qtp-btn-success:hover { background: #15803d; border-color: #15803d; color: #fff; }
+    #qtpWrap .qtp-btn-outline { border-color: var(--blue); color: var(--blue); }
+    #qtpWrap .qtp-btn-outline:hover { background: var(--blue-50); color: var(--blue-d); }
+    #qtpWrap .qtp-btn-amber { border-color: #f59e0b; color: var(--amber); background: #fff; }
+    #qtpWrap .qtp-btn-amber:hover { background: var(--amber-50); }
+    #qtpWrap .qtp-btn-ghost { border-color: transparent; background: transparent; color: var(--mute); }
+    #qtpWrap .qtp-btn-ghost:hover { background: #f1f5f9; color: var(--ink); }
+    #qtpWrap .qtp-btn-sm { min-height: 30px; padding: 5px 10px; font-size: 12.5px; }
+    #qtpWrap .qtp-btn-icon { width: 34px; min-height: 34px; padding: 0; }
+
+    /* --- Chip / pill --- */
+    #qtpWrap .qtp-chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; background: #f1f5f9; color: var(--ink2); font-size: 12px; font-weight: 600; white-space: nowrap; }
+    #qtpWrap .qtp-chip .dot { width: 8px; height: 8px; border-radius: 50%; background: #94a3b8; }
+    #qtpWrap .qtp-chip.ok .dot { background: var(--green); }
+    #qtpWrap .qtp-chip.err { background: var(--red-50); color: var(--red); }
+    #qtpWrap .qtp-chip.err .dot { background: var(--red); }
+    #qtpWrap .qtp-pill { display: inline-flex; align-items: center; gap: 4px; padding: 2px 9px; border-radius: 999px; font-size: 11.5px; font-weight: 700; white-space: nowrap; background: #f1f5f9; color: var(--mute); }
+    #qtpWrap .qtp-pill.done { background: var(--green-100); color: #166534; }
+    #qtpWrap .qtp-pill.skip { background: var(--amber-100); color: #92400e; }
+    #qtpWrap .qtp-pill.cur { background: var(--blue-100); color: var(--blue-d); }
+    #qtpWrap .qtp-pill.unsaved { background: var(--red-50); color: var(--red); }
+
+    /* --- Đầu trang --- */
+    #qtpWrap .qtp-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 2px 2px 0; }
+    #qtpWrap .qtp-head-l { display: flex; align-items: center; gap: 14px; min-width: 0; }
+    #qtpWrap .qtp-head-icon { width: 46px; height: 46px; border-radius: 12px; background: var(--blue); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 20px; flex: 0 0 auto; box-shadow: 0 6px 14px rgba(37, 99, 235, .25); }
+    #qtpWrap .qtp-title { font-size: 20px; font-weight: 700; letter-spacing: -.01em; }
+    #qtpWrap .qtp-sub { color: var(--mute); font-size: 13px; }
+    #qtpWrap .qtp-head-r { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+    /* --- Chọn quy trình --- */
+    #qtpWrap .qtp-flows { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    #qtpWrap .qtp-flow { position: relative; display: flex; gap: 14px; align-items: flex-start; padding: 16px 18px; cursor: pointer; text-align: left; border: 1.5px solid var(--line); transition: border-color .12s, background .12s, box-shadow .12s; }
+    #qtpWrap .qtp-flow:hover { border-color: #93c5fd; box-shadow: 0 4px 14px rgba(15, 23, 42, .06); }
+    #qtpWrap .qtp-flow.active { border-color: var(--blue); background: linear-gradient(0deg, #fff, var(--blue-50)); box-shadow: 0 0 0 3px rgba(37, 99, 235, .12); }
+    #qtpWrap .qtp-flow-icon { width: 44px; height: 44px; border-radius: 11px; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; font-size: 19px; }
+    #qtpWrap .qtp-flow-icon.blue { background: var(--blue-100); color: var(--blue-d); }
+    #qtpWrap .qtp-flow-icon.amber { background: var(--amber-100); color: var(--amber); }
+    #qtpWrap .qtp-flow-name { font-size: 15px; font-weight: 700; color: var(--ink); }
+    #qtpWrap .qtp-flow-desc { color: var(--ink2); font-size: 13px; margin-top: 2px; }
+    #qtpWrap .qtp-flow-meta { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+    #qtpWrap .qtp-flow-check { position: absolute; top: 12px; right: 12px; width: 22px; height: 22px; border-radius: 50%; background: var(--blue); color: #fff; display: none; align-items: center; justify-content: center; font-size: 12px; }
+    #qtpWrap .qtp-flow.active .qtp-flow-check { display: flex; }
+
+    /* --- Ngữ cảnh: mẫu + phiên --- */
+    #qtpWrap .qtp-ctx { display: grid; grid-template-columns: minmax(240px, 340px) minmax(0, 1fr) auto; gap: 18px; align-items: center; padding: 14px 18px; }
+    #qtpWrap .qtp-lbl { display: block; font-size: 11.5px; font-weight: 700; color: var(--mute); text-transform: uppercase; letter-spacing: .04em; margin: 0 0 5px; }
+    #qtpWrap .qtp-ctx-info { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; min-width: 0; }
+    #qtpWrap .qtp-ctx-phien { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+    #qtpWrap .qtp-phien-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    #qtpWrap .qtp-phien-text { font-size: 12.5px; color: var(--ink2); }
+    #qtpWrap .qtp-phien-text b { color: var(--ink); }
+    #qtpWrap select.qtp-select { height: 32px; border: 1px solid var(--line); border-radius: 7px; padding: 0 8px; font-size: 12.5px; color: var(--ink); background: #fff; max-width: 280px; }
+    #qtpWrap .qtp-inline-confirm { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; background: var(--amber-50); border: 1px solid #fcd34d; border-radius: 8px; padding: 6px 10px; font-size: 12.5px; color: #78350f; }
+
+    /* --- Khối chính --- */
+    #qtpWrap .qtp-main { display: grid; grid-template-columns: 330px minmax(0, 1fr); gap: 16px; align-items: start; }
+
+    /* Stepper */
+    #qtpWrap .qtp-steps { padding: 16px 14px 10px; position: sticky; top: 10px; }
+    #qtpWrap .qtp-steps-head { padding: 0 6px 12px; border-bottom: 1px solid var(--line); margin-bottom: 8px; }
+    #qtpWrap .qtp-steps-title { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-weight: 700; font-size: 14px; }
+    #qtpWrap .qtp-progress { height: 8px; border-radius: 999px; background: #eef2f7; overflow: hidden; margin-top: 10px; }
+    #qtpWrap .qtp-progress > span { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--blue), #22c55e); transition: width .3s; }
+    #qtpWrap .qtp-progress-text { font-size: 12px; color: var(--mute); margin-top: 6px; }
+    #qtpWrap .qtp-done-box { margin-top: 10px; background: var(--green-50); border: 1px solid #bbf7d0; color: #166534; border-radius: 8px; padding: 8px 10px; font-size: 12.5px; display: flex; gap: 8px; align-items: flex-start; }
+    #qtpWrap .qtp-step-list { list-style: none; margin: 0; padding: 0; }
+    #qtpWrap .qtp-step { position: relative; display: flex; gap: 12px; align-items: flex-start; padding: 10px 8px; border-radius: 10px; cursor: pointer; transition: background .12s; }
+    #qtpWrap .qtp-step:hover { background: var(--soft); }
+    #qtpWrap .qtp-step.is-view { background: var(--blue-50); box-shadow: inset 3px 0 0 var(--blue); }
+    #qtpWrap .qtp-step:not(:last-child)::after { content: ""; position: absolute; left: 22px; top: 40px; bottom: -8px; width: 2px; background: var(--line); }
+    #qtpWrap .qtp-step.is-done:not(:last-child)::after { background: #86efac; }
+    #qtpWrap .qtp-step-dot { position: relative; z-index: 1; width: 29px; height: 29px; flex: 0 0 auto; border-radius: 50%; border: 2px solid #cbd5e1; background: #fff; color: var(--mute); display: flex; align-items: center; justify-content: center; font-size: 12.5px; font-weight: 700; }
+    #qtpWrap .qtp-step.is-done .qtp-step-dot { background: var(--green); border-color: var(--green); color: #fff; }
+    #qtpWrap .qtp-step.is-skip .qtp-step-dot { background: var(--amber-100); border-color: #f59e0b; color: var(--amber); }
+    #qtpWrap .qtp-step.is-cur .qtp-step-dot { border-color: var(--blue); color: var(--blue); box-shadow: 0 0 0 4px rgba(37, 99, 235, .15); }
+    #qtpWrap .qtp-step-body { flex: 1 1 auto; min-width: 0; padding-top: 3px; }
+    #qtpWrap .qtp-step-name { font-weight: 600; color: var(--ink); font-size: 13.5px; line-height: 1.35; }
+    #qtpWrap .qtp-step-meta { font-size: 12px; color: var(--mute); margin-top: 2px; display: flex; align-items: center; gap: 5px; }
+    #qtpWrap .qtp-step-side { padding-top: 4px; }
+
+    /* Chi tiết bước */
+    #qtpWrap .qtp-detail { padding: 0; overflow: hidden; }
+    #qtpWrap .qtp-d-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding: 18px 22px 14px; border-bottom: 1px solid var(--line); }
+    #qtpWrap .qtp-eyebrow { font-size: 11.5px; font-weight: 700; color: var(--blue); text-transform: uppercase; letter-spacing: .06em; }
+    #qtpWrap .qtp-d-title { font-size: 18px; font-weight: 700; margin-top: 2px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    #qtpWrap .qtp-d-purpose { color: var(--ink2); margin-top: 4px; }
+    #qtpWrap .qtp-d-nav { display: flex; gap: 6px; flex: 0 0 auto; }
+    #qtpWrap .qtp-d-body { padding: 18px 22px 6px; display: flex; flex-direction: column; gap: 18px; }
+    #qtpWrap .qtp-sec-title { font-size: 12px; font-weight: 700; color: var(--mute); text-transform: uppercase; letter-spacing: .05em; margin: 0 0 8px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+
+    #qtpWrap .qtp-view { display: flex; gap: 14px; align-items: center; padding: 14px 16px; border-radius: 10px; border: 1px solid var(--blue-100); background: var(--blue-50); }
+    #qtpWrap .qtp-view.offline { border-color: var(--line); background: var(--soft); }
+    #qtpWrap .qtp-view.missing { border-color: #fcd34d; background: var(--amber-50); }
+    #qtpWrap .qtp-view-icon { width: 42px; height: 42px; border-radius: 10px; background: #fff; color: var(--blue); border: 1px solid var(--blue-100); display: flex; align-items: center; justify-content: center; font-size: 18px; flex: 0 0 auto; }
+    #qtpWrap .qtp-view.offline .qtp-view-icon { color: var(--mute); border-color: var(--line); }
+    #qtpWrap .qtp-view.missing .qtp-view-icon { color: var(--amber); border-color: #fcd34d; }
+    #qtpWrap .qtp-view-main { flex: 1 1 auto; min-width: 0; }
+    #qtpWrap .qtp-view-name { font-weight: 700; color: var(--ink); font-size: 14px; }
+    #qtpWrap .qtp-view-path { font-size: 12px; color: var(--mute); word-break: break-word; }
+    #qtpWrap .qtp-view-desc { font-size: 12.5px; color: var(--ink2); }
+    #qtpWrap .qtp-view-err { font-size: 12.5px; color: #92400e; margin-top: 3px; }
+    #qtpWrap .qtp-view.other { border-color: #c4b5fd; background: var(--purple-50); }
+    #qtpWrap .qtp-view.other .qtp-view-icon { color: var(--purple); border-color: #c4b5fd; }
+    #qtpWrap .qtp-view-note { font-size: 12.5px; color: #4c1d95; margin-top: 4px; }
+    #qtpWrap .qtp-view-note .fa { color: var(--purple); margin-right: 3px; }
+
+    #qtpWrap ol.qtp-howto { list-style: none; counter-reset: qtp; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+    #qtpWrap ol.qtp-howto > li { counter-increment: qtp; position: relative; padding-left: 34px; color: var(--ink); }
+    #qtpWrap ol.qtp-howto > li::before { content: counter(qtp); position: absolute; left: 0; top: 0; width: 23px; height: 23px; border-radius: 50%; background: #f1f5f9; color: var(--ink2); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+    #qtpWrap .qtp-callout { border-radius: 10px; padding: 10px 14px; font-size: 13px; }
+    #qtpWrap .qtp-callout ul { margin: 0; padding-left: 18px; }
+    #qtpWrap .qtp-callout li + li { margin-top: 4px; }
+    #qtpWrap .qtp-callout.warn { background: var(--amber-50); border: 1px solid #fde68a; color: #78350f; }
+    #qtpWrap .qtp-callout.info { background: var(--blue-50); border: 1px solid var(--blue-100); color: #1e3a8a; }
+    #qtpWrap .qtp-callout.err { background: var(--red-50); border: 1px solid #fecaca; color: #7f1d1d; }
+
+    #qtpWrap .qtp-checks { list-style: none; margin: 0; padding: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+    #qtpWrap .qtp-checks > li { display: flex; gap: 10px; align-items: flex-start; padding: 9px 12px; border-top: 1px solid #f1f5f9; }
+    #qtpWrap .qtp-checks > li:first-child { border-top: 0; }
+    #qtpWrap .qtp-checks .ic { width: 20px; height: 20px; border-radius: 50%; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; font-size: 11px; margin-top: 1px; }
+    #qtpWrap .qtp-checks .lv-ok .ic { background: var(--green-100); color: #166534; }
+    #qtpWrap .qtp-checks .lv-warn .ic { background: var(--amber-100); color: var(--amber); }
+    #qtpWrap .qtp-checks .lv-err .ic { background: var(--red-50); color: var(--red); }
+    #qtpWrap .qtp-checks .lv-info .ic { background: var(--blue-100); color: var(--blue-d); }
+    #qtpWrap .qtp-checks .lv-wait .ic { background: #f1f5f9; color: var(--mute); }
+    #qtpWrap .qtp-checks .tx { flex: 1 1 auto; min-width: 0; color: var(--ink); }
+    #qtpWrap .qtp-checks .act { flex: 0 0 auto; }
+
+    #qtpWrap .qtp-tool { border: 1px solid var(--line); background: var(--soft); border-radius: 10px; padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; }
+    #qtpWrap .qtp-tool-title { font-weight: 700; color: var(--ink); display: flex; align-items: center; gap: 8px; }
+    #qtpWrap .qtp-tool-title i { color: var(--blue); }
+    #qtpWrap .qtp-grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    #qtpWrap .qtp-grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    #qtpWrap .qtp-field { display: flex; flex-direction: column; gap: 4px; margin: 0; font-weight: 400; }
+    #qtpWrap .qtp-field > span { font-size: 12.5px; font-weight: 600; color: var(--ink2); }
+    #qtpWrap .qtp-field small { font-size: 12px; color: var(--mute); }
+    #qtpWrap .qtp-input, #qtpWrap textarea.qtp-input {
+        width: 100%; min-height: 36px; padding: 7px 10px !important; border: 1px solid #cbd5e1; border-radius: 8px;
+        background: #fff; color: #0f172a; font-weight: 600; font-size: 13px; box-shadow: none; outline: none;
+    }
+    #qtpWrap textarea.qtp-input { font-weight: 500; resize: vertical; min-height: 64px; line-height: 1.45; }
+    #qtpWrap .qtp-input::placeholder { color: #64748b; font-weight: 500; }
+    #qtpWrap .qtp-input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(37, 99, 235, .15); }
+    #qtpWrap .qtp-input.sm { width: 90px; min-height: 30px; padding: 4px 8px !important; display: inline-block; }
+    #qtpWrap .qtp-tbl { width: 100%; border-collapse: separate; border-spacing: 0; background: #fff; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; font-size: 12.5px; }
+    #qtpWrap .qtp-tbl th { background: #f1f5f9; color: var(--ink2); font-weight: 700; text-align: left; padding: 7px 10px; white-space: nowrap; }
+    #qtpWrap .qtp-tbl td { padding: 7px 10px; border-top: 1px solid #f1f5f9; color: var(--ink); vertical-align: top; }
+    #qtpWrap .qtp-tbl td.num, #qtpWrap .qtp-tbl th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    #qtpWrap .qtp-hint { font-size: 12.5px; color: var(--ink2); }
+    #qtpWrap .qtp-conv { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 12.5px; color: var(--ink2); }
+    #qtpWrap .qtp-seg { display: inline-flex; flex-wrap: wrap; gap: 6px; }
+    #qtpWrap .qtp-seg label { display: inline-flex; align-items: center; gap: 6px; margin: 0; padding: 6px 11px; border: 1px solid #cbd5e1; border-radius: 999px; background: #fff; font-size: 12.5px; font-weight: 600; color: var(--ink2); cursor: pointer; }
+    #qtpWrap .qtp-seg input { display: none; }
+    #qtpWrap .qtp-seg label.on { border-color: var(--blue); background: var(--blue-50); color: var(--blue-d); }
+    #qtpWrap .qtp-stat { display: flex; align-items: center; gap: 14px; }
+    #qtpWrap .qtp-stat-num { font-size: 28px; font-weight: 800; line-height: 1; color: var(--ink); }
+    #qtpWrap .qtp-stat-num.warn { color: var(--amber); }
+    #qtpWrap .qtp-stat-num.ok { color: var(--green); }
+
+    #qtpWrap .qtp-cklist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+    #qtpWrap .qtp-cklist label { display: flex; align-items: flex-start; gap: 10px; margin: 0; padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; font-weight: 500; color: var(--ink); cursor: pointer; background: #fff; }
+    #qtpWrap .qtp-cklist label.on { border-color: #86efac; background: var(--green-50); }
+    #qtpWrap .qtp-cklist input[type=checkbox] { width: 16px; height: 16px; margin: 2px 0 0; flex: 0 0 auto; accent-color: var(--green); }
+
+    #qtpWrap .qtp-actions { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 14px 22px 18px; border-top: 1px solid var(--line); background: #fcfdfe; margin-top: 6px; }
+    #qtpWrap .qtp-actions-l, #qtpWrap .qtp-actions-r { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    #qtpWrap .qtp-confirm-bar { margin: 0 22px; }
+    #qtpWrap .qtp-msg { margin: 0 22px; }
+    #qtpWrap .qtp-done-info { font-size: 12.5px; color: #166534; }
+
+    /* --- Nhật ký --- */
+    #qtpWrap .qtp-log-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+    #qtpWrap .qtp-log-title { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 15px; }
+    #qtpWrap .qtp-log-tools { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    #qtpWrap .qtp-segbtn { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: #fff; }
+    #qtpWrap .qtp-segbtn button { border: 0; background: transparent; padding: 7px 12px; font-size: 12.5px; font-weight: 600; color: var(--ink2); cursor: pointer; }
+    #qtpWrap .qtp-segbtn button + button { border-left: 1px solid var(--line); }
+    #qtpWrap .qtp-segbtn button.on { background: var(--blue-50); color: var(--blue-d); }
+    #qtpWrap .qtp-log-search { position: relative; }
+    #qtpWrap .qtp-log-search i { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--mute); font-size: 12px; }
+    #qtpWrap .qtp-log-search .qtp-input { width: 220px; padding-left: 28px !important; min-height: 32px; font-weight: 500; }
+    #qtpWrap .qtp-log-banner { margin: 12px 18px 0; }
+    #qtpWrap .qtp-log-list { list-style: none; margin: 0; padding: 6px 18px 14px; }
+    #qtpWrap .qtp-log-item { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; gap: 12px; padding: 11px 0; border-top: 1px solid #f1f5f9; }
+    #qtpWrap .qtp-log-item:first-child { border-top: 0; }
+    #qtpWrap .qtp-log-dot { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12.5px; }
+    #qtpWrap .c-blue { background: var(--blue-100); color: var(--blue-d); }
+    #qtpWrap .c-green { background: var(--green-100); color: #166534; }
+    #qtpWrap .c-amber { background: var(--amber-100); color: var(--amber); }
+    #qtpWrap .c-red { background: var(--red-50); color: var(--red); }
+    #qtpWrap .c-purple { background: var(--purple-50); color: var(--purple); }
+    #qtpWrap .c-slate { background: #f1f5f9; color: var(--ink2); }
+    #qtpWrap .qtp-log-l1 { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    #qtpWrap .qtp-log-act { font-weight: 700; color: var(--ink); }
+    #qtpWrap .qtp-log-tag { font-size: 11.5px; font-weight: 600; color: var(--ink2); background: #f1f5f9; border-radius: 6px; padding: 1px 7px; }
+    #qtpWrap .qtp-log-text { color: var(--ink); margin-top: 2px; word-break: break-word; }
+    #qtpWrap .qtp-log-l3 { font-size: 12px; color: var(--mute); margin-top: 3px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    #qtpWrap .qtp-log-l3 .bad { color: var(--red); font-weight: 600; }
+    #qtpWrap .qtp-log-l3 .pend { color: var(--amber); font-weight: 600; }
+    #qtpWrap .qtp-log-time { font-size: 12px; color: var(--mute); white-space: nowrap; text-align: right; }
+    #qtpWrap .qtp-log-detail { margin-top: 8px; display: none; }
+    #qtpWrap .qtp-log-item.open .qtp-log-detail { display: block; }
+    #qtpWrap .qtp-log-detail pre { margin: 0; background: #0f172a; color: #e2e8f0; border-radius: 8px; padding: 10px 12px; font-size: 11.5px; white-space: pre-wrap; word-break: break-word; max-height: 260px; overflow: auto; }
+    #qtpWrap .qtp-empty { padding: 26px 18px; text-align: center; color: var(--mute); }
+    #qtpWrap .qtp-empty i { font-size: 22px; display: block; margin-bottom: 6px; color: #cbd5e1; }
+    #qtpWrap .qtp-empty-sm { font-size: 12.5px; color: var(--mute); }
+    #qtpWrap .qtp-link { color: var(--blue); font-weight: 600; text-decoration: none; }
+    #qtpWrap .qtp-link:hover { text-decoration: underline; }
+
+    #qtpWrap .select2-container { width: 100% !important; }
+
+    @media (max-width: 1199px) {
+        #qtpWrap .qtp-main { grid-template-columns: minmax(0, 1fr); }
+        #qtpWrap .qtp-steps { position: static; }
+        #qtpWrap .qtp-ctx { grid-template-columns: minmax(0, 1fr); }
+        #qtpWrap .qtp-ctx-phien { align-items: flex-start; }
+        #qtpWrap .qtp-phien-row { justify-content: flex-start; }
+    }
+    @media (max-width: 767px) {
+        #qtpWrap .qtp-flows, #qtpWrap .qtp-grid2, #qtpWrap .qtp-grid3 { grid-template-columns: minmax(0, 1fr); }
+        #qtpWrap .qtp-d-head, #qtpWrap .qtp-d-body, #qtpWrap .qtp-actions { padding-left: 16px; padding-right: 16px; }
+        #qtpWrap .qtp-log-item { grid-template-columns: 30px minmax(0, 1fr); }
+        #qtpWrap .qtp-log-time { grid-column: 2; text-align: left; }
+        #qtpWrap .qtp-log-search .qtp-input { width: 100%; }
+    }
+</style>
+<section class="content">
+    <div id="qtpWrap">
+        <!-- Đầu trang -->
+        <div class="qtp-head">
+            <div class="qtp-head-l">
+                <div class="qtp-head-icon"><i class="fa fa-sitemap"></i></div>
+                <div>
+                    <h2 class="qtp-title">Quy trình phôi in</h2>
+                    <div class="qtp-sub">Thiết lập và căn chỉnh mẫu phôi văn bằng theo từng bước — mỗi bước dẫn tới đúng màn hình, mọi thao tác được ghi nhật ký.</div>
+                </div>
+            </div>
+            <div class="qtp-head-r">
+                <span id="qtpApiChip" class="qtp-chip"><span class="dot"></span> Nhật ký: đang kiểm tra…</span>
+                <button type="button" class="qtp-btn qtp-btn-ghost" id="qtpBtnLamMoi" title="Nạp lại mẫu, kiểm tra tự động và nhật ký"><i class="fa fa-refresh"></i> Làm mới</button>
+            </div>
+        </div>
+
+        <!-- Chọn quy trình -->
+        <div class="qtp-flows" id="qtpFlows"></div>
+
+        <!-- Mẫu phôi + phiên làm việc -->
+        <div class="qtp-card qtp-ctx">
+            <div>
+                <span class="qtp-lbl">Mẫu phôi</span>
+                <select id="dropMau_QTP" class="select-opt" style="width:100% !important"></select>
+            </div>
+            <div class="qtp-ctx-info" id="qtpMauInfo"></div>
+            <div class="qtp-ctx-phien" id="qtpPhien"></div>
+        </div>
+
+        <!-- Các bước + chi tiết bước -->
+        <div class="qtp-main">
+            <div class="qtp-card qtp-steps" id="qtpSteps"></div>
+            <div class="qtp-card qtp-detail" id="qtpDetail"></div>
+        </div>
+
+        <!-- Nhật ký -->
+        <div class="qtp-card">
+            <div class="qtp-log-head">
+                <div class="qtp-log-title"><i class="fa fa-history" style="color:#2563eb"></i> Nhật ký <span class="qtp-chip" id="qtpNKDem">0</span></div>
+                <div class="qtp-log-tools">
+                    <div class="qtp-segbtn" id="qtpNKLoc">
+                        <button type="button" data-loc="phien" class="on">Phiên này</button>
+                        <button type="button" data-loc="mau">Mẫu đang chọn</button>
+                        <button type="button" data-loc="tatca">Tất cả phôi in</button>
+                    </div>
+                    <div class="qtp-log-search"><i class="fa fa-search"></i><input type="text" class="qtp-input" id="qtpNKTuKhoa" placeholder="Tìm trong nhật ký…" /></div>
+                    <button type="button" class="qtp-btn qtp-btn-sm" data-act="taiNhatKy"><i class="fa fa-refresh"></i> Tải lại</button>
+                </div>
+            </div>
+            <div class="qtp-log-banner" id="qtpNKBanner"></div>
+            <ul class="qtp-log-list" id="qtpNKList"></ul>
+        </div>
+    </div>
+</section>
+<!-- page script -->
+<script src="modules/danhmuc/script/phoiinflow.js?v=1.1.0.0"></script>
+<script src="modules/danhmuc/script/phoiinanh.js?v=1.0.0.0"></script>
+<script src="modules/danhmuc/script/quytrinhphoiin.js?v=1.2.0.0"></script>
+<script type="text/javascript">
+    var main_doc = {};
+    main_doc['QuyTrinhPhoiIn'] = new QuyTrinhPhoiIn();
+    $(document).ready(function () {
+        main_doc.QuyTrinhPhoiIn.init();
+    });
+</script>

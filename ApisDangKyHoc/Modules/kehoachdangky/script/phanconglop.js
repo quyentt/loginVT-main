@@ -31,6 +31,12 @@ PhanCongLop.prototype = {
         me.getList_KhoaDaoTao();
         me.getList_KhoaQuanLy();
         me.getList_CoSoDaoTao();
+        me.getList_CoSoDaoTao_PhamVi();
+        // Khoi "Co so dao tao ap dung" trong modal Chi tiet (dung chung voi phancongphamvi)
+        if (typeof PhanCongCSDT === "function") {
+            me.csdt = new PhanCongCSDT({ loai: 'LHP', zone: 'zoneCSDT_LHP', modal: 'myModal' });
+            me.csdt.init();
+        }
 
         $("#btnSearch").click(function (e) {
             me.getList_PhanCongLop();
@@ -141,6 +147,13 @@ PhanCongLop.prototype = {
                 name: this.name
             };
             me.getList_QuanSoTheoLop();
+            // Ke hoach + pham vi cho khoi Co so dao tao lay tu ban ghi dong vua bam
+            if (me.csdt) {
+                var strPhamVi_Id = this.id, strPhanCap_Id = this.name;
+                var oBanGhi = me.dtPhanCongLop.find(e => e.PHAMVIAPDUNG_ID === strPhamVi_Id && e.PHANCAPAPDUNG_ID === strPhanCap_Id)
+                    || me.dtPhanCongLop.find(e => e.PHAMVIAPDUNG_ID === strPhamVi_Id);
+                me.csdt.open(oBanGhi);
+            }
         });
         $("#zonePhanCong").delegate('.checkAllTable', 'click', function (e) {
             var strTable_Id = this.id.replace("chkSelectAll_", "tblPhanCong");
@@ -191,6 +204,23 @@ PhanCongLop.prototype = {
                 if (strPhamVi != "") strPhamVi = strPhamVi.substr(2);
                 $("#lblPhamVi").html(strPhamVi);
             }
+        });
+        // Pham vi "Co so dao tao - Khoa hoc": giong "Khoa quan ly - khoa hoc",
+        // chi khac PhamViApDung_Id = ID co so dao tao + ID khoa dao tao.
+        $("#addCoSoDaoTaoKhoaHoc").click(function () {
+            var valCSDT = $("#dropCoSoDaoTao_PhamVi").val();
+            var valKDT = $("#dropKhoaDaoTao").val();
+            if (!valCSDT || !valKDT) {
+                edu.system.alert("Vui lòng chọn Cơ sở đào tạo và Khóa!");
+                return;
+            }
+            var strId = valCSDT + valKDT;
+            if (me.arrPhamVi.find(e => e.id === strId) !== undefined) return;
+            me.arrPhamVi.push({ id: strId, name: $("#dropCoSoDaoTao_PhamVi option:selected").text() + " - " + $("#dropKhoaDaoTao option:selected").text() });
+            var strPhamVi = "";
+            me.arrPhamVi.forEach(ele => strPhamVi += " ," + ele.name);
+            if (strPhamVi != "") strPhamVi = strPhamVi.substr(2);
+            $("#lblPhamVi").html(strPhamVi);
         });
         /*------------------------------------------
         --Discription: [2] Action SinhVien
@@ -262,6 +292,7 @@ PhanCongLop.prototype = {
         var me = this;
         me.arrPhamVi = [];
         $("#lblPhamVi").html("");
+        edu.util.viewValById("dropCoSoDaoTao_PhamVi", "");
         edu.util.viewValById("dropKhoaQuanLy", "");
         edu.util.viewValById("dropHeDaoTao", "");
         edu.util.viewValById("dropKhoaDaoTao", "");
@@ -1477,6 +1508,42 @@ PhanCongLop.prototype = {
                 avatar: ""
             },
             renderPlace: ["dropCoSoDaoTao"],
+            type: "",
+            title: "Chọn cơ sở đào tạo",
+        }
+        edu.system.loadToCombo_data(obj);
+    },
+    /*------------------------------------------
+    --Discription: DS co so dao tao cho pham vi "Co so dao tao - Khoa hoc" (ham chung,
+    --  cung nguon voi khoi CSDT trong modal Chi tiet - phancong_csdt.js)
+    -------------------------------------------*/
+    getList_CoSoDaoTao_PhamVi: function () {
+        var me = this;
+        edu.system.getList_CoSoDaoTao({
+            strNguoiThucHien_Id: edu.system.userId,
+            strTuKhoa: '',
+            pageIndex: 1,
+            pageSize: 100000
+        }, "", "", function (data) {
+            me.cbGenCombo_CoSoDaoTao_PhamVi(data || []);
+        });
+    },
+    cbGenCombo_CoSoDaoTao_PhamVi: function (data) {
+        var obj = {
+            data: data,
+            renderInfor: {
+                id: "ID",
+                parentId: "",
+                name: "TEN",
+                code: "",
+                avatar: "",
+                mRender: function (nRow, aData) {
+                    var strTen = edu.util.returnEmpty(aData.TEN);
+                    var strMa = edu.util.returnEmpty(aData.MA);
+                    return (strMa && strMa != strTen) ? (strTen ? strTen + " (" + strMa + ")" : strMa) : (strTen || strMa);
+                }
+            },
+            renderPlace: ["dropCoSoDaoTao_PhamVi"],
             type: "",
             title: "Chọn cơ sở đào tạo",
         }

@@ -17,6 +17,7 @@ InBangDiem.prototype = {
     strPhamViMa: '',
     strSinhVien_Id: '',
     strDaoTao_LopQuanLy_Id: [],
+    strView: 'DSSV', // view đang hiện: 'DSSV' (danh sách sinh viên) | 'NOMON' (danh sách còn nợ môn)
 
     init: function () {
         var me = this;
@@ -56,12 +57,13 @@ InBangDiem.prototype = {
         //me.getList_HinhThuc();
         //me.getList_LoaiQuyetDinh();
 
+        // Tìm kiếm / đổi bộ lọc: nạp lại đúng view đang xem (đang ở "Danh sách còn nợ môn" thì nạp lại nợ môn, không nhảy về DSSV)
         $("#btnSearch").click(function (e) {
-            me.getList_SinhVien();
+            me.reload_DanhSach();
         });
         $("#txtSearch_QD").keypress(function (e) {
             if (e.which === 13) {
-                me.getList_SinhVien();
+                me.reload_DanhSach();
             }
         });
         $(".btnClose").click(function () {
@@ -225,7 +227,7 @@ InBangDiem.prototype = {
             me.getList_KhoaDaoTao();
             me.getList_ChuongTrinhDaoTao();
             me.getList_LopQuanLy();
-            me.getList_SinhVien();
+            me.reload_DanhSach();
         });
         $('#dropSearch_HeDaoTao_QD').on('select2:select', function (e) {
 
@@ -233,24 +235,24 @@ InBangDiem.prototype = {
             me.getList_ChuongTrinhDaoTao();
             me.getList_LopQuanLy();
             me.resetCombobox(this);
-            me.getList_SinhVien();
+            me.reload_DanhSach();
         });
         $('#dropSearch_KhoaDaoTao_QD').on('select2:select', function (e) {
 
             me.getList_ChuongTrinhDaoTao();
             me.getList_LopQuanLy();
-            me.getList_SinhVien();
+            me.reload_DanhSach();
             me.resetCombobox(this);
         });
         $('#dropSearch_ChuongTrinh_QD').on('select2:select', function (e) {
 
             me.getList_LopQuanLy();
-            me.getList_SinhVien();
+            me.reload_DanhSach();
             me.resetCombobox(this);
         });
         $('#dropSearch_Lop_QD').on('select2:select', function (e) {
 
-            me.getList_SinhVien();
+            me.reload_DanhSach();
             var x = $(this).val();
             me.resetCombobox(this);
         });
@@ -361,9 +363,23 @@ InBangDiem.prototype = {
         $("#btnTongHopDuLieu").click(function (e) {
             me.getList_TongHopDuLieu();
         });
+        // "Danh sách còn nợ môn": chuyển sang view nợ môn (thay chỗ danh sách SV) + nạp dữ liệu
         $("#btnSearchSinhVienNoMon").click(function (e) {
             me.getList_SinhVienNoMon();
         });
+        $("#btnQuayLai_DSSV").click(function (e) {
+            me.showView('DSSV');
+        });
+        $("#btnXuatExcel_NoMon").click(function (e) {
+            me.exportExcel_NoMon();
+        });
+        var tTimNhanh = null;
+        $("#txtTimNhanh_NoMon").on("input", function () {
+            clearTimeout(tTimNhanh);
+            tTimNhanh = setTimeout(function () { me.applyTimNhanh_NoMon(); }, 200);
+        });
+        // Nạp sẵn bộ xuất Excel chung (index.aspx chưa nạp Corei/exportexcel.js) để lần bấm đầu không phải chờ
+        me._ensureExporter();
 
         // Filter client-side: chỉ SV có Tài chính (TONGNOPHI) > 0
         $("#chkFilterCongNo").on("change", function () {
@@ -379,7 +395,8 @@ InBangDiem.prototype = {
             if ((e.ctrlKey || e.metaKey) && (e.key === 'g' || e.key === 'G' || e.which === 71)) {
                 e.preventDefault();
                 e.stopPropagation();
-                me.exportExcel_DSSinhVien();
+                if (me.strView === 'NOMON') me.exportExcel_NoMon();
+                else me.exportExcel_DSSinhVien();
             }
         });
 
@@ -837,11 +854,9 @@ InBangDiem.prototype = {
         if (data.length != 1) $("#dropSearch_KhoaQuanLy_QD").val(data[0].ID).trigger("change");
     },
 
-    getList_SinhVien: function (strDanhSach_Id) {
-        var me = this;
-        $("#tblSinhVienNoMon").parent().hide();
-        $("#tblSinhVien").parent().show();
-        var obj_save = {
+    // Tham số API danh sách SV (chưa có trang) — dùng chung cho nạp từng trang và Xuất Excel toàn bộ
+    _req_DSSV: function () {
+        return {
             'action': 'D_BaoCao_MH/DSA4BSAvKRIgIikJLhIuDykoJDQPJiAvKQPP',
             'func': 'pkg_diem_baocao.LayDanhSachHoSoNhieuNganh',
             'iM': edu.system.iM,
@@ -856,9 +871,18 @@ InBangDiem.prototype = {
             'strChucNang_Id': edu.system.strChucNang_Id,
             'strTN_KeHoach_Id': edu.util.getValById('dropSearch_KeHoachXet'),
             'strNguoiThucHien_Id': edu.system.userId,
-            'pageIndex': edu.system.pageIndex_default,
-            'pageSize': edu.system.pageSize_default,
         };
+    },
+
+    getList_SinhVien: function (strDanhSach_Id) {
+        var me = this;
+        me.showView('DSSV');
+        var obj_save = me._req_DSSV();
+        // Giữ điều kiện của lần nạp gần nhất: Xuất Excel nạp lại TOÀN BỘ đúng điều kiện đang hiển thị (không đọc lại ô lọc lúc bấm)
+        me.objLoc_DSSV = $.extend({}, obj_save);
+        me.snapLoc_DSSV = me._snapLoc();
+        obj_save.pageIndex = edu.system.pageIndex_default;
+        obj_save.pageSize = edu.system.pageSize_default;
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
@@ -915,11 +939,103 @@ InBangDiem.prototype = {
     },
 
     /*------------------------------------------
-    --Discription: Xuất Excel theo dữ liệu DSSV đang hiển thị (đã apply filter tài chính)
-    --Nguồn: me.dtQuyetDinh
-    --Lib: XLSX (SheetJS) - load lazy từ CDN trong inbangdiem.html
+    --Discription: Xuất Excel danh sách sinh viên qua chuẩn chung edu.exporter (cùng hộp thoại với "Danh sách còn nợ môn"):
+    --  nạp lại TOÀN BỘ danh sách theo điều kiện của lần tìm kiếm gần nhất (không chỉ trang đang xem) rồi hỏi trước khi xuất,
+    --  LỌC THÊM KHI XUẤT: Tài chính (còn nợ / không nợ), Trạng thái, Hệ, Khóa, Chương trình, Lớp + ô từ khóa chung;
+    --  mặc định tích sẵn theo bộ lọc ngoài màn hình ("Chỉ SV còn nợ tài chính" -> tích sẵn "Còn nợ tài chính").
     -------------------------------------------*/
     exportExcel_DSSinhVien: function () {
+        var me = this;
+        if (!me.objLoc_DSSV) {
+            edu.system.alert('Không có dữ liệu để xuất. Vui lòng tìm kiếm trước.', 'w');
+            return;
+        }
+        if (me._bNapXuat_DSSV) return;  // đang nạp toàn bộ: bỏ qua các lần bấm thêm (mỗi lần = 1 lần nạp lại + 1 hộp thoại)
+        me._ensureExporter(function (exp) {
+            me._napToanBo_DSSV(function (rows, iTong) {
+                if (!rows.length) {
+                    edu.system.alert('Không có sinh viên nào theo điều kiện tìm kiếm hiện tại.', 'w');
+                    return;
+                }
+                exp.exportWithConfirm(me._optsExport_DSSV(rows, iTong));
+            });
+        });
+    },
+    // Nạp toàn bộ danh sách (cùng API, cùng điều kiện, pageSize lớn). Giữ kết quả 5 phút: mở lại hộp thoại không nạp lại;
+    // bấm Tìm kiếm / đổi bộ lọc (reload_DanhSach) thì bỏ.
+    _napToanBo_DSSV: function (cb) {
+        var me = this;
+        var strKhoa = JSON.stringify(me.objLoc_DSSV);
+        var c = me._cacheXuat_DSSV;
+        if (c && c.key === strKhoa && Date.now() - c.at < 5 * 60 * 1000) { cb(c.rows, c.iTong); return; }
+        var obj_save = $.extend({}, me.objLoc_DSSV, { 'pageIndex': 1, 'pageSize': 1000000 });
+        me._bNapXuat_DSSV = true;
+        edu.system.makeRequest({
+            success: function (data) {
+                me._bNapXuat_DSSV = false;
+                if (data.Success) {
+                    var rows = data.Data || [];
+                    var iTong = parseInt(data.Pager, 10) || rows.length;
+                    me._cacheXuat_DSSV = { key: strKhoa, rows: rows, iTong: iTong, at: Date.now() };
+                    cb(rows, iTong);
+                }
+                else {
+                    edu.system.alert("Xuất Excel danh sách sinh viên: " + data.Message, "w");
+                }
+            },
+            error: function (er) {
+                me._bNapXuat_DSSV = false;
+                edu.system.alert("Xuất Excel danh sách sinh viên (er): " + JSON.stringify(er), "w");
+            },
+            type: "POST",
+            action: obj_save.action,
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
+    _optsExport_DSSV: function (rows, iTong) {
+        var me = this;
+        var snap = me.snapLoc_DSSV || { sel: {}, parts: [], trangThai: [] };
+        var CON_NO = "Còn nợ tài chính", KHONG_NO = "Không nợ";
+        return {
+            fileName: "DSSV_InBangDiem",
+            title: "DANH SÁCH SINH VIÊN",
+            subTitles: snap.parts.length ? [snap.parts.join("; ")] : [],
+            // Máy chủ trả thiếu so với tổng số (giới hạn số dòng phía BE) thì báo rõ, không giả vờ xuất đủ
+            notice: rows.length < iTong ? ("Máy chủ chỉ trả " + rows.length.toLocaleString("vi-VN") + " / " + iTong.toLocaleString("vi-VN")
+                + " sinh viên — file sẽ thiếu. Hãy thu hẹp điều kiện tìm kiếm rồi xuất lại.") : "",
+            columns: [
+                { header: "Mã số", field: "QLSV_NGUOIHOC_MASO" },
+                { header: "Họ đệm", field: "QLSV_NGUOIHOC_HODEM" },
+                { header: "Tên", field: "QLSV_NGUOIHOC_TEN" },
+                { header: "Ngày sinh", field: "QLSV_NGUOIHOC_NGAYSINH", align: "center" },
+                { header: "Trạng thái", field: "QLSV_TRANGTHAINGUOIHOC_TEN" },
+                { header: "Tài chính (còn nợ)", field: "TONGNOPHI", type: "number", format: "int", sum: true },
+                { header: "Lớp", field: "DAOTAO_LOPQUANLY_TEN" },
+                { header: "Chương trình", field: "DAOTAO_CHUONGTRINH_TEN" },
+                { header: "Khóa", field: "DAOTAO_KHOADAOTAO_TEN" },
+                { header: "Hệ", field: "DAOTAO_HEDAOTAO_TEN" },
+                { header: "ĐTBTL Hệ 4", field: "DTBTICHLUYHE4TOANKHOA", type: "number", align: "center" },
+                { header: "ĐTBTL Hệ 10", field: "DTBTICHLUYHE10TOANKHOA", type: "number", align: "center" },
+                { header: "Số TCTL", field: "SOTCTICHLUYTOANKHOA", align: "center" }
+            ],
+            data: rows,
+            filters: [
+                { label: "Tài chính", get: function (r) { return (Number(r.TONGNOPHI) || 0) > 0 ? CON_NO : KHONG_NO; }, selected: $("#chkFilterCongNo").is(":checked") ? [CON_NO] : [] },
+                { label: "Trạng thái", field: "QLSV_TRANGTHAINGUOIHOC_TEN", selected: snap.trangThai || [] },
+                { label: "Hệ đào tạo", field: "DAOTAO_HEDAOTAO_TEN", selected: snap.sel.dropSearch_HeDaoTao_QD || [] },
+                { label: "Khóa", field: "DAOTAO_KHOADAOTAO_TEN", selected: snap.sel.dropSearch_KhoaDaoTao_QD || [] },
+                { label: "Chương trình", field: "DAOTAO_CHUONGTRINH_TEN", selected: snap.sel.dropSearch_ChuongTrinh_QD || [] },
+                { label: "Lớp", field: "DAOTAO_LOPQUANLY_TEN", selected: snap.sel.dropSearch_Lop_QD || [] }
+            ]
+        };
+    },
+
+    /* CŨ (SheetJS nạp CDN, chỉ xuất TRANG ĐANG XEM) — thay bằng exportExcel_DSSinhVien ở trên (edu.exporter, xuất toàn bộ).
+       Giữ lại để mở lại khi cần.
+    exportExcel_DSSinhVien_SheetJS: function () {
         var me = this;
         if (typeof XLSX === 'undefined') {
             edu.system.alert('Thư viện Excel chưa load xong. Vui lòng thử lại sau vài giây.', 'w');
@@ -977,6 +1093,7 @@ InBangDiem.prototype = {
         var fileName = 'DSSV_InBangDiem' + tag + '_' + stamp + '.xlsx';
         XLSX.writeFile(wb, fileName);
     },
+    */
 
     /*------------------------------------------
     --Discription: Gửi Email KQHT / công nợ (theo pattern sinhviennotien.js)
@@ -3721,10 +3838,91 @@ InBangDiem.prototype = {
         }, false, false, false, null);
     },
     
-    getList_SinhVienNoMon: function (strQLSV_NguoiHoc_Id, strDaoTao_ChuongTrinh_Id) {
+    /*------------------------------------------
+    --Discription: 2 view thay chỗ nhau: 'DSSV' (danh sách sinh viên) | 'NOMON' (danh sách còn nợ môn).
+    --  Ẩn/hiện bằng thuộc tính hidden ở khối bao ngoài (#zoneView_*): .hide() trên .scroll-table-x KHÔNG ăn vì
+    --  index.aspx ép `.scroll-table-x { display:flex !important }` -> trước đây bảng nợ môn luôn nằm dưới bảng SV.
+    -------------------------------------------*/
+    showView: function (strView) {
         var me = this;
-        $("#tblSinhVienNoMon").parent().show();
-        $("#tblSinhVien").parent().hide();
+        var bNoMon = strView === 'NOMON';
+        var bDoi = me.strView !== (bNoMon ? 'NOMON' : 'DSSV');
+        me.strView = bNoMon ? 'NOMON' : 'DSSV';
+        $("#zoneView_DSSV").prop("hidden", bNoMon);
+        $("#zoneView_NoMon").prop("hidden", !bNoMon);
+        if (bNoMon) me._syncSticky_NoMon();
+        // Vừa chuyển view: sang nợ môn thì đưa đầu view lên trên (lặp lại sau khi vẽ xong dữ liệu — lúc bảng còn rỗng trang chưa đủ dài để cuộn);
+        // quay về DSSV thì chỉ cuộn khi đầu khối nằm ngoài tầm nhìn.
+        if (bDoi) me._cuonDenView(bNoMon ? "zoneView_NoMon" : "zoneView_DSSV", bNoMon);
+    },
+    // Đưa đầu khối lên đầu màn hình (scroll-margin-top trong CSS chừa thanh menu trên); bLuon=false: chỉ khi khối nằm ngoài tầm nhìn
+    _cuonDenView: function (strId, bLuon) {
+        var el = document.getElementById(strId);
+        if (!el || !el.getBoundingClientRect || el.hidden) return;
+        var r = el.getBoundingClientRect();
+        if (bLuon || r.top < 60 || r.top > (window.innerHeight || 800) - 120) {
+            try { el.scrollIntoView({ behavior: "smooth", block: "start" }); } catch (ex) { el.scrollIntoView(true); }
+        }
+    },
+    reload_DanhSach: function () {
+        var me = this;
+        me._cacheXuat_DSSV = null;  // tìm kiếm lại = muốn số liệu mới: Xuất Excel lần sau nạp lại từ máy chủ
+        if (me.strView === 'NOMON') me.getList_SinhVienNoMon();
+        else me.getList_SinhVien();
+    },
+
+    // Tên các mục đang chọn của 1 ô chọn (bỏ mục rỗng "Tất cả ..."/"Chọn ...")
+    _tenDaChon: function (strId) {
+        var arr = [];
+        $("#" + strId + " option:selected").each(function () {
+            var t = $(this).text().replace(/\s+/g, " ").trim();
+            if ($(this).val() && t) arr.push(t);
+        });
+        return arr;
+    },
+    // Tên các trạng thái SV đang tích; tích hết (hoặc không tích gì) = không lọc -> []
+    _trangThaiDaChon: function () {
+        var $all = $(".ckbDSTrangThaiSV_QD"), arr = [];
+        $all.filter(":checked").each(function () {
+            var t = $("label[for='" + this.id + "']").text().replace(/\s+/g, " ").trim();
+            if (t) arr.push(t);
+        });
+        return (arr.length === 0 || arr.length === $all.length) ? [] : arr;
+    },
+    // Chụp điều kiện tìm kiếm LÚC BẤM: file xuất mô tả đúng dữ liệu đã nạp + hộp thoại xuất tích sẵn theo đó (quy tắc chung của edu.exporter)
+    _snapLoc: function () {
+        var me = this;
+        var snap = { sel: {}, parts: [], trangThai: [] };
+        [
+            { label: "Khoa quản lý", id: "dropSearch_KhoaQuanLy_QD" },
+            { label: "Hệ đào tạo", id: "dropSearch_HeDaoTao_QD" },
+            { label: "Khóa đào tạo", id: "dropSearch_KhoaDaoTao_QD" },
+            { label: "Chương trình", id: "dropSearch_ChuongTrinh_QD" },
+            { label: "Lớp", id: "dropSearch_Lop_QD" },
+            { label: "Kế hoạch xét", id: "dropSearch_KeHoachXet" }
+        ].forEach(function (o) {
+            var arr = me._tenDaChon(o.id);
+            snap.sel[o.id] = arr;
+            if (arr.length) snap.parts.push(o.label + ": " + arr.join(", "));
+        });
+        snap.trangThai = me._trangThaiDaChon();
+        if (snap.trangThai.length) snap.parts.push("Trạng thái: " + snap.trangThai.join(", "));
+        var strTuKhoa = (edu.util.getValById('txtSearch_QD') || '').trim();
+        if (strTuKhoa) snap.parts.push("Từ khóa: " + strTuKhoa);
+        return snap;
+    },
+
+    getList_SinhVienNoMon: function () {
+        var me = this;
+        me.showView('NOMON');
+        me.snapLoc_NoMon = me._snapLoc();
+        // Xóa dữ liệu cũ trước khi nạp: lỗi giữa chừng thì không còn bảng/xuất Excel của lần lọc trước
+        me.dtSinhVienNoMon = [];
+        me._hayNoMon = null;
+        $("#txtTimNhanh_NoMon").val('');
+        $("#tblSinhVienNoMon tbody").html('');
+        $("#lblNoMon_Tong").html('...');
+        $("#lblNoMon_SoSV").html('Đang tải danh sách...');
         var obj_save = {
             'action': 'D_BaoCao_MH/DSA4BSAvKRIgIikPLgwuLwPP',
             'func': 'pkg_diem_baocao.LayDanhSachNoMon',
@@ -3744,16 +3942,20 @@ InBangDiem.prototype = {
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    var dtReRult = data.Data;
+                    var dtReRult = data.Data || [];
                     me["dtSinhVienNoMon"] = dtReRult;
                     me.genTable_SinhVienNoMon(dtReRult);
                 }
                 else {
-                    edu.system.alert(" : " + data.Message, "s");
+                    $("#lblNoMon_Tong").html('0');
+                    $("#lblNoMon_SoSV").html('');
+                    edu.system.alert("Danh sách còn nợ môn: " + data.Message, "s");
                 }
             },
             error: function (er) {
-                edu.system.alert(" (er): " + JSON.stringify(er), "w");
+                $("#lblNoMon_Tong").html('0');
+                $("#lblNoMon_SoSV").html('');
+                edu.system.alert("Danh sách còn nợ môn (er): " + JSON.stringify(er), "w");
             },
             type: 'POST',
             action: obj_save.action,
@@ -3763,19 +3965,21 @@ InBangDiem.prototype = {
             ]
         }, false, false, false, null);
     },
-    genTable_SinhVienNoMon: function (data, iPager) {
+    genTable_SinhVienNoMon: function (data) {
         var me = this;
-        $("#lblSinhVien_Tong").html(data.length)
+        data = data || [];
+        var objSV = {};
+        data.forEach(function (e) { objSV[e.QLSV_NGUOIHOC_MASO || e.QLSV_NGUOIHOC_ID || ''] = 1; });
+        me.iSoSV_NoMon = Object.keys(objSV).length;
+        me._hayNoMon = null;
+        // KHÔNG phân trang: API trả toàn bộ, bảng vẽ toàn bộ trong khung cuộn có tiêu đề dính.
+        // (bPaginate cũ chỉ hiện "Hiển thị 10" giả — vẫn vẽ hết — và đổi số dòng thì gọi getList_SinhVien, nhảy về danh sách SV.)
+        // Không đụng badge #lblSinhVien_Tong của danh sách SV (trước đây bị ghi đè bằng số dòng nợ môn).
         var jsonForm = {
             strTable_Id: "tblSinhVienNoMon",
             aaData: data,
-            bPaginate: {
-                strFuntionName: "main_doc.InBangDiem.getList_SinhVien()",
-                iDataRow: 1,
-                bFilter: true
-            },
             colPos: {
-                center: [0, 2],
+                center: [0, 10, 12, 13, 14, 18],
             },
             aoColumns: [
                 {
@@ -3792,7 +3996,7 @@ InBangDiem.prototype = {
                 },
                 {
                     mRender: function (nRow, aData) {
-                        return edu.util.returnEmpty(aData.DAOTAO_CHUONGTRINH_TEN) + "(" + edu.util.returnEmpty(aData.DAOTAO_CHUONGTRINH_MA) + ")";
+                        return edu.util.returnEmpty(aData.DAOTAO_CHUONGTRINH_TEN) + (edu.util.returnEmpty(aData.DAOTAO_CHUONGTRINH_MA) ? " (" + aData.DAOTAO_CHUONGTRINH_MA + ")" : "");
                     }
                 },
                 {
@@ -3844,8 +4048,162 @@ InBangDiem.prototype = {
             ]
         };
         edu.system.loadToTable_data(jsonForm);
+        $("#scrollWrap_NoMon").scrollTop(0).scrollLeft(0);
+        me._syncSticky_NoMon();
+        me.applyTimNhanh_NoMon();
+        // Có dữ liệu rồi mới cuộn được: đưa cả khung bảng (kèm thanh cuộn ngang ở đáy khung) lên trong màn hình
+        if (me.strView === 'NOMON') me._cuonDenView("zoneView_NoMon", true);
+    },
+    // Tiêu đề 2 dòng dính trên: dòng 2 dính ngay dưới dòng 1 (đo khi view đang hiện; ẩn thì giữ mặc định CSS)
+    _syncSticky_NoMon: function () {
+        var tbl = document.getElementById("tblSinhVienNoMon");
+        var h = $("#tblSinhVienNoMon thead tr:eq(0)").outerHeight();
+        if (tbl && h > 0) tbl.style.setProperty("--ibd-nomon-h1", Math.round(h) + "px");
+    },
 
-        //edu.system.actionRowSpan("tblLichHoc", [1,2,3]);
-        /*III. Callback*/
+    /*------------------------------------------
+    --Discription: Cột của danh sách còn nợ môn — dùng chung cho Tìm nhanh trên màn hình và file Excel
+    -------------------------------------------*/
+    _cols_NoMon: function () {
+        var v = edu.util.returnEmpty;
+        var G1 = "Thông tin sinh viên", G2 = "Thông tin học tập";
+        return [
+            { header: "Mã số", field: "QLSV_NGUOIHOC_MASO", group: G1 },
+            { header: "Họ tên", group: G1, render: function (r) { return (v(r.QLSV_NGUOIHOC_HODEM) + " " + v(r.QLSV_NGUOIHOC_TEN)).trim(); } },
+            { header: "Lớp", field: "DAOTAO_LOPQUANLY_TEN", group: G1 },
+            { header: "Chương trình", group: G1, render: function (r) { return v(r.DAOTAO_CHUONGTRINH_TEN) + (v(r.DAOTAO_CHUONGTRINH_MA) ? " (" + v(r.DAOTAO_CHUONGTRINH_MA) + ")" : ""); } },
+            { header: "Khoa quản lý", field: "DAOTAO_KHOAQUANLY_TEN", group: G1 },
+            { header: "Khóa học", field: "DAOTAO_KHOADAOTAO_TEN", group: G1 },
+            { header: "Trạng thái", field: "QLSV_TRANGTHAINGUOIHOC_TEN", group: G1 },
+            { header: "Mã học phần", field: "DAOTAO_HOCPHAN_MA", group: G2 },
+            { header: "Tên học phần", field: "DAOTAO_HOCPHAN_TEN", group: G2 },
+            { header: "Số tín", field: "DAOTAO_HOCPHAN_HOCTRINH", type: "number", align: "center", group: G2 },
+            { header: "Khối kiến thức", group: G2, render: function (r) { return v(r.TENKHOI) + (v(r.MAKHOI) ? " - " + v(r.MAKHOI) : ""); } },
+            { header: "Điểm", field: "DIEM", type: "number", align: "center", group: G2 },
+            { header: "Điểm quy đổi", field: "DIEMQUYDOI", type: "number", align: "center", group: G2 },
+            { header: "Điểm chữ", field: "DIEMQUYDOI_TEN", align: "center", group: G2 },
+            { header: "Đánh giá", field: "DANHGIA_TEN", group: G2 },
+            { header: "Thời gian", field: "THOIGIAN", group: G2 },
+            { header: "Lớp tín chỉ", field: "DIEM_DANHSACHHOC_TEN", group: G2 }
+        ];
+    },
+    // Chuỗi tìm kiếm (bỏ dấu) của từng dòng nợ môn — dựng 1 lần cho mỗi lần nạp
+    _hay_NoMon: function () {
+        var me = this;
+        if (me._hayNoMon) return me._hayNoMon;
+        var cols = me._cols_NoMon(), dt = me.dtSinhVienNoMon || [];
+        me._hayNoMon = dt.map(function (r) {
+            var parts = cols.map(function (c) { return c.render ? c.render(r) : edu.util.returnEmpty(r[c.field]); });
+            return edu.system.change_alias(parts.join(" "));
+        });
+        return me._hayNoMon;
+    },
+    _tuKhoa_NoMon: function () {
+        return edu.system.change_alias(String($("#txtTimNhanh_NoMon").val() || ""));
+    },
+    // Tìm nhanh trên màn hình (không gọi lại máy chủ); badge = số dòng đang hiện / tổng
+    applyTimNhanh_NoMon: function () {
+        var me = this;
+        var dt = me.dtSinhVienNoMon || [];
+        var q = me._tuKhoa_NoMon();
+        var rows = document.querySelectorAll("#tblSinhVienNoMon > tbody > tr");
+        var iHien = dt.length;
+        if (q && rows.length === dt.length) {
+            var hay = me._hay_NoMon();
+            iHien = 0;
+            for (var i = 0; i < rows.length; i++) {
+                var bOk = hay[i].indexOf(q) > -1;
+                rows[i].style.display = bOk ? "" : "none";
+                if (bOk) iHien++;
+            }
+        } else {
+            for (var j = 0; j < rows.length; j++) rows[j].style.display = "";
+        }
+        var fmt = function (n) { return Number(n).toLocaleString("vi-VN"); };
+        $("#lblNoMon_Tong").html(q ? fmt(iHien) + " / " + fmt(dt.length) : fmt(dt.length));
+        $("#lblNoMon_SoSV").html(dt.length
+            ? "dòng (học phần nợ) · " + fmt(me.iSoSV_NoMon || 0) + " sinh viên"
+            : "Không có sinh viên còn nợ môn theo điều kiện lọc");
+    },
+
+    /*------------------------------------------
+    --Discription: Xuất Excel danh sách còn nợ môn qua chuẩn chung edu.exporter (Corei/exportexcel.js):
+    --  hộp thoại hỏi trước khi xuất + LỌC THÊM KHI XUẤT (tích chọn nhiều: lớp, học phần, khối kiến thức, đánh giá, thời gian...),
+    --  ô từ khóa chung; mặc định tích sẵn theo bộ lọc đã chọn ngoài màn hình lúc bấm "Danh sách còn nợ môn".
+    --  Đang gõ "Tìm nhanh" thì chỉ xuất các dòng đang hiện (ghi từ khóa vào phụ đề file).
+    -------------------------------------------*/
+    exportExcel_NoMon: function () {
+        var me = this;
+        if (!(me.dtSinhVienNoMon || []).length) {
+            edu.system.alert('Chưa có dữ liệu. Vui lòng bấm "Danh sách còn nợ môn" để nạp danh sách trước.', 'w');
+            return;
+        }
+        me._ensureExporter(function (exp) {
+            exp.exportWithConfirm(me._optsExport_NoMon());
+        });
+    },
+    _optsExport_NoMon: function () {
+        var me = this;
+        var v = edu.util.returnEmpty;
+        var snap = me.snapLoc_NoMon || { sel: {}, parts: [], trangThai: [] };
+        var dt = me.dtSinhVienNoMon || [];
+        var q = me._tuKhoa_NoMon(), rows = dt;
+        if (q) {
+            var hay = me._hay_NoMon();
+            rows = dt.filter(function (e, i) { return hay[i].indexOf(q) > -1; });
+        }
+        var subs = [];
+        if (snap.parts.length) subs.push(snap.parts.join("; "));
+        if (q) subs.push("Tìm nhanh trên màn hình: \"" + String($("#txtTimNhanh_NoMon").val()).trim() + "\"");
+        return {
+            fileName: "DSSV_ConNoMon",
+            title: "DANH SÁCH SINH VIÊN CÒN NỢ MÔN",
+            subTitles: subs,
+            columns: me._cols_NoMon(),
+            data: rows,
+            filters: [
+                { label: "Khoa quản lý", field: "DAOTAO_KHOAQUANLY_TEN", selected: snap.sel.dropSearch_KhoaQuanLy_QD || [] },
+                { label: "Khóa học", field: "DAOTAO_KHOADAOTAO_TEN", selected: snap.sel.dropSearch_KhoaDaoTao_QD || [] },
+                { label: "Chương trình", field: "DAOTAO_CHUONGTRINH_TEN", selected: snap.sel.dropSearch_ChuongTrinh_QD || [] },
+                { label: "Lớp", field: "DAOTAO_LOPQUANLY_TEN", selected: snap.sel.dropSearch_Lop_QD || [] },
+                { label: "Trạng thái", field: "QLSV_TRANGTHAINGUOIHOC_TEN", selected: snap.trangThai || [] },
+                { label: "Khối kiến thức", get: function (r) { return v(r.TENKHOI) + (v(r.MAKHOI) ? " - " + v(r.MAKHOI) : ""); } },
+                { label: "Học phần", get: function (r) { return v(r.DAOTAO_HOCPHAN_TEN) + (v(r.DAOTAO_HOCPHAN_MA) ? " (" + v(r.DAOTAO_HOCPHAN_MA) + ")" : ""); } },
+                { label: "Đánh giá", field: "DANHGIA_TEN" },
+                { label: "Thời gian", field: "THOIGIAN" }
+            ]
+        };
+    },
+
+    /*------------------------------------------
+    --Discription: Bộ xuất Excel chung edu.exporter (Corei/exportexcel.js). indexi.aspx nạp sẵn; index.aspx (shell chạy trang này)
+    --  CHƯA nạp -> tự nạp 1 lần rồi đăng ký giống indexi.aspx: edu['exporter'] = new exportexcel().
+    --  Cần exportexcel.js >= 1.9.4: hộp thoại tự nhận Bootstrap 5 (nút Đóng/× dùng data-bs-dismiss).
+    -------------------------------------------*/
+    _ensureExporter: function (cb) {
+        var ready = function () { return !!(window.edu && edu.exporter && typeof edu.exporter.exportWithConfirm === "function"); };
+        var dangKy = function () { if (!ready() && typeof window.exportexcel === "function" && window.exportexcelApi) edu.exporter = new window.exportexcel(); };
+        dangKy();
+        if (ready()) { if (cb) cb(edu.exporter); return; }
+        if (!window.__ibdNapExporter) {
+            window.__ibdNapExporter = new Promise(function (resolve, reject) {
+                var s = document.createElement("script");
+                s.src = "Corei/exportexcel.js?v=1.9.4.0";
+                s.onload = function () { resolve(); };
+                s.onerror = function () { window.__ibdNapExporter = null; reject(new Error("không tải được Corei/exportexcel.js")); };
+                document.head.appendChild(s);
+            });
+        }
+        window.__ibdNapExporter.then(function () {
+            dangKy();
+            if (!ready()) throw new Error("Corei/exportexcel.js không đăng ký được edu.exporter");
+            return true;
+        }).then(null, function (ex) {
+            if (cb) edu.system.alert("Chưa dùng được chức năng Xuất Excel chung: " + ex.message + ". Kiểm tra file Corei/exportexcel.js trên máy chủ.", "w");
+            else if (window.console) console.warn("[inbangdiem] " + ex.message);
+            return false;
+        }).then(function (bOk) {
+            if (bOk && cb) cb(edu.exporter);
+        });
     },
 }

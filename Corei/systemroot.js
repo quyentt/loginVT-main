@@ -795,7 +795,9 @@ systemroot.prototype = {
             me.rootPathReport = objChucNang.TENFILEDINHKEM;
             sessionStorage.setItem("strChucNang_Id", objChucNang.ID);
             let strTenAnh = objChucNang.TENANH ? objChucNang.TENANH.trim() : "";
-            if (objChucNang.DUONGDANFILE && (!strTenAnh || strTenAnh.indexOf('fa ') != 0)) {
+            // Cổng sinh viên (Bootstrap 5) luôn về index.aspx, bất kể icon — xem Core/systemroot.js initMain (16/11).
+            var isCongSinhVien = objChucNang.MAUNGDUNG === 'ApisCongSinhVien';
+            if (objChucNang.DUONGDANFILE && (isCongSinhVien || !strTenAnh || strTenAnh.indexOf('fa ') != 0)) {
                 location.href = "./index.aspx"
             }
             //$("#sidebar-menu .active").removeClass('active');

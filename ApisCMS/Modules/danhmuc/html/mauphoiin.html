@@ -15,8 +15,25 @@
         border: dashed red;
     }
 
+    /* Nút "In" bị rule chung indexi.aspx (~998: ".box-header .pull-right>a.btn.btn-default" — vốn cho header nền xanh)
+       ép nền trong suốt + chữ trắng, mà header khung Phôi nền trắng -> nút vô hình. Đè bằng 2 id, chỉ trong trang này. */
+    #dadangky #btnInPhoi {
+        background: #ffffff !important;
+        border: 1px solid #2563eb !important;
+        color: #2563eb !important;
+        opacity: 1 !important;
+        font-weight: 600 !important;
+        padding: 6px 14px !important;
+        border-radius: 6px !important;
+        margin-right: 6px;
+    }
+    #dadangky #btnInPhoi:hover { background: #eff6ff !important; color: #1d4ed8 !important; }
+    #dadangky #btnInPhoi i { color: #2563eb !important; }
+
 </style>
 <section class="content aps-cms">
+    <!-- Banner khi mở từ trang Quy trình phôi in (PhoiInFlow.veBannerNguCanh) -->
+    <div id="zoneQuyTrinhPhoi" style="display:none"></div>
     <div class="zone-dangky box-phoi-in" id="zoneCauHinh">
         <!-- /.left-content -->
         <div class="col-sm-3 box-shadow">
@@ -277,6 +294,8 @@
                         <a id="btnSavePhoi" class="btn btn-primary btnSave"><i class="fa fa-save"></i> Lưu</a>
                     </div>
                 </div>
+                <!-- Trạng thái ghi nhật ký thay đổi (Lưu / Tạo mẫu / Xóa ô) -->
+                <div id="lblNhatKyPhoi" style="display:none;padding:6px 15px;font-size:12.5px;line-height:1.45;border-bottom:1px solid #f1f5f9"></div>
 
                 <div id="zoneMotherPhoi" class="col-sm-12 box box-solid ">
 
@@ -340,7 +359,8 @@
     </div>
 </div>
 <!-- page script -->
-<script src="modules/danhmuc/script/mauphoiin.js?v=1.0.0.0"></script>
+<script src="modules/danhmuc/script/phoiinflow.js?v=1.1.0.0"></script>
+<script src="modules/danhmuc/script/mauphoiin.js?v=1.0.1.0"></script>
 <script src="modules/danhmuc/script/qrcode.min.js"></script>
 <script type="text/javascript">
     var main_doc = {};

@@ -88,6 +88,7 @@ XacNhanKetQua.prototype = {
                 me.save_KetQua(arrThem[i], strMoTa, strTinhTrang);
             }
         });
+        /* ẨN (13/11/2026): nút Xác nhận cũ — thay bằng nút "Duyệt" (#btnDuyetDongBo → me.duyet_DongBo). Giữ code để mở lại khi cần.
         $("#btnXacNhan").click(function () {
             var arrThem = [];
             var arrXoa = [];
@@ -127,6 +128,8 @@ XacNhanKetQua.prototype = {
                 edu.system.alert("Vui lòng chọn đối tượng");
             }
         });
+        */
+        $("#btnDuyetDongBo").click(function () { me.duyet_DongBo(); });
 
         me.getList_HeDaoTao();
         me.getList_KhoaDaoTao();
@@ -442,7 +445,7 @@ XacNhanKetQua.prototype = {
                     "mRender": function (nRow, aData) {
                         var iThuTu = edu.system.icolumn++;
                         return '<label id="inputNoiDung_' + aData.ID + '_' + main_doc.XacNhanKetQua.dtThongTin_View[iThuTu].ID + '" ></label>'
-                            + '<input type="checkbox" class="check' + aData.ID + ' check' + main_doc.XacNhanKetQua.dtThongTin_View[iThuTu].ID + ' checkPhanQuyen poiter" id="chkSelect_' + aData.ID + '_' + main_doc.XacNhanKetQua.dtThongTin_View[iThuTu].ID + '" sanpham="' + main_doc.XacNhanKetQua.dtThongTin_View[iThuTu].ID + aData.ID +'" />'
+                            + '<input type="checkbox" class="check' + aData.ID + ' check' + main_doc.XacNhanKetQua.dtThongTin_View[iThuTu].ID + ' checkPhanQuyen poiter" id="chkSelect_' + aData.ID + '_' + main_doc.XacNhanKetQua.dtThongTin_View[iThuTu].ID + '" sanpham="' + main_doc.XacNhanKetQua.dtThongTin_View[iThuTu].ID + aData.ID + '" data-row="' + aData.ID + '" data-tt="' + main_doc.XacNhanKetQua.dtThongTin_View[iThuTu].ID + '" />'
                             + '<span id="lblxacnhan_' + aData.ID + '_' + main_doc.XacNhanKetQua.dtThongTin_View[iThuTu].ID + '"></span>';
                     }
                 }
@@ -569,6 +572,101 @@ XacNhanKetQua.prototype = {
         setTimeout(function () {
             me.getList_TongHop();
         }, 1000);
+    },
+
+    /*------------------------------------------
+    --Discription: Duyệt kết quả kê khai → đồng bộ vào hồ sơ (PKG_KEKHAI_DONGBO.DongBoTheoKeHoach)
+    --  Mỗi ô đã tick trong #tblKetQua (dòng SV × cột trường thông tin) = 1 bản ghi của form tiến trình edu.process:
+    --  strQLSV_NguoiHoc_Id = QLSV_NGUOIHOC_ID của dòng (LayDSQLSV_KeHoach_PhamVi_DL), strKeHoach_Id = kế hoạch đang chọn,
+    --  strTruongThongTin_Id = ID cột. Bước 1 của form (bấm RUN) là bước xác nhận duyệt.
+    -------------------------------------------*/
+    duyet_DongBo: function () {
+        var me = this;
+        if (!edu.process) {
+            edu.system.alert("Chưa cập nhật form tiến trình (thiếu Corei/processrun.js hoặc indexi.aspx).", "w");
+            return;
+        }
+        var strKeHoach_Id = edu.util.getValById('dropSearch_KeHoach');
+        if (!edu.util.checkValue(strKeHoach_Id) || strKeHoach_Id === 'DULIEUGOC') {
+            edu.system.alert('Vui lòng chọn Kế hoạch (khác "Dữ liệu gốc") trước khi duyệt.', 'w');
+            return;
+        }
+        // chốt tại lúc bấm: đổi list giữa chừng không ảnh hưởng lượt đang chạy
+        var strHanhDongXuLy = edu.util.getValById('dropSearch_HanhDongXuLy') || 'GHIDE';
+        var strHanhDongXuLy_Ten = $("#dropSearch_HanhDongXuLy option:selected").text().trim() || strHanhDongXuLy;
+        var v = edu.util.returnEmpty;
+        var mapSV = {}, mapTT = {}, seen = {}, items = [];
+        (me.dtSinhVien || []).forEach(function (r) { if (r) mapSV[r.ID] = r; });
+        (me.dtThongTin || []).forEach(function (t) { if (t) mapTT[t.ID] = t; });
+        // querySelectorAll gốc: nhanh cả khi bảng nhiều dòng × nhiều cột
+        var nodes = document.querySelectorAll('#tblKetQua tbody input.checkPhanQuyen:checked');
+        for (var i = 0; i < nodes.length; i++) {
+            var sv = mapSV[nodes[i].getAttribute('data-row')];
+            var tt = mapTT[nodes[i].getAttribute('data-tt')];
+            if (!sv || !tt) continue;
+            var strKey = v(sv.QLSV_NGUOIHOC_ID) + '_' + tt.ID;
+            if (seen[strKey]) continue;//1 người học xuất hiện 2 dòng phạm vi → chỉ đồng bộ 1 lần
+            seen[strKey] = true;
+            var lbl = document.getElementById('inputNoiDung_' + sv.ID + '_' + tt.ID);
+            items.push({ ID: strKey, sv: sv, tt: tt, giaTri: lbl ? (lbl.textContent || '').trim() : '' });
+        }
+        if (items.length === 0) {
+            edu.system.alert("Vui lòng tick ô (sinh viên × trường thông tin) cần duyệt.");
+            return;
+        }
+        edu.process.run({
+            title: "Duyệt kết quả kê khai hồ sơ",
+            subTitles: [
+                "Kế hoạch: " + $("#dropSearch_KeHoach option:selected").text().trim(),
+                "Hành động xử lý: " + strHanhDongXuLy_Ten
+            ],
+            unit: "trường thông tin",
+            fileName: "KetQuaDuyetKeKhaiHoSo",
+            notes: [
+                "Mỗi ô đã tick (sinh viên × trường thông tin) = 1 lần đồng bộ dữ liệu kê khai vào hồ sơ (PKG_KEKHAI_DONGBO.DongBoTheoKeHoach).",
+                "Hành động xử lý: " + strHanhDongXuLy_Ten + "."
+            ],
+            items: items,
+            columns: [
+                { header: "Lớp", render: function (it) { return v(it.sv.DAOTAO_LOPQUANLY_MA); } },
+                { header: "Mã số", render: function (it) { return v(it.sv.QLSV_NGUOIHOC_MASO); } },
+                { header: "Họ tên", render: function (it) { return (v(it.sv.QLSV_NGUOIHOC_HODEM) + " " + v(it.sv.QLSV_NGUOIHOC_TEN)).trim(); } },
+                { header: "Trường thông tin", render: function (it) { return v(it.tt.TEN); } },
+                { header: "Giá trị kê khai", render: function (it) { return it.giaTri; } }
+            ],
+            request: function (it) {
+                if (!edu.util.checkValue(it.sv.QLSV_NGUOIHOC_ID)) throw new Error("Dòng không có QLSV_NGUOIHOC_ID.");
+                return me.req_DongBoTheoKeHoach(it.sv.QLSV_NGUOIHOC_ID, strKeHoach_Id, it.tt.ID, strHanhDongXuLy);
+            },
+            filters: [[
+                { label: "Hệ đào tạo", id: "dropSearch_HeDaoTao_IHD" },
+                { label: "Khóa đào tạo", id: "dropSearch_KhoaDaoTao_IHD" },
+                { label: "Chương trình", id: "dropSearch_ChuongTrinh_IHD" },
+                { label: "Lớp", id: "dropSearch_Lop_IHD" }
+            ]],
+            refresh: function () { me.getList_TongHop(); }
+        });
+    },
+    req_DongBoTheoKeHoach: function (strQLSV_NguoiHoc_Id, strKeHoach_Id, strTruongThongTin_Id, strHanhDongXuLy) {
+        //strVaiTroDangNhap_Id, strChucNangHeThong_Id: makeRequest tự thêm khi thiếu
+        var obj_save = {
+            'action': 'SV_KeKhaiDongBo_MH/BS4vJgMuFSkkLgokCS4gIikP',
+            'func': 'PKG_KEKHAI_DONGBO.DongBoTheoKeHoach',
+            'iM': edu.system.iM,
+            'strQLSV_NguoiHoc_Id': strQLSV_NguoiHoc_Id,
+            'strKeHoach_Id': strKeHoach_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strHanhDong_Code': '',
+            'strHanhDongXuLy': strHanhDongXuLy || 'GHIDE',//TOANBO | GHIDE | THEMMOI (list #dropSearch_HanhDongXuLy); luôn gửi rõ vì rỗng → NULL, không ăn DEFAULT của proc
+            'strTruongThongTin_Id': strTruongThongTin_Id
+        };
+        return {
+            type: 'POST',
+            action: obj_save.action,
+            contentType: true,
+            data: obj_save,
+            fakedb: []
+        };
     },
 
 

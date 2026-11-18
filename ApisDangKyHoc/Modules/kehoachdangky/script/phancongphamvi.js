@@ -32,6 +32,12 @@ PhanCongPhamVi.prototype = {
         me.getList_KhoaDaoTao();
         me.getList_KhoaQuanLy();
         me.getList_HocPhan();
+        me.getList_CoSoDaoTao_PhamVi();
+        // Khoi "Co so dao tao ap dung" trong modal Chi tiet (dung chung voi phanconglop)
+        if (typeof PhanCongCSDT === "function") {
+            me.csdt = new PhanCongCSDT({ loai: 'PV', zone: 'zoneCSDT_PV', modal: 'myModal' });
+            me.csdt.init();
+        }
 
         $("#btnSearch").click(function (e) {
             me.getList_PhanCongPhamVi();
@@ -120,6 +126,8 @@ PhanCongPhamVi.prototype = {
             } else me.viewForm_PhanCongPhamVi([]);
             me.strPhanCongPhamVi_Id = this.id;
             me.getList_QuanSoTheoLop();
+            // Ke hoach + pham vi cho khoi Co so dao tao lay tu ban ghi dong vua bam
+            if (me.csdt) me.csdt.open(dataX);
         });
         $("#btnSave_QuanSo").click(function () {
             $("#myModal").modal("hide");
@@ -175,6 +183,23 @@ PhanCongPhamVi.prototype = {
                 if (strPhamVi != "") strPhamVi = strPhamVi.substr(2);
                 $("#lblPhamVi").html(strPhamVi);
             }
+        });
+        // Pham vi "Co so dao tao - Khoa hoc": giong "Khoa quan ly - khoa hoc",
+        // chi khac PhamViApDung_Id = ID co so dao tao + ID khoa dao tao.
+        $("#addCoSoDaoTaoKhoaHoc").click(function () {
+            var valCSDT = $("#dropCoSoDaoTao_PhamVi").val();
+            var valKDT = $("#dropKhoaDaoTao").val();
+            if (!valCSDT || !valKDT) {
+                edu.system.alert("Vui lòng chọn Cơ sở đào tạo và Khóa!");
+                return;
+            }
+            var strId = valCSDT + valKDT;
+            if (me.arrPhamVi.find(e => e.id === strId) !== undefined) return;
+            me.arrPhamVi.push({ id: strId, name: $("#dropCoSoDaoTao_PhamVi option:selected").text() + " - " + $("#dropKhoaDaoTao option:selected").text() });
+            var strPhamVi = "";
+            me.arrPhamVi.forEach(ele => strPhamVi += " ," + ele.name);
+            if (strPhamVi != "") strPhamVi = strPhamVi.substr(2);
+            $("#lblPhamVi").html(strPhamVi);
         });
 
         /*------------------------------------------
@@ -279,6 +304,7 @@ PhanCongPhamVi.prototype = {
         me.strPhanCongPhamVi_Id = "";
         me.arrPhamVi = [];
         $("#lblPhamVi").html("");
+        edu.util.viewValById("dropCoSoDaoTao_PhamVi", "");
         edu.util.viewValById("dropKhoaQuanLy", "");
         edu.util.viewValById("dropHeDaoTao", "");
         edu.util.viewValById("dropKhoaDaoTao", "");
@@ -860,6 +886,42 @@ PhanCongPhamVi.prototype = {
         }
         edu.system.loadToCombo_data(obj);
         if (data.length != 1) $("#dropSearch_NguoiThu").val("").trigger("change");
+    },
+    /*------------------------------------------
+    --Discription: DS co so dao tao cho pham vi "Co so dao tao - Khoa hoc" (ham chung,
+    --  cung nguon voi khoi CSDT trong modal Chi tiet - phancong_csdt.js)
+    -------------------------------------------*/
+    getList_CoSoDaoTao_PhamVi: function () {
+        var me = this;
+        edu.system.getList_CoSoDaoTao({
+            strNguoiThucHien_Id: edu.system.userId,
+            strTuKhoa: '',
+            pageIndex: 1,
+            pageSize: 100000
+        }, "", "", function (data) {
+            me.cbGenCombo_CoSoDaoTao_PhamVi(data || []);
+        });
+    },
+    cbGenCombo_CoSoDaoTao_PhamVi: function (data) {
+        var obj = {
+            data: data,
+            renderInfor: {
+                id: "ID",
+                parentId: "",
+                name: "TEN",
+                code: "",
+                avatar: "",
+                mRender: function (nRow, aData) {
+                    var strTen = edu.util.returnEmpty(aData.TEN);
+                    var strMa = edu.util.returnEmpty(aData.MA);
+                    return (strMa && strMa != strTen) ? (strTen ? strTen + " (" + strMa + ")" : strMa) : (strTen || strMa);
+                }
+            },
+            renderPlace: ["dropCoSoDaoTao_PhamVi"],
+            type: "",
+            title: "Chọn cơ sở đào tạo",
+        }
+        edu.system.loadToCombo_data(obj);
     },
 
     cbGenCombo_HocVien: function (data) {
