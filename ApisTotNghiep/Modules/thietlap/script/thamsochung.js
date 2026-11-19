@@ -1206,8 +1206,9 @@ ThamSoChung.prototype = {
         var me = this;
         //--Edit
         var obj_list = {
-            'action': 'CMS_NguoiDung/LayDanhSach',
-            'versionAPI': 'v1.0',
+			'action': 'CMS_QuanLyNguoiDung_MH/DSA4BSAvKRIgIikPJjQuKAU0LyYP',
+			'func': 'pkg_chung_quanlynguoidung.LayDanhSachNguoiDung',
+			'iM' : edu.system.iM,
 
             'strTuKhoa': '',
             'pageIndex':1,
@@ -1227,13 +1228,13 @@ ThamSoChung.prototype = {
                     me.dtNguoiDung = data.Data;
                 }
                 else {
-                    edu.system.alert("CMS_NguoiDung/LayDanhSach: " + data.Message);
+                    edu.system.alert("" + data.Message);
                 }
 
             },
             error: function (er) {
 
-                edu.system.alert("CMS_NguoiDung/LayDanhSach (er): " + JSON.stringify(er), "w");
+                edu.system.alert(" " + JSON.stringify(er), "w");
             },
             type: 'GET',
             action: obj_list.action,

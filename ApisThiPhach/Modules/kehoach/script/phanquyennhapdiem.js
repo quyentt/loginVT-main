@@ -1252,45 +1252,7 @@ NhapDiem.prototype = {
             'dLaCanBoNgoaiTruong': -1
         };
         edu.system.getList_NhanSu(obj, "", "", me.genTable_HS);
-        //var obj_list = {
-        //    'action': 'CMS_NguoiDung/LayDanhSach',
-
-
-        //    'strTuKhoa': edu.util.getValById("btnSearchNhanSuPhanQuyen"),
-        //    'pageIndex': edu.system.pageIndex_default,
-        //    'pageSize': edu.system.pageSize_default,
-        //    'dTrangThai': -1,
-        //    'strChung_DonVi_Id': edu.util.getValById("dropDonViPhanQuyen"),
-        //    'strVaiTro_Id': "",
-        //    'strPhanLoaiDoiTuong': "",
-        //    'strCapXuLy_Id': "",
-        //    'strTinhThanh_Id': ""
-        //};
-        ////
-        //edu.system.makeRequest({
-        //    success: function (data) {
-        //        if (data.Success) {
-        //            me.genTable_HS(data.Data, data.Pager)
-        //        }
-        //        else {
-        //            edu.system.alert("CMS_NguoiDung/LayDanhSach: " + data.Message, "w");
-
-        //        }
-        //    },
-        //    error: function (er) {
-
-        //        edu.system.alert("CMS_NguoiDung/LayDanhSach (er): " + JSON.stringify(er), "w");
-        //    },
-        //    type: 'GET',
-        //    action: obj_list.action,
-
-        //    contentType: true,
-
-        //    data: obj_list,
-        //    fakedb: [
-
-        //    ]
-        //}, false, false, false, null);
+        
     },
     genTable_HS: function (data, iPager) {
         var me = this;

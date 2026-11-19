@@ -697,7 +697,7 @@ systemextend.prototype = {
             },
             error: function (er) {
 
-                edu.system.alert("CMS_NguoiDung/LayDanhSach (er): " + JSON.stringify(er), "w");
+                edu.system.alert(" (er): " + JSON.stringify(er), "w");
             },
             type: 'POST',
             action: obj_save.action,
