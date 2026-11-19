@@ -81,16 +81,25 @@
         cursor: default;
     }
 
+    /* [2026-11-19] "Hôm nay" trước đây tô nền xanh đặc = trùng màu "ngày có lịch" (.actionclde) => chọn ngày khác thì
+       hôm nay (không có lịch) vẫn xanh, người dùng tưởng có lịch. Nay hôm nay = VÒNG VIỀN xanh, nền trắng, chữ xanh. */
     .block-calendar ul.days > li.today:not(.active):not(.actionclde) span {
         width: 100%;
         max-width: 32px;
         aspect-ratio: 1 / 1;
-        background-color: var(--color-link, #2f55a4);
-        color: #fff;
+        background-color: transparent;
+        color: var(--color-link, #2f55a4);
+        font-weight: 700;
+        box-shadow: inset 0 0 0 2px var(--color-link, #2f55a4);
         border-radius: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+    /* Hôm nay mà có lịch (nền xanh) hoặc đang chọn (nền cam): giữ nền, thêm vòng ngoài để vẫn nhận ra là hôm nay */
+    .block-calendar ul.days > li.today.actionclde span,
+    .block-calendar ul.days > li.today.active span {
+        box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--color-link, #2f55a4);
     }
 
     /* [2026-10-09] Khối CSS 2 icon sát nhau (xem các buổi / đổi lịch) — đã thay bằng nút "⋮" + menu ở cuối <style>.
