@@ -311,27 +311,39 @@ LichGiang.prototype = {
             //$("#lblHocPhan").html('<b>Học phần: ' + objLich.TENHOCPHAN + '</b> <span class="color-66">&ensp; - &ensp; ' + me.returnTwo(objLich.GIOBATDAU) + ':' + me.returnTwo(objLich.PHUTBATDAU) + ' - ' + me.returnTwo(objLich.GIOKETTHUC) + ':' + me.returnTwo(objLich.PHUTKETTHUC) + ' (Tiết ' + edu.util.returnEmpty(objLich.TIETBATDAU) + '-' + edu.util.returnEmpty(objLich.TIETKETTHUC) + ')</span>');
             me.getList_KhoiTaoDoiLich(objLich);
         });
+        // [2026-11-19] Thẻ thấp (1-2 tiết) không đủ chỗ => rê chuột vào thì thẻ GIÃN TẠI CHỖ cho hiện đủ lớp/phòng/cảm xúc
+        // (CSS .task-expanded trong lichgiang.html), rời chuột thì thu về. Thay cho popover cũ: popover lấy tiêu đề từ
+        // thuộc tính title của thẻ (đang chứa JSON hỏng) nên chỉ hiện đúng ký tự "{", phần nội dung không hiện.
         $("#datebody").delegate('.task-1', 'mouseenter', function (e) {
             e.stopImmediatePropagation();
             var point = this;
-            //console.log(point.clientHeight)
-            //console.log(point.scrollHeight)
-            let element = $(point).find(".task-description")[0];
-            //console.log($(point).find(".task-description")[0].clientHeight)
-            //console.log($(point).find(".task-description")[0].scrollHeight)
-            if (element.scrollHeight <= element.clientHeight) return;
-            var row = $(point).parent().html().replace('class="task-header"', '');
-            row = row.substring(0, row.indexOf('<div class="eval"'))
-            $(point).popover({
-                container: 'body',
-                content: row,
-                trigger: 'hover',
-                html: true,
-                placement: 'right',
-            });
-            $(point).popover('show');
-            //me.popover_HSDoiTuong(id, point);
+            var element = $(point).find(".task-description")[0];
+            var bThieuCho = $(point).hasClass("task-compact") || $(point).hasClass("task-tran")
+                || (element && element.scrollHeight > element.clientHeight + 1);
+            if (!bThieuCho) return;
+            point.style.minHeight = point.offsetHeight + "px"; // giãn ra chứ không bao giờ co nhỏ hơn khung giờ thật
+            $(point).addClass("task-expanded");
         });
+        $("#datebody").delegate('.task-1', 'mouseleave', function () {
+            $(this).removeClass("task-expanded");
+            this.style.minHeight = "";
+        });
+        //$("#datebody").delegate('.task-1', 'mouseenter', function (e) {
+        //    e.stopImmediatePropagation();
+        //    var point = this;
+        //    let element = $(point).find(".task-description")[0];
+        //    if (element.scrollHeight <= element.clientHeight) return;
+        //    var row = $(point).parent().html().replace('class="task-header"', '');
+        //    row = row.substring(0, row.indexOf('<div class="eval"'))
+        //    $(point).popover({
+        //        container: 'body',
+        //        content: row,
+        //        trigger: 'hover',
+        //        html: true,
+        //        placement: 'right',
+        //    });
+        //    $(point).popover('show');
+        //});
 
         $("#btnGuiYeuCau").click(function () {
             me.save_DoiLich();
@@ -1057,11 +1069,14 @@ LichGiang.prototype = {
             var iTop = e.GIOKETTHUC * 60 + e.PHUTKETTHUC - e.GIOBATDAU*60 - e.PHUTBATDAU;
 
             // iTop = chiều cao thẻ (px, 1 phút = 1px). Thẻ < 70px (1 tiết) không đủ chỗ cho hàng giờ riêng => .task-compact (xem CSS)
-            html += '<div class="task task-1 btnLichHoc' + (iTop < 70 ? ' task-compact' : '') + '" id="' + e.ID + '" style="top:' + e.PHUTBATDAU + 'px; height: ' + iTop + 'px; background-color: ' + strMauNen + '; cursor: pointer" title="' + JSON.stringify(arrLopHocPhanMau.find(ele => ele.ID == e.IDLOPHOCPHAN)) +'">';
+            // [2026-11-19] Bỏ title="JSON màu" (code debug sót): dấu " trong JSON làm vỡ thuộc tính => tooltip/popover chỉ hiện "{"
+            html += '<div class="task task-1 btnLichHoc' + (iTop < 70 ? ' task-compact' : '') + '" id="' + e.ID + '" style="top:' + e.PHUTBATDAU + 'px; height: ' + iTop + 'px; background-color: ' + strMauNen + '; cursor: pointer">';
             html += '<div class="task-header">';
             html += '<div class="text">';
             html += '<div class="title" title="' + String(e.TENHOCPHAN).replace(/"/g, '&quot;') + '">' + e.TENHOCPHAN + '</div>';
-            html += '<div class="task-date">' + me.returnTwo(e.GIOBATDAU) + ':' + me.returnTwo(e.PHUTBATDAU) + ' - ' + me.returnTwo(e.GIOKETTHUC) + ':' + me.returnTwo(e.PHUTKETTHUC) + ' (Tiết ' + edu.util.returnEmpty(e.TIETBATDAU) + '-' + edu.util.returnEmpty(e.TIETKETTHUC) + ')</div>';
+            // Buổi không có tiết (vd lịch thi) thì không in "(Tiết -)"
+            var strTiet = (e.TIETBATDAU || e.TIETKETTHUC) ? ' (Tiết ' + edu.util.returnEmpty(e.TIETBATDAU) + '-' + edu.util.returnEmpty(e.TIETKETTHUC) + ')' : '';
+            html += '<div class="task-date">' + me.returnTwo(e.GIOBATDAU) + ':' + me.returnTwo(e.PHUTBATDAU) + ' - ' + me.returnTwo(e.GIOKETTHUC) + ':' + me.returnTwo(e.PHUTKETTHUC) + strTiet + '</div>';
             html += '</div>';
             // [2026-10-09] 1 nút "⋮" mở menu (Xem các buổi điểm danh / Yêu cầu đổi lịch) thay cho 2 icon sát nhau — tránh bấm nhầm.
             // Bản cũ (2 icon) comment lại bên dưới để mở lại khi cần (kèm khối CSS đã comment trong lichgiang.html).
@@ -1088,6 +1103,12 @@ LichGiang.prototype = {
             html += '</div>';
             html += '</div>';
             $("#datebody #h" + e.NGAYHOC.replace(/\//g, '') + e.GIOBATDAU).append(html);
+        });
+        // [2026-11-19] Thẻ có thân không chứa hết chữ (thường là 2 tiết): đánh dấu .task-tran => lúc nghỉ tạm ẩn cụm cảm xúc
+        // (nó nằm đè lên đuôi tên lớp) và thu dòng chữ; rê chuột vào thì giãn ra hiện đủ (xem CSS trong lichgiang.html)
+        $("#datebody .task-1").each(function () {
+            var d = $(this).find(".task-description")[0];
+            if (d && d.scrollHeight > d.clientHeight + 1) $(this).addClass("task-tran");
         });
 
         if (data.length > 0) {

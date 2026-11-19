@@ -333,6 +333,50 @@
         top: 4px;
         bottom: auto;
     }
+    /* [2026-11-19] Thẻ 1 tiết (50-60px): đầu thẻ đã chiếm ~44px, thân thẻ chỉ còn ~10px => trước đây hiện nửa dòng tên lớp
+       bị cụm cảm xúc đè lên ("bị che"). Nay lúc nghỉ chỉ hiện đầu thẻ (tên học phần + giờ), không còn dòng bị cắt dở;
+       rê chuột vào thì thẻ giãn tại chỗ (JS gắn .task-expanded, lichgiang.js) hiện đủ lớp / phòng / cảm xúc. */
+    .day-of-week .task.task-1.task-compact:not(.task-expanded) .task-description {
+        display: none;
+    }
+    /* Thẻ thiếu chỗ (JS gắn .task-tran, thường là 2 tiết): lúc nghỉ ẩn cụm cảm xúc (all.css đặt nó đè góc phải-dưới,
+       che đuôi tên lớp) + thu dòng chữ để đủ 2 dòng lớp/phòng; rê chuột vào mới hiện cảm xúc */
+    .day-of-week .task.task-1.task-tran:not(.task-expanded) .task-description {
+        padding-top: 3px;
+        padding-bottom: 2px;
+        line-height: 16px;
+    }
+    .day-of-week .task.task-1.task-tran:not(.task-expanded) .task-description .eval {
+        display: none;
+    }
+    /* Thẻ giãn khi rê chuột: cao theo nội dung (JS đặt min-height = chiều cao thật nên không bao giờ co lại), nổi lên trên thẻ khác */
+    .day-of-week .task.task-1.task-expanded {
+        height: auto !important;
+        z-index: 6;
+        justify-content: flex-start;
+    }
+    /* Thẻ compact khi giãn: bỏ giới hạn 1 dòng/"..." của tên học phần + giờ (cột hẹp thì xuống dòng cho đọc được hết) */
+    .day-of-week .task.task-1.task-expanded .task-header .title {
+        -webkit-line-clamp: 3;
+    }
+    .day-of-week .task.task-1.task-expanded .task-header .task-date {
+        white-space: normal;
+        overflow: visible;
+    }
+    .day-of-week .task.task-1.task-expanded .task-description {
+        display: block;
+        flex: 0 0 auto;
+        height: auto;
+        overflow: visible;
+        padding: 5px 8px 6px 8px;
+        border-radius: 0 0 10px 10px;
+    }
+    /* Cụm cảm xúc (all.css: position absolute góc phải-dưới, đè lên chữ) => khi giãn thì xuống dòng riêng dưới phòng học */
+    .day-of-week .task.task-1.task-expanded .task-description .eval {
+        position: static;
+        width: fit-content;
+        margin: 4px 0 0 auto;
+    }
     .task-1 .card-menu-btn {
         display: inline-flex;
         align-items: center;
@@ -1612,7 +1656,7 @@
 <!-- Modal "Yêu cầu đổi lịch" MỚI dùng chung với trang Lịch giảng đường: giao diện (doilich_modal.js) + xử lý (LichGiangNhieuPhong). Thiếu 1 trong 2 file thì tự quay về modal cũ. -->
 <script src="modules/lichgiang/script/doilich_modal.js?v=1.0.1.0"></script>
 <script src="modules/lichgiang/script/lichgiangnhieuphonghoc.js?v=3.20.0.0"></script>
-<script src="modules/lichgiang/script/lichgiang.js?v=1.0.0.9"></script>
+<script src="modules/lichgiang/script/lichgiang.js?v=1.0.0.10"></script>
 <script src="modules/lichgiang/script/jquery-searchbox.js"></script>
 <script type="text/javascript">
     var main_doc = {};
