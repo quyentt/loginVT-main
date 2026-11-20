@@ -1443,26 +1443,35 @@ if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype._zeXhdHooked) {
                 -- Hệ quả người dùng báo 10/11/2026: ô "Tên đơn vị / Công ty" KHÔNG
                 -- hề gõ gì, bấm Lưu xong mở lại thì tự có họ tên sinh viên.
                 --
-                -- Phân biệt cột tên đó đang mang nghĩa gì:
-                --   có MST, hoặc đối tượng xuất hoá đơn là tổ chức/cơ quan
-                --        → là TÊN ĐƠN VỊ thật, giữ nguyên ô Tên đơn vị.
-                --   ngược lại (cá nhân)
-                --        → là HỌ TÊN NGƯỜI MUA, đưa về đúng ô và trả ô Tên đơn vị
-                --          về trống cho hiện lại placeholder.
+                -- Phân biệt cột tên đó đang mang nghĩa gì — căn cứ theo thứ tự:
+                --   1. Ô "Đối tượng xuất hoá đơn" người dùng CHỌN là căn cứ cao nhất.
+                --      CA_NHAN → họ tên người mua.  TO_CHUC/CƠ QUAN → tên đơn vị.
+                --   2. Không đọc được đối tượng mới suy từ MST / mã QHNS.
+                --
+                -- ⚠ SỬA 19/11/2026: trước đây hễ CÓ MST là kết luận tổ chức — SAI.
+                -- Cá nhân vẫn có mã số thuế cá nhân (ca Tạ Thị Thoa, MST
+                -- 026196000544, đối tượng chọn rõ CA_NHAN). Dấu MST đè lên lựa chọn
+                -- của người dùng nên tên cứ bị kéo về ô Tên đơn vị, người dùng
+                -- chuyển lên ô Họ tên người mua là mở lại mất.
+                --
+                -- Cá nhân → đưa tên về ô Họ tên người mua, trả ô Tên đơn vị về trống.
                 -- Chỉ dọn khi ô đang mang ĐÚNG chữ vừa nạp lên và người dùng chưa
                 -- tự tay gõ vào — không bao giờ xoá chữ của người dùng.
                 ------------------------------------------------------------------ */
                 var ten = inv.BUYER_NAME_TENNM || inv.BUYER_NAME || '';
                 if (edu.util.checkValue(ten)) {
                     var laToChuc = function () {
-                        if (edu.util.checkValue(inv.BUYER_TAX_MST)) return true;
-                        if (edu.util.checkValue(inv.BUYER_BUDGET_MAQHNS)) return true;
                         // BUYER_TYPE_LOAI có máy khách lưu mã chữ, có máy lưu GUID
-                        // → xét thêm chữ hiển thị của option đang được chọn.
+                        // → xét cả giá trị thô lẫn chữ hiển thị của option đang chọn.
                         var t = ((inv.BUYER_TYPE_LOAI || '') + '');
                         var $o = $('#ddlKQ_HD_DoiTuong option:selected');
                         if ($o.length && $o.val()) t += ' ' + (($o.text() || '') + '');
-                        return /T[OỔ][_ ]?CH[UỨ]C|C[OƠ][_ ]?QUAN|DOANH[_ ]?NGHI[EỆ]P|DON[_ ]?VI/i.test(t);
+                        // Người dùng chọn rõ cá nhân thì thôi, có MST cũng mặc kệ
+                        if (/CA[_ ]?NHAN|C[AÁ] *NH[AÂ]N/i.test(t)) return false;
+                        if (/T[OỔ][_ ]?CH[UỨ]C|C[OƠ][_ ]?QUAN|DOANH[_ ]?NGHI[EỆ]P|DON[_ ]?VI/i.test(t)) return true;
+                        // Chưa đọc ra đối tượng → mới suy từ dấu hiệu của tổ chức
+                        return edu.util.checkValue(inv.BUYER_TAX_MST)
+                            || edu.util.checkValue(inv.BUYER_BUDGET_MAQHNS);
                     };
                     var dat = function () {
                         if (laToChuc()) return;              // tên đó là tên đơn vị thật
@@ -3923,4 +3932,345 @@ if (typeof edu !== 'undefined' && edu.system && edu.system.makeRequest
         } catch (e) { }
         return _mrHD.apply(this, arguments);
     };
+}
+
+/*==============================================================================
+== HOÁ ĐƠN THEO TỪNG LOẠI ĐỐI TƯỢNG  (19/11/2026 — yêu cầu của sếp)
+==
+== Một người có thể có NHIỀU bản ghi PERSON_INVOICE_INFO, mỗi bản ghi một "Đối
+== tượng xuất hoá đơn" (CA_NHAN / CO_QUAN_NGOAI / DONVI_NOIBO). Ca thật: Tạ Thị
+== Thoa có 2 bản ghi, 2 loại khác nhau.
+==
+== Trước bản vá này front-end coi như mỗi người chỉ có MỘT bản ghi: 5 chỗ trong
+== 3 file đều lấy thẳng Data[0] theo vị trí mảng, không lọc IS_CURRENT, không
+== sắp xếp. Hệ quả:
+==   - đổi ô "Đối tượng xuất hoá đơn" thì KHÔNG nạp lại gì, màn hình vẫn đứng
+==     nguyên dữ liệu của bản ghi cũ (đúng cái sếp hỏi);
+==   - Oracle không bảo đảm thứ tự dòng nên mở lại có thể ra bản khác, và bấm
+==     Lưu là ghi đè vào bản nào tình cờ đứng đầu — có thể ghi đè CHÉO LOẠI.
+==
+== Cách xử lý:
+==  1) Chặn ngay tại response của LayDS_PersonInvoiceInfo: sắp xếp Data theo
+==     (IS_CURRENT, IS_ACTIVE, ngày cập nhật mới nhất) rồi nhớ cả danh sách.
+==     Nhờ vậy cả 5 chỗ đang lấy Data[0] đều nhìn thấy CÙNG một bản ghi — sửa
+==     một chỗ ăn cả 5, không phải đụng vào dexuathoso.js của sếp.
+==  2) Đổi ô Đối tượng → tra trong danh sách đã nhớ, nạp dữ liệu của ĐÚNG loại
+==     đó lên form. Loại chưa có bản ghi thì để trắng cho nhập mới.
+==  3) Lúc lưu: loại đang chọn có bản ghi → Sửa đúng bản đó; chưa có → Thêm bản
+==     mới cho loại đó. Không còn ghi đè chéo loại.
+==  4) Nút "Xoá bản ghi này" — PKG_CORE_NGUOIHOC_01.Xoa_PersonInvoiceInfo.
+==
+== Cột tên: bảng chỉ có BUYER_NAME. Loại CA_NHAN thì nó là họ tên người mua,
+== loại tổ chức thì nó là tên đơn vị — nạp lên đúng ô theo loại.
+==============================================================================*/
+if (typeof edu !== 'undefined' && edu.system && edu.system.makeRequest
+    && !edu.system._zeHoaDonTheoLoaiHooked) {
+    edu.system._zeHoaDonTheoLoaiHooked = true;
+
+    var _ZE_HD_XOA = 'SV_NGUOIHOC_01_MH/GS4gHhEkMzIuLwgvNy4oIiQILycu';
+    var _ZE_HD_LAY = 'SV_NGUOIHOC_01_MH/DSA4BRIeESQzMi4vCC83LigiJAgvJy4P';
+
+    var HD = {};
+
+    HD.dx = function () {
+        return (window.main_doc && window.main_doc.DeXuatHoSo) || null;
+    };
+
+    HD.pid = function (dx) {
+        return ((dx && (dx.strDeXuatHoSo_Id || dx._lockedPersonId)) || '') + '';
+    };
+
+    // "20261119111144" → số để so sánh; null/rỗng → 0
+    HD.soNgay = function (v) {
+        var s = ((v === null || v === undefined) ? '' : v) + '';
+        s = s.replace(/\D/g, '');
+        return s ? Number(s.substring(0, 14)) : 0;
+    };
+
+    /* Danh mục đối tượng có máy khách lưu MÃ CHỮ ("CA_NHAN"), có máy lưu GUID.
+    -- Quy cả hai về một khoá so sánh bằng cách tra ngược qua <option>. */
+    HD.khoaLoai = function (v) {
+        var t = (((v === null || v === undefined) ? '' : v) + '').trim();
+        if (!t) return '';
+        var T = t.toUpperCase();
+        var ds = document.querySelectorAll('#ddlKQ_HD_DoiTuong option');
+        for (var i = 0; i < ds.length; i++) {
+            var o = ds[i];
+            if (!o.value) continue;
+            if ((o.value + '').toUpperCase() === T
+                || ((o.getAttribute('name') || '') + '').toUpperCase() === T
+                || ((o.textContent || '') + '').trim().toUpperCase() === T) {
+                return (o.value + '').toUpperCase();
+            }
+        }
+        return T;   // danh mục chưa nạp xong → tạm so bằng giá trị thô
+    };
+
+    HD.chuLoai = function (v) {
+        var t = (((v === null || v === undefined) ? '' : v) + '').trim();
+        if (!t) return '';
+        var T = t.toUpperCase();
+        var ds = document.querySelectorAll('#ddlKQ_HD_DoiTuong option');
+        for (var i = 0; i < ds.length; i++) {
+            var o = ds[i];
+            if (!o.value) continue;
+            if ((o.value + '').toUpperCase() === T
+                || ((o.getAttribute('name') || '') + '').toUpperCase() === T) {
+                return ((o.textContent || '') + '').trim();
+            }
+        }
+        return t;
+    };
+
+    HD.sapXep = function (ds) {
+        ds.sort(function (a, b) {
+            var c = (b.IS_CURRENT == 1 ? 1 : 0) - (a.IS_CURRENT == 1 ? 1 : 0);
+            if (c) return c;
+            c = (b.IS_ACTIVE == 1 ? 1 : 0) - (a.IS_ACTIVE == 1 ? 1 : 0);
+            if (c) return c;
+            return Math.max(HD.soNgay(b.UPDATED_DATE), HD.soNgay(b.CREATED_DATE))
+                - Math.max(HD.soNgay(a.UPDATED_DATE), HD.soNgay(a.CREATED_DATE));
+        });
+        return ds;
+    };
+
+    HD.timTheoLoai = function (ds, khoa) {
+        if (!ds || !khoa) return null;
+        for (var i = 0; i < ds.length; i++) {
+            if (HD.khoaLoai(ds[i].BUYER_TYPE_LOAI) === khoa) return ds[i];
+        }
+        return null;
+    };
+
+    /*------------------------------------------
+    -- Thanh phụ dưới ô Đối tượng: cho biết hồ sơ có mấy bản ghi, đang xem bản
+    -- nào, và nút Xoá bản ghi đang xem.
+    -------------------------------------------*/
+    HD.thanh = function () {
+        var el = document.getElementById('zeHDThanhLoai');
+        if (el) return el;
+        var sel = document.getElementById('ddlKQ_HD_DoiTuong');
+        if (!sel) return null;
+        var o = sel.closest ? sel.closest('.aps-sv-field') : null;
+        el = document.createElement('div');
+        el.id = 'zeHDThanhLoai';
+        el.className = 'aps-sv-field aps-sv-col-full';
+        el.style.cssText = 'display:flex;align-items:center;gap:10px;flex-wrap:wrap;'
+            + 'margin:-4px 0 6px;font-size:12.5px;color:#475569;';
+        el.innerHTML =
+            '<span id="zeHDGhiChu" style="font-weight:500"></span>'
+            + '<button type="button" id="zeHDBtnXoa" class="btn btn-danger btn-xs" '
+            + 'style="display:none;padding:3px 10px;font-size:12px;height:auto;line-height:1.5">'
+            + '<i class="fa fa-trash"></i> Xoá bản ghi hoá đơn này</button>';
+        if (o && o.parentNode) o.parentNode.insertBefore(el, o.nextSibling);
+        else if (sel.parentNode) sel.parentNode.appendChild(el);
+        return el;
+    };
+
+    HD.ghiChu = function (chu, choXoa) {
+        var el = HD.thanh();
+        if (!el) return;
+        var g = document.getElementById('zeHDGhiChu');
+        var b = document.getElementById('zeHDBtnXoa');
+        if (g) g.innerHTML = chu || '';
+        if (b) b.style.display = choXoa ? '' : 'none';
+    };
+
+    /*------------------------------------------
+    -- Đổ một bản ghi lên form. row = null → xoá trắng các ô để nhập mới.
+    -------------------------------------------*/
+    HD.OTEXT = ['txtKQ_HD_TenDonVi', 'txtKQ_HD_NguoiMua', 'txtKQ_HD_MST',
+        'txtKQ_HD_MaQHNS', 'txtKQ_HD_SDT', 'txtKQ_HD_DiaChi', 'txtKQ_HD_Email'];
+
+    HD.doLenForm = function (dx, row) {
+        HD.OTEXT.forEach(function (id) {
+            $('#' + id).val('').removeAttr('data-user-touched');
+        });
+        var tong = (dx._zeHDDanhSach || []).length;
+        if (!row) {
+            dx._currentInvoiceId = '';       // chưa có bản ghi → bấm Lưu sẽ Thêm mới
+            dx._zeHoaDonCu = null;
+            HD.ghiChu('Loại này <b>chưa có thông tin hoá đơn</b> — nhập rồi bấm Lưu để tạo mới.'
+                + (tong ? ' Hồ sơ đang có ' + tong + ' bản ghi ở loại khác.' : ''), false);
+            return;
+        }
+        dx._currentInvoiceId = row.ID || '';
+        dx._zeHoaDonCu = row;
+        var ten = row.BUYER_NAME_TENNM || row.BUYER_NAME || '';
+        // Bảng chỉ có một cột tên: CA_NHAN → họ tên người mua, tổ chức → tên đơn vị
+        var laCaNhan = /CA[_ ]?NHAN/i.test(HD.chuLoai(row.BUYER_TYPE_LOAI));
+        $('#' + (laCaNhan ? 'txtKQ_HD_NguoiMua' : 'txtKQ_HD_TenDonVi')).val(ten);
+        $('#txtKQ_HD_MST').val(row.BUYER_TAX_MST || '');
+        $('#txtKQ_HD_MaQHNS').val(row.BUYER_BUDGET_MAQHNS || '');
+        $('#txtKQ_HD_SDT').val(row.BUYER_PHONE_SDT || '');
+        $('#txtKQ_HD_DiaChi').val(row.BUYER_ADDR_DIACHI || '');
+        $('#txtKQ_HD_Email').val(row.BUYER_EMAIL || '');
+        HD.ghiChu(tong > 1
+            ? 'Hồ sơ có <b>' + tong + ' bản ghi hoá đơn</b> — đang xem loại <b>'
+            + HD.chuLoai(row.BUYER_TYPE_LOAI) + '</b>. Đổi ô trên để xem loại khác.'
+            : 'Đang xem loại <b>' + HD.chuLoai(row.BUYER_TYPE_LOAI) + '</b>.', true);
+    };
+
+    /*------------------------------------------
+    -- Xen vào response LayDS_PersonInvoiceInfo: sắp xếp + nhớ danh sách, rồi
+    -- đẩy bản ghi của LOẠI ĐANG XEM lên đầu để 5 chỗ lấy Data[0] đều đúng.
+    -- Loại đang xem chưa có bản ghi → trả mảng rỗng cho các luồng phía sau, để
+    -- chúng không nạp nhầm dữ liệu của loại khác và để lúc Lưu đi Thêm mới.
+    -------------------------------------------*/
+    HD.nhanDanhSach = function (data) {
+        var ds = data && data.Data;
+        if (!ds) return;
+        var dx = HD.dx();
+        if (!dx) return;
+        // Hồ sơ chưa có bản ghi nào: vẫn ghi nhận mảng rỗng để ô Đối tượng hoạt
+        // động được (chọn loại rồi nhập mới), thay vì tắt hẳn tính năng.
+        if (!ds.length) { dx._zeHDDanhSach = []; return; }
+        HD.sapXep(ds);
+        dx._zeHDDanhSach = ds.slice();
+        if (ds.length > 1) {
+            console.warn('[ZE Hoá đơn] hồ sơ có ' + ds.length
+                + ' bản ghi PERSON_INVOICE_INFO (nhiều loại đối tượng).');
+        }
+        var khoa = HD.khoaLoai(dx._zeHDLoaiDangXemRaw || '');
+        if (!khoa) {
+            dx._zeHDLoaiDangXemRaw = ds[0].BUYER_TYPE_LOAI;   // lần đầu: bản hiện hành mới nhất
+            return;
+        }
+        var row = HD.timTheoLoai(ds, khoa);
+        if (!row) { data.Data = []; return; }
+        var i = ds.indexOf(row);
+        if (i > 0) { ds.splice(i, 1); ds.unshift(row); }
+    };
+
+    /*------------------------------------------
+    -- Người dùng đổi ô Đối tượng → nạp bản ghi của loại đó.
+    -- Chỉ chạy khi loại chọn KHÁC loại đang hiển thị, nên các lệnh
+    -- .trigger('change') của luồng mở hồ sơ không kích hoạt nhầm.
+    -------------------------------------------*/
+    $(document).off('change.zehdloai').on('change.zehdloai', '#ddlKQ_HD_DoiTuong', function () {
+        var dx = HD.dx();
+        if (!dx || !dx._zeHDDanhSach) return;
+        var chon = HD.khoaLoai($(this).val());
+        if (!chon) return;
+        if (HD.khoaLoai(dx._zeHDLoaiDangXemRaw || '') === chon) return;
+        var row = HD.timTheoLoai(dx._zeHDDanhSach, chon);
+        dx._zeHDLoaiDangXemRaw = row ? row.BUYER_TYPE_LOAI : ($(this).val() || '');
+        HD.doLenForm(dx, row);
+    });
+
+    /*------------------------------------------
+    -- Xoá bản ghi hoá đơn đang xem.
+    -------------------------------------------*/
+    $(document).off('click.zehdxoa').on('click.zehdxoa', '#zeHDBtnXoa', function () {
+        var dx = HD.dx();
+        if (!dx) return;
+        var id = ((dx._currentInvoiceId || '') + '').trim();
+        if (id.length !== 32) {
+            alert('Loại này chưa có bản ghi hoá đơn để xoá.');
+            return;
+        }
+        var loai = HD.chuLoai(dx._zeHDLoaiDangXemRaw || '');
+        if (!window.confirm('Xoá bản ghi hoá đơn của loại "' + loai
+            + '"?\n\nThao tác này không khôi phục được.')) return;
+
+        edu.system.makeRequest({
+            success: function (d) {
+                if (d && d.Success) {
+                    dx._currentInvoiceId = '';
+                    dx._zeHoaDonCu = null;
+                    dx._zeHDLoaiDangXemRaw = '';
+                    HD.napLai(dx);
+                } else {
+                    alert('Không xoá được: ' + ((d && d.Message) || 'máy chủ không nêu lý do'));
+                }
+            },
+            error: function (er) {
+                console.warn('[ZE Hoá đơn] xoá lỗi:', er);
+                alert('Không gọi được hàm xoá, xem Console để biết chi tiết.');
+            },
+            type: 'POST',
+            contentType: true,
+            action: _ZE_HD_XOA,
+            data: {
+                'action': _ZE_HD_XOA,
+                'func': 'PKG_CORE_NGUOIHOC_01.Xoa_PersonInvoiceInfo',
+                'iM': edu.system.iM,
+                'strId': id,
+                'strNguoiThucHien_Id': edu.system.userId,
+                'strVaiTroDangNhap_Id': edu.system.vaiTroDangNhap_Id || '',
+                'strChucNangHeThong_Id': edu.system.chucNangHeThong_Id || edu.system.strChucNang_Id,
+                'strHanhDong_Code': ''
+            },
+            fakedb: []
+        }, false, false, false, null);
+    });
+
+    /*------------------------------------------
+    -- Nạp lại danh sách sau khi xoá, rồi hiển thị bản còn lại (nếu còn).
+    -------------------------------------------*/
+    HD.napLai = function (dx) {
+        var pid = HD.pid(dx);
+        if (!pid) return;
+        edu.system.makeRequest({
+            success: function (d) {
+                var ds = (d && d.Success && d.Data) || [];
+                dx._zeHDDanhSach = ds.slice();
+                if (!ds.length) {
+                    dx._zeHDLoaiDangXemRaw = '';
+                    $('#ddlKQ_HD_DoiTuong').val('');
+                    HD.doLenForm(dx, null);
+                    HD.ghiChu('Hồ sơ không còn bản ghi hoá đơn nào.', false);
+                    return;
+                }
+                dx._zeHDLoaiDangXemRaw = ds[0].BUYER_TYPE_LOAI;
+                var k = HD.khoaLoai(ds[0].BUYER_TYPE_LOAI);
+                if (k) $('#ddlKQ_HD_DoiTuong').val(k);
+                HD.doLenForm(dx, ds[0]);
+            },
+            error: function () { },
+            type: 'POST',
+            contentType: true,
+            action: _ZE_HD_LAY,
+            data: {
+                'action': _ZE_HD_LAY,
+                'func': 'PKG_CORE_NGUOIHOC_01.LayDS_PersonInvoiceInfo',
+                'iM': edu.system.iM,
+                'strPerson_Id': pid,
+                'dChiHienHanh': 1,
+                'strNguoiThucHien_Id': edu.system.userId,
+                'strVaiTroDangNhap_Id': edu.system.vaiTroDangNhap_Id || '',
+                'strChucNangHeThong_Id': edu.system.chucNangHeThong_Id || edu.system.strChucNang_Id,
+                'strHanhDong_Code': ''
+            },
+            fakedb: []
+        }, false, false, false, null);
+    };
+
+    // Mở hồ sơ khác thì quên loại đang xem, đừng mang sang người kế tiếp
+    if (typeof DeXuatHoSo === 'function' && DeXuatHoSo.prototype.openEditByPerson) {
+        var _origOpenHD = DeXuatHoSo.prototype.openEditByPerson;
+        DeXuatHoSo.prototype.openEditByPerson = function () {
+            this._zeHDDanhSach = null;
+            this._zeHDLoaiDangXemRaw = '';
+            HD.ghiChu('', false);
+            return _origOpenHD.apply(this, arguments);
+        };
+    }
+
+    var _mrLoai = edu.system.makeRequest;
+    edu.system.makeRequest = function (o) {
+        try {
+            var f = (o && o.data && o.data.func) || '';
+            if (/LayDS_PersonInvoiceInfo/.test(f) && typeof o.success === 'function') {
+                var goc = o.success;
+                o.success = function (data) {
+                    try { HD.nhanDanhSach(data); } catch (e) { console.warn('[ZE Hoá đơn]', e); }
+                    return goc.apply(this, arguments);
+                };
+            }
+        } catch (e) { }
+        return _mrLoai.apply(this, arguments);
+    };
+
+    window._zeHoaDon = HD;   // để gỡ lỗi từ Console khi cần
 }
