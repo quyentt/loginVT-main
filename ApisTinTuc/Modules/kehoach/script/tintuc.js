@@ -1421,7 +1421,16 @@ TinTuc.prototype = {
     ----------------------------------------------*/
     getList_UngDung: function () {
         var me = this;
+var obj_save = {
+			'action': 'CMS_QuanLyNguoiDung_MH/DSA4BSAvKRIgIikULyYFNC8m',
+			'func': 'pkg_chung_quanlynguoidung.LayDanhSachUngDung',
+			'iM' : edu.system.iM,
 
+            'strTuKhoa': "",
+            'pageIndex': 1,
+            'pageSize': 1000,
+            'dTrangThai': 1
+        };
 
         edu.system.makeRequest({
             success: function (data) {
@@ -1448,12 +1457,7 @@ TinTuc.prototype = {
 
             contentType: true,
 
-            data: {
-                'strTuKhoa': "",
-                'pageIndex': 1,
-                'pageSize': 1000,
-                'dTrangThai': 1
-            },
+            data: obj_save,
             fakedb: [
 
             ]
