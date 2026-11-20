@@ -1304,7 +1304,8 @@ QuyTrinhPhoiIn.prototype = {
             var dot = t === "xong" ? '<i class="fa fa-check"></i>' : t === "boqua" ? '<i class="fa fa-forward"></i>' : (i + 1);
             var mh = b.view ? me.F.MAN_HINH[b.view] : null;
             var pill = t === "xong" ? '<span class="qtp-pill done">Xong</span>' : t === "boqua" ? '<span class="qtp-pill skip">Bỏ qua</span>' : (b.ma === goiY ? '<span class="qtp-pill cur">Tiếp theo</span>' : "");
-            if (st && st.chuaLuu) pill = '<span class="qtp-pill unsaved" title="Chưa ghi được nhật ký">Chưa lưu</span>';
+            // ẨN (20/11/2026 — tạm ẩn phần Nhật ký vì BE chưa có API; mở lại thì bỏ comment):
+            // if (st && st.chuaLuu) pill = '<span class="qtp-pill unsaved" title="Chưa ghi được nhật ký">Chưa lưu</span>';
             h += '<li class="' + cls + '" data-buoc="' + b.ma + '"><span class="qtp-step-dot">' + dot + "</span>";
             h += '<div class="qtp-step-body"><div class="qtp-step-name">' + b.ten + '</div><div class="qtp-step-meta">' + (mh ? '<i class="fa ' + mh.icon + '"></i> ' + mh.ten : b.congCu === "anh" ? '<i class="fa fa-picture-o"></i> Chỉnh ảnh ngay trên trang' : '<i class="fa fa-hand-paper-o"></i> Làm ngoài hệ thống') + "</div></div>";
             h += '<div class="qtp-step-side">' + pill + "</div></li>";
@@ -1338,7 +1339,8 @@ QuyTrinhPhoiIn.prototype = {
         h += '<div class="qtp-d-title">' + b.ten;
         if (t === "xong") h += ' <span class="qtp-pill done"><i class="fa fa-check"></i> Đã xong</span>';
         if (t === "boqua") h += ' <span class="qtp-pill skip">Đã bỏ qua</span>';
-        if (st && st.chuaLuu) h += ' <span class="qtp-pill unsaved">Chưa ghi được nhật ký</span>';
+        // ẨN (tạm ẩn phần Nhật ký — mở lại thì bỏ comment):
+        // if (st && st.chuaLuu) h += ' <span class="qtp-pill unsaved">Chưa ghi được nhật ký</span>';
         h += '</div><div class="qtp-d-purpose">' + b.mucDich + "</div></div>";
         h += '<div class="qtp-d-nav"><button type="button" class="qtp-btn qtp-btn-icon" data-act="truoc" title="Bước trước"' + (i === 0 ? " disabled" : "") + '><i class="fa fa-chevron-left"></i></button>'
             + '<button type="button" class="qtp-btn qtp-btn-icon" data-act="sau" title="Bước sau"' + (i === n - 1 ? " disabled" : "") + '><i class="fa fa-chevron-right"></i></button></div></div>';
@@ -1372,7 +1374,10 @@ QuyTrinhPhoiIn.prototype = {
         h += '<div class="qtp-actions"><div class="qtp-actions-l">';
         if (t === "xong" || t === "boqua") h += '<button type="button" class="qtp-btn" data-act="moLai"><i class="fa fa-undo"></i> Mở lại bước</button>';
         else h += '<button type="button" class="qtp-btn qtp-btn-ghost" data-act="boQua"><i class="fa fa-forward"></i> Bỏ qua bước</button>';
-        h += '</div><div class="qtp-actions-r"><button type="button" class="qtp-btn qtp-btn-outline" data-act="luuGhiChu"><i class="fa fa-commenting-o"></i> Lưu ghi chú</button>';
+        h += '</div><div class="qtp-actions-r">';
+        // ẨN (tạm ẩn phần Nhật ký): nút "Lưu ghi chú" chỉ để gửi ghi chú vào nhật ký. Ghi chú vẫn tự lưu nháp
+        // và vẫn đi kèm khi Hoàn thành / Bỏ qua bước. Mở lại thì bỏ comment dòng dưới.
+        // h += '<button type="button" class="qtp-btn qtp-btn-outline" data-act="luuGhiChu"><i class="fa fa-commenting-o"></i> Lưu ghi chú</button>';
         if (t !== "xong") h += '<button type="button" class="qtp-btn qtp-btn-success" data-act="hoanThanh"><i class="fa fa-check"></i> ' + (b.ketThuc ? "Hoàn thành & kết thúc phiên" : "Hoàn thành bước") + "</button>";
         else if (i < n - 1) h += '<button type="button" class="qtp-btn qtp-btn-primary" data-act="sau">Bước tiếp theo <i class="fa fa-arrow-right"></i></button>';
         h += "</div></div>";

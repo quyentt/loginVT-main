@@ -89,6 +89,53 @@
     #tblDSDiem tbody td:last-child {
         text-align: center !important;
     }
+
+    /* Kết quả học tập theo phạm vi (Học kỳ / Năm học / Toàn khóa): bảng 25 cột
+       - khung tự cuộn cả 2 chiều (max-height) để tiêu đề 2 tầng dính trên cùng khi cuộn dọc
+       - thanh cuộn ngang giả phía trên bảng, đồng bộ 2 chiều (tracuudiem.js: _ganCuonNgang_KQHT)
+       - clear:both: thanh phân trang của systemroot (đặt ngay trên) gồm 2 khối col-lg-6 float không được clear,
+         khối overflow:auto đứng cạnh float sẽ bị co về rộng 0 -> bảng biến mất */
+    #zoneKQHT_TopScroll {
+        clear: both;
+        overflow-x: auto;
+        overflow-y: hidden;
+        height: 14px;
+    }
+
+    #zoneKQHT_Wrap {
+        clear: both;
+        overflow: auto !important;
+        max-height: calc(100vh - 240px);
+        max-width: 100%;
+    }
+
+    #tblKetQuaHocTap {
+        margin-bottom: 0 !important;
+    }
+
+    #tblKetQuaHocTap thead {
+        position: sticky;
+        top: 0;
+        z-index: 3;
+    }
+
+    #tblKetQuaHocTap thead th {
+        background: #f0f3fd !important;
+        white-space: nowrap !important;
+        vertical-align: middle !important;
+        text-align: center !important;
+    }
+
+    #tblKetQuaHocTap tbody td {
+        white-space: nowrap;
+        vertical-align: middle !important;
+    }
+
+    #lblKQHT_DieuKien {
+        font-style: italic;
+        color: #475569;
+        margin-bottom: 8px;
+    }
 </style>
 <link href="Modules/TraCuuDiem/css/bootstrap-colorselector.min.css" rel="stylesheet" /><!-- editor -->
 
@@ -209,6 +256,10 @@
                                                 <li><a class="btnBaoCao_LHD" name="DeTai" href="#"> 1. Đề tài</a></li>
                                             </ul>-->
                                             </div>
+                                            <!-- Nhãn nút đổi theo "Phạm vi tổng hợp" đang chọn (tracuudiem.js: _capNhatNhanKQHT) -->
+                                            <a class="btn btn-info ml-10 btn-table-38" id="btnKetQuaHocTap" href="#"
+                                                title="Xem kết quả học tập của sinh viên theo phạm vi tổng hợp đang chọn">
+                                                <i class="fa-light fa-graduation-cap"></i><span id="lblBtnKetQuaHocTap">Kết quả học tập theo Học kỳ - Năm học - Toàn khóa</span></a>
                                         </div>
                                     </td>
                                 </tr>
@@ -344,6 +395,38 @@
                     </div>
                 </div>
             </div>
+            <!-- box Kết quả học tập theo phạm vi (Học kỳ / Năm học / Toàn khóa) — pkg_diem_baocao.LayDanhSachHoSoNhieuNganh -->
+            <div class="box box-solid form-container zone-bus" id="zone_input_KetQuaHocTap" style="display: none">
+                <div class="box box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">
+                            <span style="float: left">
+                                <i class="fa-light fa-graduation-cap"></i> <span id="lblKQHT_TieuDe">Kết quả học tập</span>
+                                <span class="badge bg-light-blue" id="lblKQHT_Tong"></span>
+                            </span>
+                            <span>
+                                <a class="btn btn-success ml-10 pull-left" id="btnXuatExcel_KQHT" href="#"
+                                    title="Xuất toàn bộ danh sách (không chỉ trang đang hiển thị) ra Excel">
+                                    <i class="fa fa-file-excel-o"></i> Xuất Excel</a>
+                            </span>
+                        </h3>
+                        <div class="pull-right">
+                            <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times"></i></a>
+                        </div>
+                    </div>
+                    <div class="box-body pd20">
+                        <div id="lblKQHT_DieuKien"></div>
+                        <!-- thanh phân trang (systemroot chèn trước bảng) được JS đưa ra đây, ngoài khung cuộn -->
+                        <div id="zoneKQHT_TopScroll"><div style="height:1px;"></div></div>
+                        <div id="zoneKQHT_Wrap">
+                            <table id="tblKetQuaHocTap" class="table table-hover table-bordered">
+                                <thead></thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- box Edit_VBSC -->
             <div class="box box-solid form-container zone-bus" id="zone_input_TraCuuDiem" style="display: none">
                 <div class="box box-solid">
@@ -431,7 +514,7 @@
 </div>
 
 <!-- page script -->
-<script src="modules/TraCuuDiem/script/tracuudiem.js?v=1.0.0.2"></script>
+<script src="modules/TraCuuDiem/script/tracuudiem.js?v=1.0.0.3"></script>
 <script src="modules/TraCuuDiem/script/bootstrap-colorselector.js"></script>
 <script type="text/javascript">
     var main_doc = {};

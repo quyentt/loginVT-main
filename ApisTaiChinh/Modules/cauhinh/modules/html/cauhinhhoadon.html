@@ -1,0 +1,1818 @@
+<style>
+    /* ===== Cấu hình hóa đơn điện tử — CSS scope theo #chdWrap (trang) và #modalChd (form) =====
+       - Không dùng .box/.row/.col của AdminLTE: vỏ indexi.aspx đặt .box-body padding 0, .box margin 14px !important,
+         .row không lề âm => dính mép, lệch mép. Trang tự dựng panel + grid.
+       - Rule của vỏ dạng `html body.skin-blue #main-content-wrapper .form-control {... !important}` thắng selector 1 id
+         => chỗ nào cần đè (padding ô mật khẩu, viền lỗi, ô bị khóa) dùng 2 id (#modalChd#modalChd).
+       - Nút điều khiển phụ (hiện mật khẩu, thao tác trên thẻ) KHÔNG dùng class .btn: Corei/systemroot.js gắn spinner +
+         disabled 1 giây cho mọi .btn.
+       - Không dùng select2 (ô chọn ít mục): tránh lỗi select2 trồi lên lớp tải / bay góc trong modal. */
+    #chdWrap,
+    #modalChd {
+        --chd-navy: #223771;
+        --chd-blue: #2f55a4;
+        --chd-blue-50: #eef3ff;
+        --chd-text: #0f172a;
+        --chd-sub: #334155;
+        --chd-muted: #64748b;
+        --chd-line: #e5e9f2;
+        --chd-soft: #f8fafc;
+        --chd-ok: #16a34a;
+        --chd-ok-50: #ecfdf3;
+        --chd-warn: #d97706;
+        --chd-warn-50: #fffbeb;
+        --chd-err: #dc2626;
+        --chd-err-50: #fef2f2;
+        --chd-mono: Consolas, "SFMono-Regular", Menlo, "Courier New", monospace;
+    }
+
+    #chdWrap {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        padding-bottom: 28px;
+        color: var(--chd-text);
+    }
+
+    #chdWrap .chd-panel {
+        background: #fff;
+        border: 1px solid var(--chd-line);
+        border-radius: 14px;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, .04);
+    }
+
+    /* ----- Đầu trang ----- */
+    #chdWrap .chd-hero {
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        padding: 22px 26px;
+    }
+
+    #chdWrap .chd-hero::before {
+        content: "";
+        position: absolute;
+        width: 240px;
+        height: 240px;
+        right: -70px;
+        top: -120px;
+        border-radius: 50%;
+        pointer-events: none;
+        background: radial-gradient(circle, rgba(47, 85, 164, .10), rgba(47, 85, 164, 0) 70%);
+    }
+
+    /* Vùng thông báo rỗng không chiếm khoảng cách của flex gap */
+    #chdWrap #chdThongBao:empty {
+        display: none;
+    }
+
+    #chdWrap .chd-hero-ic {
+        flex: 0 0 58px;
+        width: 58px;
+        height: 58px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #223771, #3b6fd1);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        box-shadow: 0 6px 16px rgba(34, 55, 113, .25);
+    }
+
+    #chdWrap .chd-hero-txt {
+        min-width: 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    #chdWrap .chd-hero-txt h2 {
+        margin: 0 0 5px;
+        font-size: 21px;
+        font-weight: 700;
+        color: var(--chd-navy);
+    }
+
+    #chdWrap .chd-hero-txt p {
+        margin: 0;
+        font-size: 13.5px;
+        line-height: 1.55;
+        color: var(--chd-muted);
+        max-width: 780px;
+    }
+
+    #chdWrap .chd-hero-act {
+        margin-left: auto;
+        position: relative;
+        z-index: 1;
+        flex-shrink: 0;
+    }
+
+    /* CTA: to hơn nút thường (42px, chữ 600, bóng nhẹ) */
+    #chdWrap#chdWrap .chd-cta,
+    #modalChd#modalChd .chd-cta {
+        height: 42px;
+        padding: 0 20px !important;
+        font-weight: 600 !important;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 12px rgba(34, 55, 113, .22) !important;
+    }
+
+    /* ----- Thẻ số liệu: nền trắng, màu tone chỉ ở khung icon + viền trái ----- */
+    #chdWrap .chd-kpis {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+        gap: 16px;
+    }
+
+    #chdWrap .chd-kpi {
+        background: #fff;
+        border: 1px solid var(--chd-line);
+        border-left: 4px solid var(--c);
+        border-radius: 12px;
+        padding: 16px 20px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        min-width: 0;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, .04);
+    }
+
+    #chdWrap .chd-kpi .ic {
+        flex: 0 0 46px;
+        width: 46px;
+        height: 46px;
+        border-radius: 12px;
+        background: var(--bg);
+        color: var(--c);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+    }
+
+    #chdWrap .chd-kpi .v {
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 1.1;
+        color: var(--chd-text);
+    }
+
+    #chdWrap .chd-kpi .l {
+        font-size: 13px;
+        color: var(--chd-muted);
+        margin-top: 3px;
+    }
+
+    /* ----- Thanh tìm kiếm ----- */
+    #chdWrap .chd-toolbar {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 16px 20px;
+    }
+
+    #chdWrap .chd-search {
+        position: relative;
+        flex: 1 1 340px;
+        min-width: 220px;
+    }
+
+    #chdWrap .chd-search i {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        pointer-events: none;
+        z-index: 2;
+    }
+
+    #chdWrap#chdWrap .chd-search input.form-control {
+        padding-left: 40px !important;
+    }
+
+    #chdWrap .chd-filter {
+        flex: 0 1 300px;
+        min-width: 200px;
+    }
+
+    #chdWrap .chd-count {
+        margin-left: auto;
+        font-size: 13px;
+        color: var(--chd-muted);
+        white-space: nowrap;
+    }
+
+    #chdWrap .chd-count b {
+        color: var(--chd-text);
+    }
+
+    /* ----- Thông báo trong trang ----- */
+    #chdWrap .chd-banner,
+    #modalChd .chd-banner {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        border-left: 4px solid var(--chd-blue);
+        background: #eff6ff;
+        padding: 11px 14px;
+        border-radius: 8px;
+        color: var(--chd-text);
+        font-size: 13.5px;
+        line-height: 1.5;
+    }
+
+    #chdWrap .chd-banner > i,
+    #modalChd .chd-banner > i {
+        margin-top: 3px;
+        color: var(--chd-blue);
+    }
+
+    #chdWrap .chd-banner.s,
+    #modalChd .chd-banner.s {
+        border-left-color: var(--chd-ok);
+        background: var(--chd-ok-50);
+    }
+
+    #chdWrap .chd-banner.s > i,
+    #modalChd .chd-banner.s > i {
+        color: var(--chd-ok);
+    }
+
+    #chdWrap .chd-banner.w,
+    #modalChd .chd-banner.w {
+        border-left-color: var(--chd-warn);
+        background: var(--chd-warn-50);
+    }
+
+    #chdWrap .chd-banner.w > i,
+    #modalChd .chd-banner.w > i {
+        color: var(--chd-warn);
+    }
+
+    #chdWrap .chd-banner.e,
+    #modalChd .chd-banner.e {
+        border-left-color: var(--chd-err);
+        background: var(--chd-err-50);
+    }
+
+    #chdWrap .chd-banner.e > i,
+    #modalChd .chd-banner.e > i {
+        color: var(--chd-err);
+    }
+
+    #chdWrap .chd-banner .tx,
+    #modalChd .chd-banner .tx {
+        flex: 1;
+        min-width: 0;
+    }
+
+    #chdWrap .chd-banner .x,
+    #modalChd .chd-banner .x {
+        cursor: pointer;
+        color: #94a3b8;
+        padding: 0 4px;
+        font-size: 18px;
+        line-height: 1;
+    }
+
+    #chdWrap .chd-banner .x:hover,
+    #modalChd .chd-banner .x:hover {
+        color: var(--chd-text);
+    }
+
+    /* ----- Lưới thẻ cấu hình ----- */
+    #chdWrap .chd-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(390px, 1fr));
+        gap: 18px;
+    }
+
+    #chdWrap .chd-grid.is-loading {
+        opacity: .55;
+        pointer-events: none;
+        transition: opacity .15s ease;
+    }
+
+    @media (max-width: 575px) {
+        #chdWrap .chd-grid {
+            grid-template-columns: minmax(0, 1fr);
+        }
+    }
+
+    #chdWrap .chd-card {
+        background: #fff;
+        border: 1px solid var(--chd-line);
+        border-radius: 14px;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, .04);
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        overflow: hidden;
+        transition: box-shadow .15s ease, border-color .15s ease;
+    }
+
+    #chdWrap .chd-card:hover {
+        border-color: #cdd8f0;
+        box-shadow: 0 10px 26px rgba(34, 55, 113, .12);
+    }
+
+    #chdWrap .chd-card.is-flash {
+        animation: chdFlash 2.2s ease;
+    }
+
+    @keyframes chdFlash {
+        0%, 35% {
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 4px rgba(245, 158, 11, .25);
+        }
+
+        100% {
+            border-color: var(--chd-line);
+            box-shadow: 0 1px 2px rgba(15, 23, 42, .04);
+        }
+    }
+
+    #chdWrap .chd-card-top {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px 18px 12px;
+    }
+
+    #chdWrap .chd-avatar {
+        flex: 0 0 42px;
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: var(--av-bg);
+        color: var(--av-c);
+        font-weight: 700;
+        font-size: 17px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #chdWrap .chd-top-txt {
+        min-width: 0;
+        flex: 1;
+    }
+
+    #chdWrap .chd-ncc {
+        font-weight: 700;
+        font-size: 14.5px;
+        color: var(--chd-text);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    #chdWrap .chd-pt {
+        font-size: 12.5px;
+        color: var(--chd-muted);
+        margin-top: 1px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    #chdWrap .chd-pt i {
+        color: #0891b2;
+        margin-right: 3px;
+    }
+
+    #chdWrap .chd-pill {
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        border-radius: 999px;
+        padding: 3px 11px;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    #chdWrap .chd-pill.ok {
+        background: var(--chd-ok-50);
+        color: #15803d;
+        border: 1px solid #bbf7d0;
+    }
+
+    #chdWrap .chd-pill.warn {
+        background: var(--chd-warn-50);
+        color: #b45309;
+        border: 1px solid #fde68a;
+    }
+
+    #chdWrap .chd-dv {
+        padding: 0 18px 14px;
+    }
+
+    #chdWrap .chd-dv-ten {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--chd-text);
+        line-height: 1.35;
+        cursor: pointer;
+    }
+
+    #chdWrap .chd-dv-ten:hover {
+        color: var(--chd-blue);
+    }
+
+    #chdWrap .chd-dv-sub {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 16px;
+        margin-top: 5px;
+        font-size: 13px;
+        color: var(--chd-sub);
+    }
+
+    #chdWrap .chd-dv-sub i {
+        color: #94a3b8;
+        margin-right: 4px;
+    }
+
+    #chdWrap .chd-dv-dc {
+        margin-top: 4px;
+        font-size: 12.5px;
+        color: var(--chd-muted);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    #chdWrap .chd-codes {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        padding: 0 18px 14px;
+    }
+
+    #chdWrap .chd-code {
+        background: var(--chd-soft);
+        border: 1px solid #edf1f7;
+        border-radius: 10px;
+        padding: 9px 12px;
+        min-width: 0;
+    }
+
+    #chdWrap .chd-code .l {
+        font-size: 11.5px;
+        font-weight: 600;
+        letter-spacing: .4px;
+        text-transform: uppercase;
+        color: var(--chd-muted);
+    }
+
+    #chdWrap .chd-code .v {
+        margin-top: 2px;
+        font-family: var(--chd-mono);
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--chd-navy);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    #chdWrap .chd-kvs {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+        padding: 0 18px 14px;
+        font-size: 13px;
+    }
+
+    #chdWrap .chd-kv {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+    }
+
+    #chdWrap .chd-kv .l {
+        flex: 0 0 112px;
+        color: var(--chd-muted);
+    }
+
+    #chdWrap .chd-kv .v {
+        flex: 1;
+        min-width: 0;
+        color: var(--chd-text);
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    #chdWrap .chd-na {
+        color: #b4bccb;
+        font-weight: 400;
+    }
+
+    #chdWrap .chd-dot {
+        letter-spacing: 2px;
+        color: var(--chd-sub);
+    }
+
+    #chdWrap .chd-prog {
+        padding: 0 18px 14px;
+    }
+
+    #chdWrap .chd-prog-bar {
+        height: 6px;
+        border-radius: 6px;
+        background: #eef1f6;
+        overflow: hidden;
+    }
+
+    #chdWrap .chd-prog-bar span {
+        display: block;
+        height: 100%;
+        border-radius: 6px;
+        background: var(--c);
+    }
+
+    #chdWrap .chd-prog-cap {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        margin-top: 6px;
+        font-size: 12px;
+        color: var(--chd-muted);
+    }
+
+    #chdWrap .chd-warns {
+        margin: 0 18px 14px;
+        padding: 8px 12px;
+        list-style: none;
+        border-radius: 8px;
+        background: var(--chd-warn-50);
+        border: 1px solid #fde68a;
+        font-size: 12.5px;
+        color: #92400e;
+    }
+
+    #chdWrap .chd-warns li + li {
+        margin-top: 3px;
+    }
+
+    #chdWrap .chd-warns i {
+        color: var(--chd-warn);
+        margin-right: 6px;
+    }
+
+    #chdWrap .chd-card-foot {
+        margin-top: auto;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        padding: 12px 14px;
+        border-top: 1px solid #eef1f6;
+        background: #fbfcfe;
+        min-height: 59px;
+    }
+
+    #chdWrap .chd-meta {
+        font-size: 12px;
+        color: var(--chd-muted);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-width: 0;
+        flex: 1 1 120px;
+    }
+
+    #chdWrap .chd-foot-confirm {
+        display: none;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    #chdWrap .chd-card.is-confirm .chd-foot-normal {
+        display: none;
+    }
+
+    #chdWrap .chd-card.is-confirm .chd-foot-confirm {
+        display: flex;
+    }
+
+    #chdWrap .chd-card.is-confirm .chd-card-foot {
+        background: var(--chd-err-50);
+    }
+
+    #chdWrap .chd-foot-normal {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    #chdWrap .chd-confirm-tx {
+        flex: 1 1 180px;
+        font-size: 13px;
+        color: #991b1b;
+        font-weight: 600;
+    }
+
+    /* Nút thao tác trên thẻ (không phải .btn) */
+    #chdWrap#chdWrap .chd-act {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        height: 34px;
+        padding: 0 12px;
+        border-radius: 8px;
+        border: 1px solid #d9e1f0;
+        background: #fff;
+        color: var(--chd-navy);
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+        user-select: none;
+        white-space: nowrap;
+    }
+
+    #chdWrap#chdWrap .chd-act:hover {
+        background: var(--chd-blue-50);
+        border-color: var(--chd-navy);
+    }
+
+    #chdWrap#chdWrap .chd-act.is-primary {
+        background: var(--chd-navy);
+        border-color: var(--chd-navy);
+        color: #fff;
+    }
+
+    #chdWrap#chdWrap .chd-act.is-primary:hover {
+        background: #121d3b;
+    }
+
+    #chdWrap#chdWrap .chd-act.is-danger {
+        color: var(--chd-err);
+        border-color: #f5c2c2;
+    }
+
+    #chdWrap#chdWrap .chd-act.is-danger:hover {
+        background: var(--chd-err-50);
+        border-color: var(--chd-err);
+    }
+
+    #chdWrap#chdWrap .chd-act.is-danger-solid {
+        background: var(--chd-err);
+        border-color: var(--chd-err);
+        color: #fff;
+    }
+
+    #chdWrap#chdWrap .chd-act.is-danger-solid:hover {
+        background: #b91c1c;
+    }
+
+    #chdWrap#chdWrap .chd-act.is-disabled {
+        opacity: .45;
+        pointer-events: none;
+    }
+
+    /* Nút Xóa: tách hẳn sang phải, cuối hàng */
+    #chdWrap .chd-foot-normal .is-danger {
+        margin-left: auto;
+    }
+
+    /* ----- Khung xương khi đang tải ----- */
+    #chdWrap .chd-skel {
+        height: 330px;
+        border-radius: 14px;
+        border: 1px solid var(--chd-line);
+        background: linear-gradient(90deg, #f3f6fb 25%, #e9eef7 37%, #f3f6fb 63%);
+        background-size: 400% 100%;
+        animation: chdShimmer 1.3s ease infinite;
+    }
+
+    @keyframes chdShimmer {
+        0% {
+            background-position: 100% 50%;
+        }
+
+        100% {
+            background-position: 0 50%;
+        }
+    }
+
+    /* ----- Trạng thái trống ----- */
+    #chdWrap .chd-empty {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 44px 24px 40px;
+    }
+
+    #chdWrap .chd-empty-ic {
+        width: 76px;
+        height: 76px;
+        margin: 0 auto 14px;
+        border-radius: 50%;
+        background: var(--chd-blue-50);
+        color: var(--chd-blue);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+    }
+
+    #chdWrap .chd-empty h3 {
+        margin: 0 0 6px;
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--chd-text);
+    }
+
+    #chdWrap .chd-empty p {
+        margin: 0 auto 18px;
+        max-width: 560px;
+        font-size: 13.5px;
+        color: var(--chd-muted);
+        line-height: 1.55;
+    }
+
+    #chdWrap .chd-steps {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 14px;
+        max-width: 860px;
+        margin: 26px auto 0;
+        text-align: left;
+    }
+
+    #chdWrap .chd-step {
+        display: flex;
+        gap: 12px;
+        padding: 14px 16px;
+        border-radius: 12px;
+        background: var(--chd-soft);
+        border: 1px solid #edf1f7;
+        font-size: 13px;
+        color: var(--chd-sub);
+        line-height: 1.5;
+    }
+
+    #chdWrap .chd-step b {
+        display: block;
+        color: var(--chd-text);
+        margin-bottom: 2px;
+    }
+
+    #chdWrap .chd-step-no {
+        flex: 0 0 28px;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--chd-navy);
+        color: #fff;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    @media (max-width: 767px) {
+        #chdWrap .chd-hero {
+            flex-wrap: wrap;
+            padding: 18px;
+        }
+
+        #chdWrap .chd-hero-act {
+            margin-left: 0;
+            width: 100%;
+        }
+
+        #chdWrap .chd-count {
+            margin-left: 0;
+        }
+    }
+
+    /* =================== FORM (modal) =================== */
+    #modalChd .modal-dialog {
+        width: 96%;
+        max-width: 1480px;
+        margin: 24px auto;
+    }
+
+    #modalChd#modalChd .modal-body {
+        padding: 0 !important;
+        background: #f6f8fc !important;
+    }
+
+    #modalChd .chd-mlayout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 370px;
+        gap: 20px;
+        align-items: start;
+        padding: 20px 22px 22px;
+    }
+
+    #modalChd .chd-side {
+        position: sticky;
+        top: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    @media (max-width: 1199px) {
+        #modalChd .chd-mlayout {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        #modalChd .chd-side {
+            position: static;
+        }
+    }
+
+    #modalChd .chd-mtop {
+        padding: 18px 22px 0;
+    }
+
+    #modalChd .chd-mtop:empty {
+        display: none;
+    }
+
+    #modalChd .chd-mtop > * + * {
+        margin-top: 10px;
+    }
+
+    /* Thanh khóa thông số kết nối (chỉ khi Sửa) */
+    #modalChd .chd-lockbar {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        padding: 12px 16px;
+        margin-bottom: 16px;
+        border-radius: 10px;
+        border: 1px solid #dbe3f3;
+        background: #f5f8ff;
+        font-size: 13px;
+        color: var(--chd-sub);
+    }
+
+    #modalChd .chd-lockbar > i {
+        font-size: 18px;
+        color: var(--chd-navy);
+    }
+
+    #modalChd .chd-lockbar .tx {
+        flex: 1 1 320px;
+        line-height: 1.5;
+    }
+
+    #modalChd .chd-lockbar .tx b {
+        color: var(--chd-text);
+    }
+
+    #modalChd .chd-lockbar.is-open {
+        background: var(--chd-warn-50);
+        border-color: #fde68a;
+    }
+
+    #modalChd .chd-lockbar.is-open > i {
+        color: var(--chd-warn);
+    }
+
+    #modalChd .chd-switch {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0;
+        cursor: pointer;
+        font-weight: 600;
+        color: var(--chd-navy);
+        user-select: none;
+        white-space: nowrap;
+    }
+
+    #modalChd .chd-switch input {
+        position: absolute;
+        opacity: 0;
+        width: 1px;
+        height: 1px;
+    }
+
+    #modalChd .chd-switch .tg {
+        position: relative;
+        width: 40px;
+        height: 22px;
+        border-radius: 22px;
+        background: #cbd5e1;
+        transition: background .15s ease;
+        flex-shrink: 0;
+    }
+
+    #modalChd .chd-switch .tg::after {
+        content: "";
+        position: absolute;
+        left: 3px;
+        top: 3px;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: #fff;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
+        transition: transform .15s ease;
+    }
+
+    #modalChd .chd-switch input:checked + .tg {
+        background: var(--chd-warn);
+    }
+
+    #modalChd .chd-switch input:checked + .tg::after {
+        transform: translateX(18px);
+    }
+
+    #modalChd .chd-switch input:focus-visible + .tg {
+        box-shadow: 0 0 0 3px rgba(34, 55, 113, .25);
+    }
+
+    /* Khối nhập liệu */
+    #modalChd .chd-sec {
+        background: #fff;
+        border: 1px solid var(--chd-line);
+        border-radius: 12px;
+        padding: 18px 20px 20px;
+    }
+
+    #modalChd .chd-sec + .chd-sec {
+        margin-top: 16px;
+    }
+
+    #modalChd .chd-sec-head {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 16px;
+    }
+
+    #modalChd .chd-sec-no {
+        flex: 0 0 30px;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: var(--chd-blue-50);
+        color: var(--chd-navy);
+        font-size: 14px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background .15s ease;
+    }
+
+    #modalChd .chd-sec-no .fa {
+        display: none;
+    }
+
+    #modalChd .chd-sec.is-done .chd-sec-no {
+        background: var(--chd-ok);
+        color: #fff;
+    }
+
+    #modalChd .chd-sec.is-done .chd-sec-no span {
+        display: none;
+    }
+
+    #modalChd .chd-sec.is-done .chd-sec-no .fa {
+        display: inline-block;
+    }
+
+    #modalChd .chd-sec-head h5 {
+        margin: 4px 0 2px;
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--chd-text);
+    }
+
+    #modalChd .chd-sec-head p {
+        margin: 0;
+        font-size: 12.5px;
+        color: var(--chd-muted);
+        line-height: 1.45;
+    }
+
+    #modalChd .chd-sec-tag {
+        margin-left: auto;
+        flex-shrink: 0;
+        display: none;
+        align-items: center;
+        gap: 5px;
+        padding: 3px 10px;
+        border-radius: 999px;
+        background: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        color: var(--chd-muted);
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    #modalChd.is-locked .chd-sec.has-kt .chd-sec-tag {
+        display: inline-flex;
+    }
+
+    #modalChd .chd-fgrid {
+        display: grid;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        gap: 16px 18px;
+    }
+
+    #modalChd .chd-f {
+        grid-column: span 6;
+        min-width: 0;
+    }
+
+    #modalChd .chd-f.chd-s12 {
+        grid-column: span 12;
+    }
+
+    #modalChd .chd-f.chd-s4 {
+        grid-column: span 4;
+    }
+
+    #modalChd .chd-f.chd-s8 {
+        grid-column: span 8;
+    }
+
+    #modalChd .chd-f.chd-s3 {
+        grid-column: span 3;
+    }
+
+    @media (max-width: 991px) {
+        #modalChd .chd-f.chd-s3,
+        #modalChd .chd-f.chd-s4,
+        #modalChd .chd-f.chd-s8 {
+            grid-column: span 6;
+        }
+    }
+
+    @media (max-width: 767px) {
+        #modalChd .chd-f,
+        #modalChd .chd-f.chd-s3,
+        #modalChd .chd-f.chd-s4,
+        #modalChd .chd-f.chd-s8 {
+            grid-column: span 12;
+        }
+    }
+
+    #modalChd .chd-f > label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #475569;
+    }
+
+    #modalChd .chd-req {
+        color: var(--chd-err);
+        font-weight: 700;
+    }
+
+    #modalChd .chd-need {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--chd-blue);
+        background: var(--chd-blue-50);
+        border-radius: 4px;
+        padding: 0 6px;
+        line-height: 18px;
+    }
+
+    #modalChd .chd-lockic {
+        display: none;
+        color: #94a3b8;
+        font-size: 12px;
+    }
+
+    #modalChd.is-locked .chd-f.is-kt .chd-lockic {
+        display: inline-block;
+    }
+
+    #modalChd .chd-help {
+        margin-top: 5px;
+        font-size: 12px;
+        line-height: 1.45;
+        color: var(--chd-muted);
+    }
+
+    #modalChd .chd-msg {
+        display: none;
+        margin-top: 5px;
+        font-size: 12px;
+        line-height: 1.45;
+    }
+
+    #modalChd .chd-f.has-w .chd-msg {
+        display: block;
+        color: #b45309;
+    }
+
+    #modalChd .chd-f.has-e .chd-msg {
+        display: block;
+        color: var(--chd-err);
+        font-weight: 600;
+    }
+
+    #modalChd#modalChd .chd-f.has-w .form-control {
+        border-color: #f59e0b !important;
+    }
+
+    #modalChd#modalChd .chd-f.has-e .form-control {
+        border-color: var(--chd-err) !important;
+        box-shadow: 0 0 0 3px rgba(220, 38, 38, .12) !important;
+    }
+
+    #modalChd#modalChd .form-control[disabled] {
+        background: #f1f5f9 !important;
+        color: #475569 !important;
+        cursor: not-allowed;
+    }
+
+    #modalChd#modalChd .chd-mono .form-control {
+        font-family: var(--chd-mono);
+        letter-spacing: .5px;
+    }
+
+    #modalChd .chd-secret {
+        position: relative;
+    }
+
+    #modalChd#modalChd .chd-secret .form-control {
+        padding-right: 44px !important;
+    }
+
+    #modalChd .chd-eye {
+        position: absolute;
+        right: 5px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 32px;
+        height: 30px;
+        border: 0;
+        border-radius: 6px;
+        background: transparent;
+        color: #64748b;
+        cursor: pointer;
+        z-index: 2;
+    }
+
+    #modalChd .chd-eye:hover {
+        background: #eef2f8;
+        color: var(--chd-navy);
+    }
+
+    #modalChd .chd-eye[disabled] {
+        opacity: .4;
+        cursor: not-allowed;
+    }
+
+    /* Cột phải: tiến độ + xem trước */
+    #modalChd .chd-side-card {
+        background: #fff;
+        border: 1px solid var(--chd-line);
+        border-radius: 12px;
+        padding: 16px 18px;
+    }
+
+    #modalChd .chd-side-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 12px;
+        font-size: 12.5px;
+        font-weight: 700;
+        letter-spacing: .5px;
+        text-transform: uppercase;
+        color: var(--chd-muted);
+    }
+
+    #modalChd .chd-side-title b {
+        font-size: 13px;
+        letter-spacing: 0;
+        text-transform: none;
+        color: var(--chd-text);
+    }
+
+    #modalChd .chd-prog-bar {
+        height: 8px;
+        border-radius: 8px;
+        background: #eef1f6;
+        overflow: hidden;
+        margin-bottom: 12px;
+    }
+
+    #modalChd .chd-prog-bar span {
+        display: block;
+        height: 100%;
+        border-radius: 8px;
+        background: var(--c, var(--chd-blue));
+        transition: width .2s ease;
+    }
+
+    #modalChd .chd-check {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    #modalChd .chd-check li {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 8px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 13px;
+        color: var(--chd-sub);
+    }
+
+    #modalChd .chd-check li:hover {
+        background: #f5f8ff;
+    }
+
+    #modalChd .chd-check li i {
+        width: 16px;
+        text-align: center;
+    }
+
+    #modalChd .chd-check li.ok i {
+        color: var(--chd-ok);
+    }
+
+    #modalChd .chd-check li.miss i {
+        color: #cbd5e1;
+    }
+
+    #modalChd .chd-check li.warn i {
+        color: var(--chd-warn);
+    }
+
+    #modalChd .chd-check li.ok span {
+        color: var(--chd-muted);
+    }
+
+    #modalChd .chd-check-note {
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px dashed #dde3ee;
+        font-size: 12px;
+        line-height: 1.5;
+        color: var(--chd-muted);
+    }
+
+    /* Xem trước phần đầu hóa đơn */
+    #modalChd .chd-inv {
+        position: relative;
+        padding: 18px 16px 14px;
+        border: 1px solid #d7deea;
+        border-top: 4px solid var(--chd-navy);
+        border-radius: 10px;
+        background: #fff;
+        font-size: 12.5px;
+        color: #1e293b;
+    }
+
+    #modalChd .chd-inv-codes {
+        display: flex;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        gap: 2px 14px;
+        font-size: 11.5px;
+        line-height: 1.55;
+        color: var(--chd-muted);
+    }
+
+    #modalChd .chd-inv-codes b {
+        font-family: var(--chd-mono);
+        color: var(--chd-text);
+    }
+
+    #modalChd .chd-inv-title {
+        margin: 12px 0 2px;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: .3px;
+        color: var(--chd-navy);
+    }
+
+    #modalChd .chd-inv-sub {
+        text-align: center;
+        font-size: 11.5px;
+        font-style: italic;
+        color: var(--chd-muted);
+    }
+
+    #modalChd .chd-inv-div {
+        margin: 12px 0 8px;
+        border-top: 1px dashed #d7deea;
+    }
+
+    #modalChd .chd-inv-row {
+        display: flex;
+        gap: 8px;
+        padding: 3px 0;
+    }
+
+    #modalChd .chd-inv-row .l {
+        flex: 0 0 104px;
+        color: var(--chd-muted);
+    }
+
+    #modalChd .chd-inv-row .v {
+        flex: 1;
+        min-width: 0;
+        font-weight: 600;
+        word-break: break-word;
+    }
+
+    #modalChd .chd-inv .ph {
+        font-weight: 400;
+        font-style: italic;
+        color: #b4bccb;
+    }
+
+    #modalChd .chd-series {
+        margin-top: 12px;
+        padding: 10px 12px;
+        border-radius: 8px;
+        background: var(--chd-soft);
+        border: 1px solid #edf1f7;
+        font-size: 12px;
+        line-height: 1.55;
+        color: var(--chd-sub);
+    }
+
+    #modalChd .chd-series:empty {
+        display: none;
+    }
+
+    #modalChd .chd-series .k {
+        display: inline-block;
+        min-width: 22px;
+        margin-right: 6px;
+        padding: 0 5px;
+        border-radius: 4px;
+        background: #e8eefb;
+        color: var(--chd-navy);
+        font-family: var(--chd-mono);
+        font-weight: 700;
+        text-align: center;
+    }
+
+    #modalChd .chd-series.w {
+        background: var(--chd-warn-50);
+        border-color: #fde68a;
+        color: #92400e;
+    }
+
+    /* Chân form: Xóa tách trái — Lưu, Đóng nhóm phải */
+    #modalChd#modalChd .modal-footer {
+        flex-wrap: wrap;
+        gap: 10px !important;
+    }
+
+    #modalChd .chd-foot-l {
+        margin-right: auto;
+    }
+
+    #modalChd .chd-foot-r {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
+    #modalChd .chd-savehint {
+        font-size: 12.5px;
+        color: var(--chd-muted);
+        margin-right: 4px;
+    }
+
+    #modalChd .chd-savehint b {
+        color: var(--chd-text);
+    }
+
+    #modalChd .chd-saving {
+        display: none;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--chd-navy);
+    }
+
+    #modalChd.is-saving .chd-saving {
+        display: inline-flex;
+    }
+
+    #modalChd.is-saving #chdBtnLuu {
+        opacity: .55;
+        pointer-events: none;
+    }
+
+    #modalChd .chd-foot-ask {
+        display: none;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        width: 100%;
+    }
+
+    #modalChd .chd-foot-ask .tx {
+        flex: 1 1 260px;
+        font-size: 13.5px;
+        font-weight: 600;
+    }
+
+    #modalChd .chd-foot-ask.is-danger .tx {
+        color: #991b1b;
+    }
+
+    #modalChd .chd-foot-ask.is-warn .tx {
+        color: #92400e;
+    }
+
+    #modalChd.ask-xoa .chd-foot-main,
+    #modalChd.ask-dong .chd-foot-main,
+    #modalChd.ask-luu .chd-foot-main {
+        display: none !important;
+    }
+
+    #modalChd.ask-xoa #chdAskXoa,
+    #modalChd.ask-dong #chdAskDong,
+    #modalChd.ask-luu #chdAskLuu {
+        display: flex;
+    }
+
+    #modalChd .chd-foot-main {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+</style>
+
+<section class="content">
+    <div id="chdWrap">
+        <!-- Đầu trang -->
+        <div class="chd-panel chd-hero">
+            <div class="chd-hero-ic"><i class="fa fa-file-text-o"></i></div>
+            <div class="chd-hero-txt">
+                <h2>Cấu hình hóa đơn điện tử</h2>
+                <p>Khai báo đơn vị bán, tài khoản kết nối nhà cung cấp HĐĐT, mẫu số – ký hiệu và ký số. Hệ thống dùng các thông số này mỗi khi phát hành hóa đơn điện tử lúc thu tiền.</p>
+            </div>
+            <div class="chd-hero-act">
+                <a class="btn btn-primary chd-cta" id="chdBtnThem"><i class="fa fa-plus"></i> Thêm cấu hình</a>
+            </div>
+        </div>
+
+        <!-- Số liệu -->
+        <div class="chd-kpis" id="chdKpi"></div>
+
+        <!-- Tìm kiếm -->
+        <div class="chd-panel chd-toolbar">
+            <div class="chd-search">
+                <i class="fa fa-search"></i>
+                <input type="text" id="txtChdTuKhoa" class="form-control" placeholder="Tìm theo tên đơn vị, mã số thuế, ký hiệu..." autocomplete="off">
+            </div>
+            <div class="chd-filter">
+                <select id="dropChdLocNCC" class="form-control" title="Lọc theo nhà cung cấp dịch vụ">
+                    <option value="">Tất cả nhà cung cấp</option>
+                </select>
+            </div>
+            <a class="btn btn-primary" id="chdBtnTim"><i class="fa fa-search"></i> Tìm kiếm</a>
+            <span class="chd-count" id="chdDem"></span>
+        </div>
+
+        <div id="chdThongBao"></div>
+
+        <!-- Danh sách cấu hình -->
+        <div class="chd-grid" id="chdDanhSach"></div>
+    </div>
+</section>
+
+<!-- Form Thêm / Sửa cấu hình -->
+<div class="modal fade" id="modalChd" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close chd-dong" aria-label="Đóng"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><i class="fa fa-file-text-o"></i> <span id="chdModalTitle">Thêm cấu hình hóa đơn</span></h4>
+            </div>
+            <div class="modal-body">
+                <div class="chd-mtop" id="chdModalThongBao"></div>
+                <div class="chd-mlayout">
+                    <div class="chd-form-main">
+                        <!-- Khóa thông số kết nối khi sửa -->
+                        <div class="chd-lockbar" id="chdLockBar" style="display: none">
+                            <i class="fa fa-lock" id="chdLockIc"></i>
+                            <div class="tx" id="chdLockTx"></div>
+                            <label class="chd-switch">
+                                <input type="checkbox" id="chkChdMoKhoa">
+                                <span class="tg"></span>
+                                <span>Mở khóa để sửa</span>
+                            </label>
+                        </div>
+
+                        <!-- 1. Nhà cung cấp -->
+                        <div class="chd-sec has-kt" data-sec="1">
+                            <div class="chd-sec-head">
+                                <span class="chd-sec-no"><span>1</span><i class="fa fa-check"></i></span>
+                                <div>
+                                    <h5>Nhà cung cấp dịch vụ</h5>
+                                    <p>Đơn vị cung cấp phần mềm hóa đơn điện tử và nút phát hành tương ứng trên màn Thu tiền.</p>
+                                </div>
+                                <span class="chd-sec-tag"><i class="fa fa-lock"></i> Đang khóa</span>
+                            </div>
+                            <div class="chd-fgrid">
+                                <div class="chd-f is-kt" data-f="NHACUNGCAPDICHVU_ID">
+                                    <label for="dropChdNCC">Nhà cung cấp dịch vụ <i class="fa fa-lock chd-lockic"></i></label>
+                                    <select id="dropChdNCC" class="form-control chd-inp" data-k="NHACUNGCAPDICHVU_ID">
+                                        <option value="">— Chọn nhà cung cấp —</option>
+                                    </select>
+                                    <div class="chd-msg"></div>
+                                    <div class="chd-help">Đơn vị cung cấp phần mềm HĐĐT (Viettel, VNPT, MISA, BKAV...).</div>
+                                </div>
+                                <div class="chd-f is-kt" data-f="PHUONGTHUC_ID">
+                                    <label for="dropChdPhuongThuc">Nút phát hành HĐĐT <span class="chd-need">Cần để phát hành</span> <i class="fa fa-lock chd-lockic"></i></label>
+                                    <select id="dropChdPhuongThuc" class="form-control chd-inp" data-k="PHUONGTHUC_ID">
+                                        <option value="">— Chọn nút phát hành —</option>
+                                    </select>
+                                    <div class="chd-msg"></div>
+                                    <div class="chd-help">Khi bấm nút này trên màn Thu tiền, hệ thống dùng cấu hình đang khai báo để xuất hóa đơn.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2. Đơn vị bán -->
+                        <div class="chd-sec" data-sec="2">
+                            <div class="chd-sec-head">
+                                <span class="chd-sec-no"><span>2</span><i class="fa fa-check"></i></span>
+                                <div>
+                                    <h5>Thông tin đơn vị bán hàng</h5>
+                                    <p>In ở phần "Đơn vị bán hàng" trên hóa đơn — phải khớp thông tin đã đăng ký với cơ quan thuế.</p>
+                                </div>
+                            </div>
+                            <div class="chd-fgrid">
+                                <div class="chd-f chd-s8" data-f="TENDONVI">
+                                    <label for="txtChdTenDonVi">Tên đơn vị <b class="chd-req">*</b></label>
+                                    <input type="text" id="txtChdTenDonVi" class="form-control chd-inp" data-k="TENDONVI" placeholder="VD: Trường Đại học ..." autocomplete="off">
+                                    <div class="chd-msg"></div>
+                                </div>
+                                <div class="chd-f chd-s4 chd-mono" data-f="MASOTHUEDONVI">
+                                    <label for="txtChdMaSoThue">Mã số thuế <b class="chd-req">*</b></label>
+                                    <input type="text" id="txtChdMaSoThue" class="form-control chd-inp" data-k="MASOTHUEDONVI" placeholder="0101234567" maxlength="20" inputmode="numeric" autocomplete="off">
+                                    <div class="chd-msg"></div>
+                                    <div class="chd-help">10 số; đơn vị phụ thuộc: 10 số - 3 số.</div>
+                                </div>
+                                <div class="chd-f chd-s8" data-f="DIACHIDONVI">
+                                    <label for="txtChdDiaChi">Địa chỉ</label>
+                                    <input type="text" id="txtChdDiaChi" class="form-control chd-inp" data-k="DIACHIDONVI" placeholder="Số nhà, đường, xã/phường, tỉnh/thành phố" autocomplete="off">
+                                    <div class="chd-msg"></div>
+                                </div>
+                                <div class="chd-f chd-s4" data-f="SODIENTHOAIDONVI">
+                                    <label for="txtChdSoDienThoai">Số điện thoại</label>
+                                    <input type="text" id="txtChdSoDienThoai" class="form-control chd-inp" data-k="SODIENTHOAIDONVI" placeholder="024 1234 5678" autocomplete="off">
+                                    <div class="chd-msg"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3. Kết nối -->
+                        <div class="chd-sec has-kt" data-sec="3">
+                            <div class="chd-sec-head">
+                                <span class="chd-sec-no"><span>3</span><i class="fa fa-check"></i></span>
+                                <div>
+                                    <h5>Kết nối hệ thống hóa đơn</h5>
+                                    <p>Địa chỉ máy chủ và cách xác thực khi gọi API của nhà cung cấp — lấy theo tài liệu tích hợp nhà cung cấp gửi.</p>
+                                </div>
+                                <span class="chd-sec-tag"><i class="fa fa-lock"></i> Đang khóa</span>
+                            </div>
+                            <div class="chd-fgrid">
+                                <div class="chd-f is-kt" data-f="HOST">
+                                    <label for="txtChdHost">Máy chủ (Host) <span class="chd-need">Cần để phát hành</span> <i class="fa fa-lock chd-lockic"></i></label>
+                                    <input type="text" id="txtChdHost" class="form-control chd-inp" data-k="HOST" placeholder="https://..." autocomplete="off" spellcheck="false">
+                                    <div class="chd-msg"></div>
+                                    <div class="chd-help">Có http:// hoặc https:// ở đầu.</div>
+                                </div>
+                                <div class="chd-f is-kt" data-f="API">
+                                    <label for="txtChdApi">Đường dẫn API <i class="fa fa-lock chd-lockic"></i></label>
+                                    <input type="text" id="txtChdApi" class="form-control chd-inp" data-k="API" placeholder="/api/..." autocomplete="off" spellcheck="false">
+                                    <div class="chd-msg"></div>
+                                    <div class="chd-help">Phần đường dẫn hàm phát hành, ghép sau máy chủ.</div>
+                                </div>
+                                <div class="chd-f chd-s4 is-kt" data-f="LOAIXACTHUC">
+                                    <label for="txtChdLoaiXacThuc">Loại xác thực <i class="fa fa-lock chd-lockic"></i></label>
+                                    <input type="text" id="txtChdLoaiXacThuc" class="form-control chd-inp" data-k="LOAIXACTHUC" list="chdDlXacThuc" placeholder="VD: Basic" autocomplete="off">
+                                    <datalist id="chdDlXacThuc">
+                                        <option value="Basic"></option>
+                                        <option value="Bearer"></option>
+                                    </datalist>
+                                    <div class="chd-msg"></div>
+                                </div>
+                                <div class="chd-f chd-s8 is-kt" data-f="MAXACTHUC">
+                                    <label for="txtChdMaXacThuc">Mã xác thực (token / khóa API) <i class="fa fa-lock chd-lockic"></i></label>
+                                    <div class="chd-secret">
+                                        <input type="password" id="txtChdMaXacThuc" class="form-control chd-inp" data-k="MAXACTHUC" autocomplete="new-password" spellcheck="false">
+                                        <button type="button" class="chd-eye" tabindex="-1" title="Hiện / ẩn"><i class="fa fa-eye"></i></button>
+                                    </div>
+                                    <div class="chd-msg"></div>
+                                    <div class="chd-help">Chỉ nhập khi nhà cung cấp cấp riêng token / khóa; để trống nếu chỉ dùng tài khoản.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 4. Tài khoản -->
+                        <div class="chd-sec" data-sec="4">
+                            <div class="chd-sec-head">
+                                <span class="chd-sec-no"><span>4</span><i class="fa fa-check"></i></span>
+                                <div>
+                                    <h5>Tài khoản kết nối</h5>
+                                    <p>Tài khoản nhà cung cấp HĐĐT cấp cho đơn vị. Mật khẩu chỉ hiện khi bấm biểu tượng con mắt.</p>
+                                </div>
+                            </div>
+                            <div class="chd-fgrid">
+                                <div class="chd-f" data-f="USERNAME">
+                                    <label for="txtChdUsername">Tên đăng nhập <span class="chd-need">Cần để phát hành</span></label>
+                                    <input type="text" id="txtChdUsername" name="chd_u1" class="form-control chd-inp" data-k="USERNAME" autocomplete="off" spellcheck="false">
+                                    <div class="chd-msg"></div>
+                                </div>
+                                <div class="chd-f" data-f="PASSWORD">
+                                    <label for="txtChdPassword">Mật khẩu <span class="chd-need">Cần để phát hành</span></label>
+                                    <div class="chd-secret">
+                                        <input type="password" id="txtChdPassword" name="chd_p1" class="form-control chd-inp" data-k="PASSWORD" autocomplete="new-password" spellcheck="false">
+                                        <button type="button" class="chd-eye" tabindex="-1" title="Hiện / ẩn"><i class="fa fa-eye"></i></button>
+                                    </div>
+                                    <div class="chd-msg"></div>
+                                </div>
+                                <div class="chd-f" data-f="USERNAME2">
+                                    <label for="txtChdUsername2">Tên đăng nhập thứ hai</label>
+                                    <input type="text" id="txtChdUsername2" name="chd_u2" class="form-control chd-inp" data-k="USERNAME2" autocomplete="off" spellcheck="false">
+                                    <div class="chd-msg"></div>
+                                    <div class="chd-help">Chỉ nhập khi nhà cung cấp yêu cầu tài khoản thứ hai.</div>
+                                </div>
+                                <div class="chd-f" data-f="PASSWORD2">
+                                    <label for="txtChdPassword2">Mật khẩu thứ hai</label>
+                                    <div class="chd-secret">
+                                        <input type="password" id="txtChdPassword2" name="chd_p2" class="form-control chd-inp" data-k="PASSWORD2" autocomplete="new-password" spellcheck="false">
+                                        <button type="button" class="chd-eye" tabindex="-1" title="Hiện / ẩn"><i class="fa fa-eye"></i></button>
+                                    </div>
+                                    <div class="chd-msg"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 5. Mẫu số - ký hiệu -->
+                        <div class="chd-sec has-kt" data-sec="5">
+                            <div class="chd-sec-head">
+                                <span class="chd-sec-no"><span>5</span><i class="fa fa-check"></i></span>
+                                <div>
+                                    <h5>Mẫu số &amp; ký hiệu hóa đơn</h5>
+                                    <p>Theo thông báo phát hành / đăng ký sử dụng hóa đơn điện tử của đơn vị.</p>
+                                </div>
+                                <span class="chd-sec-tag"><i class="fa fa-lock"></i> Một phần đang khóa</span>
+                            </div>
+                            <div class="chd-fgrid">
+                                <div class="chd-f chd-s3 chd-mono is-kt" data-f="INVOICETYPE">
+                                    <label for="txtChdInvoiceType">Loại hóa đơn <i class="fa fa-lock chd-lockic"></i></label>
+                                    <input type="text" id="txtChdInvoiceType" class="form-control chd-inp" data-k="INVOICETYPE" list="chdDlLoaiHD" placeholder="VD: 1" autocomplete="off">
+                                    <datalist id="chdDlLoaiHD">
+                                        <option value="1">Hóa đơn giá trị gia tăng</option>
+                                        <option value="2">Hóa đơn bán hàng</option>
+                                    </datalist>
+                                    <div class="chd-msg"></div>
+                                </div>
+                                <div class="chd-f chd-s3 chd-mono is-kt" data-f="TEMPLATECODE">
+                                    <label for="txtChdTemplateCode">Mẫu số <span class="chd-need">Cần</span> <i class="fa fa-lock chd-lockic"></i></label>
+                                    <input type="text" id="txtChdTemplateCode" class="form-control chd-inp chd-upper" data-k="TEMPLATECODE" placeholder="VD: 1/001" autocomplete="off" spellcheck="false">
+                                    <div class="chd-msg"></div>
+                                </div>
+                                <div class="chd-f chd-s3 chd-mono" data-f="INVOICESERIES">
+                                    <label for="txtChdInvoiceSeries">Ký hiệu <span class="chd-need">Cần</span></label>
+                                    <input type="text" id="txtChdInvoiceSeries" class="form-control chd-inp chd-upper" data-k="INVOICESERIES" placeholder="VD: C26TAA" autocomplete="off" spellcheck="false">
+                                    <div class="chd-msg"></div>
+                                </div>
+                                <div class="chd-f chd-s3 chd-mono is-kt" data-f="CURRENCYCODE">
+                                    <label for="txtChdCurrencyCode">Tiền tệ <i class="fa fa-lock chd-lockic"></i></label>
+                                    <input type="text" id="txtChdCurrencyCode" class="form-control chd-inp chd-upper" data-k="CURRENCYCODE" list="chdDlTienTe" placeholder="VND" maxlength="10" autocomplete="off">
+                                    <datalist id="chdDlTienTe">
+                                        <option value="VND"></option>
+                                        <option value="USD"></option>
+                                    </datalist>
+                                    <div class="chd-msg"></div>
+                                </div>
+                                <div class="chd-f chd-s12">
+                                    <div class="chd-help"><i class="fa fa-lightbulb-o"></i> Ký hiệu có năm lập hóa đơn (2 số sau chữ C/K) — sang năm mới nhớ đổi ký hiệu, ví dụ C25TAA → C26TAA.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 6. Ký số -->
+                        <div class="chd-sec" data-sec="6">
+                            <div class="chd-sec-head">
+                                <span class="chd-sec-no"><span>6</span><i class="fa fa-check"></i></span>
+                                <div>
+                                    <h5>Chữ ký số</h5>
+                                    <p>Chỉ cần khi hóa đơn được ký bằng chữ ký số của đơn vị (USB token / HSM / dịch vụ ký riêng).</p>
+                                </div>
+                            </div>
+                            <div class="chd-fgrid">
+                                <div class="chd-f chd-s4" data-f="PINCODE">
+                                    <label for="txtChdPinCode">Mã PIN chữ ký số</label>
+                                    <div class="chd-secret">
+                                        <input type="password" id="txtChdPinCode" name="chd_p3" class="form-control chd-inp" data-k="PINCODE" autocomplete="new-password" spellcheck="false">
+                                        <button type="button" class="chd-eye" tabindex="-1" title="Hiện / ẩn"><i class="fa fa-eye"></i></button>
+                                    </div>
+                                    <div class="chd-msg"></div>
+                                </div>
+                                <div class="chd-f chd-s8" data-f="SIGNXML_HOST">
+                                    <label for="txtChdSignXmlHost">Địa chỉ dịch vụ ký XML</label>
+                                    <input type="text" id="txtChdSignXmlHost" class="form-control chd-inp" data-k="SIGNXML_HOST" placeholder="https://... hoặc http://localhost:..." autocomplete="off" spellcheck="false">
+                                    <div class="chd-msg"></div>
+                                    <div class="chd-help">Máy chủ / phần mềm ký số nhận file XML hóa đơn để ký.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cột phải: mức độ đầy đủ + xem trước -->
+                    <aside class="chd-side">
+                        <div class="chd-side-card">
+                            <div class="chd-side-title">Thông số để phát hành <b id="chdTienDo">0/0</b></div>
+                            <div class="chd-prog-bar"><span id="chdTienDoBar" style="width: 0"></span></div>
+                            <ul class="chd-check" id="chdCheck"></ul>
+                            <div class="chd-check-note">Trang chỉ kiểm tra đã nhập đủ hay chưa. Thông số đúng hay sai do máy chủ hóa đơn kiểm tra khi phát hành.</div>
+                        </div>
+                        <div class="chd-side-card">
+                            <div class="chd-side-title">Xem trước trên hóa đơn</div>
+                            <div class="chd-inv" id="chdXemTruoc"></div>
+                            <div class="chd-series" id="chdKyHieu"></div>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="chd-foot-main">
+                    <div class="chd-foot-l" id="chdFootXoa">
+                        <a class="btn btn-danger" id="chdBtnXoaForm"><i class="fa fa-trash"></i> Xóa cấu hình</a>
+                    </div>
+                    <div class="chd-foot-r" style="margin-left: auto">
+                        <span class="chd-savehint" id="chdSaveHint"></span>
+                        <span class="chd-saving"><i class="fa fa-spinner fa-spin"></i> Đang lưu...</span>
+                        <a class="btn btn-primary chd-cta" id="chdBtnLuu"><i class="fa fa-check-circle"></i> Lưu cấu hình</a>
+                        <!-- Lề inline !important: vỏ có .modal-footer gap 0 / margin nút cố định -->
+                        <a class="btn btn-default chd-dong" style="margin-left: 6px !important"><i class="fa fa-times-circle-o"></i> Đóng</a>
+                    </div>
+                </div>
+                <!-- Xác nhận xóa ngay trong chân form (không mở hộp thoại chồng lên modal) -->
+                <div class="chd-foot-ask is-danger" id="chdAskXoa">
+                    <span class="tx"><i class="fa fa-exclamation-triangle"></i> Xóa cấu hình này? Nút phát hành HĐĐT đang dùng cấu hình sẽ không xuất được hóa đơn.</span>
+                    <a class="btn btn-default" id="chdBtnHuyXoa">Không xóa</a>
+                    <a class="btn btn-danger" id="chdBtnXacNhanXoa"><i class="fa fa-trash"></i> Xóa</a>
+                </div>
+                <div class="chd-foot-ask is-warn" id="chdAskLuu">
+                    <span class="tx" id="chdAskLuuTx"></span>
+                    <a class="btn btn-default" id="chdBtnNhapLai"><i class="fa fa-pencil"></i> Quay lại nhập</a>
+                    <a class="btn btn-primary" id="chdBtnVanLuu"><i class="fa fa-check-circle"></i> Vẫn lưu</a>
+                </div>
+                <div class="chd-foot-ask is-warn" id="chdAskDong">
+                    <span class="tx"><i class="fa fa-exclamation-circle"></i> Có thay đổi chưa lưu. Đóng form sẽ bỏ các thay đổi này.</span>
+                    <a class="btn btn-default" id="chdBtnBoThayDoi">Bỏ thay đổi &amp; đóng</a>
+                    <a class="btn btn-primary" id="chdBtnTiepTuc"><i class="fa fa-pencil"></i> Tiếp tục sửa</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="modules/cauhinh/modules/scripts/cauhinhhoadon.js?v=1.0.1"></script>
+<script type="text/javascript">
+    var main_doc = {};
+    main_doc['CauHinhHoaDon'] = new CauHinhHoaDon();
+    $(document).ready(function () {
+        main_doc.CauHinhHoaDon.init();
+    });
+</script>

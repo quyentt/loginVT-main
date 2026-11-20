@@ -270,7 +270,9 @@
                 </div>
             </div>
             <div class="qtp-head-r">
+                <!-- ẨN (20/11/2026 — tạm ẩn phần Nhật ký vì BE chưa có API; mở lại thì bỏ comment):
                 <span id="qtpApiChip" class="qtp-chip"><span class="dot"></span> Nhật ký: đang kiểm tra…</span>
+                -->
                 <button type="button" class="qtp-btn qtp-btn-ghost" id="qtpBtnLamMoi" title="Nạp lại mẫu, kiểm tra tự động và nhật ký"><i class="fa fa-refresh"></i> Làm mới</button>
             </div>
         </div>
@@ -294,7 +296,9 @@
             <div class="qtp-card qtp-detail" id="qtpDetail"></div>
         </div>
 
-        <!-- Nhật ký -->
+        <!-- ẨN (20/11/2026 — tạm ẩn phần Nhật ký vì BE chưa có API; mở lại thì bỏ comment cả khối, kể cả dòng đóng phía dưới).
+             Nhật ký -->
+        <!--
         <div class="qtp-card">
             <div class="qtp-log-head">
                 <div class="qtp-log-title"><i class="fa fa-history" style="color:#2563eb"></i> Nhật ký <span class="qtp-chip" id="qtpNKDem">0</span></div>
@@ -311,12 +315,13 @@
             <div class="qtp-log-banner" id="qtpNKBanner"></div>
             <ul class="qtp-log-list" id="qtpNKList"></ul>
         </div>
+        -->
     </div>
 </section>
 <!-- page script -->
 <script src="modules/danhmuc/script/phoiinflow.js?v=1.1.0.0"></script>
 <script src="modules/danhmuc/script/phoiinanh.js?v=1.0.0.0"></script>
-<script src="modules/danhmuc/script/quytrinhphoiin.js?v=1.2.0.0"></script>
+<script src="modules/danhmuc/script/quytrinhphoiin.js?v=1.2.1.0"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['QuyTrinhPhoiIn'] = new QuyTrinhPhoiIn();

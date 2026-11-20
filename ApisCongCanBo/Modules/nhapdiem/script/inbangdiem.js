@@ -17,7 +17,7 @@ InBangDiem.prototype = {
     strPhamViMa: '',
     strSinhVien_Id: '',
     strDaoTao_LopQuanLy_Id: [],
-    strView: 'DSSV', // view đang hiện: 'DSSV' (danh sách sinh viên) | 'NOMON' (danh sách còn nợ môn)
+    strView: 'DSSV', // view đang hiện: 'DSSV' (danh sách sinh viên) | 'NOMON' (danh sách còn nợ môn) | 'KQHT' (kết quả học tập theo phạm vi)
 
     init: function () {
         var me = this;
@@ -285,6 +285,7 @@ InBangDiem.prototype = {
             var strMa = $("#dropPhanViTongHop option:selected").attr("id");
             me.strPhamViMa = strMa;
             edu.util.toggle_overide("zonePhamVi", "zone_" + strMa);
+            me._capNhatNhan_KQHT();
         });
         edu.system.getList_MauImport("zonebtnSVQD", function (addKeyValue) {
             var arrChecked_Id = edu.util.getArrCheckedIds("tblSinhVien", "checkX");
@@ -373,6 +374,17 @@ InBangDiem.prototype = {
         $("#btnXuatExcel_NoMon").click(function (e) {
             me.exportExcel_NoMon();
         });
+        // "Kết quả học tập theo Học kỳ / Năm học / Toàn khóa": View 3 thay chỗ danh sách SV
+        $("#btnKetQuaHocTap_IBD").click(function (e) {
+            me.open_KQHT();
+        });
+        $("#btnQuayLai_DSSV_KQHT").click(function (e) {
+            me.showView('DSSV');
+        });
+        $("#btnXuatExcel_KQHT").click(function (e) {
+            me.exportExcel_KQHT();
+        });
+        me._capNhatNhan_KQHT();
         var tTimNhanh = null;
         $("#txtTimNhanh_NoMon").on("input", function () {
             clearTimeout(tTimNhanh);
@@ -396,6 +408,7 @@ InBangDiem.prototype = {
                 e.preventDefault();
                 e.stopPropagation();
                 if (me.strView === 'NOMON') me.exportExcel_NoMon();
+                else if (me.strView === 'KQHT') me.exportExcel_KQHT();
                 else me.exportExcel_DSSinhVien();
             }
         });
@@ -3845,15 +3858,16 @@ InBangDiem.prototype = {
     -------------------------------------------*/
     showView: function (strView) {
         var me = this;
-        var bNoMon = strView === 'NOMON';
-        var bDoi = me.strView !== (bNoMon ? 'NOMON' : 'DSSV');
-        me.strView = bNoMon ? 'NOMON' : 'DSSV';
-        $("#zoneView_DSSV").prop("hidden", bNoMon);
-        $("#zoneView_NoMon").prop("hidden", !bNoMon);
-        if (bNoMon) me._syncSticky_NoMon();
-        // Vừa chuyển view: sang nợ môn thì đưa đầu view lên trên (lặp lại sau khi vẽ xong dữ liệu — lúc bảng còn rỗng trang chưa đủ dài để cuộn);
-        // quay về DSSV thì chỉ cuộn khi đầu khối nằm ngoài tầm nhìn.
-        if (bDoi) me._cuonDenView(bNoMon ? "zoneView_NoMon" : "zoneView_DSSV", bNoMon);
+        var v = (strView === 'NOMON' || strView === 'KQHT') ? strView : 'DSSV';
+        var bDoi = me.strView !== v;
+        me.strView = v;
+        $("#zoneView_DSSV").prop("hidden", v !== 'DSSV');
+        $("#zoneView_NoMon").prop("hidden", v !== 'NOMON');
+        $("#zoneView_KQHT").prop("hidden", v !== 'KQHT');
+        if (v === 'NOMON') me._syncSticky_NoMon();
+        // Vừa chuyển view: sang nợ môn / kết quả học tập thì đưa đầu view lên trên (lặp lại sau khi vẽ xong dữ liệu — lúc bảng còn rỗng
+        // trang chưa đủ dài để cuộn); quay về DSSV thì chỉ cuộn khi đầu khối nằm ngoài tầm nhìn.
+        if (bDoi) me._cuonDenView(v === 'NOMON' ? "zoneView_NoMon" : (v === 'KQHT' ? "zoneView_KQHT" : "zoneView_DSSV"), v !== 'DSSV');
     },
     // Đưa đầu khối lên đầu màn hình (scroll-margin-top trong CSS chừa thanh menu trên); bLuon=false: chỉ khi khối nằm ngoài tầm nhìn
     _cuonDenView: function (strId, bLuon) {
@@ -3868,6 +3882,7 @@ InBangDiem.prototype = {
         var me = this;
         me._cacheXuat_DSSV = null;  // tìm kiếm lại = muốn số liệu mới: Xuất Excel lần sau nạp lại từ máy chủ
         if (me.strView === 'NOMON') me.getList_SinhVienNoMon();
+        else if (me.strView === 'KQHT') me.open_KQHT();   // nạp lại theo bộ lọc mới (cũng bỏ cache xuất)
         else me.getList_SinhVien();
     },
 
@@ -4171,6 +4186,317 @@ InBangDiem.prototype = {
                 { label: "Học phần", get: function (r) { return v(r.DAOTAO_HOCPHAN_TEN) + (v(r.DAOTAO_HOCPHAN_MA) ? " (" + v(r.DAOTAO_HOCPHAN_MA) + ")" : ""); } },
                 { label: "Đánh giá", field: "DANHGIA_TEN" },
                 { label: "Thời gian", field: "THOIGIAN" }
+            ]
+        };
+    },
+
+    /*------------------------------------------
+    --Discription: [KQHT] View 3 — Kết quả học tập theo phạm vi tổng hợp (Học kỳ / Năm học / Toàn khóa ...)
+    --  Hàm: pkg_diem_baocao.LayDanhSachHoSoNhieuNganh, CÙNG tham số với danh sách SV (_req_DSSV: từ khóa, khoa, hệ, khóa, CTĐT, lớp,
+    --  trạng thái, kế hoạch xét) + 2 tham số phạm vi: strPhamViTongHopDiem_Id = Id ô "Phạm vi tổng hợp";
+    --  strDaoTao_ThoiGianDaoTao_Id = giá trị ô theo phạm vi (Năm học: năm, vd 2025; Học kỳ: Id kỳ; Toàn khóa: rỗng).
+    --  GIẢ ĐỊNH: tên 2 tham số str* theo quy ước Param* -> str*, chờ BE xác nhận controller D_BaoCao_MH đã nhận 2 tham số này.
+    --  Cột + tiêu đề theo mẫu của sếp — GIỮ ĐỒNG BỘ với ApisQuanLyDiem/Modules/tracuudiem/script/tracuudiem.js (_cot_KQHT).
+    --  Hiển thị có phân trang; "Xuất Excel" (edu.exporter) nạp lại TOÀN BỘ đúng điều kiện của lần xem gần nhất.
+    -------------------------------------------*/
+    PHAMVI_TEN_KQHT: { TOANKHOA: "Toàn khóa", NHIEUKY: "Nhiều kỳ", NAMHOC: "Năm học", HOCKY: "Học kỳ", DOTHOC: "Đợt học" },
+    _esc_KQHT: function (s) {
+        return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    },
+    // Phạm vi đang chọn: Id, mã (TOANKHOA/NAMHOC/HOCKY... = thuộc tính id của option), tên hiển thị, giá trị theo phạm vi
+    _phamVi_KQHT: function () {
+        var me = this;
+        var strId = edu.util.getValById("dropPhanViTongHop") || "";
+        var $op = $("#dropPhanViTongHop option:selected");
+        var strMa = strId ? ($op.attr("id") || "") : "";
+        var strTen = strId ? (me.PHAMVI_TEN_KQHT[strMa] || $.trim($op.text())) : "";
+        var strDrop = "dropPhanViTongHop_" + strMa;
+        // Toàn khóa không có ô giá trị -> gửi rỗng
+        var bCoO = !!strMa && strMa !== "TOANKHOA" && $("#" + strDrop).length > 0;
+        var giaTri = bCoO ? edu.util.getValById(strDrop) : "";   // ô chọn nhiều trống: Core trả null
+        if (giaTri === null || giaTri === undefined) giaTri = "";
+        return {
+            id: strId,
+            ma: strMa,
+            ten: strTen,
+            canGiaTri: bCoO,
+            giaTri: String(giaTri),
+            giaTriTen: bCoO ? me._tenDaChon(strDrop).join(", ") : ""
+        };
+    },
+    // Tiêu đề nhóm cột kết quả: "KẾT QUẢ HỌC TẬP HỌC KỲ 2026_2027_2" / "KẾT QUẢ HỌC TẬP NĂM HỌC 2025" / "KẾT QUẢ HỌC TẬP TOÀN KHÓA"
+    _tieuDeNhom_KQHT: function (pv) {
+        var s = "KẾT QUẢ HỌC TẬP";
+        if (pv && pv.ten) s += " " + pv.ten.toUpperCase();
+        if (pv && pv.giaTriTen) s += " " + pv.giaTriTen;
+        return s;
+    },
+    // Nhãn nút đổi theo phạm vi: "Kết quả học tập theo Học kỳ" ...; chưa chọn phạm vi thì để nhãn đầy đủ
+    _capNhatNhan_KQHT: function () {
+        var pv = this._phamVi_KQHT();
+        $("#lblBtnKetQuaHocTap_IBD").text("Kết quả học tập theo " + (pv.ten || "Học kỳ - Năm học - Toàn khóa"));
+    },
+    // Cột theo mẫu của sếp (tên trường viết HOA vì API trả HOA; kiểu khác đã chuẩn hóa ở _chuanHoaKhoa_KQHT). Dùng chung bảng + file Excel.
+    _cot_KQHT: function (strNhomKQ) {
+        var TT = "THÔNG TIN NGƯỜI HỌC", TK = "TỔNG HỢP TOÀN KHÓA", KQ = strNhomKQ || "KẾT QUẢ HỌC TẬP";
+        function e(v) { return (v === null || v === undefined) ? "" : String(v); }
+        return [
+            { header: "Mã số", field: "QLSV_NGUOIHOC_MASO", group: TT },
+            { header: "Họ và tên", group: TT, render: function (r) { return $.trim(e(r.QLSV_NGUOIHOC_HODEM) + " " + e(r.QLSV_NGUOIHOC_TEN)); } },
+            { header: "Ngày sinh", field: "QLSV_NGUOIHOC_NGAYSINH", align: "center", group: TT },
+            { header: "Trạng thái", field: "QLSV_TRANGTHAINGUOIHOC_TEN", group: TT },
+            { header: "Tên lớp", field: "DAOTAO_LOPQUANLY_MA", group: TT },      // mẫu ghi "Tên lớp" = daotao_lopquanly_ma
+            { header: "Tên chương trình", field: "DAOTAO_CHUONGTRINH_TEN", group: TT },
+            { header: "Mã chương trình", field: "DAOTAO_CHUONGTRINH_MA", group: TT },
+            { header: "Tên khóa", field: "DAOTAO_KHOADAOTAO_TEN", group: TT },
+            { header: "Mã khóa", field: "DAOTAO_KHOADAOTAO_MA", group: TT },
+            { header: "Khoa quản lý", field: "DAOTAO_KHOAQUANLY_TEN", group: TT },
+            { header: "Hệ đào tạo", field: "DAOTAO_HEDAOTAO_TEN", group: TT },
+            { header: "ĐTBTL Hệ 4", field: "DTBTICHLUYHE4TOANKHOA", type: "number", align: "center", group: TK },
+            { header: "ĐTBTL Hệ 10", field: "DTBTICHLUYHE10TOANKHOA", type: "number", align: "center", group: TK },
+            { header: "Số TCTL", field: "SOTCTICHLUYTOANKHOA", type: "number", align: "center", group: TK },
+            { header: "Số học phần học lại", field: "SOHPHOCLAI", type: "number", align: "center", group: KQ },
+            { header: "Số học phần thi lại", field: "SOHPTHILAI", type: "number", align: "center", group: KQ },
+            { header: "Điểm trung bình học tập hệ 10", field: "DTBCHE10", type: "number", align: "center", group: KQ },
+            { header: "Điểm trung bình học tập hệ 4", field: "DTBCHE4", type: "number", align: "center", group: KQ },
+            { header: "Điểm trung bình học tập hệ 10 - tích lũy", field: "DTBTLHE10", type: "number", align: "center", group: KQ },
+            { header: "Điểm trung bình học tập hệ 4 - tích lũy", field: "DTBTLHE4", type: "number", align: "center", group: KQ },
+            { header: "Xếp loại học tập", field: "XLHT_XEPLOAI_TEN", group: KQ },
+            { header: "Xếp loại rèn luyện", field: "DRL_XEPLOAI_TEN", group: KQ },
+            { header: "Điểm rèn luyện", field: "DRL_DIEM", type: "number", align: "center", group: KQ },
+            { header: "Tình hình nộp học phí", field: "TONGNOPHI", type: "number", format: "int", align: "right", sum: true }
+        ];
+    },
+    // Tiêu đề bảng 2 tầng dựng từ _cot_KQHT: tầng 1 = nhóm (gộp ngang), cột không nhóm gộp dọc; STT thuộc nhóm đầu như mẫu
+    _dungTieuDe_KQHT: function (strNhomKQ) {
+        var me = this;
+        var cols = me._cot_KQHT(strNhomKQ);
+        var all = [{ header: "STT", group: cols[0].group }].concat(cols);
+        var r1 = "", r2 = "";
+        for (var j = 0; j < all.length;) {
+            var c = all[j];
+            if (!c.group) {
+                r1 += '<th rowspan="2">' + me._esc_KQHT(c.header) + '</th>';
+                j++;
+                continue;
+            }
+            var k = j;
+            while (k + 1 < all.length && all[k + 1].group === c.group) k++;
+            r1 += '<th colspan="' + (k - j + 1) + '">' + me._esc_KQHT(c.group) + '</th>';
+            for (var m = j; m <= k; m++) r2 += '<th>' + me._esc_KQHT(all[m].header) + '</th>';
+            j = k + 1;
+        }
+        $("#tblKQHT_IBD thead").html('<tr>' + r1 + '</tr><tr>' + r2 + '</tr>');
+        $("#tblKQHT_IBD tbody").html("");
+    },
+    // BE có thể trả tên cột kiểu PascalCase (mẫu ghi DTBTichLuyHe4ToanKhoa...) -> thêm khóa viết HOA, giá trị giữ nguyên
+    _chuanHoaKhoa_KQHT: function (rows) {
+        for (var i = 0; i < rows.length; i++) {
+            var r = rows[i];
+            for (var k in r) {
+                if (!Object.prototype.hasOwnProperty.call(r, k)) continue;
+                var K = k.toUpperCase();
+                if (K !== k && !(K in r)) r[K] = r[k];
+            }
+        }
+        return rows;
+    },
+    // Cột nào trong mẫu mà API không trả thì báo ở Console (1 lần) để gửi BE; các ô đó để trống
+    _canhBaoThieuCot_KQHT: function (rows) {
+        var me = this;
+        if (me._bDaCanhBao_KQHT || !rows.length) return;
+        me._bDaCanhBao_KQHT = true;
+        var arrCan = ["QLSV_NGUOIHOC_HODEM", "QLSV_NGUOIHOC_TEN"];
+        me._cot_KQHT().forEach(function (c) { if (c.field) arrCan.push(c.field); });
+        var arrThieu = arrCan.filter(function (f) {
+            for (var i = 0; i < rows.length; i++) if (f in rows[i]) return false;
+            return true;
+        });
+        if (arrThieu.length && window.console) {
+            console.warn("[inbangdiem] pkg_diem_baocao.LayDanhSachHoSoNhieuNganh chưa trả các cột: " + arrThieu.join(", ") + " (các ô này để trống, cần báo BE). Dòng mẫu:", rows[0]);
+        }
+    },
+    _oHienThi_KQHT: function (c, r) {
+        var v = c.render ? c.render(r) : r[c.field];
+        if (v === null || v === undefined) return "";
+        if (c.field === "TONGNOPHI" && String(v) !== "") v = edu.util.formatCurrency(v);
+        return this._esc_KQHT(v);
+    },
+    // Tham số = tham số danh sách SV + 2 tham số phạm vi; dùng chung cho xem từng trang và Xuất Excel toàn bộ
+    _req_KQHT: function (pv) {
+        return $.extend(this._req_DSSV(), {
+            'strPhamViTongHopDiem_Id': pv.id,
+            'strDaoTao_ThoiGianDaoTao_Id': pv.giaTri        // Năm học: năm (vd 2025); Học kỳ: Id kỳ; Toàn khóa: rỗng
+        });
+    },
+    open_KQHT: function () {
+        var me = this;
+        var pv = me._phamVi_KQHT();
+        if (!pv.id) {
+            edu.system.alert('Vui lòng chọn "Phạm vi tổng hợp" (Học kỳ / Năm học / Toàn khóa...) trước khi xem kết quả học tập.', 'w');
+            return;
+        }
+        if (pv.canGiaTri && !pv.giaTri) {
+            edu.system.alert('Vui lòng chọn giá trị cho phạm vi "' + pv.ten + '".', 'w');
+            return;
+        }
+        // Chụp điều kiện lúc bấm: phân trang + Xuất Excel dùng đúng điều kiện này (không đọc lại ô lọc)
+        me.objLoc_KQHT = me._req_KQHT(pv);
+        var snap = me._snapLoc();
+        snap.parts.unshift("Phạm vi: " + pv.ten + (pv.giaTriTen ? " " + pv.giaTriTen : ""));
+        snap.pv = pv;
+        snap.nhom = me._tieuDeNhom_KQHT(pv);
+        me.snapLoc_KQHT = snap;
+        me._cacheXuat_KQHT = null;
+        edu.system.pageIndex_default = 1;
+        $("#lblKQHT_TieuDe_IBD").text("Kết quả học tập theo " + pv.ten + (pv.giaTriTen ? ": " + pv.giaTriTen : ""));
+        $("#lblKQHT_Tong_IBD").html("...");
+        $("#lblKQHT_DieuKien_IBD").text(snap.parts.join("; "));
+        me._dungTieuDe_KQHT(snap.nhom);
+        me.showView('KQHT');
+        me.getList_KQHT();
+    },
+    // Nạp 1 trang (thanh phân trang gọi lại hàm này với edu.system.pageIndex_default/pageSize_default mới)
+    getList_KQHT: function () {
+        var me = this;
+        if (!me.objLoc_KQHT) return;
+        var obj_save = $.extend({}, me.objLoc_KQHT, {
+            'pageIndex': edu.system.pageIndex_default,
+            'pageSize': edu.system.pageSize_default
+        });
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var rows = me._chuanHoaKhoa_KQHT(data.Data || []);
+                    me.dtKQHT = rows;
+                    me._canhBaoThieuCot_KQHT(rows);
+                    me.genTable_KQHT(rows, parseInt(data.Pager, 10) || rows.length);
+                }
+                else {
+                    $("#lblKQHT_Tong_IBD").html("0");
+                    edu.system.alert("Kết quả học tập: " + data.Message, "w");
+                }
+            },
+            error: function (er) {
+                $("#lblKQHT_Tong_IBD").html("0");
+                edu.system.alert("Kết quả học tập (er): " + JSON.stringify(er), "w");
+            },
+            type: "POST",
+            action: obj_save.action,
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
+    genTable_KQHT: function (data, iPager) {
+        var me = this;
+        $("#lblKQHT_Tong_IBD").html(iPager);
+        var cols = me._cot_KQHT(me.snapLoc_KQHT ? me.snapLoc_KQHT.nhom : "");
+        var aoColumns = [], center = [0], right = [];
+        cols.forEach(function (c, i) {
+            aoColumns.push({ "mRender": function (nRow, aData) { return me._oHienThi_KQHT(c, aData); } });
+            if (c.align === "center") center.push(i + 1);   // +1 vì cột STT do loadToTable_data tự thêm
+            if (c.align === "right") right.push(i + 1);
+        });
+        edu.system.loadToTable_data({
+            strTable_Id: "tblKQHT_IBD",
+            bPaginate: {
+                strFuntionName: "main_doc.InBangDiem.getList_KQHT()",
+                iDataRow: iPager
+            },
+            aaData: data,
+            colPos: { center: center, right: right },
+            aoColumns: aoColumns
+        });
+        if (!data.length) {
+            // Core không vẽ dòng "không có dữ liệu"; bỏ luôn thanh phân trang của lần trước
+            $("#tblKQHT_IBD tbody").html('<tr><td colspan="' + (cols.length + 1) + '" class="text-center">Không tìm thấy dữ liệu!</td></tr>');
+            $(".zone-pag-headertblKQHT_IBD, .zone-pag-footertblKQHT_IBD").remove();
+        }
+        // Core chèn thanh phân trang ngay trước + sau bảng (tức bên trong khung cuộn) -> đưa ra ngoài khung để luôn nhìn thấy
+        $(".zone-pag-headertblKQHT_IBD").insertBefore("#scrollWrap_KQHT");
+        $(".zone-pag-footertblKQHT_IBD").insertAfter("#scrollWrap_KQHT");
+        $("#scrollWrap_KQHT").scrollTop(0).scrollLeft(0);
+        if (me.strView === 'KQHT') me._cuonDenView("zoneView_KQHT", true);
+    },
+    /*------------------------------------------
+    --Discription: [KQHT] Xuất Excel qua edu.exporter: nạp lại TOÀN BỘ (pageSize lớn) theo điều kiện lần xem gần nhất,
+    --  tiêu đề 2 tầng giống bảng, hỏi trước khi xuất + lọc thêm (tích sẵn theo bộ lọc ngoài màn hình).
+    -------------------------------------------*/
+    exportExcel_KQHT: function () {
+        var me = this;
+        if (!me.objLoc_KQHT) {
+            edu.system.alert('Chưa có dữ liệu để xuất. Vui lòng bấm "Kết quả học tập theo ..." trước.', 'w');
+            return;
+        }
+        if (me._bNapXuat_KQHT) return;   // đang nạp toàn bộ: bỏ qua các lần bấm thêm
+        me._ensureExporter(function (exp) {
+            me._napToanBo_KQHT(function (rows, iTong) {
+                if (!rows.length) {
+                    edu.system.alert("Không có sinh viên nào theo điều kiện đang xem.", "w");
+                    return;
+                }
+                exp.exportWithConfirm(me._optsExport_KQHT(rows, iTong));
+            });
+        });
+    },
+    // Cùng API, cùng điều kiện, pageSize lớn. Giữ kết quả 5 phút; bấm xem lại / Tìm kiếm (open_KQHT) thì bỏ.
+    _napToanBo_KQHT: function (cb) {
+        var me = this;
+        var strKhoa = JSON.stringify(me.objLoc_KQHT);
+        var c = me._cacheXuat_KQHT;
+        if (c && c.key === strKhoa && Date.now() - c.at < 5 * 60 * 1000) { cb(c.rows, c.iTong); return; }
+        var obj_save = $.extend({}, me.objLoc_KQHT, { 'pageIndex': 1, 'pageSize': 1000000 });
+        me._bNapXuat_KQHT = true;
+        edu.system.makeRequest({
+            success: function (data) {
+                me._bNapXuat_KQHT = false;
+                if (data.Success) {
+                    var rows = me._chuanHoaKhoa_KQHT(data.Data || []);
+                    var iTong = parseInt(data.Pager, 10) || rows.length;
+                    me._cacheXuat_KQHT = { key: strKhoa, rows: rows, iTong: iTong, at: Date.now() };
+                    cb(rows, iTong);
+                }
+                else {
+                    edu.system.alert("Xuất Excel kết quả học tập: " + data.Message, "w");
+                }
+            },
+            error: function (er) {
+                me._bNapXuat_KQHT = false;
+                edu.system.alert("Xuất Excel kết quả học tập (er): " + JSON.stringify(er), "w");
+            },
+            type: "POST",
+            action: obj_save.action,
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
+    _optsExport_KQHT: function (rows, iTong) {
+        var me = this;
+        var snap = me.snapLoc_KQHT || { pv: {}, nhom: "", parts: [], sel: {}, trangThai: [] };
+        var CON_NO = "Còn nợ tài chính", KHONG_NO = "Không nợ";
+        return {
+            fileName: "KetQuaHocTap_" + (snap.pv.ma || "SinhVien"),
+            title: "KẾT QUẢ HỌC TẬP CỦA SINH VIÊN",
+            subTitles: snap.parts.length ? [snap.parts.join("; ")] : [],
+            // Máy chủ trả thiếu so với tổng số thì báo rõ, không giả vờ xuất đủ
+            notice: rows.length < iTong ? ("Máy chủ chỉ trả " + rows.length.toLocaleString("vi-VN") + " / " + iTong.toLocaleString("vi-VN")
+                + " sinh viên — file sẽ thiếu. Hãy thu hẹp điều kiện rồi xuất lại.") : "",
+            columns: me._cot_KQHT(snap.nhom),
+            data: rows,
+            filters: [
+                { label: "Tài chính", get: function (r) { return (Number(r.TONGNOPHI) || 0) > 0 ? CON_NO : KHONG_NO; } },
+                { label: "Trạng thái", field: "QLSV_TRANGTHAINGUOIHOC_TEN", selected: snap.trangThai || [] },
+                { label: "Khoa quản lý", field: "DAOTAO_KHOAQUANLY_TEN", selected: snap.sel.dropSearch_KhoaQuanLy_QD || [] },
+                { label: "Hệ đào tạo", field: "DAOTAO_HEDAOTAO_TEN", selected: snap.sel.dropSearch_HeDaoTao_QD || [] },
+                { label: "Khóa", field: "DAOTAO_KHOADAOTAO_TEN", selected: snap.sel.dropSearch_KhoaDaoTao_QD || [] },
+                { label: "Chương trình", field: "DAOTAO_CHUONGTRINH_TEN", selected: snap.sel.dropSearch_ChuongTrinh_QD || [] },
+                { label: "Lớp", field: "DAOTAO_LOPQUANLY_TEN", selected: snap.sel.dropSearch_Lop_QD || [] },
+                { label: "Xếp loại học tập", field: "XLHT_XEPLOAI_TEN" },
+                { label: "Xếp loại rèn luyện", field: "DRL_XEPLOAI_TEN" }
             ]
         };
     },

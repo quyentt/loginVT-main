@@ -255,6 +255,11 @@
                     </label>
                 </div>
                 <div class="ms-auto aps-gap-10 aps-btn-list">
+                    <!-- Nhãn đổi theo "Phạm vi tổng hợp" đang chọn (inbangdiem.js: _capNhatNhan_KQHT); mở View 3 -->
+                    <div id="btnKetQuaHocTap_IBD" class="btn"
+                        title="Xem kết quả học tập của sinh viên theo phạm vi tổng hợp đang chọn (Học kỳ / Năm học / Toàn khóa)">
+                        <i class="fa-solid fa-graduation-cap"></i><span id="lblBtnKetQuaHocTap_IBD">Kết quả học tập theo Học kỳ - Năm học - Toàn khóa</span>
+                    </div>
                     <div class="btn btn-soft-success" id="btnTongHopDuLieu">
                         <i class="fa-solid fa-book-open-reader"></i>Tổng hợp dữ liệu học tập
                     </div>
@@ -376,6 +381,36 @@
             </div>
             </div>
             <!-- ===== end View 2 ===== -->
+
+            <!-- ===== View 3: Kết quả học tập theo phạm vi (Học kỳ / Năm học / Toàn khóa) — nút "Kết quả học tập theo ..." mở, thay chỗ View 1.
+                 Hàm pkg_diem_baocao.LayDanhSachHoSoNhieuNganh (cùng hàm danh sách SV) + tham số phạm vi; cột theo mẫu của sếp (giống trang Tra cứu điểm). ===== -->
+            <div id="zoneView_KQHT" hidden>
+                <div class="title-is-paging mt-20">
+                    <p class="color-dask-blue fw-bold mt-5"><i class="fa-solid fa-graduation-cap"></i> <span id="lblKQHT_TieuDe_IBD">Kết quả học tập</span></p>
+                    <span class="bg-dask-blue text-white px-2 rounded-20px ms-2 fs-13 fw-bold aps-tong" id="lblKQHT_Tong_IBD"
+                        style="margin-top: 10px !important;"></span>
+                    <div class="ms-auto aps-gap-10 aps-btn-list ibd-kqht-acts">
+                        <div id="btnQuayLai_DSSV_KQHT" class="btn btn-outline-secondary" title="Quay lại danh sách sinh viên">
+                            <i class="fa-solid fa-arrow-left mr-5"></i>Danh sách sinh viên
+                        </div>
+                        <div id="btnXuatExcel_KQHT" class="btn btn-success"
+                            title="Xuất TOÀN BỘ kết quả học tập theo điều kiện đang xem (không chỉ trang hiện tại), chọn lọc thêm trước khi xuất (Ctrl+G)."
+                            style="background:#1e8e3e;border-color:#1e8e3e;color:#fff;font-weight:500;">
+                            <i class="fa-solid fa-file-excel mr-5" style="color:#fff;"></i>Xuất Excel
+                            <kbd style="background:rgba(255,255,255,.22);color:#fff;border:0;padding:3px 6px;border-radius:3px;font-size:11px;margin-left:6px;">Ctrl+G</kbd>
+                        </div>
+                    </div>
+                </div>
+                <div class="ibd-kqht-dieukien" id="lblKQHT_DieuKien_IBD"></div>
+                <!-- thanh phân trang (Core chèn trước/sau bảng, tức bên trong khung cuộn) được JS đưa ra ngoài khung -->
+                <div class="aps-table-select" id="scrollWrap_KQHT">
+                    <table class="table table-hover table-bordered table-border" id="tblKQHT_IBD">
+                        <thead></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- ===== end View 3 ===== -->
         </div>
     </div>
     <!-- end đăng ký nguyện vọng -->
@@ -1593,7 +1628,7 @@
     })();
 </script>
 -->
-<script src="modules/nhapdiem/script/inbangdiem.js?v=1.0.0.6"></script>
+<script src="modules/nhapdiem/script/inbangdiem.js?v=1.0.0.7"></script>
 <script src="modules/nhapdiem/script/chuongtrinhhoc.js?v=1.0.0.2"></script>
 <script type="text/javascript">
     var main_doc = {};
@@ -1795,12 +1830,68 @@
 
     /* ===== View "Danh sách còn nợ môn" (scoped #zoneView_*) — 2 view thay chỗ nhau ===== */
     #zoneView_DSSV[hidden],
-    #zoneView_NoMon[hidden] {
+    #zoneView_NoMon[hidden],
+    #zoneView_KQHT[hidden] {
         display: none !important;
     }
     #zoneView_DSSV,
-    #zoneView_NoMon {
+    #zoneView_NoMon,
+    #zoneView_KQHT {
         scroll-margin-top: 80px; /* scrollIntoView chừa thanh menu trên */
+    }
+
+    /* ===== View 3 "Kết quả học tập theo phạm vi" ===== */
+    #btnKetQuaHocTap_IBD {
+        background: rgba(102, 16, 242, 0.08) !important;
+        color: #5b21b6 !important;
+        border: 1px solid rgba(102, 16, 242, 0.3) !important;
+        font-weight: bold !important;
+    }
+    #btnKetQuaHocTap_IBD:hover {
+        background: #6d28d9 !important;
+        color: #fff !important;
+    }
+    #btnKetQuaHocTap_IBD i {
+        margin-right: 6px;
+    }
+    #zoneView_KQHT .ibd-kqht-acts {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    #zoneView_KQHT .ibd-kqht-dieukien {
+        margin: 2px 0 8px;
+        font-size: 13px;
+        font-style: italic;
+        color: #475569;
+    }
+    /* Khung tự cuộn 2 chiều: tiêu đề 2 tầng dính trên, thanh cuộn ngang luôn trong tầm nhìn.
+       clear:both phòng thanh phân trang (đặt ngay trên) có khối float -> khối overflow bị co về rộng 0 */
+    #zoneView_KQHT #scrollWrap_KQHT {
+        clear: both;
+        max-height: calc(100vh - 220px);
+        min-height: 200px;
+        overflow: auto !important;
+    }
+    #tblKQHT_IBD {
+        margin-bottom: 0 !important;
+    }
+    #tblKQHT_IBD > thead {
+        position: sticky;
+        top: 0;
+        z-index: 3;
+    }
+    #tblKQHT_IBD > thead > tr > th {
+        background-color: #f8fafc;
+        white-space: nowrap;
+        vertical-align: middle;
+        text-align: center;
+        box-shadow: inset 0 -1px 0 #d6dce8;
+    }
+    #tblKQHT_IBD > tbody > tr > td {
+        vertical-align: middle;
+        white-space: nowrap;
     }
     #zoneView_NoMon .ibd-nomon-sub {
         margin: 10px 0 0 10px;
