@@ -656,6 +656,12 @@
 
     </div>
 </section>
+<!-- Nút ẩn Kanban: script riêng, không phụ thuộc ConfigModule (nếu config_app.js lỗi/không nạp vẫn chạy) -->
+<script type="text/javascript">
+    $(document).off('click.kanbanCfm').on('click.kanbanCfm', '#btnCloseKanban_CFM', function () {
+        $('#zone_input_mtp').slideUp(200);
+    });
+</script>
 <!-- page script -->
 <script src="modules/hethong/script/config_app.js?v=1.0.0.2"></script>
 <script type="text/javascript">
@@ -663,6 +669,5 @@
     main_doc['ConfigModule'] = new ConfigModule();
     $(document).ready(function () {
         main_doc.ConfigModule.init();
-        $('#btnCloseKanban_CFM').on('click', function () { $('#zone_input_mtp').slideUp(200); });
     });
 </script>
