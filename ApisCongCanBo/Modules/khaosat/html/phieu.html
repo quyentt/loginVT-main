@@ -411,31 +411,52 @@
 </div>
 
 
-<!-- ═══ Bước nhảy theo đáp án: Thêm nhóm ẩn ═══ -->
-<div class="modal fade finance-modal ks-nhoman-modal" id="myModal_ThemNhomAn" tabindex="-1" aria-hidden="true">
+<!-- ═══ Bước nhảy theo đáp án: Chỉnh sửa nhóm ẩn ═══ -->
+<div class="modal fade finance-modal ks-nhoman-modal" id="myModal_NhomAn" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal">
-                    <p><span class="myModalLabel"><i class="fa-solid fa-eye-slash"></i></span> Thêm các nhóm cần ẩn</p>
+                    <p><span class="myModalLabel"><i class="fa-solid fa-eye-slash"></i></span> Chỉnh sửa nhóm ẩn</p>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="ks-nhoman-dapan">Khi chọn đáp án: <b id="lblDapAn_ThemNhomAn"></b></div>
-                <div class="ks-nhoman-hint">Tích các nhóm câu hỏi sẽ bị <b>ẩn</b> khi sinh viên chọn đáp án này, rồi bấm <b>Lưu</b>. <span class="badge bg-light-blue" id="lblThemNhomAn_Tong">0</span></div>
-                <div class="ks-nhoman-table">
-                    <table class="table table-bordered table-hover" id="tblThemNhomAn">
-                        <thead>
-                            <tr>
-                                <th class="td-center" style="width: 50px">STT</th>
-                                <th>Tên nhóm</th>
-                                <th>Mô tả</th>
-                                <th class="td-center" style="width: 60px"><input type="checkbox" id="chkSelectAll_ThemNhomAn" /></th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
+                <div class="ks-nhoman-dapan">Khi sinh viên chọn đáp án: <b id="lblDapAn_NhomAn"></b></div>
+
+                <div class="ks-nhoman-sec">
+                    <div class="ks-nhoman-sec-title"><i class="fal fa-eye-slash"></i> Các nhóm đang bị ẩn <span class="badge bg-light-blue" id="lblXoaNhomAn_Tong">0</span></div>
+                    <div class="ks-nhoman-table">
+                        <table class="table table-bordered table-hover" id="tblXoaNhomAn">
+                            <thead>
+                                <tr>
+                                    <th class="td-center" style="width: 50px">STT</th>
+                                    <th>Tên nhóm</th>
+                                    <th>Mô tả</th>
+                                    <th class="td-center" style="width: 90px">Xóa</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="ks-nhoman-sec">
+                    <div class="ks-nhoman-sec-title"><i class="fal fa-plus"></i> Thêm nhóm cần ẩn <span class="badge bg-light-blue" id="lblThemNhomAn_Tong">0</span>
+                        <span class="ks-nhoman-hint">tích nhóm rồi bấm <b>Lưu</b></span></div>
+                    <div class="ks-nhoman-table">
+                        <table class="table table-bordered table-hover" id="tblThemNhomAn">
+                            <thead>
+                                <tr>
+                                    <th class="td-center" style="width: 50px">STT</th>
+                                    <th>Tên nhóm</th>
+                                    <th>Mô tả</th>
+                                    <th class="td-center" style="width: 90px"><input type="checkbox" id="chkSelectAll_ThemNhomAn" /></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -445,70 +466,34 @@
         </div>
     </div>
 </div>
-
-<!-- ═══ Bước nhảy theo đáp án: Xóa nhóm ẩn ═══ -->
-<div class="modal fade finance-modal ks-nhoman-modal" id="myModal_XoaNhomAn" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="finance-user-info in-modal">
-                    <p><span class="myModalLabel"><i class="fa-solid fa-trash"></i></span> Xóa các nhóm cần ẩn</p>
-                </div>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="ks-nhoman-dapan">Khi chọn đáp án: <b id="lblDapAn_XoaNhomAn"></b></div>
-                <div class="ks-nhoman-hint">Các nhóm đang bị ẩn bởi đáp án này. Tích nhóm muốn bỏ ẩn rồi bấm <b>Xóa</b>. <span class="badge bg-light-blue" id="lblXoaNhomAn_Tong">0</span></div>
-                <div class="ks-nhoman-table">
-                    <table class="table table-bordered table-hover" id="tblXoaNhomAn">
-                        <thead>
-                            <tr>
-                                <th class="td-center" style="width: 50px">STT</th>
-                                <th>Tên nhóm</th>
-                                <th>Mô tả</th>
-                                <th class="td-center" style="width: 60px"><input type="checkbox" id="chkSelectAll_XoaNhomAn" /></th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <div class="btn btn-outline-secondary" data-bs-dismiss="modal"><i class="fal fa-times me-2"></i>Đóng</div>
-                <div class="btn btn-danger" id="btnDelete_XoaNhomAn"><i class="fal fa-trash me-2"></i>Xóa</div>
-            </div>
-        </div>
-    </div>
-</div>
 <style>
-    /* ═══ Bước nhảy theo đáp án — link cạnh đáp án + 2 form nhóm ẩn ═══ */
+    /* ═══ Bước nhảy theo đáp án — nút cạnh đáp án + form Chỉnh sửa nhóm ẩn ═══ */
     .aps-phieu #tblNoiDung .form-check { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 0; }
-    .aps-phieu #tblNoiDung .ks-nhoman-links { display: inline-flex; gap: 6px; margin-left: 14px; }
+    .aps-phieu #tblNoiDung .ks-nhoman-links { display: inline-flex; margin-left: 14px; }
     .aps-phieu #tblNoiDung .ks-nhoman-links a {
         font-size: 12px; font-weight: 600; line-height: 1; padding: 4px 8px; border-radius: 6px;
-        text-decoration: none; white-space: nowrap; border: 1px solid transparent;
+        text-decoration: none; white-space: nowrap; border: 1px solid #cfe0ff; color: #0d6efd; background: #eef4ff;
     }
     .aps-phieu #tblNoiDung .ks-nhoman-links a i { margin-right: 3px; }
-    .aps-phieu #tblNoiDung .ks-nhoman-links .btnThemNhomAn { color: #0d6efd; background: #eef4ff; border-color: #cfe0ff; }
-    .aps-phieu #tblNoiDung .ks-nhoman-links .btnThemNhomAn:hover { background: #0d6efd; color: #fff; }
-    .aps-phieu #tblNoiDung .ks-nhoman-links .btnXoaNhomAn { color: #dc3545; background: #fff1f2; border-color: #fecdd3; }
-    .aps-phieu #tblNoiDung .ks-nhoman-links .btnXoaNhomAn:hover { background: #dc3545; color: #fff; }
-    .ks-nhoman-modal .ks-nhoman-dapan { font-size: 15px; color: #0f172a; margin-bottom: 6px; }
+    .aps-phieu #tblNoiDung .ks-nhoman-links a:hover { background: #0d6efd; color: #fff; }
+    .ks-nhoman-modal .ks-nhoman-dapan { font-size: 15px; color: #0f172a; margin-bottom: 12px; }
     .ks-nhoman-modal .ks-nhoman-dapan b { color: #14375f; }
-    .ks-nhoman-modal .ks-nhoman-hint { font-size: 13px; color: #475569; margin-bottom: 10px; }
-    .ks-nhoman-modal .ks-nhoman-table { max-height: 55vh; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 8px; }
+    .ks-nhoman-modal .ks-nhoman-sec + .ks-nhoman-sec { margin-top: 16px; }
+    .ks-nhoman-modal .ks-nhoman-sec-title { font-size: 14px; font-weight: 700; color: #14375f; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+    .ks-nhoman-modal .ks-nhoman-hint { font-size: 12px; font-weight: 400; color: #64748b; margin-left: auto; }
+    .ks-nhoman-modal .ks-nhoman-table { max-height: 30vh; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 8px; }
     .ks-nhoman-modal .ks-nhoman-table table { margin: 0; }
     .ks-nhoman-modal .ks-nhoman-table thead th { position: sticky; top: 0; background: #f8fafc; z-index: 2; color: #0f172a; font-weight: 700; }
     .ks-nhoman-modal .ks-nhoman-table td { color: #0f172a; vertical-align: middle; }
     .ks-nhoman-modal .ks-nhoman-table input[type=checkbox] { width: 16px; height: 16px; cursor: pointer; }
-    .ks-nhoman-modal .ks-nhoman-daan td { background: #f1f5f9; color: #64748b; }
-    .ks-nhoman-modal .ks-nhoman-badge { background: #64748b; color: #fff; font-weight: 600; }
-    .ks-nhoman-modal .ks-nhoman-empty { color: #64748b; font-style: italic; padding: 18px; }
+    .ks-nhoman-modal .btnXoaMotNhomAn { font-size: 12px; font-weight: 600; padding: 3px 10px; border: 1px solid #fecdd3 !important; border-radius: 6px; background: #fff1f2; color: #dc3545 !important; }
+    .ks-nhoman-modal .btnXoaMotNhomAn:hover { background: #dc3545; color: #fff !important; }
+    .ks-nhoman-modal .ks-nhoman-empty { color: #64748b; font-style: italic; padding: 14px; }
     .ks-nhoman-modal .modal-footer { justify-content: flex-end; gap: 8px; }
     .ks-nhoman-modal .modal-header .btn-close { filter: invert(1) grayscale(1) brightness(2); opacity: .9; }
 </style>
 
-<script src="modules/khaosat/script/Phieu.js?v=1.0.0.2"></script>
+<script src="modules/khaosat/script/Phieu.js?v=1.0.0.3"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['Phieu'] = new Phieu();
