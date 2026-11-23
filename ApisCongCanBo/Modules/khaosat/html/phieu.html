@@ -97,7 +97,7 @@
                                     class="fa-regular fa-file-circle-question fw-bold"></i></span>Câu hỏi</a></p>
                 </div>
                 <div class="nav-content-right mt">
-                    <a class="d-block text-right fs-16 mt-5 color-fff btnClosePhieu"><i class="fal fa-times"></i></a>
+                    <div class="btn ks-header-close btnClosePhieu"><i class="fal fa-times me-2"></i>Đóng</div>
                 </div>
             </div>
 
@@ -257,7 +257,7 @@
                                 <i class="fa-solid fa-pen"></i>Chỉnh sửa - </span>Phiếu</a></p>
                 </div>
                 <div class="nav-content-right mt">
-                    <a class="d-block text-right fs-16 color-fff btnClose mt-5"><i class="fal fa-times"></i></a>
+                    <div class="btn ks-header-close btnClose"><i class="fal fa-times me-2"></i>Đóng</div>
                 </div>
             </div>
             <div class="form-top rounded-0 border-top" style="background: unset">
@@ -491,6 +491,17 @@
     .ks-nhoman-modal .ks-nhoman-empty { color: #64748b; font-style: italic; padding: 14px; }
     .ks-nhoman-modal .modal-footer { justify-content: flex-end; gap: 8px; }
     .ks-nhoman-modal .modal-header .btn-close { filter: invert(1) grayscale(1) brightness(2); opacity: .9; }
+    /* Nút Đóng ở header "Chỉnh sửa - Phiếu" / "Câu hỏi": icon fal fa-times cũ không có glyph (FA5 weight 300) nên không thấy → nút có chữ như nút cuối form */
+    html body .aps-phieu .box-header { position: relative; }
+    html body .aps-phieu .box-header .nav-content-right { display: block !important; } /* theme đặt display:none → nút đóng header không bao giờ hiện */
+    html body .aps-phieu .box-header .ks-header-close {
+        position: absolute; right: 20px; top: 50%; transform: translateY(-50%); z-index: 3;
+        color: #fff !important; background: transparent !important; border: 1px solid rgba(255,255,255,.85) !important;
+        border-radius: 8px; padding: 5px 14px; font-size: 14px; font-weight: 600; line-height: 1.4; min-width: unset;
+        display: inline-flex; align-items: center; cursor: pointer;
+    }
+    html body .aps-phieu .box-header .ks-header-close:hover { background: #fff !important; color: #0d6efd !important; }
+    html body .aps-phieu .box-header .ks-header-close i { color: inherit !important; }
 </style>
 
 <script src="modules/khaosat/script/Phieu.js?v=1.0.0.3"></script>
