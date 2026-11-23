@@ -1,111 +1,491 @@
-﻿<section class="content aps-cms">
-    <div class="row aps-guiemail">
-        <!-- box Notify_VBSC -->
-        <div class="box box-guiemail zone-bus">
-            <div class="box box-solid box-search">
-                <div class="box-header with-border d-none">
-                    <h3 class="box-title"><i class="fa fa-window-restore"></i> Tìm kiếm</h3>
+﻿<style>
+    /* ═══ Gửi email (thiết kế lại 2026-11). Scope .aps-guiemail .ge-*; giữ nguyên mọi ID guiemail.js dùng.
+       Chuỗi html body #main-content-wrapper để thắng rule toàn cục có !important (Custom_V1/styles.css). ═══ */
+    .aps-guiemail {
+        --ge-text: #0f172a;
+        --ge-muted: #64748b;
+        --ge-line: #e2e8f0;
+        --ge-soft: #f8fafc;
+        --ge-blue: #0d6efd;
+        --ge-navy: #14375f;
+        --ge-green: #198754;
+        --ge-red: #dc3545;
+        color: var(--ge-text);
+        margin: 0 !important;
+    }
+    .aps-guiemail .ge-card {
+        background: #fff;
+        border: 1px solid var(--ge-line);
+        border-radius: 14px;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, .04), 0 6px 20px rgba(15, 23, 42, .05);
+        margin-bottom: 18px;
+        overflow: visible;
+    }
+    .aps-guiemail .ge-card-head {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--ge-line);
+    }
+    .aps-guiemail .ge-ico {
+        width: 38px;
+        height: 38px;
+        flex: 0 0 38px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: #eef4ff;
+        color: var(--ge-blue);
+        font-size: 17px;
+    }
+    html body #main-content-wrapper .aps-guiemail .ge-card-head h3,
+    .aps-guiemail .ge-card-head h3 {
+        margin: 0;
+        font-size: 17px !important;
+        font-weight: 700 !important;
+        color: var(--ge-text) !important;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .aps-guiemail .ge-card-head p {
+        margin: 2px 0 0;
+        font-size: 13px;
+        color: var(--ge-muted);
+    }
+    .aps-guiemail .ge-head-actions {
+        margin-left: auto;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    /* Bố cục 2 cột: trái = người nhận, phải = tài khoản gửi */
+    .aps-guiemail .ge-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    }
+    .aps-guiemail .ge-pane {
+        padding: 18px 20px 20px;
+        min-width: 0;
+    }
+    .aps-guiemail .ge-pane + .ge-pane {
+        border-left: 1px solid var(--ge-line);
+        background: var(--ge-soft);
+        border-radius: 0 0 14px 0;
+    }
+    @media (max-width: 991px) {
+        .aps-guiemail .ge-grid { grid-template-columns: 1fr; }
+        .aps-guiemail .ge-pane + .ge-pane { border-left: 0; border-top: 1px solid var(--ge-line); border-radius: 0 0 14px 14px; }
+    }
+    .aps-guiemail .ge-pane-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0 0 14px;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+        color: var(--ge-muted);
+    }
+    .aps-guiemail .ge-pane-title i { color: var(--ge-blue); font-size: 14px; }
+
+    /* Field */
+    .aps-guiemail .ge-field { margin-bottom: 14px; }
+    .aps-guiemail .ge-label {
+        display: block;
+        margin: 0 0 6px;
+        font-size: 13.5px;
+        font-weight: 600;
+        color: #334155;
+    }
+    .aps-guiemail .ge-label .ge-hint { font-weight: 400; color: var(--ge-muted); }
+    .aps-guiemail .ge-input {
+        position: relative;
+    }
+    .aps-guiemail .ge-input > i {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        font-size: 14px;
+        pointer-events: none;
+        z-index: 2;
+    }
+    html body #main-content-wrapper .aps-guiemail .form-control,
+    .aps-guiemail .form-control {
+        height: 40px !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 9px !important;
+        font-size: 14px !important;
+        font-weight: 500;
+        color: var(--ge-text) !important;
+        background: #fff !important;
+        box-shadow: none !important;
+        transition: border-color .15s, box-shadow .15s;
+    }
+    html body #main-content-wrapper .aps-guiemail .ge-input > .form-control,
+    .aps-guiemail .ge-input > .form-control { padding-left: 36px !important; }
+    html body #main-content-wrapper .aps-guiemail .form-control:focus,
+    .aps-guiemail .form-control:focus {
+        border-color: var(--ge-blue) !important;
+        box-shadow: 0 0 0 3px rgba(13, 110, 253, .15) !important;
+    }
+    .aps-guiemail .form-control::placeholder { color: #94a3b8 !important; opacity: 1; }
+
+    /* Hàng tìm kiếm + nút */
+    .aps-guiemail .ge-searchrow {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+    .aps-guiemail .ge-searchrow .ge-input { flex: 1 1 260px; }
+    .aps-guiemail .ge-searchrow .dropdown { position: relative; }
+    .aps-guiemail .ge-searchrow #zonebtnBaoCao_GE:empty { display: none; }
+
+    /* Nút */
+    html body #main-content-wrapper .aps-guiemail .ge-btn,
+    .aps-guiemail .ge-btn {
+        height: 40px;
+        padding: 0 16px !important;
+        border-radius: 9px !important;
+        display: inline-flex !important;
+        align-items: center;
+        gap: 7px;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        border: 1px solid transparent !important;
+        box-shadow: none !important;
+        white-space: nowrap;
+        text-decoration: none !important;
+        transition: background .15s, border-color .15s, color .15s;
+    }
+    html body #main-content-wrapper .aps-guiemail .ge-btn-primary,
+    .aps-guiemail .ge-btn-primary { background: var(--ge-blue) !important; color: #fff !important; }
+    html body #main-content-wrapper .aps-guiemail .ge-btn-primary:hover,
+    .aps-guiemail .ge-btn-primary:hover { background: #0b5ed7 !important; }
+    html body #main-content-wrapper .aps-guiemail .ge-btn-success,
+    .aps-guiemail .ge-btn-success { background: var(--ge-green) !important; color: #fff !important; }
+    html body #main-content-wrapper .aps-guiemail .ge-btn-success:hover,
+    .aps-guiemail .ge-btn-success:hover { background: #157347 !important; }
+    html body #main-content-wrapper .aps-guiemail .ge-btn-outline,
+    .aps-guiemail .ge-btn-outline { background: #fff !important; color: #334155 !important; border-color: #cbd5e1 !important; }
+    html body #main-content-wrapper .aps-guiemail .ge-btn-outline:hover,
+    .aps-guiemail .ge-btn-outline:hover { border-color: var(--ge-blue) !important; color: var(--ge-blue) !important; }
+    html body #main-content-wrapper .aps-guiemail .ge-btn-danger,
+    .aps-guiemail .ge-btn-danger { background: #fff !important; color: var(--ge-red) !important; border-color: #f6c6c6 !important; }
+    html body #main-content-wrapper .aps-guiemail .ge-btn-danger:hover,
+    .aps-guiemail .ge-btn-danger:hover { background: #fdeeee !important; }
+    .aps-guiemail .ge-btn .caret { margin-left: 2px; }
+    .aps-guiemail .ge-searchrow .dropdown-menu {
+        border-radius: 10px;
+        border: 1px solid var(--ge-line);
+        box-shadow: 0 10px 24px rgba(15, 23, 42, .12);
+        padding: 6px;
+        min-width: 220px;
+    }
+    .aps-guiemail .ge-searchrow .dropdown-menu a {
+        display: block;
+        padding: 8px 10px;
+        border-radius: 7px;
+        color: var(--ge-text);
+        font-size: 14px;
+    }
+    .aps-guiemail .ge-searchrow .dropdown-menu a:hover { background: #eef4ff; color: var(--ge-blue); }
+
+    /* Ô đính kèm (JS thay #txtFileDinhKem bằng nút upload + danh sách file) */
+    .aps-guiemail .ge-attach {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 16px;
+        border: 1.5px dashed #cbd5e1;
+        border-radius: 12px;
+        background: #fff;
+        transition: border-color .15s, background .15s;
+    }
+    .aps-guiemail .ge-attach:hover { border-color: var(--ge-blue); background: #f8fbff; }
+    .aps-guiemail .ge-attach-ico {
+        width: 40px;
+        height: 40px;
+        flex: 0 0 40px;
+        border-radius: 10px;
+        background: #eef4ff;
+        color: var(--ge-blue);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+    }
+    .aps-guiemail .ge-attach-text { flex: 1 1 auto; min-width: 0; }
+    .aps-guiemail .ge-attach-text b { display: block; font-size: 14px; color: var(--ge-text); }
+    .aps-guiemail .ge-attach-text span { font-size: 12.5px; color: var(--ge-muted); }
+    .aps-guiemail .ge-attach-ctrl { flex: 0 0 auto; }
+    .aps-guiemail .ge-attach-ctrl input[type="image"] { width: 30px; height: 30px; cursor: pointer; }
+
+    /* Hướng dẫn 3 bước */
+    .aps-guiemail .ge-steps {
+        list-style: none;
+        counter-reset: ge;
+        margin: 22px 0 0;
+        padding: 16px;
+        border-radius: 12px;
+        background: var(--ge-soft);
+        border: 1px solid var(--ge-line);
+        display: grid;
+        gap: 12px;
+    }
+    .aps-guiemail .ge-steps li {
+        counter-increment: ge;
+        position: relative;
+        padding-left: 40px;
+        min-height: 28px;
+    }
+    .aps-guiemail .ge-steps li::before {
+        content: counter(ge);
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #fff;
+        border: 1px solid #cddcf6;
+        color: var(--ge-blue);
+        font-weight: 700;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .aps-guiemail .ge-steps b { display: block; font-size: 14px; color: var(--ge-text); }
+    .aps-guiemail .ge-steps span { font-size: 13px; color: var(--ge-muted); }
+
+    /* Checkbox dùng người gửi */
+    .aps-guiemail .ge-check {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 11px 12px;
+        border: 1px solid var(--ge-line);
+        border-radius: 10px;
+        background: #fff;
+        cursor: pointer;
+        margin: 2px 0 0;
+    }
+    .aps-guiemail .ge-check input { width: 17px; height: 17px; margin: 1px 0 0; accent-color: var(--ge-blue); flex: 0 0 auto; }
+    .aps-guiemail .ge-check label { margin: 0; cursor: pointer; font-size: 14px; font-weight: 600; color: var(--ge-text); }
+    .aps-guiemail .ge-check label small { display: block; font-weight: 400; color: var(--ge-muted); font-size: 12.5px; margin-top: 1px; }
+
+    .aps-guiemail .ge-divider {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 18px 0 12px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #94a3b8;
+        text-transform: uppercase;
+        letter-spacing: .05em;
+    }
+    .aps-guiemail .ge-divider::before,
+    .aps-guiemail .ge-divider::after { content: ""; flex: 1; height: 1px; background: var(--ge-line); }
+
+    /* select2 */
+    .aps-guiemail .select2-container { width: 100% !important; }
+    html body #main-content-wrapper .aps-guiemail .select2-container .select2-selection--multiple,
+    .aps-guiemail .select2-container .select2-selection--multiple {
+        min-height: 40px !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 9px !important;
+        background: #fff !important;
+    }
+
+    /* Bảng danh sách */
+    .aps-guiemail .ge-badge {
+        min-width: 26px;
+        padding: 2px 9px;
+        border-radius: 999px;
+        background: #eef4ff;
+        color: var(--ge-blue);
+        font-size: 12.5px;
+        font-weight: 700;
+        text-align: center;
+    }
+    .aps-guiemail .ge-badge:empty::before { content: "0"; }
+    .aps-guiemail .ge-tablewrap { padding: 0 20px 20px; }
+    .aps-guiemail .ge-tablewrap .scroll-table-x {
+        border: 1px solid var(--ge-line);
+        border-radius: 10px;
+        overflow: auto;
+    }
+    html body #main-content-wrapper .aps-guiemail #tblGuiEmail,
+    .aps-guiemail #tblGuiEmail { margin: 0 !important; border: 0 !important; }
+    html body #main-content-wrapper .aps-guiemail #tblGuiEmail thead th,
+    .aps-guiemail #tblGuiEmail thead th {
+        background: #f1f5f9 !important;
+        color: #334155 !important;
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        text-transform: uppercase;
+        letter-spacing: .03em;
+        border-color: var(--ge-line) !important;
+        padding: 11px 12px !important;
+        position: sticky;
+        top: 0;
+        z-index: 2;
+    }
+    html body #main-content-wrapper .aps-guiemail #tblGuiEmail td,
+    .aps-guiemail #tblGuiEmail td {
+        border-color: var(--ge-line) !important;
+        padding: 10px 12px !important;
+        font-size: 14px;
+        color: var(--ge-text);
+        vertical-align: middle;
+    }
+    .aps-guiemail #tblGuiEmail input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--ge-blue); }
+    .aps-guiemail #tblGuiEmail th:first-child,
+    .aps-guiemail #tblGuiEmail td:first-child { width: 60px; }
+    .aps-guiemail #tblGuiEmail th:last-child,
+    .aps-guiemail #tblGuiEmail td:last-child { width: 52px; }
+
+    @media (max-width: 575px) {
+        .aps-guiemail .ge-pane, .aps-guiemail .ge-card-head { padding: 14px; }
+        .aps-guiemail .ge-tablewrap { padding: 0 14px 14px; }
+        .aps-guiemail .ge-head-actions { margin-left: 0; width: 100%; }
+    }
+</style>
+<section class="content aps-cms">
+    <div class="aps-guiemail">
+        <!-- Soạn & cấu hình gửi -->
+        <div class="ge-card">
+            <div class="ge-card-head">
+                <span class="ge-ico"><i class="fa-light fa-envelope-open-text"></i></span>
+                <div>
+                    <h3>Gửi email hàng loạt</h3>
+                    <p>Import danh sách người nhận, đính kèm file và chọn tài khoản gửi</p>
                 </div>
-                <div class="box-body pd20 mt-5">
-                    <div class="col-sm-8">
-                        <div class="col-sm-5 item-search">
-                            <input id="txtSearch_TuKhoa" class="form-control" placeholder="Nhập từ khóa tìm kiếm">
-                        </div>
-                        <div class="col-sm-4 item-search-btn">
-                            <a class="btn btn-default btn-search" id="btnSearch"><i class="fa fa-search"></i> <span
-                                    class="lang" key="">Tìm kiếm</span></a>
+            </div>
+            <div class="ge-grid">
+                <!-- Trái: người nhận -->
+                <div class="ge-pane">
+                    <div class="ge-pane-title"><i class="fa-light fa-users"></i> Người nhận</div>
+                    <div class="ge-field">
+                        <label class="ge-label" for="txtSearch_TuKhoa">Tìm trong danh sách</label>
+                        <div class="ge-searchrow">
+                            <div class="ge-input">
+                                <i class="fa-light fa-magnifying-glass"></i>
+                                <input id="txtSearch_TuKhoa" class="form-control" placeholder="Nhập email, tiêu đề hoặc nội dung...">
+                            </div>
+                            <a class="btn ge-btn ge-btn-primary btn-search" id="btnSearch"><i class="fa fa-search"></i> <span class="lang" key="">Tìm kiếm</span></a>
                             <div class="dropdown" id="zonebtnBaoCao_GE_Import">
-                                <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">
+                                <button class="btn ge-btn ge-btn-success dropdown-toggle" type="button" data-toggle="dropdown">
                                     <i class="fa fa-cloud-upload"></i> Import <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu form-container">
                                     <li><a class="btnImportWithProce" name="IMPORTWITHPROC_GUIEMAIL" title="gửi email"
-                                            callback="main_doc.GuiEmail.getList_GuiEmail()" href="#"> 1. Import gửi
-                                            email</a></li>
+                                            callback="main_doc.GuiEmail.getList_GuiEmail()" href="#"><i class="fa-light fa-file-import"></i> Import danh sách gửi email</a></li>
                                 </ul>
                             </div>
-                            <div class="dropdown" id="zonebtnBaoCao_GE">
-                            </div>
-
-
+                            <div class="dropdown" id="zonebtnBaoCao_GE"></div>
                         </div>
-                        <div class="clear"></div>
-                        <div class="aps-file-attach">
-                            <div class="col-sm-8 d-flex">
-                                <span style="margin-right: 8px !important;">Chọn file đính kèm: </span>
-                                <a id="txtFileDinhKem" class="btn btn-success dropdown-toggle ml-10">
-                                    Chọn file
-                                </a>
+                    </div>
+                    <div class="ge-field">
+                        <span class="ge-label">File đính kèm <span class="ge-hint">(tuỳ chọn)</span></span>
+                        <div class="ge-attach aps-file-attach">
+                            <span class="ge-attach-ico"><i class="fa-light fa-paperclip"></i></span>
+                            <div class="ge-attach-text">
+                                <b>Đính kèm file vào email</b>
+                                <span>Bấm biểu tượng bên phải để chọn file từ máy</span>
                             </div>
-                            <div class="col-sm-2">
-
+                            <div class="ge-attach-ctrl">
+                                <a id="txtFileDinhKem" class="btn btn-success">Chọn file</a>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-4 box-search-r">
-                        <div class="item-search mb-10">
-                            <input id="txtNguoiGui_Email" class="form-control" placeholder="Email" autocomplete="off" />
-                        </div>
-                        <div class="item-search mb-10 pr0">
-                            <input id="txtNguoiGui_MatKhau" class="form-control" type="password" placeholder="Mật khẩu"
-                                autocomplete="off" />
-                        </div>
-                        <div class="item-search mb-10 pr0">
-                            <input id="txtNguoiGui_HostMail" class="form-control" placeholder="Host Mail" />
-                        </div>
-                        <div class="item-search mb-10 pr0">
-                            <input id="txtNguoiGui_NguoiGui" class="form-control" placeholder="Tên người gửi" />
-                        </div>
-                        <div class="item-search mb-10 pr0">
-                            <input type="checkbox" id="chkSelectAll_NguoiGui" name="chkSelectAll_NguoiGui"> <label
-                                for="chkSelectAll_NguoiGui">Sử dụng người gửi này</label>
-                            <!--<input type="checkbox" id="chkSuDungDanhMuc" name="chkSuDungDanhMuc"> <label for="chkSuDungDanhMuc">Sử dụng danh mục tài khoản</label>-->
+                    <ol class="ge-steps">
+                        <li><b>Import danh sách</b><span>Bấm Import, tải file Excel người nhận (email, tiêu đề, nội dung)</span></li>
+                        <li><b>Đính kèm file</b><span>Nếu cần, thêm file sẽ gửi kèm mọi email</span></li>
+                        <li><b>Chọn tài khoản &amp; gửi</b><span>Nhập tài khoản SMTP hoặc chọn từ danh mục, tích các dòng rồi bấm Gửi email</span></li>
+                    </ol>
+                </div>
+
+                <!-- Phải: tài khoản gửi -->
+                <div class="ge-pane box-search-r">
+                    <div class="ge-pane-title"><i class="fa-light fa-paper-plane"></i> Tài khoản gửi (SMTP)</div>
+                    <div class="ge-field">
+                        <label class="ge-label" for="txtNguoiGui_Email">Email gửi</label>
+                        <div class="ge-input">
+                            <i class="fa-light fa-at"></i>
+                            <input id="txtNguoiGui_Email" class="form-control" placeholder="vd: no-reply@truong.edu.vn" autocomplete="off" />
                         </div>
                     </div>
-
-                    <div class="col-sm-12">
-                        Danh mục người gửi
-                        <div class="item-search mt-10">
-                            <select id="dropSearch_NguoiGui" class="select-opt" multiple="multiple"></select>
+                    <div class="ge-field">
+                        <label class="ge-label" for="txtNguoiGui_MatKhau">Mật khẩu ứng dụng</label>
+                        <div class="ge-input">
+                            <i class="fa-light fa-key"></i>
+                            <input id="txtNguoiGui_MatKhau" class="form-control" type="password" placeholder="••••••••" autocomplete="new-password" />
                         </div>
+                    </div>
+                    <div class="ge-field">
+                        <label class="ge-label" for="txtNguoiGui_HostMail">Host mail</label>
+                        <div class="ge-input">
+                            <i class="fa-light fa-server"></i>
+                            <input id="txtNguoiGui_HostMail" class="form-control" placeholder="vd: smtp.gmail.com" />
+                        </div>
+                    </div>
+                    <div class="ge-field">
+                        <label class="ge-label" for="txtNguoiGui_NguoiGui">Tên người gửi</label>
+                        <div class="ge-input">
+                            <i class="fa-light fa-user"></i>
+                            <input id="txtNguoiGui_NguoiGui" class="form-control" placeholder="vd: Phòng Đào tạo" />
+                        </div>
+                    </div>
+                    <div class="ge-check">
+                        <input type="checkbox" id="chkSelectAll_NguoiGui" name="chkSelectAll_NguoiGui">
+                        <label for="chkSelectAll_NguoiGui">Sử dụng người gửi này
+                            <small>Bỏ chọn để gửi bằng các tài khoản trong danh mục bên dưới</small></label>
+                    </div>
+
+                    <div class="ge-divider">hoặc</div>
+                    <div class="ge-field" style="margin-bottom:0">
+                        <label class="ge-label" for="dropSearch_NguoiGui">Danh mục người gửi <span class="ge-hint">(chọn nhiều)</span></label>
+                        <select id="dropSearch_NguoiGui" class="select-opt" multiple="multiple"></select>
                     </div>
                 </div>
             </div>
-            <div class="box box-solid pd20">
-                <div class="box-header">
-                    <h3 class="box-title">
-                        <i class="fa-light fa-address-book"></i> Danh sách
-                        <span class="badge bg-light-blue">
-                            <span id="lblGuiEmail_Tong"></span>
-                        </span>
-                    </h3>
+        </div>
 
-                    <div class="pull-right">
-                        <a class="btn btn-success btnSave" id="btnSave_GuiEmail" href="#"><i
-                                class="fa-light fa-paper-plane-top"></i> Gửi</a>
-                        <a id="btnXoaGuiEmail" class="btn btn-default ml-5"><i class="fa fa-trash"></i> Xóa</a>
-                    </div>
+        <!-- Danh sách gửi -->
+        <div class="ge-card">
+            <div class="ge-card-head">
+                <span class="ge-ico"><i class="fa-light fa-address-book"></i></span>
+                <h3>Danh sách gửi <span class="ge-badge" id="lblGuiEmail_Tong"></span></h3>
+                <div class="ge-head-actions">
+                    <a id="btnXoaGuiEmail" class="btn ge-btn ge-btn-danger"><i class="fa fa-trash"></i> Xóa</a>
+                    <a class="btn ge-btn ge-btn-success btnSave" id="btnSave_GuiEmail" href="#"><i class="fa-light fa-paper-plane-top"></i> Gửi email</a>
                 </div>
-                <div class="box-body">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="col-sm-12 scroll-table-x">
-                                <table id="tblGuiEmail" class="table table-hover table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th class="td-fixed td-center">Stt</th>
-                                            <th class="td-center">Người nhận</th>
-                                            <th class="td-center">Tiêu đề</th>
-                                            <th class="td-center">Nội dung</th>
-                                            <th class="td-center td-fixed"><input type="checkbox" id="chkSelectAll">
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+            </div>
+            <div class="ge-tablewrap">
+                <div class="scroll-table-x">
+                    <table id="tblGuiEmail" class="table table-hover table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="td-fixed td-center">Stt</th>
+                                <th class="td-left">Người nhận</th>
+                                <th class="td-left">Tiêu đề</th>
+                                <th class="td-left">Nội dung</th>
+                                <th class="td-center td-fixed"><input type="checkbox" id="chkSelectAll" title="Chọn tất cả"></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
                 </div>
             </div>
         </div>
