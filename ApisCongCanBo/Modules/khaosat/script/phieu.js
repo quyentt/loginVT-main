@@ -231,6 +231,7 @@ Phieu.prototype = {
             e.preventDefault();
             e.stopPropagation();
             me.strDapAnNhomAn_Id = $(this).attr("data-id");
+            me.strDapAnNhomAn_NhomId = $(this).attr("data-nhom") || "";
             $("#lblDapAn_NhomAn").html($(this).attr("data-ten"));
             $("#myModal_NhomAn").modal("show");
             me.getList_NhomAn_Form();
@@ -1200,7 +1201,7 @@ Phieu.prototype = {
                         // Bước nhảy: đáp án này ẩn những nhóm nào
                         var strTen = String(e.TENDAPAN == null ? '' : e.TENDAPAN).replace(/"/g, '&quot;');
                         html += '<span class="ks-nhoman-links">';
-                        html += '<a href="javascript:void(0)" class="btnSuaNhomAn" data-id="' + e.ID + '" data-ten="' + strTen + '"><i class="fal fa-eye-slash"></i> Chỉnh sửa nhóm ẩn</a>';
+                        html += '<a href="javascript:void(0)" class="btnSuaNhomAn" data-id="' + e.ID + '" data-nhom="' + edu.util.returnEmpty(objCauHoi.KS_NHOMCAUHOI_ID) + '" data-ten="' + strTen + '"><i class="fal fa-eye-slash"></i> Chỉnh sửa nhóm ẩn</a>';
                         html += '</span>';
                         html += '</div>';
                     })
@@ -1278,9 +1279,11 @@ Phieu.prototype = {
             if (!html) html = '<tr><td colspan="4" class="td-center ks-nhoman-empty">Đáp án này chưa ẩn nhóm nào — chọn nhóm ở trên rồi bấm Thêm</td></tr>';
             $("#tblNhomAn tbody").html(html);
             $("#lblNhomAn_Tong").html(dtDaAn.length);
-            // ô chọn lấy từ danh sách nhóm câu hỏi của phiếu đang hiển thị (me.dtNhom — KS_ThongTin/LayDSKS_NhomKhaoSat), chỉ nhóm CHƯA ẩn
+            // ô chọn lấy từ danh sách nhóm câu hỏi của phiếu (me.dtNhom — KS_ThongTin/LayDSKS_NhomKhaoSat):
+            // bỏ nhóm chứa chính câu hỏi của đáp án này và nhóm đã có trong danh sách ẩn
             var dt = (me.dtNhom || []).filter(function (e) {
-                return e.ID && !dtDaAn.some(function (x) { return x.AN_KS_NHOMCAUHOI_ID == e.ID; });
+                return e.ID && e.ID != me.strDapAnNhomAn_NhomId
+                    && !dtDaAn.some(function (x) { return x.AN_KS_NHOMCAUHOI_ID == e.ID; });
             });
             var opt = '<option value="">' + (dt.length ? '-- Chọn nhóm cần ẩn --' : '-- Không còn nhóm nào để thêm --') + '</option>';
             dt.forEach(function (e) {

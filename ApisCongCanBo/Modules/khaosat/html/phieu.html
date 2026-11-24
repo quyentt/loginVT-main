@@ -425,11 +425,11 @@
                 <div class="ks-nhoman-dapan">Khi sinh viên chọn đáp án: <b id="lblDapAn_NhomAn"></b></div>
 
                 <div class="ks-nhoman-sec">
-                    <div class="ks-nhoman-sec-title"><i class="fal fa-eye-slash"></i> Danh sách nhóm bị ẩn <span class="badge bg-light-blue" id="lblNhomAn_Tong">0</span></div>
                     <div class="ks-nhoman-them">
                         <select class="form-select" id="dropThem_NhomAn"></select>
                         <div class="btn btn-primary" id="btnThem_NhomAn"><i class="fal fa-plus me-1"></i>Thêm</div>
                     </div>
+                    <div class="ks-nhoman-sec-title"><i class="fal fa-eye-slash"></i> Danh sách nhóm bị ẩn <span class="badge bg-light-blue" id="lblNhomAn_Tong">0</span></div>
                     <div class="ks-nhoman-table">
                         <table class="table table-bordered table-hover" id="tblNhomAn">
                             <thead>
@@ -465,7 +465,7 @@
     .ks-nhoman-modal .ks-nhoman-dapan b { color: #14375f; }
     .ks-nhoman-modal .ks-nhoman-sec + .ks-nhoman-sec { margin-top: 16px; }
     .ks-nhoman-modal .ks-nhoman-sec-title { font-size: 14px; font-weight: 700; color: #14375f; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
-    .ks-nhoman-modal .ks-nhoman-them { display: flex; gap: 8px; margin-bottom: 8px; }
+    .ks-nhoman-modal .ks-nhoman-them { display: flex; gap: 8px; margin-bottom: 14px; }
     .ks-nhoman-modal .ks-nhoman-them .form-select { flex: 1; min-width: 0; color: #0f172a; }
     .ks-nhoman-modal .ks-nhoman-them .btn { white-space: nowrap; }
     .ks-nhoman-modal .ks-nhoman-hint { font-size: 12px; font-weight: 400; color: #64748b; margin-left: auto; }
@@ -492,7 +492,7 @@
     html body .aps-phieu .box-header .ks-header-close i { color: inherit !important; }
 </style>
 
-<script src="modules/khaosat/script/Phieu.js?v=1.0.0.5"></script>
+<script src="modules/khaosat/script/Phieu.js?v=1.0.0.6"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['Phieu'] = new Phieu();
