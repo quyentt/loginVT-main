@@ -1278,29 +1278,17 @@ Phieu.prototype = {
             if (!html) html = '<tr><td colspan="4" class="td-center ks-nhoman-empty">Đáp án này chưa ẩn nhóm nào — chọn nhóm ở trên rồi bấm Thêm</td></tr>';
             $("#tblNhomAn tbody").html(html);
             $("#lblNhomAn_Tong").html(dtDaAn.length);
-            me.call_NhomAn({
-                'action': 'SV_KHAOSAT_TAOPHIEU_MH/DSA4BRIeChIeDykuLAopIC4SIDUeFSkkLgwgNAPP',
-                'func': 'KHAOSAT_TAOPHIEU.LayDS_KS_NhomKhaoSat_TheoMau',
-                'iM': edu.system.iM,
-                'strKS_PhieuKhaoSat_Mau_Id': me.strPhieu_Id,
-            }, function (data) {
-                if (!data || !data.Success) {
-                    edu.system.alert("LayDS_KS_NhomKhaoSat_TheoMau: " + (data ? data.Message : ""), "w");
-                    $("#dropThem_NhomAn").html('<option value="">-- Không tải được danh sách nhóm --</option>');
-                    return;
-                }
-                // ô chọn chỉ có nhóm CHƯA ẩn
-                var dt = (data.Data || []).filter(function (e) {
-                    return !dtDaAn.some(function (x) { return x.AN_KS_NHOMCAUHOI_ID == e.ID; });
-                });
-                var opt = '<option value="">' + (dt.length ? '-- Chọn nhóm cần ẩn --' : '-- Không còn nhóm nào để thêm --') + '</option>';
-                dt.forEach(function (e) {
-                    var strTen = String(edu.util.returnEmpty(e.TEN)).replace(/</g, '&lt;');
-                    opt += '<option value="' + e.ID + '">' + strTen + '</option>';
-                });
-                $("#dropThem_NhomAn").html(opt);
-                $("#btnThem_NhomAn").toggleClass("disabled", !dt.length);
+            // ô chọn lấy từ danh sách nhóm câu hỏi của phiếu đang hiển thị (me.dtNhom — KS_ThongTin/LayDSKS_NhomKhaoSat), chỉ nhóm CHƯA ẩn
+            var dt = (me.dtNhom || []).filter(function (e) {
+                return e.ID && !dtDaAn.some(function (x) { return x.AN_KS_NHOMCAUHOI_ID == e.ID; });
             });
+            var opt = '<option value="">' + (dt.length ? '-- Chọn nhóm cần ẩn --' : '-- Không còn nhóm nào để thêm --') + '</option>';
+            dt.forEach(function (e) {
+                var strTen = String(edu.util.returnEmpty(e.TEN)).replace(/</g, '&lt;');
+                opt += '<option value="' + e.ID + '">' + strTen + '</option>';
+            });
+            $("#dropThem_NhomAn").html(opt);
+            $("#btnThem_NhomAn").toggleClass("disabled", !dt.length);
         });
     },
     // Thêm / Xóa lần lượt từng nhóm ẩn; cb(số bản ghi lỗi)
