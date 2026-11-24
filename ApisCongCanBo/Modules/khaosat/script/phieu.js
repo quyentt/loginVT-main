@@ -226,7 +226,7 @@ Phieu.prototype = {
         --Discription: Bước nhảy theo đáp án — chọn đáp án thì ẩn các nhóm câu hỏi không cần trả lời
         --  KHAOSAT_TAOPHIEU.LayDS_KS_DapAn_An_Nhom / Xoa_KS_DapAn_An_Nhom / LayDS_KS_NhomKhaoSat_TheoMau / Them_KS_DapAn_An_Nhom
         -------------------------------------------*/
-        // 1 nút "Chỉnh sửa nhóm ẩn" → form: trên là nhóm đang ẩn (xóa từng dòng), dưới là nhóm còn lại (tích + Lưu)
+        // 1 nút "Chỉnh sửa nhóm ẩn" → form 1 danh sách nhóm đang ẩn: chọn nhóm + Thêm, Xóa từng dòng
         $("#tblNoiDung").delegate(".btnSuaNhomAn", "click", function (e) {
             e.preventDefault();
             e.stopPropagation();
@@ -235,22 +235,18 @@ Phieu.prototype = {
             $("#myModal_NhomAn").modal("show");
             me.getList_NhomAn_Form();
         });
-        $("#chkSelectAll_ThemNhomAn").on("click", function () {
-            $("#tblThemNhomAn tbody input[type=checkbox]").prop("checked", this.checked);
-        });
-        $("#btnSave_ThemNhomAn").click(function () {
-            var arrId = [];
-            $("#tblThemNhomAn tbody input[type=checkbox]:checked").each(function () { arrId.push($(this).attr("data-id")); });
-            if (!arrId.length) {
-                edu.system.alert("Vui lòng tích nhóm cần ẩn!");
+        $("#btnThem_NhomAn").click(function () {
+            var strId = $("#dropThem_NhomAn").val();
+            if (!strId) {
+                edu.system.alert("Vui lòng chọn nhóm cần ẩn!");
                 return;
             }
-            me.run_NhomAn("Them", arrId, function (iLoi) {
-                if (iLoi) edu.system.alert("Có " + iLoi + " nhóm lưu không thành công!");
+            me.run_NhomAn("Them", [strId], function (iLoi) {
+                if (iLoi) edu.system.alert("Thêm không thành công!");
                 me.getList_NhomAn_Form();
             });
         });
-        $("#tblXoaNhomAn").delegate(".btnXoaMotNhomAn", "click", function () {
+        $("#tblNhomAn").delegate(".btnXoaMotNhomAn", "click", function () {
             var strId = $(this).attr("data-id");
             var strTen = $(this).attr("data-ten");
             edu.system.confirm("Bỏ ẩn nhóm <b>" + strTen + "</b> khi chọn đáp án này?");
@@ -1263,13 +1259,11 @@ Phieu.prototype = {
             }
         });
     },
-    // Form "Chỉnh sửa nhóm ẩn": trên = nhóm đang ẩn (nút Xóa từng dòng), dưới = nhóm còn lại để tích thêm
+    // Form "Chỉnh sửa nhóm ẩn": 1 danh sách nhóm đang ẩn (Xóa từng dòng) + ô chọn nhóm còn lại để Thêm
     getList_NhomAn_Form: function () {
         var me = this;
-        var strLoading = '<tr><td colspan="4" class="td-center">Đang tải...</td></tr>';
-        $("#chkSelectAll_ThemNhomAn").prop("checked", false);
-        $("#tblXoaNhomAn tbody").html(strLoading);
-        $("#tblThemNhomAn tbody").html(strLoading);
+        $("#tblNhomAn tbody").html('<tr><td colspan="4" class="td-center">Đang tải...</td></tr>');
+        $("#dropThem_NhomAn").html('<option value="">Đang tải...</option>');
         me.load_DapAn_An_Nhom(function (dtDaAn) {
             var html = '';
             dtDaAn.forEach(function (e, i) {
@@ -1281,9 +1275,9 @@ Phieu.prototype = {
                 html += '<td class="td-center"><a href="javascript:void(0)" class="btn btn-sm btn-outline-danger btnXoaMotNhomAn" data-id="' + e.AN_KS_NHOMCAUHOI_ID + '" data-ten="' + strTen + '"><i class="fal fa-trash"></i> Xóa</a></td>';
                 html += '</tr>';
             });
-            if (!html) html = '<tr><td colspan="4" class="td-center ks-nhoman-empty">Đáp án này chưa ẩn nhóm nào</td></tr>';
-            $("#tblXoaNhomAn tbody").html(html);
-            $("#lblXoaNhomAn_Tong").html(dtDaAn.length);
+            if (!html) html = '<tr><td colspan="4" class="td-center ks-nhoman-empty">Đáp án này chưa ẩn nhóm nào — chọn nhóm ở trên rồi bấm Thêm</td></tr>';
+            $("#tblNhomAn tbody").html(html);
+            $("#lblNhomAn_Tong").html(dtDaAn.length);
             me.call_NhomAn({
                 'action': 'SV_KHAOSAT_TAOPHIEU_MH/DSA4BRIeChIeDykuLAopIC4SIDUeFSkkLgwgNAPP',
                 'func': 'KHAOSAT_TAOPHIEU.LayDS_KS_NhomKhaoSat_TheoMau',
@@ -1292,25 +1286,20 @@ Phieu.prototype = {
             }, function (data) {
                 if (!data || !data.Success) {
                     edu.system.alert("LayDS_KS_NhomKhaoSat_TheoMau: " + (data ? data.Message : ""), "w");
-                    $("#tblThemNhomAn tbody").html("");
+                    $("#dropThem_NhomAn").html('<option value="">-- Không tải được danh sách nhóm --</option>');
                     return;
                 }
-                // chỉ liệt kê nhóm CHƯA ẩn (nhóm đã ẩn nằm ở bảng trên)
+                // ô chọn chỉ có nhóm CHƯA ẩn
                 var dt = (data.Data || []).filter(function (e) {
                     return !dtDaAn.some(function (x) { return x.AN_KS_NHOMCAUHOI_ID == e.ID; });
                 });
-                var html = '';
-                dt.forEach(function (e, i) {
-                    html += '<tr>';
-                    html += '<td class="td-center">' + (i + 1) + '</td>';
-                    html += '<td>' + edu.util.returnEmpty(e.TEN) + '</td>';
-                    html += '<td>' + edu.util.returnEmpty(e.MOTA) + '</td>';
-                    html += '<td class="td-center"><input type="checkbox" data-id="' + e.ID + '" /></td>';
-                    html += '</tr>';
+                var opt = '<option value="">' + (dt.length ? '-- Chọn nhóm cần ẩn --' : '-- Không còn nhóm nào để thêm --') + '</option>';
+                dt.forEach(function (e) {
+                    var strTen = String(edu.util.returnEmpty(e.TEN)).replace(/</g, '&lt;');
+                    opt += '<option value="' + e.ID + '">' + strTen + '</option>';
                 });
-                if (!html) html = '<tr><td colspan="4" class="td-center ks-nhoman-empty">Không còn nhóm nào để thêm</td></tr>';
-                $("#tblThemNhomAn tbody").html(html);
-                $("#lblThemNhomAn_Tong").html(dt.length);
+                $("#dropThem_NhomAn").html(opt);
+                $("#btnThem_NhomAn").toggleClass("disabled", !dt.length);
             });
         });
     },
