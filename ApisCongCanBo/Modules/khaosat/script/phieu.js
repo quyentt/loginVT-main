@@ -222,6 +222,44 @@ Phieu.prototype = {
             })
         })
 
+        /*------------------------------------------
+        --Discription: Bước nhảy theo đáp án — chọn đáp án thì ẩn các nhóm câu hỏi không cần trả lời
+        --  KHAOSAT_TAOPHIEU.LayDS_KS_DapAn_An_Nhom / Xoa_KS_DapAn_An_Nhom / LayDS_KS_NhomKhaoSat_TheoMau / Them_KS_DapAn_An_Nhom
+        -------------------------------------------*/
+        // 1 nút "Chỉnh sửa nhóm ẩn" → form 1 danh sách nhóm đang ẩn: chọn nhóm + Thêm, Xóa từng dòng
+        $("#tblNoiDung").delegate(".btnSuaNhomAn", "click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            me.strDapAnNhomAn_Id = $(this).attr("data-id");
+            me.strDapAnNhomAn_NhomId = $(this).attr("data-nhom") || "";
+            $("#lblDapAn_NhomAn").html($(this).attr("data-ten"));
+            $("#myModal_NhomAn").modal("show");
+            me.getList_NhomAn_Form();
+        });
+        $("#btnThem_NhomAn").click(function () {
+            var strId = $("#dropThem_NhomAn").val();
+            if (!strId) {
+                edu.system.alert("Vui lòng chọn nhóm cần ẩn!");
+                return;
+            }
+            me.run_NhomAn("Them", [strId], function (iLoi) {
+                if (iLoi) edu.system.alert("Thêm không thành công!");
+                me.getList_NhomAn_Form();
+            });
+        });
+        $("#tblNhomAn").delegate(".btnXoaMotNhomAn", "click", function () {
+            var strId = $(this).attr("data-id");
+            var strTen = $(this).attr("data-ten");
+            edu.system.confirm("Bỏ ẩn nhóm <b>" + strTen + "</b> khi chọn đáp án này?");
+            $("#btnYes").click(function (e) {
+                $('#myModalAlert').modal('hide');
+                me.run_NhomAn("Xoa", [strId], function (iLoi) {
+                    if (iLoi) edu.system.alert("Xóa không thành công!");
+                    me.getList_NhomAn_Form();
+                });
+            });
+        });
+
         edu.system.getList_MauImport("zonebtnBaoCao_Phieu", function (addKeyValue) {
             var arrChecked_Id = edu.util.getArrCheckedIds("tblPhieu", "checkX");
             addKeyValue("dHieuLuc", edu.util.getValById("dropSearch_HieuLuc"));
@@ -1160,6 +1198,11 @@ Phieu.prototype = {
                         html += '<label class="form-check-label" for="' + e.ID + '">';
                         html += e.TENDAPAN;
                         html += '</label>';
+                        // Bước nhảy: đáp án này ẩn những nhóm nào
+                        var strTen = String(e.TENDAPAN == null ? '' : e.TENDAPAN).replace(/"/g, '&quot;');
+                        html += '<span class="ks-nhoman-links">';
+                        html += '<a href="javascript:void(0)" class="btnSuaNhomAn" data-id="' + e.ID + '" data-nhom="' + edu.util.returnEmpty(objCauHoi.KS_NHOMCAUHOI_ID) + '" data-ten="' + strTen + '"><i class="fal fa-eye-slash"></i> Chỉnh sửa nhóm ẩn</a>';
+                        html += '</span>';
                         html += '</div>';
                     })
                     $("#answer" + objCauHoi.ID).html(html)
@@ -1180,5 +1223,107 @@ Phieu.prototype = {
             fakedb: [
             ]
         }, false, false, false, null);
+    },
+
+    /*------------------------------------------
+    --Discription: [5] Bước nhảy theo đáp án — nhóm câu hỏi bị ẩn khi chọn đáp án
+    --  Controller sinhvienapi: SV_KHAOSAT_TAOPHIEU_MH (package KHAOSAT_TAOPHIEU)
+    -------------------------------------------*/
+    // Gọi 1 API All Post của SV_KHAOSAT_TAOPHIEU_MH, cb(data) khi xong (data = null nếu lỗi mạng)
+    call_NhomAn: function (obj, cb) {
+        edu.system.makeRequest({
+            success: function (data) { cb(data); },
+            error: function (er) { cb({ Success: false, Message: JSON.stringify(er) }); },
+            type: 'POST',
+            contentType: true,
+            action: obj.action,
+            data: obj,
+            fakedb: []
+        }, false, false, false, null);
+    },
+    // Danh sách nhóm đang bị ẩn bởi đáp án me.strDapAnNhomAn_Id
+    load_DapAn_An_Nhom: function (cb) {
+        var me = this;
+        me.call_NhomAn({
+            'action': 'SV_KHAOSAT_TAOPHIEU_MH/DSA4BRIeChIeBSAxAC8eAC8eDykuLAPP',
+            'func': 'KHAOSAT_TAOPHIEU.LayDS_KS_DapAn_An_Nhom',
+            'iM': edu.system.iM,
+            'strKS_CauHoi_DapAn_Id': me.strDapAnNhomAn_Id,
+            'strKS_PhieuKhaoSat_Mau_Id': me.strPhieu_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+        }, function (data) {
+            if (data && data.Success) {
+                cb(data.Data || []);
+            } else {
+                edu.system.alert("LayDS_KS_DapAn_An_Nhom: " + (data ? data.Message : ""), "w");
+                cb([]);
+            }
+        });
+    },
+    // Form "Chỉnh sửa nhóm ẩn": 1 danh sách nhóm đang ẩn (Xóa từng dòng) + ô chọn nhóm còn lại để Thêm
+    getList_NhomAn_Form: function () {
+        var me = this;
+        $("#tblNhomAn tbody").html('<tr><td colspan="4" class="td-center">Đang tải...</td></tr>');
+        $("#dropThem_NhomAn").html('<option value="">Đang tải...</option>');
+        me.load_DapAn_An_Nhom(function (dtDaAn) {
+            var html = '';
+            dtDaAn.forEach(function (e, i) {
+                var strTen = String(edu.util.returnEmpty(e.AN_KS_NHOMCAUHOI_TEN)).replace(/"/g, '&quot;');
+                html += '<tr>';
+                html += '<td class="td-center">' + (i + 1) + '</td>';
+                html += '<td>' + edu.util.returnEmpty(e.AN_KS_NHOMCAUHOI_TEN) + '</td>';
+                html += '<td>' + edu.util.returnEmpty(e.AN_KS_NHOMCAUHOI_MOTA) + '</td>';
+                html += '<td class="td-center"><a href="javascript:void(0)" class="btn btn-sm btn-outline-danger btnXoaMotNhomAn" data-id="' + e.AN_KS_NHOMCAUHOI_ID + '" data-ten="' + strTen + '"><i class="fal fa-trash"></i> Xóa</a></td>';
+                html += '</tr>';
+            });
+            if (!html) html = '<tr><td colspan="4" class="td-center ks-nhoman-empty">Đáp án này chưa ẩn nhóm nào — chọn nhóm ở trên rồi bấm Thêm</td></tr>';
+            $("#tblNhomAn tbody").html(html);
+            $("#lblNhomAn_Tong").html(dtDaAn.length);
+            // ô chọn lấy từ danh sách nhóm câu hỏi của phiếu (me.dtNhom — KS_ThongTin/LayDSKS_NhomKhaoSat):
+            // bỏ nhóm chứa chính câu hỏi của đáp án này và nhóm đã có trong danh sách ẩn
+            var dt = (me.dtNhom || []).filter(function (e) {
+                return e.ID && e.ID != me.strDapAnNhomAn_NhomId
+                    && !dtDaAn.some(function (x) { return x.AN_KS_NHOMCAUHOI_ID == e.ID; });
+            });
+            var opt = '<option value="">' + (dt.length ? '-- Chọn nhóm cần ẩn --' : '-- Không còn nhóm nào để thêm --') + '</option>';
+            dt.forEach(function (e) {
+                var strTen = String(edu.util.returnEmpty(e.TEN)).replace(/</g, '&lt;');
+                opt += '<option value="' + e.ID + '">' + strTen + '</option>';
+            });
+            $("#dropThem_NhomAn").html(opt);
+            $("#btnThem_NhomAn").toggleClass("disabled", !dt.length);
+        });
+    },
+    // Thêm / Xóa lần lượt từng nhóm ẩn; cb(số bản ghi lỗi)
+    run_NhomAn: function (strLoai, arrId, cb) {
+        var me = this;
+        var iLoi = 0;
+        var arrLoi = [];
+        var i = 0;
+        var next = function () {
+            if (i >= arrId.length) {
+                if (arrLoi.length) console.warn("[NhomAn " + strLoai + "]", arrLoi);
+                cb(iLoi);
+                return;
+            }
+            var obj = {
+                'action': strLoai == "Them" ? 'SV_KHAOSAT_TAOPHIEU_MH/FSkkLB4KEh4FIDEALx4ALx4PKS4s' : 'SV_KHAOSAT_TAOPHIEU_MH/GS4gHgoSHgUgMQAvHgAvHg8pLiwP',
+                'func': strLoai == "Them" ? 'KHAOSAT_TAOPHIEU.Them_KS_DapAn_An_Nhom' : 'KHAOSAT_TAOPHIEU.Xoa_KS_DapAn_An_Nhom',
+                'iM': edu.system.iM,
+                'strKS_CauHoi_DapAn_Id': me.strDapAnNhomAn_Id,
+                'strKS_PhieuKhaoSat_Mau_Id': me.strPhieu_Id,
+                'strNguoiThucHien_Id': edu.system.userId,
+                'strAn_KS_NhomCauHoi_Id': arrId[i],
+            };
+            i++;
+            me.call_NhomAn(obj, function (data) {
+                if (!data || !data.Success) {
+                    iLoi++;
+                    arrLoi.push(data ? data.Message : "");
+                }
+                next();
+            });
+        };
+        next();
     }
 }

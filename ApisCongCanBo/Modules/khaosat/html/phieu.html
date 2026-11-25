@@ -97,7 +97,7 @@
                                     class="fa-regular fa-file-circle-question fw-bold"></i></span>Câu hỏi</a></p>
                 </div>
                 <div class="nav-content-right mt">
-                    <a class="d-block text-right fs-16 mt-5 color-fff btnClosePhieu"><i class="fal fa-times"></i></a>
+                    <div class="btn ks-header-close btnClosePhieu"><i class="fal fa-times me-2"></i>Đóng</div>
                 </div>
             </div>
 
@@ -257,7 +257,7 @@
                                 <i class="fa-solid fa-pen"></i>Chỉnh sửa - </span>Phiếu</a></p>
                 </div>
                 <div class="nav-content-right mt">
-                    <a class="d-block text-right fs-16 color-fff btnClose mt-5"><i class="fal fa-times"></i></a>
+                    <div class="btn ks-header-close btnClose"><i class="fal fa-times me-2"></i>Đóng</div>
                 </div>
             </div>
             <div class="form-top rounded-0 border-top" style="background: unset">
@@ -411,7 +411,88 @@
 </div>
 
 
-<script src="modules/khaosat/script/Phieu.js?v=1.0.0.1"></script>
+<!-- ═══ Bước nhảy theo đáp án: Chỉnh sửa nhóm ẩn ═══ -->
+<div class="modal fade finance-modal ks-nhoman-modal" id="myModal_NhomAn" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="finance-user-info in-modal">
+                    <p><span class="ks-nhoman-icon"><i class="fa-solid fa-eye-slash"></i></span> Chỉnh sửa nhóm ẩn</p>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="ks-nhoman-dapan">Khi sinh viên chọn đáp án: <b id="lblDapAn_NhomAn"></b></div>
+
+                <div class="ks-nhoman-sec">
+                    <div class="ks-nhoman-them">
+                        <select class="form-select" id="dropThem_NhomAn"></select>
+                        <div class="btn btn-primary" id="btnThem_NhomAn"><i class="fal fa-plus me-1"></i>Thêm</div>
+                    </div>
+                    <div class="ks-nhoman-sec-title"><i class="fal fa-eye-slash"></i> Danh sách nhóm bị ẩn <span class="badge bg-light-blue" id="lblNhomAn_Tong">0</span></div>
+                    <div class="ks-nhoman-table">
+                        <table class="table table-bordered table-hover" id="tblNhomAn">
+                            <thead>
+                                <tr>
+                                    <th class="td-center" style="width: 50px">STT</th>
+                                    <th>Tên nhóm</th>
+                                    <th>Mô tả</th>
+                                    <th class="td-center" style="width: 90px">Xóa</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="btn btn-outline-secondary" data-bs-dismiss="modal"><i class="fal fa-times me-2"></i>Đóng</div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    /* ═══ Bước nhảy theo đáp án — nút cạnh đáp án + form Chỉnh sửa nhóm ẩn ═══ */
+    .aps-phieu #tblNoiDung .form-check { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 0; }
+    .aps-phieu #tblNoiDung .ks-nhoman-links { display: inline-flex; margin-left: 14px; }
+    .aps-phieu #tblNoiDung .ks-nhoman-links a {
+        font-size: 12px; font-weight: 600; line-height: 1; padding: 4px 8px; border-radius: 6px;
+        text-decoration: none; white-space: nowrap; border: 1px solid #cfe0ff; color: #0d6efd; background: #eef4ff;
+    }
+    .aps-phieu #tblNoiDung .ks-nhoman-links a i { margin-right: 3px; }
+    .aps-phieu #tblNoiDung .ks-nhoman-links a:hover { background: #0d6efd; color: #fff; }
+    .ks-nhoman-modal .ks-nhoman-dapan { font-size: 15px; color: #0f172a; margin-bottom: 12px; }
+    .ks-nhoman-modal .ks-nhoman-dapan b { color: #14375f; }
+    .ks-nhoman-modal .ks-nhoman-sec + .ks-nhoman-sec { margin-top: 16px; }
+    .ks-nhoman-modal .ks-nhoman-sec-title { font-size: 14px; font-weight: 700; color: #14375f; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+    .ks-nhoman-modal .ks-nhoman-them { display: flex; gap: 8px; margin-bottom: 14px; }
+    .ks-nhoman-modal .ks-nhoman-them .form-select { flex: 1; min-width: 0; color: #0f172a; }
+    .ks-nhoman-modal .ks-nhoman-them .btn { white-space: nowrap; }
+    .ks-nhoman-modal .ks-nhoman-hint { font-size: 12px; font-weight: 400; color: #64748b; margin-left: auto; }
+    .ks-nhoman-modal .ks-nhoman-table { max-height: 45vh; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 8px; }
+    .ks-nhoman-modal .ks-nhoman-table table { margin: 0; }
+    .ks-nhoman-modal .ks-nhoman-table thead th { position: sticky; top: 0; background: #f8fafc; z-index: 2; color: #0f172a; font-weight: 700; }
+    .ks-nhoman-modal .ks-nhoman-table td { color: #0f172a; vertical-align: middle; }
+    .ks-nhoman-modal .ks-nhoman-table input[type=checkbox] { width: 16px; height: 16px; cursor: pointer; }
+    .ks-nhoman-modal .btnXoaMotNhomAn { font-size: 12px; font-weight: 600; padding: 3px 10px; border: 1px solid #fecdd3 !important; border-radius: 6px; background: #fff1f2; color: #dc3545 !important; }
+    .ks-nhoman-modal .btnXoaMotNhomAn:hover { background: #dc3545; color: #fff !important; }
+    .ks-nhoman-modal .ks-nhoman-empty { color: #64748b; font-style: italic; padding: 14px; }
+    .ks-nhoman-modal .modal-footer { justify-content: flex-end; gap: 8px; }
+    .ks-nhoman-modal .modal-header .btn-close { filter: invert(1) grayscale(1) brightness(2); opacity: .9; }
+    /* Nút Đóng ở header "Chỉnh sửa - Phiếu" / "Câu hỏi": icon fal fa-times cũ không có glyph (FA5 weight 300) nên không thấy → nút có chữ như nút cuối form */
+    html body .aps-phieu .box-header { position: relative; }
+    html body .aps-phieu .box-header .nav-content-right { display: block !important; } /* theme đặt display:none → nút đóng header không bao giờ hiện */
+    html body .aps-phieu .box-header .ks-header-close {
+        position: absolute; right: 20px; top: 50%; transform: translateY(-50%); z-index: 3;
+        color: #fff !important; background: transparent !important; border: 1px solid rgba(255,255,255,.85) !important;
+        border-radius: 8px; padding: 5px 14px; font-size: 14px; font-weight: 600; line-height: 1.4; min-width: unset;
+        display: inline-flex; align-items: center; cursor: pointer;
+    }
+    html body .aps-phieu .box-header .ks-header-close:hover { background: #fff !important; color: #0d6efd !important; }
+    html body .aps-phieu .box-header .ks-header-close i { color: inherit !important; }
+</style>
+
+<script src="modules/khaosat/script/Phieu.js?v=1.0.0.6"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['Phieu'] = new Phieu();

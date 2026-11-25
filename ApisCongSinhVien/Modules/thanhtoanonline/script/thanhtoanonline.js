@@ -388,7 +388,7 @@ thanhtoanonline.prototype = {
                 name: "THONGTIN1",
                 code: "THONGTIN2",
                 avatar: "",
-                selectOne: true,
+                // Bỏ selectOne: khi chỉ có 1 ngân hàng, loadToCombo_data tự trigger("change") rồi dòng dưới trigger thêm lần nữa → LayThongTinTaiChinh bị gọi 2 lần
             },
             renderPlace: ["drpNganHang"],
             type: "",

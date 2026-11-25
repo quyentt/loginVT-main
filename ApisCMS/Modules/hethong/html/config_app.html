@@ -1,208 +1,377 @@
-﻿<!-- Main content -->
+﻿<style>
+    /* ═══ Kanban Board - Cấu hình ứng dụng (thiết kế lại 2026-11)
+       Mọi selector scope trong .aps-config_app .aps-kanban; thêm chuỗi html body #main-content-wrapper
+       cho tiêu đề để thắng rule toàn cục có !important trong Custom_V1/styles.css. ═══ */
+    .aps-config_app .aps-kanban {
+        --kb-text: #0f172a;
+        --kb-muted: #64748b;
+        --kb-line: #e2e8f0;
+        --kb-lane: #f8fafc;
+        --kb-blue: #0d6efd;
+        --kb-backlog: #64748b;
+        --kb-todo: #0d6efd;
+        --kb-progress: #f59e0b;
+        --kb-done: #16a34a;
+        background: #fff;
+        border: 1px solid var(--kb-line);
+        border-radius: 16px;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, .04), 0 8px 24px rgba(15, 23, 42, .06);
+        overflow: hidden;
+        margin: 0 0 20px;
+        color: var(--kb-text);
+    }
+
+    /* Header */
+    .aps-config_app .aps-kanban .kb-head {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 18px 22px;
+        background: linear-gradient(120deg, #14375f 0%, #1d4ed8 60%, #0d6efd 100%);
+        color: #fff;
+    }
+    .aps-config_app .aps-kanban .kb-head-icon {
+        width: 44px;
+        height: 44px;
+        flex: 0 0 44px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, .16);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+    }
+    html body #main-content-wrapper .aps-config_app .aps-kanban .kb-head h3,
+    .aps-config_app .aps-kanban .kb-head h3 {
+        margin: 0;
+        font-size: 19px !important;
+        font-weight: 700 !important;
+        color: #fff !important;
+        line-height: 1.3;
+    }
+    .aps-config_app .aps-kanban .kb-head p {
+        margin: 2px 0 0;
+        font-size: 13px;
+        color: rgba(255, 255, 255, .8);
+    }
+    .aps-config_app .aps-kanban .kb-head-stats {
+        margin-left: auto;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+    .aps-config_app .aps-kanban .kb-stat {
+        padding: 5px 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, .14);
+        font-size: 12.5px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+    .aps-config_app .aps-kanban .kb-close {
+        width: 36px;
+        height: 36px;
+        flex: 0 0 36px;
+        border-radius: 10px;
+        border: 0;
+        background: rgba(255, 255, 255, .12);
+        color: #fff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background .15s;
+    }
+    .aps-config_app .aps-kanban .kb-close:hover,
+    .aps-config_app .aps-kanban .kb-close:focus-visible {
+        background: rgba(255, 255, 255, .26);
+        outline: none;
+    }
+
+    /* Board: 4 cột ngang, co về 2 / 1 cột trên màn nhỏ */
+    .aps-config_app .aps-kanban .kb-board {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+        padding: 20px 22px 22px;
+        background: #f5f6f8;
+        align-items: start;
+    }
+    @media (max-width: 1199px) {
+        .aps-config_app .aps-kanban .kb-board { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 767px) {
+        .aps-config_app .aps-kanban .kb-board { grid-template-columns: 1fr; padding: 14px; }
+        .aps-config_app .aps-kanban .kb-head-stats { display: none; }
+    }
+
+    /* Cột (lane) */
+    .aps-config_app .aps-kanban .kb-lane {
+        --lane: var(--kb-backlog);
+        --lane-soft: rgba(100, 116, 139, .18);
+        background: var(--kb-lane);
+        border: 1px solid var(--kb-line);
+        border-top: 3px solid var(--lane);
+        border-radius: 12px;
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        min-width: 0;
+    }
+    .aps-config_app .aps-kanban .kb-lane.is-todo { --lane: var(--kb-todo); --lane-soft: rgba(13, 110, 253, .18); }
+    .aps-config_app .aps-kanban .kb-lane.is-progress { --lane: var(--kb-progress); --lane-soft: rgba(245, 158, 11, .2); }
+    .aps-config_app .aps-kanban .kb-lane.is-done { --lane: var(--kb-done); --lane-soft: rgba(22, 163, 74, .18); }
+
+    .aps-config_app .aps-kanban .kb-lane-head {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 2px 2px 4px;
+    }
+    .aps-config_app .aps-kanban .kb-dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: var(--lane);
+        box-shadow: 0 0 0 3px var(--lane-soft);
+    }
+    html body #main-content-wrapper .aps-config_app .aps-kanban .kb-lane-head h4,
+    .aps-config_app .aps-kanban .kb-lane-head h4 {
+        margin: 0;
+        font-size: 13.5px !important;
+        font-weight: 700 !important;
+        letter-spacing: .03em;
+        text-transform: uppercase;
+        color: var(--kb-text) !important;
+    }
+    .aps-config_app .aps-kanban .kb-count {
+        margin-left: auto;
+        min-width: 24px;
+        padding: 1px 8px;
+        border-radius: 999px;
+        background: #fff;
+        border: 1px solid var(--kb-line);
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--kb-muted);
+        text-align: center;
+    }
+
+    /* Thẻ công việc */
+    .aps-config_app .aps-kanban .kb-card {
+        background: #fff;
+        border: 1px solid var(--kb-line);
+        border-radius: 10px;
+        padding: 12px 12px 12px 15px;
+        position: relative;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, .05);
+        transition: transform .15s ease, box-shadow .15s ease, border-color .15s;
+    }
+    .aps-config_app .aps-kanban .kb-card::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 10px;
+        bottom: 10px;
+        width: 3px;
+        border-radius: 0 3px 3px 0;
+        background: var(--lane);
+    }
+    .aps-config_app .aps-kanban .kb-card:hover {
+        transform: translateY(-2px);
+        border-color: #cbd5e1;
+        box-shadow: 0 6px 16px rgba(15, 23, 42, .08);
+    }
+    .aps-config_app .aps-kanban .kb-card-top {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    html body #main-content-wrapper .aps-config_app .aps-kanban .kb-card h5,
+    .aps-config_app .aps-kanban .kb-card h5 {
+        flex: 1 1 auto;
+        margin: 0;
+        font-size: 14.5px !important;
+        font-weight: 600 !important;
+        line-height: 1.4;
+        color: var(--kb-text) !important;
+    }
+    .aps-config_app .aps-kanban .kb-id {
+        flex: 0 0 auto;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--kb-muted) !important;
+        background: #f1f5f9;
+        border-radius: 6px;
+        padding: 2px 7px;
+        text-decoration: none !important;
+    }
+    .aps-config_app .aps-kanban .kb-edit {
+        flex: 0 0 28px;
+        width: 28px;
+        height: 28px;
+        margin: -4px -4px 0 0;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--kb-muted) !important;
+        text-decoration: none !important;
+        transition: background .15s, color .15s;
+    }
+    .aps-config_app .aps-kanban .kb-edit:hover,
+    .aps-config_app .aps-kanban .kb-edit:focus-visible {
+        background: #eef4ff;
+        color: var(--kb-blue) !important;
+        outline: none;
+    }
+    .aps-config_app .aps-kanban .kb-desc {
+        margin: 8px 0 0;
+        font-size: 13px;
+        line-height: 1.55;
+        color: #475569;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    .aps-config_app .aps-kanban .kb-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 10px;
+    }
+    .aps-config_app .aps-kanban .kb-tag {
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 1;
+        padding: 5px 9px;
+        border-radius: 999px;
+        border: 1px solid transparent;
+    }
+    .aps-config_app .aps-kanban .kb-tag.t-red { background: #fdeeee; color: #b91c1c; border-color: #f6c6c6; }
+    .aps-config_app .aps-kanban .kb-tag.t-blue { background: #eef4ff; color: #1d4ed8; border-color: #cddcf6; }
+    .aps-config_app .aps-kanban .kb-tag.t-green { background: #dcf5e4; color: #15803d; border-color: #b5e5c4; }
+    .aps-config_app .aps-kanban .kb-tag.t-amber { background: #fff8e6; color: #b45309; border-color: #f7dd9c; }
+    .aps-config_app .aps-kanban .kb-tag.t-purple { background: #f3e8ff; color: #7e22ce; border-color: #e3ccfb; }
+    .aps-config_app .aps-kanban .kb-done-mark {
+        color: var(--kb-done);
+        margin-right: 6px;
+    }
+    html body #main-content-wrapper .aps-config_app .aps-kanban .kb-card.is-done h5,
+    .aps-config_app .aps-kanban .kb-card.is-done h5 {
+        color: var(--kb-muted) !important;
+    }
+    /* styles.css ép icon FA về weight 300 → trả lại 900 cho fa-solid */
+    .aps-config_app .aps-kanban .fa-solid { font-weight: 900 !important; }
+
+    @media (prefers-reduced-motion: reduce) {
+        .aps-config_app .aps-kanban .kb-card { transition: none; }
+        .aps-config_app .aps-kanban .kb-card:hover { transform: none; }
+    }
+</style>
+<!-- Main content -->
 <section class="content aps-cms">
     <div class="row row-align aps-config_app">
         <div class="col-lg-12">
-            <div id="zone_input_mtp" class="box-body zone-bus-mtp">
-                <div class="form-container pb15">
-                    <div class="form-container-header">
-                        <div class="pull-left">
-                            <h3 class="fc-title color-white" style="color: #fff !important;"><i
-                                    class="fa-light fa-laptop-binary"></i> Kanban Board - Cấu hình ứng dụng</h3>
-                        </div>
-                        <div class="pull-right pull-right-absolute">
-                            <a class="btn btn-default btnClose btn-none-bg mt-15 mr-10" href="#"><i
-                                    class="fa fa-times"></i></a>
-                        </div>
-                        <div class="clear"></div>
+            <div id="zone_input_mtp" class="aps-kanban">
+                <div class="kb-head">
+                    <span class="kb-head-icon"><i class="fa-light fa-laptop-binary"></i></span>
+                    <div>
+                        <h3>Kanban Board - Cấu hình ứng dụng</h3>
+                        <p>Theo dõi tiến độ các đầu việc cấu hình hệ thống</p>
                     </div>
-                    <div class="form-container-body pb15">
-                        <div class="row">
-                            <div class="col col-md-7 col-lg-7 pt0 pr20">
-                                <div class="container-fluid h-100">
-                                    <div class="card card-row card-secondary">
-                                        <div class="card-header width">
-                                            <h3 class="card-title fz24 bold color-blue">
-                                                Backlog
-                                            </h3>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="card card-info card-outline mt-10">
-                                                <div class="card-header">
-                                                    <h5 class="card-title fz16 bold">Create Labels</h5>
-                                                    <div class="card-tools">
-                                                        <a href="#" class="btn btn-tool btn-link">#3</a>
-                                                        <a href="#" class="btn btn-tool">
-                                                            <i class="fas fa-pen"></i>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                                <div class="card-body">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input class="custom-control-input" type="checkbox"
-                                                            id="customCheckbox1" disabled="">
-                                                        <label for="customCheckbox1"
-                                                            class="custom-control-label">Bug</label>
-                                                    </div>
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input class="custom-control-input" type="checkbox"
-                                                            id="customCheckbox2" disabled="">
-                                                        <label for="customCheckbox2"
-                                                            class="custom-control-label">Feature</label>
-                                                    </div>
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input class="custom-control-input" type="checkbox"
-                                                            id="customCheckbox3" disabled="">
-                                                        <label for="customCheckbox3"
-                                                            class="custom-control-label">Enhancement</label>
-                                                    </div>
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input class="custom-control-input" type="checkbox"
-                                                            id="customCheckbox4" disabled="">
-                                                        <label for="customCheckbox4"
-                                                            class="custom-control-label">Documentation</label>
-                                                    </div>
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input class="custom-control-input" type="checkbox"
-                                                            id="customCheckbox5" disabled="">
-                                                        <label for="customCheckbox5"
-                                                            class="custom-control-label">Examples</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="card card-primary card-outline mt-20">
-                                                <div class="card-header">
-                                                    <h5 class="card-title fz16 bold">Create Issue template</h5>
-                                                    <div class="card-tools">
-                                                        <a href="#" class="btn btn-tool btn-link">#4</a>
-                                                        <a href="#" class="btn btn-tool">
-                                                            <i class="fas fa-pen"></i>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                                <div class="card-body">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input class="custom-control-input" type="checkbox"
-                                                            id="customCheckbox1_1" disabled="">
-                                                        <label for="customCheckbox1_1" class="custom-control-label">Bug
-                                                            Report</label>
-                                                    </div>
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input class="custom-control-input" type="checkbox"
-                                                            id="customCheckbox1_2" disabled="">
-                                                        <label for="customCheckbox1_2"
-                                                            class="custom-control-label">Feature
-                                                            Request</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="card card-primary card-outline mt-20">
-                                                <div class="card-header">
-                                                    <h5 class="card-title fz16 bold">Create PR template</h5>
-                                                    <div class="card-tools">
-                                                        <a href="#" class="btn btn-tool btn-link">#6</a>
-                                                        <a href="#" class="btn btn-tool">
-                                                            <i class="fas fa-pen"></i>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="card card-light card-outline mt-20">
-                                                <div class="card-header">
-                                                    <h5 class="card-title fz16 bold">Create Actions</h5>
-                                                    <div class="card-tools">
-                                                        <a href="#" class="btn btn-tool btn-link">#7</a>
-                                                        <a href="#" class="btn btn-tool">
-                                                            <i class="fas fa-pen"></i>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                                <div class="card-body">
-                                                    <p>
-                                                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-                                                        Aenean commodo ligula eget dolor. Aenean massa.
-                                                        Cum sociis natoque penatibus et magnis dis parturient montes,
-                                                        nascetur ridiculus mus.
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col col-md-5 col-lg-5 pd20">
-                                <div class="card card-row card-primary">
-                                    <div class="card-header">
-                                        <h3 class="card-title fz24 bold color-green"> To Do</h3>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="card card-primary card-outline mt-10">
-                                            <div class="card-header">
-                                                <h5 class="card-title fz16 bold">Create first milestone</h5>
-                                                <div class="card-tools">
-                                                    <a href="#" class="btn btn-tool btn-link">#5</a>
-                                                    <a href="#" class="btn btn-tool">
-                                                        <i class="fas fa-pen"></i>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card card-row card-default mt-20">
-                                    <div class="card-header bg-info">
-                                        <h3 class="card-title fz24 bold"> In Progress </h3>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="card card-light card-outline mt-10">
-                                            <div class="card-header">
-                                                <h5 class="card-title fz16 bold">Update Readme</h5>
-                                                <div class="card-tools">
-                                                    <a href="#" class="btn btn-tool btn-link">#2</a>
-                                                    <a href="#" class="btn btn-tool">
-                                                        <i class="fas fa-pen"></i>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                            <div class="card-body">
-                                                <p>
-                                                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-                                                    Aenean commodo ligula eget dolor. Aenean massa.
-                                                    Cum sociis natoque penatibus et magnis dis parturient montes,
-                                                    nascetur ridiculus mus.
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card card-row card-success mt-20">
-                                    <div class="card-header">
-                                        <h3 class="card-title fz24 bold color-danger">Done </h3>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="card card-primary card-outline mt-10">
-                                            <div class="card-header">
-                                                <h5 class="card-title fz16 bold">Create repo</h5>
-                                                <div class="card-tools">
-                                                    <a href="#" class="btn btn-tool btn-link">#1</a>
-                                                    <a href="#" class="btn btn-tool">
-                                                        <i class="fas fa-pen"></i>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="aps-thamso-img text-center w-100 d-none">
-                                    <img src="Upload/images/mahoa.svg">
-                                    <!-- <img src="Upload/images/sms-01.png"> -->
-                                </div>
-                            </div>
-                        </div>
-
+                    <div class="kb-head-stats">
+                        <span class="kb-stat">7 công việc</span>
+                        <span class="kb-stat">1 hoàn thành</span>
                     </div>
+                    <button type="button" class="kb-close" id="btnCloseKanban_CFM" title="Ẩn Kanban" aria-label="Ẩn Kanban">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+                <div class="kb-board">
+                    <!-- Backlog -->
+                    <section class="kb-lane is-backlog" aria-label="Backlog">
+                        <div class="kb-lane-head"><span class="kb-dot"></span><h4>Backlog</h4><span class="kb-count">4</span></div>
+                        <article class="kb-card">
+                            <div class="kb-card-top">
+                                <h5>Create Labels</h5>
+                                <a href="#" class="kb-id">#3</a>
+                                <a href="#" class="kb-edit" title="Sửa" aria-label="Sửa"><i class="fa-light fa-pen"></i></a>
+                            </div>
+                            <div class="kb-tags">
+                                <span class="kb-tag t-red">Bug</span>
+                                <span class="kb-tag t-blue">Feature</span>
+                                <span class="kb-tag t-green">Enhancement</span>
+                                <span class="kb-tag t-amber">Documentation</span>
+                                <span class="kb-tag t-purple">Examples</span>
+                            </div>
+                        </article>
+                        <article class="kb-card">
+                            <div class="kb-card-top">
+                                <h5>Create Issue template</h5>
+                                <a href="#" class="kb-id">#4</a>
+                                <a href="#" class="kb-edit" title="Sửa" aria-label="Sửa"><i class="fa-light fa-pen"></i></a>
+                            </div>
+                            <div class="kb-tags">
+                                <span class="kb-tag t-red">Bug Report</span>
+                                <span class="kb-tag t-blue">Feature Request</span>
+                            </div>
+                        </article>
+                        <article class="kb-card">
+                            <div class="kb-card-top">
+                                <h5>Create PR template</h5>
+                                <a href="#" class="kb-id">#6</a>
+                                <a href="#" class="kb-edit" title="Sửa" aria-label="Sửa"><i class="fa-light fa-pen"></i></a>
+                            </div>
+                        </article>
+                        <article class="kb-card">
+                            <div class="kb-card-top">
+                                <h5>Create Actions</h5>
+                                <a href="#" class="kb-id">#7</a>
+                                <a href="#" class="kb-edit" title="Sửa" aria-label="Sửa"><i class="fa-light fa-pen"></i></a>
+                            </div>
+                            <p class="kb-desc">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+                        </article>
+                    </section>
 
+                    <!-- To Do -->
+                    <section class="kb-lane is-todo" aria-label="To Do">
+                        <div class="kb-lane-head"><span class="kb-dot"></span><h4>To Do</h4><span class="kb-count">1</span></div>
+                        <article class="kb-card">
+                            <div class="kb-card-top">
+                                <h5>Create first milestone</h5>
+                                <a href="#" class="kb-id">#5</a>
+                                <a href="#" class="kb-edit" title="Sửa" aria-label="Sửa"><i class="fa-light fa-pen"></i></a>
+                            </div>
+                        </article>
+                    </section>
+
+                    <!-- In Progress -->
+                    <section class="kb-lane is-progress" aria-label="In Progress">
+                        <div class="kb-lane-head"><span class="kb-dot"></span><h4>In Progress</h4><span class="kb-count">1</span></div>
+                        <article class="kb-card">
+                            <div class="kb-card-top">
+                                <h5>Update Readme</h5>
+                                <a href="#" class="kb-id">#2</a>
+                                <a href="#" class="kb-edit" title="Sửa" aria-label="Sửa"><i class="fa-light fa-pen"></i></a>
+                            </div>
+                            <p class="kb-desc">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+                        </article>
+                    </section>
+
+                    <!-- Done -->
+                    <section class="kb-lane is-done" aria-label="Done">
+                        <div class="kb-lane-head"><span class="kb-dot"></span><h4>Done</h4><span class="kb-count">1</span></div>
+                        <article class="kb-card is-done">
+                            <div class="kb-card-top">
+                                <h5><i class="fa-solid fa-circle-check kb-done-mark"></i>Create repo</h5>
+                                <a href="#" class="kb-id">#1</a>
+                                <a href="#" class="kb-edit" title="Sửa" aria-label="Sửa"><i class="fa-light fa-pen"></i></a>
+                            </div>
+                        </article>
+                    </section>
                 </div>
             </div>
         </div>
@@ -487,6 +656,12 @@
 
     </div>
 </section>
+<!-- Nút ẩn Kanban: script riêng, không phụ thuộc ConfigModule (nếu config_app.js lỗi/không nạp vẫn chạy) -->
+<script type="text/javascript">
+    $(document).off('click.kanbanCfm').on('click.kanbanCfm', '#btnCloseKanban_CFM', function () {
+        $('#zone_input_mtp').slideUp(200);
+    });
+</script>
 <!-- page script -->
 <script src="modules/hethong/script/config_app.js?v=1.0.0.2"></script>
 <script type="text/javascript">
