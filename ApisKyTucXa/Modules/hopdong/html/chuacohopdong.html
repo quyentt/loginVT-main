@@ -12,118 +12,381 @@
         width: 50px !important;
     }
 
-    /* ---- Trang "Chưa có hợp đồng": làm đẹp bố cục ---- */
-    .aps-kyTucXa .hd-col-left > .box,
-    .aps-kyTucXa .hd-col-right > .box {
-        border: 1px solid #e5e7eb;
-        border-radius: 12px;
-        box-shadow: 0 1px 2px rgba(15, 23, 42, .04);
-        overflow: hidden;
+    /* =========================================================
+       Trang "Chưa có hợp đồng" — giao diện thẻ hiện đại
+       Tiền tố #main-content-wrapper .hd-page để thắng các quy tắc !important của indexi.aspx
+       ========================================================= */
+    #main-content-wrapper .hd-page {
+        --hd-blue: var(--color-blue, #2563eb);
+        --hd-blue-soft: #eef4ff;
+        --hd-line: #e6eaf2;
+        --hd-text: #0f172a;
+        --hd-muted: #64748b;
     }
-    .aps-kyTucXa .hd-col-left > .box {
-        margin-bottom: 16px;
+    #main-content-wrapper .hd-page > .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 -10px;
     }
-    .aps-kyTucXa .hd-search-title {
+    #main-content-wrapper .hd-page > .row > [class*="col-"] {
+        float: none;
+        padding: 0 10px !important;
+    }
+    @media (max-width: 1199px) {
+        #main-content-wrapper .hd-page > .row > [class*="col-"] {
+            width: 100%;
+        }
+    }
+
+    /* Thanh tiêu đề trang */
+    #main-content-wrapper .hd-page .hd-hero {
         display: flex;
         align-items: center;
-        gap: 8px;
-        margin: 0 0 12px;
+        gap: 16px;
+        margin: 0 0 18px;
+        padding: 18px 22px;
+        background: linear-gradient(120deg, #1e3a8a 0%, #2563eb 55%, #3b82f6 100%);
+        border-radius: 16px;
+        box-shadow: 0 10px 24px rgba(37, 99, 235, .18);
+        color: #fff;
+    }
+    #main-content-wrapper .hd-page .hd-hero-ico {
+        flex: none;
+        width: 52px;
+        height: 52px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        background: rgba(255, 255, 255, .16);
+        border: 1px solid rgba(255, 255, 255, .25);
+        border-radius: 14px;
+    }
+    #main-content-wrapper .hd-page .hd-hero h2 {
+        margin: 0 0 2px;
+        font-size: 20px;
+        font-weight: 700;
+        color: #fff !important;
+    }
+    #main-content-wrapper .hd-page .hd-hero p {
+        margin: 0;
+        font-size: 13px;
+        color: rgba(255, 255, 255, .85);
+    }
+
+    /* Thẻ trắng */
+    #main-content-wrapper .hd-page .hd-col-left > .box,
+    #main-content-wrapper .hd-page .hd-col-right > .box {
+        margin: 0 0 18px !important;
+        background: #fff !important;
+        border: 1px solid var(--hd-line) !important;
+        border-radius: 16px !important;
+        box-shadow: 0 4px 16px rgba(15, 23, 42, .05) !important;
+        overflow: hidden;
+    }
+    #main-content-wrapper .hd-page .hd-col-left > .box > .box-body {
+        padding: 18px 18px 14px !important;
+    }
+
+    /* Tiêu đề thẻ: ô biểu tượng + chữ */
+    #main-content-wrapper .hd-page .hd-card-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0 0 14px;
+        padding: 0 0 12px;
         font-size: 15px;
         font-weight: 700;
-        color: var(--color-blue, #0d6efd);
+        color: var(--hd-text);
+        border-bottom: 1px solid var(--hd-line);
     }
-    .aps-kyTucXa .hd-col-left .bs-item {
-        margin-bottom: 10px;
+    #main-content-wrapper .hd-page .hd-card-title i,
+    #main-content-wrapper .hd-page .hd-list-head .box-title i {
+        width: 32px;
+        height: 32px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        color: var(--hd-blue) !important;
+        background: var(--hd-blue-soft);
+        border-radius: 10px;
     }
-    .aps-kyTucXa .hd-col-left .bs-item:last-child {
-        margin-bottom: 4px;
+
+    /* Ô nhập, select2 */
+    #main-content-wrapper .hd-page .hd-col-left .bs-item {
+        margin: 0 0 10px !important;
     }
-    .aps-kyTucXa .hd-col-left .select2-container,
-    .aps-kyTucXa .hd-col-left .form-control {
+    #main-content-wrapper .hd-page .hd-col-left .bs-item:last-child {
+        margin-bottom: 0 !important;
+    }
+    #main-content-wrapper .hd-page .hd-col-left .select2-container,
+    #main-content-wrapper .hd-page .hd-col-left .form-control {
         width: 100% !important;
     }
-    .aps-kyTucXa .hd-col-left .input-group-addon {
+    #main-content-wrapper .hd-page .hd-col-left .form-control,
+    #main-content-wrapper .hd-page .hd-col-left .select2-container .select2-selection--single {
+        height: 42px !important;
+        border: 1px solid #d7dde8 !important;
+        border-radius: 10px !important;
+        background: #f8fafc !important;
+        box-shadow: none !important;
+        transition: border-color .15s ease, background-color .15s ease, box-shadow .15s ease;
+    }
+    #main-content-wrapper .hd-page .hd-col-left .form-control:focus,
+    #main-content-wrapper .hd-page .hd-col-left .select2-container--focus .select2-selection--single,
+    #main-content-wrapper .hd-page .hd-col-left .select2-container--open .select2-selection--single {
+        background: #fff !important;
+        border-color: var(--hd-blue) !important;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, .12) !important;
+    }
+    #main-content-wrapper .hd-page .hd-col-left .select2-selection--single .select2-selection__rendered {
+        line-height: 40px !important;
+        padding-left: 12px !important;
+    }
+    #main-content-wrapper .hd-page .hd-col-left .select2-selection--single .select2-selection__arrow {
+        height: 40px !important;
+    }
+    #main-content-wrapper .hd-page .hd-col-left .input-group {
+        display: flex;
+        width: 100%;
+    }
+    #main-content-wrapper .hd-page .hd-col-left .input-group > .form-control {
+        flex: 1 1 auto;
+        border-radius: 10px 0 0 10px !important;
+    }
+    #main-content-wrapper .hd-page .hd-col-left .input-group-addon {
+        width: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         cursor: pointer;
-        background: var(--color-blue, #0d6efd);
-        border-color: var(--color-blue, #0d6efd);
         color: #fff;
+        background: var(--hd-blue) !important;
+        border: 1px solid var(--hd-blue) !important;
+        border-radius: 0 10px 10px 0 !important;
     }
-    .aps-kyTucXa .hd-col-left .input-group-addon i {
-        color: #fff;
+    #main-content-wrapper .hd-page .hd-col-left .input-group-addon:hover {
+        filter: brightness(1.08);
     }
-    .aps-kyTucXa .hd-list-body {
-        max-height: calc(100vh - 420px);
-        min-height: 120px;
-        overflow-y: auto;
-        padding: 0 !important;
+    #main-content-wrapper .hd-page .hd-col-left .input-group-addon i {
+        color: #fff !important;
     }
-    .aps-kyTucXa #tblDangKy_DoiTuong tbody tr {
-        cursor: pointer;
+
+    /* Thẻ danh sách */
+    #main-content-wrapper .hd-page .hd-list-head {
+        display: flex !important;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 14px 18px !important;
+        background: #fff !important;
+        border-bottom: 1px solid var(--hd-line) !important;
     }
-    .aps-kyTucXa #tblDangKy_DoiTuong td {
-        font-size: 13px;
-        line-height: 1.5;
+    #main-content-wrapper .hd-page .hd-list-head::before,
+    #main-content-wrapper .hd-page .hd-list-head::after {
+        display: none !important;
     }
-    .aps-kyTucXa #tblDangKy_DoiTuong td span[id^="lbl"] {
+    #main-content-wrapper .hd-page .hd-list-head .box-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0;
+        font-size: 15px !important;
+        font-weight: 700 !important;
+        color: var(--hd-text) !important;
+    }
+    #main-content-wrapper .hd-page .hd-list-head .badge {
+        float: none !important;
+        min-width: 30px;
+        padding: 5px 10px !important;
+        font-size: 12px;
         font-weight: 700;
-        color: #0f172a;
+        color: var(--hd-blue) !important;
+        background: var(--hd-blue-soft) !important;
+        border-radius: 999px !important;
     }
-    .aps-kyTucXa #tblDangKy_DoiTuong .table-img {
-        width: 44px;
-        height: 44px;
-        object-fit: cover;
-        border-radius: 50%;
-        border: 1px solid #e5e7eb;
-    }
-    .aps-kyTucXa #lblDangKy_DoiTuong_SoLuong:empty::before {
+    #main-content-wrapper .hd-page #lblDangKy_DoiTuong_SoLuong:empty::before {
         content: "0";
     }
-    /* khung gợi ý bên phải khi chưa chọn người */
-    .aps-kyTucXa .hd-empty {
+    #main-content-wrapper .hd-page .hd-list-body {
+        max-height: calc(100vh - 470px);
+        min-height: 180px;
+        overflow-y: auto;
+        padding: 6px 8px 10px !important;
+    }
+    #main-content-wrapper .hd-page #tblDangKy_DoiTuong {
+        border-collapse: separate;
+        border-spacing: 0 4px;
+    }
+    #main-content-wrapper .hd-page #tblDangKy_DoiTuong tbody tr {
+        cursor: pointer;
+    }
+    #main-content-wrapper .hd-page #tblDangKy_DoiTuong tbody td {
+        padding: 10px !important;
+        font-size: 13px;
+        line-height: 1.55;
+        color: var(--hd-muted);
+        border: 0 !important;
+        background: transparent;
+    }
+    #main-content-wrapper .hd-page #tblDangKy_DoiTuong tbody tr:hover td {
+        background: #f5f8ff !important;
+    }
+    #main-content-wrapper .hd-page #tblDangKy_DoiTuong tbody td:first-child {
+        border-radius: 12px 0 0 12px;
+    }
+    #main-content-wrapper .hd-page #tblDangKy_DoiTuong tbody td:last-child {
+        border-radius: 0 12px 12px 0;
+    }
+    #main-content-wrapper .hd-page #tblDangKy_DoiTuong td span[id^="lbl"] {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--hd-text);
+    }
+    #main-content-wrapper .hd-page #tblDangKy_DoiTuong .table-img {
+        width: 46px;
+        height: 46px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 2px solid #fff;
+        box-shadow: 0 0 0 1px var(--hd-line);
+    }
+    /* dòng "Không tìm thấy dữ liệu!" của bảng rỗng */
+    #main-content-wrapper .hd-page #tblDangKy_DoiTuong tbody tr:only-child td:only-child {
+        padding: 34px 10px !important;
+        text-align: center;
+        color: #94a3b8;
+        background: transparent !important;
+        cursor: default;
+    }
+    #main-content-wrapper .hd-page #tblDangKy_DoiTuong tbody tr:only-child td:only-child::before {
+        content: "\f0c0";
+        display: block;
+        margin: 0 auto 8px;
+        font-family: FontAwesome;
+        font-size: 30px;
+        color: #cbd5e1;
+    }
+
+    /* Khung gợi ý bên phải khi chưa chọn người */
+    #main-content-wrapper .hd-page .hd-empty {
+        position: relative;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 10px;
-        min-height: 320px;
-        padding: 40px 20px;
+        gap: 6px;
+        min-height: 440px;
+        padding: 48px 28px;
         text-align: center;
-        color: #64748b;
+        background:
+            radial-gradient(circle at 85% 12%, rgba(59, 130, 246, .10), transparent 42%),
+            radial-gradient(circle at 10% 90%, rgba(99, 102, 241, .08), transparent 40%),
+            #fff;
+        border: 1px solid var(--hd-line);
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(15, 23, 42, .05);
+        overflow: hidden;
+    }
+    #main-content-wrapper .hd-page .hd-empty-ico {
+        width: 84px;
+        height: 84px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 10px;
+        font-size: 34px;
+        color: var(--hd-blue);
+        background: var(--hd-blue-soft);
+        border-radius: 50%;
+        box-shadow: 0 0 0 10px rgba(37, 99, 235, .05);
+    }
+    #main-content-wrapper .hd-page .hd-empty h3 {
+        margin: 0;
+        font-size: 19px;
+        font-weight: 700;
+        color: var(--hd-text);
+    }
+    #main-content-wrapper .hd-page .hd-empty > p {
+        max-width: 460px;
+        margin: 0 0 18px;
+        font-size: 13.5px;
+        color: var(--hd-muted);
+    }
+    #main-content-wrapper .hd-page .hd-steps {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        width: 100%;
+        max-width: 640px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    #main-content-wrapper .hd-page .hd-steps li {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        padding: 14px 10px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #334155;
         background: #fff;
-        border: 1px dashed #cbd5e1;
+        border: 1px solid var(--hd-line);
         border-radius: 12px;
     }
-    .aps-kyTucXa .hd-empty i {
-        font-size: 44px;
-        color: #94a3b8;
+    #main-content-wrapper .hd-page .hd-steps li span {
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 700;
+        color: #fff;
+        background: var(--hd-blue);
+        border-radius: 50%;
     }
-    .aps-kyTucXa .hd-empty b {
-        font-size: 16px;
-        color: #334155;
+    @media (max-width: 767px) {
+        #main-content-wrapper .hd-page .hd-steps {
+            grid-template-columns: minmax(0, 1fr);
+        }
     }
-    .aps-kyTucXa #zoneHopDong:not([style*="none"]) ~ .hd-empty-col {
+    #main-content-wrapper .hd-page #zoneHopDong:not([style*="none"]) ~ .hd-empty-col {
         display: none;
     }
-    .aps-kyTucXa #zoneHopDong .box-footer {
-        padding: 14px 20px;
-        background: #f8fafc;
-        border-top: 1px solid #eef0f4;
+
+    /* Form tạo hợp đồng */
+    #main-content-wrapper .hd-page #zoneHopDong .box-footer {
+        padding: 14px 20px !important;
+        background: #f8fafc !important;
+        border-top: 1px solid var(--hd-line) !important;
     }
     @media (min-width: 1200px) {
-        .aps-kyTucXa .hd-col-left {
+        #main-content-wrapper .hd-page .hd-col-left {
             position: sticky;
             top: 10px;
+            align-self: flex-start;
         }
     }
 </style>
-<section class="content aps-kyTucXa">
+<section class="content aps-kyTucXa hd-page">
+    <div class="hd-hero">
+        <div class="hd-hero-ico"><i class="fa fa-file-text-o"></i></div>
+        <div>
+            <h2>Hợp đồng chưa ký</h2>
+            <p>Danh sách người đã được xếp phòng nhưng chưa có hợp đồng ở ký túc xá</p>
+        </div>
+    </div>
     <div class="row ">
         <!-- /.left-content -->
         <div class="col-lg-4 hd-col-left">
             <div class="box box-solid">
                 <div class="box-body">
                     <!-- Bộ tìm kiếm -->
-                    <p class="hd-search-title"><i class="fa fa-search"></i> Tìm kiếm</p>
+                    <p class="hd-card-title"><i class="fa fa-search"></i> Tìm kiếm</p>
                     <div class="bs-item">
                         <select id="dropSearch_ToaNha" class="select-opt">
                             <option value="">Chọn tòa nhà</option>
@@ -148,9 +411,9 @@
                 </div>
             </div>
             <div class="box box-solid">
-                <div class="box-header with-border">
+                <div class="box-header with-border hd-list-head">
                     <h3 class="box-title" title="Danh sách chưa có hợp đồng">
-                        <i class="fa fa-hdd-o"></i> Danh sách chưa có hợp đồng
+                        <i class="fa fa-users"></i> Danh sách chưa có hợp đồng
                     </h3>
                     <span class="pull-right badge bg-light-blue">
                         <span id="lblDangKy_DoiTuong_SoLuong"></span>
@@ -377,9 +640,14 @@
         <!-- gợi ý khi chưa chọn người (tự ẩn khi #zoneHopDong hiện) -->
         <div class="col-lg-8 hd-empty-col">
             <div class="hd-empty">
-                <i class="fa fa-file-text-o"></i>
-                <b>Chưa chọn người đăng ký</b>
-                <span>Chọn tòa nhà, phòng hoặc nhập từ khóa để tìm, rồi bấm vào một người trong danh sách bên trái để tạo hợp đồng.</span>
+                <div class="hd-empty-ico"><i class="fa fa-pencil-square-o"></i></div>
+                <h3>Chưa chọn người đăng ký</h3>
+                <p>Chọn một người trong danh sách bên trái để mở form tạo hợp đồng.</p>
+                <ul class="hd-steps">
+                    <li><span>1</span>Lọc theo tòa nhà, phòng hoặc từ khóa</li>
+                    <li><span>2</span>Bấm vào người cần làm hợp đồng</li>
+                    <li><span>3</span>Nhập thông tin và bấm Lưu hợp đồng</li>
+                </ul>
             </div>
         </div>
     </div>
