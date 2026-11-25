@@ -300,6 +300,16 @@ KeHoachChung.prototype = {
     toggle_edit: function () {
         edu.util.toggle_overide("zone-bus", "zoneEdit");
     },
+    /* Combo hien "TEN - MA". Ma lay o MA, khong co thi HANHDONG_MA; khong co ma thi chi hien TEN */
+    tenMa: function (aData) {
+        var ten = edu.util.returnEmpty(aData.TEN);
+        var ma = edu.util.returnEmpty(aData.MA || aData.HANHDONG_MA);
+        return ma ? ten + " - " + ma : ten;
+    },
+    /* Ghi ban ghi dau cua combo ra console (F12) de doi chieu ten truong ma neu van khong thay ma */
+    logMauCombo: function (strDrop_Id, data) {
+        if (window.console && data && data.length) console.log("[kehoachchung] " + strDrop_Id + " - ban ghi dau:", data[0]);
+    },
     
     getList_KeHoachChung: function () {
         var me = this;
@@ -1273,6 +1283,7 @@ KeHoachChung.prototype = {
             success: function (data) {
                 if (data.Success) {
                     var dtReRult = data.Data;
+                    me.logMauCombo("dropPhanLoai_PLT", dtReRult);
                     var obj = {
                         data: dtReRult,
                         renderInfor: {
@@ -1282,7 +1293,7 @@ KeHoachChung.prototype = {
                             code: "MA",
                             order: "",
                             mRender: function (nRow, aData) {
-                                return edu.util.returnEmpty(aData.TEN) + (aData.MA ? " - " + aData.MA : "");
+                                return me.tenMa(aData);
                             }
                         },
                         renderPlace: ["dropPhanLoai_PLT"],
@@ -1751,14 +1762,19 @@ KeHoachChung.prototype = {
         }, false, false, false, null);
     },
     cbGenCombo_LoaiApDung: function (data) {
+        var me = this;
+        me.logMauCombo("dropLoaiApDung", data);
         var obj = {
             data: data,
             renderInfor: {
                 id: "ID",
                 parentId: "",
                 name: "TEN",
-                code: "",
-                avatar: ""
+                code: "MA",
+                avatar: "",
+                mRender: function (nRow, aData) {
+                    return me.tenMa(aData);
+                }
             },
             renderPlace: ["dropLoaiApDung"],
             type: "",
