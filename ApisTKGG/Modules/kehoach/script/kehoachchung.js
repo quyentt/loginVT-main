@@ -1280,7 +1280,10 @@ KeHoachChung.prototype = {
                             parentId: "",
                             name: "TEN",
                             code: "MA",
-                            order: ""
+                            order: "",
+                            mRender: function (nRow, aData) {
+                                return edu.util.returnEmpty(aData.TEN) + (aData.MA ? " - " + aData.MA : "");
+                            }
                         },
                         renderPlace: ["dropPhanLoai_PLT"],
                         title: "Chọn phân loại"
