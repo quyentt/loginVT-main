@@ -185,6 +185,9 @@
                                 <select id="dropSearch_HocPhan" class="select-opt" style="width:100% !important"
                                     multiple="multiple"></select>
                             </div>
+                            <div class="col-sm-6 item-search">
+                                <input id="txtSearch_TuKhoa" class="form-control" placeholder="Nhập từ khóa tìm kiếm" />
+                            </div>
                             <div class="col-sm-3 item-search checkbox-inline user-check-print"
                                 style="padding-left: 35px; display: flex; align-items: center; gap: 6px;">
                                 <input style="margin: 0; flex-shrink: 0;" type="checkbox" id="dChuaPhanCong" />
@@ -302,6 +305,9 @@
                             </div>
                             -->
                         </div>
+                        <div class="row mb-10">
+                            <input id="txtSearch_TuKhoa_SinhVien" class="form-control" placeholder="Nhập từ khóa tìm kiếm" />
+                        </div>
                         <div class="row aps-form-tabel">
                             <table id="tblSinhVien"
                                 class="table table-hover table-bordered tblSinhVien table-noborder mb-10">
@@ -339,6 +345,9 @@
                             <select id="dropLopCuoi" class="select-opt" style="width:100% !important">
                                 <option id="" value=""> --Chọn lớp cuối-- </option>
                             </select>
+                        </div>
+                        <div class="row mt-10">
+                            <input id="txtSearch_TuKhoa_SinhVienKQ" class="form-control" placeholder="Nhập từ khóa tìm kiếm" />
                         </div>
 
                         <!-- Row lable -->
@@ -397,6 +406,9 @@
                         class="sr-only">Close</span></button>
             </div>
             <div class="modal-body" id="modal_body">
+                <div class="mb-10">
+                    <input id="txtSearch_TuKhoa_QuanSo" class="form-control" placeholder="Nhập từ khóa tìm kiếm" style="max-width: 400px;" />
+                </div>
                 <table id="tblQuanSoLop" class="table table-hover table-bordered table-noborder tblQuanSoLop mb-0">
                     <thead>
                         <tr>
@@ -435,6 +447,9 @@
                         sách phạm vi</span> </h4>
             </div>
             <div class="modal-body" id="modal_body">
+                <div class="mb-10">
+                    <input id="txtSearch_TuKhoa_PhamVi" class="form-control" placeholder="Nhập từ khóa tìm kiếm" style="max-width: 400px;" />
+                </div>
                 <table id="tblPhamVi" class="table table-hover table-bordered table-noborder tblPhamVi mb-0">
                     <thead>
                         <tr>
@@ -460,7 +475,7 @@
     </div>
 </div>
 <!-- ----------------- -->
-<script src="modules/kehoachdangky/script/DonLop.js?v=1.0.0.0"></script>
+<script src="modules/kehoachdangky/script/DonLop.js?v=1.0.0.1"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['DonLop'] = new DonLop();

@@ -14,6 +14,8 @@ DonLop.prototype = {
     dtLopHocPhan: [],
     dtSinhVien: [],
     arrSinhVien_Id: [],
+    strPhamVi_LopHocPhan_Id: '',
+    strQuanSo_LopHocPhan_Id: '',
 
     init: function () {
         var me = this;
@@ -87,15 +89,53 @@ DonLop.prototype = {
             me.getList_LopHocPhan();
         });
         $("#btnSearch").click(function (e) {
+            edu.system.pageIndex_default = 1;
             me.getList_LopHocPhan();
+        });
+        // Chuan: ham co strTuKhoa → co o tim, Enter = tim
+        $("#txtSearch_TuKhoa").keypress(function (e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                edu.system.pageIndex_default = 1;
+                me.getList_LopHocPhan();
+            }
+        });
+        $("#txtSearch_TuKhoa_SinhVien").keypress(function (e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                me.getList_DangKyHoc();
+            }
+        });
+        $("#txtSearch_TuKhoa_SinhVienKQ").keypress(function (e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                if (!edu.util.getValById("dropLopCuoi")) return;
+                me.getList_DangKyHocKQ();
+            }
+        });
+        $("#txtSearch_TuKhoa_QuanSo").keypress(function (e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                me.getList_QuanSoTheoLop(me.strQuanSo_LopHocPhan_Id);
+            }
+        });
+        $("#txtSearch_TuKhoa_PhamVi").keypress(function (e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                me.getList_PhamVi(me.strPhamVi_LopHocPhan_Id);
+            }
         });
 
         $("#tblLopHocPhan").delegate('.btnDetail', 'click', function (e) {
             $('#myModalPhamVi').modal('show');
+            me.strPhamVi_LopHocPhan_Id = this.id;
+            $("#txtSearch_TuKhoa_PhamVi").val("");
             me.getList_PhamVi(this.id);
         });
         $("#tblLopHocPhan").delegate('.btnSinhVien', 'click', function (e) {
             $('#myModal').modal('show');
+            me.strQuanSo_LopHocPhan_Id = this.id;
+            $("#txtSearch_TuKhoa_QuanSo").val("");
             me.getList_QuanSoTheoLop(this.id);
         });
 
@@ -103,6 +143,7 @@ DonLop.prototype = {
             me.toggle_edit();
             var strId = this.id;
             me.strLopHocPhan_Id = strId;
+            $("#txtSearch_TuKhoa_SinhVien, #txtSearch_TuKhoa_SinhVienKQ").val("");
             var strTenDanhSach = $(this).attr("name");
             me.getList_DangKyHoc(strId);
             me.getList_DonLop(strId);
@@ -743,7 +784,7 @@ DonLop.prototype = {
             'action': 'DKH_ThongTin_MH/DSA4BRINLjEJLiIRKSAv',
             'func': 'pkg_dangkyhoc_thongtin.LayDSLopHocPhan',
             'iM': edu.system.iM,
-            'strTuKhoa': edu.util.getValById('txtAAAA'),
+            'strTuKhoa': edu.util.getValById('txtSearch_TuKhoa'),
             'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_ThoiGianDaoTao'),
             'strDaoTao_HocPhan_Id': edu.util.getValById('dropSearch_HocPhan'),
             'strNguoiThucHien_Id': edu.system.userId,
@@ -858,14 +899,15 @@ DonLop.prototype = {
         //--Edit
         var obj_list = {
             'action': 'DKH_PhanCong_LopHP/LayDanhSach',
-            'strTuKhoa': edu.util.getValById('txtAAAA'),
+            'strTuKhoa': edu.util.getValById('txtSearch_TuKhoa_PhamVi'),
             'strDangKy_KeHoachDangKy_Id': edu.util.getValById('dropAAAA'),
             'strDangKy_LopHocPhan_Id': strDangKy_LopHocPhan_Id,
             'strPhanCapApDung_Id': edu.util.getValById('dropAAAA'),
             'strPhamViApDung_Id': edu.util.getValById('dropAAAA'),
             'strNguoiThucHien_Id': edu.system.userId,
-            'pageIndex': edu.system.pageIndex_default,
-            'pageSize': edu.system.pageSize_default,
+            // Modal khong phan trang: lay het (truoc day dung pageIndex/pageSize cua bang chinh → chi 10 dong, sang trang 2+ thi trong)
+            'pageIndex': 1,
+            'pageSize': 1000000,
         };
         //
 
@@ -935,7 +977,7 @@ DonLop.prototype = {
         var obj_list = {
             'action': 'DKH_PhanCong_LopHP/LayDSDangKyHoc',
             'type': 'GET',
-            'strTuKhoa': edu.util.getValById('txtAAAA'),
+            'strTuKhoa': edu.util.getValById('txtSearch_TuKhoa_QuanSo'),
             'strDaoTao_LopHocPhan_Id': strDaoTao_LopHocPhan_Id,
             'strNguoiThucHien_Id': edu.system.userId,
             'pageIndex': 1,
@@ -1069,7 +1111,7 @@ DonLop.prototype = {
         var obj_list = {
             'action': 'DKH_PhanCong_LopHP/LayDSDangKyHoc',
             'type': 'GET',
-            'strTuKhoa': edu.util.getValById('txtAAAA'),
+            'strTuKhoa': edu.util.getValById('txtSearch_TuKhoa_SinhVien'),
             'strDaoTao_LopHocPhan_Id': me.strLopHocPhan_Id,
             'strNguoiThucHien_Id': edu.system.userId,
             'pageIndex': 1,
@@ -1158,7 +1200,7 @@ DonLop.prototype = {
         var obj_list = {
             'action': 'DKH_PhanCong_LopHP/LayDSDangKyHoc',
             'type': 'GET',
-            'strTuKhoa': edu.util.getValById('txtAAAA'),
+            'strTuKhoa': edu.util.getValById('txtSearch_TuKhoa_SinhVienKQ'),
             'strDaoTao_LopHocPhan_Id': edu.util.getValById("dropLopCuoi"),
             'strNguoiThucHien_Id': edu.system.userId,
             'pageIndex': 1,
