@@ -735,8 +735,31 @@ DonLop.prototype = {
     --Discription: [0] GEN HTML ==> Systemroot
     --ULR: Modules
     -------------------------------------------*/
+    // Ô "Số đã đăng ký (từ số / đến số)" chỉ nhận số nguyên ≥ 0 — nhập nhầm chữ thì báo, không gọi API (API báo "Could not convert string to double")
+    kiemTra_SoDaDang: function () {
+        var arr = [
+            { id: 'txtSearch_TuSo', ten: 'Số đã đăng ký (từ số)' },
+            { id: 'txtSearch_DenSo', ten: 'Số đã đăng ký (đến số)' }
+        ];
+        for (var i = 0; i < arr.length; i++) {
+            var strGiaTri = $.trim($("#" + arr[i].id).val() || "");
+            if (strGiaTri && !/^\d+$/.test(strGiaTri)) {
+                edu.system.alert('Ô <b>' + arr[i].ten + '</b> chỉ được nhập số. Bạn đang nhập: "' + $("<div>").text(strGiaTri).html() + '"');
+                $("#" + arr[i].id).focus().select();
+                return false;
+            }
+        }
+        var strTu = $.trim($("#txtSearch_TuSo").val() || ""), strDen = $.trim($("#txtSearch_DenSo").val() || "");
+        if (strTu && strDen && parseInt(strTu, 10) > parseInt(strDen, 10)) {
+            edu.system.alert('<b>Số đã đăng ký (từ số)</b> không được lớn hơn <b>(đến số)</b>');
+            $("#txtSearch_TuSo").focus().select();
+            return false;
+        }
+        return true;
+    },
     getList_LopHocPhan: function () {
         var me = this;
+        if (!me.kiemTra_SoDaDang()) return;
 
         //--Edit
         var obj_save = {
@@ -758,8 +781,8 @@ DonLop.prototype = {
             'strDaoTao_ChuongTrinh_Id': edu.util.getValById('dropSearch_ChuongTrinh'),
             'strDaoTao_HeDaoTao_Id': edu.util.getValById('dropSearch_HeDaoTao'),
             'strDaoTao_KhoaQuanLy_Id': edu.util.getValById('dropSearch_KhoaQuanLy'),
-            'dSoDaDangTuSo': edu.util.getValById('txtSearch_TuSo') ? edu.util.getValById('txtSearch_TuSo') : -1,
-            'dSoDaDangDenSo': edu.util.getValById('txtSearch_DenSo') ? edu.util.getValById('txtSearch_DenSo') : -1,
+            'dSoDaDangTuSo': $.trim(edu.util.getValById('txtSearch_TuSo')) ? parseInt($.trim(edu.util.getValById('txtSearch_TuSo')), 10) : -1,
+            'dSoDaDangDenSo': $.trim(edu.util.getValById('txtSearch_DenSo')) ? parseInt($.trim(edu.util.getValById('txtSearch_DenSo')), 10) : -1,
         };
 
 
