@@ -191,9 +191,12 @@ XacNhanKetQua.prototype = {
         $(".btnDownloadAllFile").click(function () {
             var arrFile = [];
             var arrFileName = [];
+            var nChuaTai = 0;// dòng chưa tải giá trị/file (chỉ tải khi cuộn tới — taiGiaTri_KhiCuonToi)
             me.dtSinhVien.forEach((e) => {
                 var iVitri = 0;
                 if ($('#tblKetQua tr[id=' + e.ID + ']').is(":hidden")) return;
+                var trE = document.getElementById(e.ID);
+                if (trE && trE.getAttribute('data-tai') !== '2') nChuaTai++;
                 $('#tblKetQua tr[id=' + e.ID + '] .upload-img').each(function () {
                     var url = $(this).attr("name");
 
@@ -216,6 +219,11 @@ XacNhanKetQua.prototype = {
             });
 
             me.save_GopFile(arrFile, arrFileName);
+            var coCotFile = (me.dtThongTin_View || []).some(function (t) { return t && t.KIEUDULIEU == "FILE"; });
+            if (coCotFile && nChuaTai > 0) {
+                edu.system.alert("Chỉ gom được file của các dòng đã tải giá trị. Còn " + nChuaTai.toLocaleString('vi-VN')
+                    + " dòng chưa tải (giá trị và file chỉ tải khi cuộn tới dòng đó): cuộn hết bảng hoặc lọc nhỏ phạm vi rồi bấm Tải file lại để gom đủ.", "w");
+            }
         });
     },
     resetCombobox: function (point) {
@@ -348,6 +356,11 @@ XacNhanKetQua.prototype = {
 
     getList_TongHop: function (strTuKhoa) {
         var me = this;
+        // Mỗi lần nạp bảng (Tìm kiếm / đổi trang / tự nạp lại sau Duyệt) là 1 "lượt": request tải giá trị của lượt cũ
+        // còn chờ trong hàng đợi thì bỏ, đã gửi đi thì lúc về tự bỏ qua — trước đây bấm lại là cộng dồn (CNGT 25/11/2026: 43.279 request chờ).
+        me.iLuotTai = (me.iLuotTai || 0) + 1;
+        var iLuot = me.iLuotTai;
+        me.huy_TaiGiaTriCu();
         var obj_list = {
             'action': 'SV_KeHoach_PhamVi/LayDSQLSV_KeHoach_PhamVi_DL',
             'type': 'GET',
@@ -368,6 +381,7 @@ XacNhanKetQua.prototype = {
         edu.system.beginLoading();
         edu.system.makeRequest({
             success: function (data) {
+                if (iLuot !== me.iLuotTai) return;// đã bấm nạp lượt mới trước khi lượt này trả về
                 if (data.Success) {
                     me.dtSinhVien = data.Data;
                     me.genTable_TongHop(data.Data, data.Pager);
@@ -460,16 +474,64 @@ XacNhanKetQua.prototype = {
             }
         );
         edu.system.loadToTable_data(jsonForm);
-        for (var i = 0; i < data.length; i++) {
-            //for (var j = 0; j < arrDoiTuong.length; j++) {
-            //    me.getList_KetQua(data[i].ID, arrDoiTuong[j].ID, data[i].QLSV_NGUOIHOC_ID);
-            //}
-            me.getList_KetQua(data[i].ID, "", data[i].QLSV_NGUOIHOC_ID);
-        }
+        // Cũ: mỗi dòng gọi ngay 1 lần getList_KetQua → chọn "Tất cả" 8.510 dòng = 8.510 request dồn hàng đợi (~10 luồng), hàng chục phút.
+        //for (var i = 0; i < data.length; i++) {
+        //    me.getList_KetQua(data[i].ID, "", data[i].QLSV_NGUOIHOC_ID, me.iLuotTai);
+        //}
+        me.taiGiaTri_KhiCuonToi(data, me.iLuotTai);
         edu.system.move_ThroughInTable(jsonForm.strTable_Id);
     },
+    /*------------------------------------------
+    --Discription: Chỉ tải giá trị (LayKQQLSV_KeHoach_DuLieu + file) cho dòng đang nhìn thấy và lân cận; cuộn tới đâu tải tới đó.
+    --  Bảng vẫn hiện đủ mọi dòng để tick tất cả + Duyệt hết như cũ.
+    --  tr[data-tai]: "1" = đã gửi yêu cầu, "2" = đã có giá trị (đặt ở getList_KetQua) — Tải file / Duyệt dùng để biết dòng chưa tải.
+    -------------------------------------------*/
+    taiGiaTri_KhiCuonToi: function (data, iLuot) {
+        var me = this, i;
+        if (me.ioGiaTri) { me.ioGiaTri.disconnect(); me.ioGiaTri = null; }
+        var mapRow = {};
+        (data || []).forEach(function (r) { if (r) mapRow[r.ID] = r; });
+        var rows = document.querySelectorAll('#tblKetQua tbody tr');
+        function tai(tr) {
+            var r = mapRow[tr.id];
+            if (!r || tr.getAttribute('data-tai')) return;
+            tr.setAttribute('data-tai', '1');
+            me.getList_KetQua(r.ID, "", r.QLSV_NGUOIHOC_ID, iLuot);
+        }
+        if (typeof IntersectionObserver === 'undefined') {// trình duyệt quá cũ: tải hết như trước
+            for (i = 0; i < rows.length; i++) tai(rows[i]);
+            return;
+        }
+        var io = me.ioGiaTri = new IntersectionObserver(function (entries) {
+            if (iLuot !== me.iLuotTai) { io.disconnect(); return; }
+            for (var k = 0; k < entries.length; k++) {
+                if (!entries[k].isIntersecting) continue;
+                io.unobserve(entries[k].target);
+                tai(entries[k].target);
+            }
+        }, { rootMargin: '300px 0px' });
+        for (i = 0; i < rows.length; i++) if (mapRow[rows[i].id]) io.observe(rows[i]);
+    },
+    /*------------------------------------------
+    --Discription: Bỏ khỏi hàng đợi chung edu.system.arrtask (Corei makeRequest, tối đa iGioiHanLuong luồng) các request
+    --  tải giá trị bảng CHƯA kịp gửi của lượt cũ: LayKQQLSV_KeHoach_DuLieu (gắn xnkqLuot) + SV_Files/LayDanhSach (viewFiles ô FILE).
+    --  Không đụng request khác (Duyệt, Xuất Excel, danh mục...). Sửa tại chỗ (không gán mảng mới) vì fixThreading đang đọc mảng này.
+    -------------------------------------------*/
+    huy_TaiGiaTriCu: function () {
+        var me = this, a = edu.system && edu.system.arrtask;
+        if (!a || !a.length) return 0;
+        var n0 = a.length, j = 0;
+        for (var i = 0; i < n0; i++) {
+            var t = a[i];
+            var cu = t && ((t.xnkqLuot !== undefined && t.xnkqLuot !== me.iLuotTai) || t.action === 'SV_Files/LayDanhSach');
+            if (!cu) a[j++] = t;
+        }
+        a.length = j;
+        if (n0 > j) console.log('[XacNhanKetQua] bỏ ' + (n0 - j) + ' request tải giá trị của lượt cũ còn chờ');
+        return n0 - j;
+    },
 
-    getList_KetQua: function (strId, strDoiTuong_Id, strQLSV_NguoiHoc_Id) {
+    getList_KetQua: function (strId, strDoiTuong_Id, strQLSV_NguoiHoc_Id, iLuot) {
         var me = this;
         var obj_list = {
             'action': 'SV_KeHoach_DuLieu/LayKQQLSV_KeHoach_DuLieu',
@@ -480,11 +542,13 @@ XacNhanKetQua.prototype = {
         };
         edu.system.beginLoading();
         edu.system.makeRequest({
+            xnkqLuot: iLuot,// nhãn lượt để huy_TaiGiaTriCu nhận ra request của lượt cũ trong hàng đợi chung
             success: function (data) {
+                if (iLuot !== undefined && iLuot !== me.iLuotTai) { edu.system.endLoading(); return; }// lượt cũ: bảng đã nạp lại
                 if (data.Success) {
-                    console.log(data.Data)
-                    for (var i = 0; i < data.Data.length; i++) {
-                        var json = data.Data[i];
+                    var arrKQ = data.Data || [];
+                    for (var i = 0; i < arrKQ.length; i++) {
+                        var json = arrKQ[i];
                         //if (json.KETQUAXACNHAN_TEN) {
                         //    strDoiTuong_Id = json.TRUONGTHONGTIN_ID;
                         //    var check = $("#chkSelect_" + strId + "_" + strDoiTuong_Id);
@@ -498,6 +562,9 @@ XacNhanKetQua.prototype = {
                         //    xannhan.html(edu.util.returnEmpty(json.TRUONGTHONGTIN_GIATRI));
                         //}
                         strDoiTuong_Id = json.TRUONGTHONGTIN_ID;
+                        // API trả giá trị MỌI trường của kế hoạch; trường không có cột trên bảng thì bỏ qua.
+                        // Trước đây vẫn gọi viewFiles (= 1 request SV_Files/LayDanhSach) cho mọi trường FILE dù cột không hiện → mỗi dòng 1 + k request.
+                        if (!document.getElementById("inputNoiDung_" + strId + "_" + strDoiTuong_Id)) continue;
                         //var check = $("#chkSelect_" + strId + "_" + strDoiTuong_Id);
                         //check.attr('checked', true);
                         //check.prop('checked', true);
@@ -513,6 +580,8 @@ XacNhanKetQua.prototype = {
                         }
                         //inputCheck.attr("name", edu.util.returnEmpty(json.TRUONGTHONGTIN_GIATRI));
                     }
+                    var trTai = document.getElementById(strId);// tr của dòng có id = ID dòng (loadToTable_data)
+                    if (trTai) trTai.setAttribute('data-tai', '2');
                 }
                 else {
                     console.log(data.Message);
@@ -608,7 +677,10 @@ XacNhanKetQua.prototype = {
             if (seen[strKey]) continue;//1 người học xuất hiện 2 dòng phạm vi → chỉ đồng bộ 1 lần
             seen[strKey] = true;
             var lbl = document.getElementById('inputNoiDung_' + sv.ID + '_' + tt.ID);
-            items.push({ ID: strKey, sv: sv, tt: tt, giaTri: lbl ? (lbl.textContent || '').trim() : '' });
+            // Giá trị chỉ để hiển thị trên form (DB tự đồng bộ từ dữ liệu của nó); dòng chưa cuộn tới thì chưa tải giá trị
+            var trN = nodes[i].closest ? nodes[i].closest('tr') : null;
+            var bDaTai = !trN || trN.getAttribute('data-tai') === '2';
+            items.push({ ID: strKey, sv: sv, tt: tt, giaTri: bDaTai ? (lbl ? (lbl.textContent || '').trim() : '') : '(chưa tải trên bảng)' });
         }
         if (items.length === 0) {
             edu.system.alert("Vui lòng tick ô (sinh viên × trường thông tin) cần duyệt.");

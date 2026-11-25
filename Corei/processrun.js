@@ -91,7 +91,10 @@ var processrunApi = (function (root) {
                 resolve({ ok: false, message: m });
             };
             try {
-                edu.system.makeRequest(p, false, false, false, null);
+                // Tham số thứ 7 block=true: đi thẳng, KHÔNG xếp vào hàng đợi chung edu.system.arrtask (giới hạn iGioiHanLuong luồng).
+                // Form đã tự giới hạn số luồng (concurrency). Nếu xếp chung thì lệnh của form phải chờ mọi request trang đang chờ:
+                // VD xacnhanketqua tải 8.510 dòng (mỗi dòng 1-5 request) làm lệnh Duyệt dòng 1 "Đang chạy" hơn 9 phút (CNGT 25/11/2026).
+                edu.system.makeRequest(p, false, false, false, null, undefined, true);
                 // makeRequest tự bật overlay "Đang tải dữ liệu" — ẩn đi, đã có form tiến trình
                 if (root.$) root.$("#overlay").hide();
             } catch (ex) {
