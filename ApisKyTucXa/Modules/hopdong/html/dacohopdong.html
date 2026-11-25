@@ -1,4 +1,4 @@
-﻿<!-- Main content -->
+<!-- Main content -->
 <style>
     .hopdong-hinhthucthu {
         width: 300px;
@@ -11,24 +11,397 @@
     .td-fix {
         width: 50px !important;
     }
+
+    /* =========================================================
+       Trang "Đã có hợp đồng" — giao diện thẻ hiện đại
+       Tiền tố #main-content-wrapper .hd-page để thắng các quy tắc !important của indexi.aspx
+       ========================================================= */
+    #main-content-wrapper .hd-page {
+        --hd-blue: var(--color-blue, #2563eb);
+        --hd-blue-soft: #eef4ff;
+        --hd-line: #e6eaf2;
+        --hd-text: #0f172a;
+        --hd-muted: #64748b;
+    }
+    #main-content-wrapper .hd-page > .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 -10px;
+    }
+    #main-content-wrapper .hd-page > .row > [class*="col-"] {
+        float: none;
+        padding: 0 10px !important;
+    }
+    @media (max-width: 1199px) {
+        #main-content-wrapper .hd-page > .row > [class*="col-"] {
+            width: 100%;
+        }
+    }
+
+    /* Thanh tiêu đề trang */
+    #main-content-wrapper .hd-page .hd-hero {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin: 0 0 18px;
+        padding: 18px 22px;
+        background: linear-gradient(120deg, #1e3a8a 0%, #2563eb 55%, #3b82f6 100%);
+        border-radius: 16px;
+        box-shadow: 0 10px 24px rgba(37, 99, 235, .18);
+        color: #fff;
+    }
+    #main-content-wrapper .hd-page .hd-hero-ico {
+        flex: none;
+        width: 52px;
+        height: 52px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        background: rgba(255, 255, 255, .16);
+        border: 1px solid rgba(255, 255, 255, .25);
+        border-radius: 14px;
+    }
+    #main-content-wrapper .hd-page .hd-hero h2 {
+        margin: 0 0 2px;
+        font-size: 20px;
+        font-weight: 700;
+        color: #fff !important;
+    }
+    #main-content-wrapper .hd-page .hd-hero p {
+        margin: 0;
+        font-size: 13px;
+        color: rgba(255, 255, 255, .85);
+    }
+
+    /* Thẻ trắng */
+    #main-content-wrapper .hd-page .hd-col-left > .box,
+    #main-content-wrapper .hd-page .hd-col-right > .box {
+        margin: 0 0 18px !important;
+        background: #fff !important;
+        border: 1px solid var(--hd-line) !important;
+        border-radius: 16px !important;
+        box-shadow: 0 4px 16px rgba(15, 23, 42, .05) !important;
+        overflow: hidden;
+    }
+    #main-content-wrapper .hd-page .hd-col-left > .box > .box-body {
+        padding: 18px 18px 14px !important;
+    }
+
+    /* Tiêu đề thẻ: ô biểu tượng + chữ */
+    #main-content-wrapper .hd-page .hd-card-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0 0 14px;
+        padding: 0 0 12px;
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--hd-text);
+        border-bottom: 1px solid var(--hd-line);
+    }
+    #main-content-wrapper .hd-page .hd-card-title i,
+    #main-content-wrapper .hd-page .hd-list-head .box-title i {
+        width: 32px;
+        height: 32px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        color: var(--hd-blue) !important;
+        background: var(--hd-blue-soft);
+        border-radius: 10px;
+    }
+
+    /* Ô nhập, select2 */
+    #main-content-wrapper .hd-page .hd-col-left .bs-item {
+        margin: 0 0 10px !important;
+    }
+    #main-content-wrapper .hd-page .hd-col-left .bs-item:last-child {
+        margin-bottom: 0 !important;
+    }
+    #main-content-wrapper .hd-page .hd-col-left .select2-container,
+    #main-content-wrapper .hd-page .hd-col-left .form-control {
+        width: 100% !important;
+    }
+    #main-content-wrapper .hd-page .hd-col-left .form-control,
+    #main-content-wrapper .hd-page .hd-col-left .select2-container .select2-selection--single {
+        height: 42px !important;
+        border: 1px solid #d7dde8 !important;
+        border-radius: 10px !important;
+        background: #f8fafc !important;
+        box-shadow: none !important;
+        transition: border-color .15s ease, background-color .15s ease, box-shadow .15s ease;
+    }
+    #main-content-wrapper .hd-page .hd-col-left .form-control:focus,
+    #main-content-wrapper .hd-page .hd-col-left .select2-container--focus .select2-selection--single,
+    #main-content-wrapper .hd-page .hd-col-left .select2-container--open .select2-selection--single {
+        background: #fff !important;
+        border-color: var(--hd-blue) !important;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, .12) !important;
+    }
+    #main-content-wrapper .hd-page .hd-col-left .select2-selection--single .select2-selection__rendered {
+        line-height: 40px !important;
+        padding-left: 12px !important;
+    }
+    #main-content-wrapper .hd-page .hd-col-left .select2-selection--single .select2-selection__arrow {
+        height: 40px !important;
+    }
+    #main-content-wrapper .hd-page .hd-col-left .input-group {
+        display: flex;
+        width: 100%;
+    }
+    #main-content-wrapper .hd-page .hd-col-left .input-group > .form-control {
+        flex: 1 1 auto;
+        border-radius: 10px 0 0 10px !important;
+    }
+    #main-content-wrapper .hd-page .hd-col-left .input-group-addon {
+        width: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: #fff;
+        background: var(--hd-blue) !important;
+        border: 1px solid var(--hd-blue) !important;
+        border-radius: 0 10px 10px 0 !important;
+    }
+    #main-content-wrapper .hd-page .hd-col-left .input-group-addon:hover {
+        filter: brightness(1.08);
+    }
+    #main-content-wrapper .hd-page .hd-col-left .input-group-addon i {
+        color: #fff !important;
+    }
+
+    /* Thẻ danh sách */
+    #main-content-wrapper .hd-page .hd-list-head {
+        display: flex !important;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 14px 18px !important;
+        background: #fff !important;
+        border-bottom: 1px solid var(--hd-line) !important;
+    }
+    #main-content-wrapper .hd-page .hd-list-head::before,
+    #main-content-wrapper .hd-page .hd-list-head::after {
+        display: none !important;
+    }
+    #main-content-wrapper .hd-page .hd-list-head .box-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0;
+        font-size: 15px !important;
+        font-weight: 700 !important;
+        color: var(--hd-text) !important;
+    }
+    #main-content-wrapper .hd-page .hd-list-head .badge {
+        float: none !important;
+        min-width: 30px;
+        padding: 5px 10px !important;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--hd-blue) !important;
+        background: var(--hd-blue-soft) !important;
+        border-radius: 999px !important;
+    }
+    #main-content-wrapper .hd-page #lblDangKy_DoiTuong_SoLuong:empty::before {
+        content: "0";
+    }
+    #main-content-wrapper .hd-page .hd-list-body {
+        max-height: calc(100vh - 470px);
+        min-height: 180px;
+        overflow-y: auto;
+        padding: 6px 8px 10px !important;
+    }
+    #main-content-wrapper .hd-page #tblDangKy_DoiTuong {
+        border-collapse: separate;
+        border-spacing: 0 4px;
+    }
+    #main-content-wrapper .hd-page #tblDangKy_DoiTuong tbody tr {
+        cursor: pointer;
+    }
+    #main-content-wrapper .hd-page #tblDangKy_DoiTuong tbody td {
+        padding: 10px !important;
+        font-size: 13px;
+        line-height: 1.55;
+        color: var(--hd-muted);
+        border: 0 !important;
+        background: transparent;
+    }
+    #main-content-wrapper .hd-page #tblDangKy_DoiTuong tbody tr:hover td {
+        background: #f5f8ff !important;
+    }
+    #main-content-wrapper .hd-page #tblDangKy_DoiTuong tbody td:first-child {
+        border-radius: 12px 0 0 12px;
+    }
+    #main-content-wrapper .hd-page #tblDangKy_DoiTuong tbody td:last-child {
+        border-radius: 0 12px 12px 0;
+    }
+    #main-content-wrapper .hd-page #tblDangKy_DoiTuong td span[id^="lbl"] {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--hd-text);
+    }
+    #main-content-wrapper .hd-page #tblDangKy_DoiTuong .table-img {
+        width: 46px;
+        height: 46px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 2px solid #fff;
+        box-shadow: 0 0 0 1px var(--hd-line);
+    }
+    /* dòng "Không tìm thấy dữ liệu!" của bảng rỗng */
+    #main-content-wrapper .hd-page #tblDangKy_DoiTuong tbody tr:only-child td:only-child {
+        padding: 34px 10px !important;
+        text-align: center;
+        color: #94a3b8;
+        background: transparent !important;
+        cursor: default;
+    }
+    #main-content-wrapper .hd-page #tblDangKy_DoiTuong tbody tr:only-child td:only-child::before {
+        content: "\f0c0";
+        display: block;
+        margin: 0 auto 8px;
+        font-family: FontAwesome;
+        font-size: 30px;
+        color: #cbd5e1;
+    }
+
+    /* Khung gợi ý bên phải khi chưa chọn người */
+    #main-content-wrapper .hd-page .hd-empty {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        min-height: 440px;
+        padding: 48px 28px;
+        text-align: center;
+        background:
+            radial-gradient(circle at 85% 12%, rgba(59, 130, 246, .10), transparent 42%),
+            radial-gradient(circle at 10% 90%, rgba(99, 102, 241, .08), transparent 40%),
+            #fff;
+        border: 1px solid var(--hd-line);
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(15, 23, 42, .05);
+        overflow: hidden;
+    }
+    #main-content-wrapper .hd-page .hd-empty-ico {
+        width: 84px;
+        height: 84px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 10px;
+        font-size: 34px;
+        color: var(--hd-blue);
+        background: var(--hd-blue-soft);
+        border-radius: 50%;
+        box-shadow: 0 0 0 10px rgba(37, 99, 235, .05);
+    }
+    #main-content-wrapper .hd-page .hd-empty h3 {
+        margin: 0;
+        font-size: 19px;
+        font-weight: 700;
+        color: var(--hd-text);
+    }
+    #main-content-wrapper .hd-page .hd-empty > p {
+        max-width: 460px;
+        margin: 0 0 18px;
+        font-size: 13.5px;
+        color: var(--hd-muted);
+    }
+    #main-content-wrapper .hd-page .hd-steps {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        width: 100%;
+        max-width: 640px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    #main-content-wrapper .hd-page .hd-steps li {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        padding: 14px 10px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #334155;
+        background: #fff;
+        border: 1px solid var(--hd-line);
+        border-radius: 12px;
+    }
+    #main-content-wrapper .hd-page .hd-steps li span {
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 700;
+        color: #fff;
+        background: var(--hd-blue);
+        border-radius: 50%;
+    }
+    @media (max-width: 767px) {
+        #main-content-wrapper .hd-page .hd-steps {
+            grid-template-columns: minmax(0, 1fr);
+        }
+    }
+    #main-content-wrapper .hd-page #zoneHopDong:not([style*="none"]) ~ .hd-empty-col {
+        display: none;
+    }
+
+    /* Form tạo hợp đồng */
+    #main-content-wrapper .hd-page #zoneHopDong .box-footer {
+        padding: 14px 20px !important;
+        background: #f8fafc !important;
+        border-top: 1px solid var(--hd-line) !important;
+    }
+    @media (min-width: 1200px) {
+        #main-content-wrapper .hd-page .hd-col-left {
+            position: sticky;
+            top: 10px;
+            align-self: flex-start;
+        }
+    }
 </style>
-<section class="content aps-kyTucXa">
+<section class="content aps-kyTucXa hd-page">
+    <div class="hd-hero">
+        <div class="hd-hero-ico"><i class="fa fa-file-text"></i></div>
+        <div>
+            <h2>Hợp đồng đã ký</h2>
+            <p>Tra cứu, cập nhật, in hoặc hủy hợp đồng ở ký túc xá đã lập</p>
+        </div>
+    </div>
     <div class="row ">
         <!-- /.left-content -->
-        <div class="col-lg-3">
+        <div class="col-lg-4 hd-col-left">
             <div class="box box-solid">
                 <div class="box-body">
                     <!-- Bộ tìm kiếm -->
-                    <select id="dropSearch_TinhTrang" class="select-opt">
-                        <option value="">Chọn tình trạng</option>
-                    </select>
-
-                    <select id="dropSearch_ToaNha" class="select-opt">
-                        <option value="">Chọn tòa nhà</option>
-                    </select>
-                    <select id="dropSearch_Phong" class="select-opt">
-                        <option value="">Chọn phòng</option>
-                    </select>
+                    <p class="hd-card-title"><i class="fa fa-search"></i> Tìm kiếm</p>
+                    <div class="bs-item">
+                        <select id="dropSearch_TinhTrang" class="select-opt">
+                            <option value="">Chọn tình trạng</option>
+                        </select>
+                    </div>
+                    <div class="bs-item">
+                        <select id="dropSearch_ToaNha" class="select-opt">
+                            <option value="">Chọn tòa nhà</option>
+                        </select>
+                    </div>
+                    <div class="bs-item">
+                        <select id="dropSearch_Phong" class="select-opt">
+                            <option value="">Chọn phòng</option>
+                        </select>
+                    </div>
                     <div class="clear"></div>
                     <div class="bs-item">
                         <input type="text" id="txtSearch_DangKy_NgayKiemTra" class="form-control input-datepicker" placeholder="Ngày kiểm tra">
@@ -43,15 +416,15 @@
                 </div>
             </div>
             <div class="box box-solid">
-                <div class="box-header with-border">
-                    <h3 class="box-title" title="Tổng bài báo trong nước">
-                        <i class="fa fa-hdd-o"></i> Danh sách đã có hợp đồng
+                <div class="box-header with-border hd-list-head">
+                    <h3 class="box-title" title="Danh sách đã có hợp đồng">
+                        <i class="fa fa-users"></i> Danh sách đã có hợp đồng
                     </h3>
                     <span class="pull-right badge bg-light-blue">
                         <span id="lblDangKy_DoiTuong_SoLuong"></span>
                     </span>
                 </div>
-                <div class="box-body">
+                <div class="box-body hd-list-body">
                     <table id="tblDangKy_DoiTuong" class="table table-hover">
                         <tbody></tbody>
                     </table>
@@ -59,11 +432,11 @@
             </div>
         </div>
         <!-- /.right-content -->
-        <div class="col-lg-9" id="zoneHopDong" style="display: none">
+        <div class="col-lg-8 hd-col-right" id="zoneHopDong" style="display: none">
             <!-- box- Input HoSo -->
             <div class="box box-solid">
                 <div class="box-header with-border">
-                    <h3 class="box-title"><i class="fa fa-pencil"></i> Tạo hợp đồng </h3>
+                    <h3 class="box-title"><i class="fa fa-pencil"></i> Thông tin hợp đồng </h3>
                 </div>
                 <div class="box-body">
                     <div class="col-sm-12 box-view">
@@ -150,7 +523,7 @@
                                 <input type="text" id="txtHopDong_SoTien_Thang" class="form-control form-border-bottom inputsotien" />
                             </div>
                         </div>
-                        <div>
+                        <div class="row">
                             <div class="col-sm-2">
                                 <div class="title-name">
                                     Tổng tiền thuê<span class="title-colon">:</span>
@@ -292,6 +665,19 @@
     </div>-->
                     </div>
                 </div>
+            </div>
+        </div>
+        <!-- gợi ý khi chưa chọn hợp đồng (tự ẩn khi #zoneHopDong hiện) -->
+        <div class="col-lg-8 hd-empty-col">
+            <div class="hd-empty">
+                <div class="hd-empty-ico"><i class="fa fa-folder-open-o"></i></div>
+                <h3>Chưa chọn hợp đồng</h3>
+                <p>Chọn một người trong danh sách bên trái để xem và cập nhật hợp đồng.</p>
+                <ul class="hd-steps">
+                    <li><span>1</span>Lọc theo tình trạng, tòa nhà, phòng hoặc từ khóa</li>
+                    <li><span>2</span>Bấm vào người cần xem hợp đồng</li>
+                    <li><span>3</span>Sửa rồi bấm Lưu, In hoặc Hủy hợp đồng</li>
+                </ul>
             </div>
         </div>
     </div>
