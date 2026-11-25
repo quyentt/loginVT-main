@@ -11,21 +11,129 @@
     .td-fix {
         width: 50px !important;
     }
+
+    /* ---- Trang "Chưa có hợp đồng": làm đẹp bố cục ---- */
+    .aps-kyTucXa .hd-col-left > .box,
+    .aps-kyTucXa .hd-col-right > .box {
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, .04);
+        overflow: hidden;
+    }
+    .aps-kyTucXa .hd-col-left > .box {
+        margin-bottom: 16px;
+    }
+    .aps-kyTucXa .hd-search-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0 0 12px;
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--color-blue, #0d6efd);
+    }
+    .aps-kyTucXa .hd-col-left .bs-item {
+        margin-bottom: 10px;
+    }
+    .aps-kyTucXa .hd-col-left .bs-item:last-child {
+        margin-bottom: 4px;
+    }
+    .aps-kyTucXa .hd-col-left .select2-container,
+    .aps-kyTucXa .hd-col-left .form-control {
+        width: 100% !important;
+    }
+    .aps-kyTucXa .hd-col-left .input-group-addon {
+        cursor: pointer;
+        background: var(--color-blue, #0d6efd);
+        border-color: var(--color-blue, #0d6efd);
+        color: #fff;
+    }
+    .aps-kyTucXa .hd-col-left .input-group-addon i {
+        color: #fff;
+    }
+    .aps-kyTucXa .hd-list-body {
+        max-height: calc(100vh - 420px);
+        min-height: 120px;
+        overflow-y: auto;
+        padding: 0 !important;
+    }
+    .aps-kyTucXa #tblDangKy_DoiTuong tbody tr {
+        cursor: pointer;
+    }
+    .aps-kyTucXa #tblDangKy_DoiTuong td {
+        font-size: 13px;
+        line-height: 1.5;
+    }
+    .aps-kyTucXa #tblDangKy_DoiTuong td span[id^="lbl"] {
+        font-weight: 700;
+        color: #0f172a;
+    }
+    .aps-kyTucXa #tblDangKy_DoiTuong .table-img {
+        width: 44px;
+        height: 44px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 1px solid #e5e7eb;
+    }
+    .aps-kyTucXa #lblDangKy_DoiTuong_SoLuong:empty::before {
+        content: "0";
+    }
+    /* khung gợi ý bên phải khi chưa chọn người */
+    .aps-kyTucXa .hd-empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        min-height: 320px;
+        padding: 40px 20px;
+        text-align: center;
+        color: #64748b;
+        background: #fff;
+        border: 1px dashed #cbd5e1;
+        border-radius: 12px;
+    }
+    .aps-kyTucXa .hd-empty i {
+        font-size: 44px;
+        color: #94a3b8;
+    }
+    .aps-kyTucXa .hd-empty b {
+        font-size: 16px;
+        color: #334155;
+    }
+    .aps-kyTucXa #zoneHopDong:not([style*="none"]) ~ .hd-empty-col {
+        display: none;
+    }
+    .aps-kyTucXa #zoneHopDong .box-footer {
+        padding: 14px 20px;
+        background: #f8fafc;
+        border-top: 1px solid #eef0f4;
+    }
+    @media (min-width: 1200px) {
+        .aps-kyTucXa .hd-col-left {
+            position: sticky;
+            top: 10px;
+        }
+    }
 </style>
 <section class="content aps-kyTucXa">
     <div class="row ">
         <!-- /.left-content -->
-        <div class="col-lg-3">
+        <div class="col-lg-4 hd-col-left">
             <div class="box box-solid">
                 <div class="box-body">
                     <!-- Bộ tìm kiếm -->
-
-                    <select id="dropSearch_ToaNha" class="select-opt">
-                        <option value="">Chọn tòa nhà</option>
-                    </select>
-                    <select id="dropSearch_Phong" class="select-opt">
-                        <option value="">Chọn phòng</option>
-                    </select>
+                    <p class="hd-search-title"><i class="fa fa-search"></i> Tìm kiếm</p>
+                    <div class="bs-item">
+                        <select id="dropSearch_ToaNha" class="select-opt">
+                            <option value="">Chọn tòa nhà</option>
+                        </select>
+                    </div>
+                    <div class="bs-item">
+                        <select id="dropSearch_Phong" class="select-opt">
+                            <option value="">Chọn phòng</option>
+                        </select>
+                    </div>
                     <div class="clear"></div>
                     <div class="bs-item">
                         <input type="text" id="txtSearch_DangKy_NgayKiemTra" class="form-control input-datepicker" placeholder="Ngày kiểm tra">
@@ -41,14 +149,14 @@
             </div>
             <div class="box box-solid">
                 <div class="box-header with-border">
-                    <h3 class="box-title" title="Tổng bài báo trong nước">
+                    <h3 class="box-title" title="Danh sách chưa có hợp đồng">
                         <i class="fa fa-hdd-o"></i> Danh sách chưa có hợp đồng
                     </h3>
                     <span class="pull-right badge bg-light-blue">
                         <span id="lblDangKy_DoiTuong_SoLuong"></span>
                     </span>
                 </div>
-                <div class="box-body">
+                <div class="box-body hd-list-body">
                     <table id="tblDangKy_DoiTuong" class="table table-hover">
                         <tbody></tbody>
                     </table>
@@ -56,7 +164,7 @@
             </div>
         </div>
         <!-- /.right-content -->
-        <div class="col-lg-9" id="zoneHopDong" style="display: none">
+        <div class="col-lg-8 hd-col-right" id="zoneHopDong" style="display: none">
             <!-- box- Input HoSo -->
             <div class="box box-solid">
                 <div class="box-header with-border">
@@ -147,7 +255,7 @@
                                 <input type="text" id="txtHopDong_SoTien_Thang" class="form-control form-border-bottom inputsotien"/>
                             </div>
                         </div>
-                        <div>
+                        <div class="row">
                             <div class="col-sm-2">
                                 <div class="title-name">
                                     Tổng tiền thuê<span class="title-colon">:</span>
@@ -259,11 +367,19 @@
                 <div class="box-footer">
                     <div id="" class="td-center">
                         <a id="btnDangKy_Save" class="btn btn-primary" style="margin:3px"><i class="fa fa-save"></i><span class="lang" key=""> Lưu hợp đồng</span></a>
-                        <a id="btnDangKy_Print" class="btn btn-primary" style="margin:3px"><i class="fa fa-save"></i><span class="lang" key=""> In hợp đồng</span></a>
+                        <a id="btnDangKy_Print" class="btn btn-primary" style="margin:3px"><i class="fa fa-print"></i><span class="lang" key=""> In hợp đồng</span></a>
                         <a class="btnHopDong_BaoCao btn btn-default" name="HopDongSinhVien" style="margin:3px; display: none"><i class="fa fa-print"></i><span class="lang" key="">1. In hợp đồng sinh viên</span></a>
                         <a class="btnHopDong_BaoCao btn btn-default" name="HopDongLuuHocSinh" style="margin:3px; display: none"><i class="fa fa-print"></i><span class="lang" key="">2. In hợp đồng lưu học sinh</span></a>
                     </div>
                 </div>
+            </div>
+        </div>
+        <!-- gợi ý khi chưa chọn người (tự ẩn khi #zoneHopDong hiện) -->
+        <div class="col-lg-8 hd-empty-col">
+            <div class="hd-empty">
+                <i class="fa fa-file-text-o"></i>
+                <b>Chưa chọn người đăng ký</b>
+                <span>Chọn tòa nhà, phòng hoặc nhập từ khóa để tìm, rồi bấm vào một người trong danh sách bên trái để tạo hợp đồng.</span>
             </div>
         </div>
     </div>
