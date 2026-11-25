@@ -30,6 +30,65 @@
     #dadangky #btnInPhoi:hover { background: #eff6ff !important; color: #1d4ed8 !important; }
     #dadangky #btnInPhoi i { color: #2563eb !important; }
 
+
+    /* ===== Khung cấu hình bên trái — gọn (CSS chung indexi ép control 38px, form-item cách 8px) ===== */
+    #zoneCauHinh#zoneCauHinh > .col-sm-3 > .box { margin-bottom: 8px; box-shadow: none; }
+    #zoneCauHinh#zoneCauHinh .box-search .box-body { padding: 8px !important; }
+    #zoneCauHinh#zoneCauHinh .box-widget > .box-body { padding: 8px !important; }
+    #zoneCauHinh#zoneCauHinh .zone-box {
+        background: #f3f5f8 !important; border-radius: 8px; padding: 8px 10px 10px !important;
+        margin: 0 0 8px 0 !important; width: auto;
+    }
+    #zoneCauHinh#zoneCauHinh .zone-box:last-child { margin-bottom: 0 !important; }
+    #zoneCauHinh#zoneCauHinh .zone-box > .row { margin: 0 !important; }
+    #zoneCauHinh#zoneCauHinh .group-group-title-name { height: auto !important; line-height: 1 !important; margin: 0 0 8px !important; }
+    #zoneCauHinh#zoneCauHinh .group-group-title-name .badge {
+        background: #1d6fd8 !important; color: #fff !important; font-size: 11.5px !important; font-weight: 700;
+        line-height: 1 !important; height: auto !important; padding: 4px 9px !important; border-radius: 10px !important;
+    }
+    #zoneCauHinh#zoneCauHinh .form-item { display: flex; align-items: center; height: auto !important; margin: 0 0 4px !important; }
+    #zoneCauHinh#zoneCauHinh .form-item > div { float: none !important; }
+    #zoneCauHinh#zoneCauHinh .form-item > .clear { display: none; }
+    #zoneCauHinh#zoneCauHinh .form-item label {
+        height: auto !important; line-height: 28px !important; margin: 0 !important;
+        font-size: 13.5px; color: #1f2937; white-space: nowrap;
+    }
+    #zoneCauHinh#zoneCauHinh .form-item .text-right.pr10 label { padding-right: 6px; }
+    #zoneCauHinh#zoneCauHinh .form-control {
+        height: 28px !important; line-height: 26px !important; padding: 1px 8px !important;
+        font-size: 13px !important; border-radius: 5px !important;
+    }
+    #zoneCauHinh#zoneCauHinh .form-control[readonly] { background: #e9edf2 !important; }
+    #zoneCauHinh#zoneCauHinh .select2-container .select2-selection--single {
+        height: 28px !important; padding: 0 6px !important; display: flex; align-items: center;
+    }
+    #zoneCauHinh#zoneCauHinh .select2-container .select2-selection__rendered { line-height: 26px !important; font-size: 13.5px; }
+    #zoneCauHinh#zoneCauHinh .select2-container .select2-selection__arrow { height: 26px !important; }
+    #zoneCauHinh#zoneCauHinh .input-group-addon {
+        height: 28px !important; padding: 2px 10px !important; font-size: 13px !important;
+        background: #fff !important; color: #1f2937 !important; border: 1px solid #cbd5e1 !important; white-space: nowrap;
+    }
+    #zoneCauHinh#zoneCauHinh .input-group-addon:hover { background: #eff6ff !important; color: #1d4ed8 !important; }
+    #zoneCauHinh#zoneCauHinh .box-search .select2-container .select2-selection--single { height: 30px !important; }
+    #zoneCauHinh#zoneCauHinh .box-search .input-group-addon { height: 30px !important; }
+    #zoneCauHinh#zoneCauHinh .btnChuDam, #zoneCauHinh#zoneCauHinh .btnCanLe {
+        height: 26px !important; min-width: 30px; padding: 0 8px !important; margin-left: 4px !important;
+        background: transparent !important; border: 1px solid transparent !important; box-shadow: none !important;
+        color: #1f2937 !important; display: inline-flex; align-items: center; justify-content: center;
+    }
+    #zoneCauHinh#zoneCauHinh .btnChuDam:hover, #zoneCauHinh#zoneCauHinh .btnCanLe:hover { background: #fff !important; border-color: #cbd5e1 !important; }
+    #zoneCauHinh#zoneCauHinh .form-item-r.text-right { display: flex; justify-content: flex-end; }
+    #zoneCauHinh#zoneCauHinh #btnDeleteNoiDung {
+        background: #dc2626 !important; border-color: #dc2626 !important; color: #fff !important;
+        height: 28px !important; padding: 0 12px !important; display: inline-flex; align-items: center; gap: 4px; border-radius: 5px !important;
+    }
+    #zoneCauHinh#zoneCauHinh #btnDeleteNoiDung i { color: #fff !important; }
+    #zoneCauHinh#zoneCauHinh #btnDeleteNoiDung:hover { background: #b91c1c !important; }
+    #zoneCauHinh#zoneCauHinh .form-item.text-right { justify-content: flex-start; margin-top: 4px !important; }
+    #zoneCauHinh#zoneCauHinh #zoneTrang { min-height: 28px; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+    #zoneCauHinh#zoneCauHinh .form-control, #zoneCauHinh#zoneCauHinh .select2-container .select2-selection--single, #zoneCauHinh#zoneCauHinh .input-group-addon,
+    #zoneCauHinh#zoneCauHinh .btnChuDam, #zoneCauHinh#zoneCauHinh .btnCanLe, #zoneCauHinh#zoneCauHinh #btnDeleteNoiDung, #zoneCauHinh#zoneCauHinh .form-item label { min-height: 0 !important; }
+    #zoneCauHinh#zoneCauHinh .form-item label .lang { line-height: 28px !important; }
 </style>
 <section class="content aps-cms">
     <!-- Banner khi mở từ trang Quy trình phôi in (PhoiInFlow.veBannerNguCanh) -->
@@ -89,7 +148,7 @@
     </div>-->
                         <div class="form-item" style="width: 100%">
                             <div style="width: 20%; float: left">
-                                <label style="font-weight: normal"><span class="lang" key="">Font chữ</span></label>
+                                <label style="font-weight: normal"><span class="lang" key="">Font chữ:</span></label>
                             </div>
                             <div style="width: 80%; float: left">
                                 <select id="dropFontChu" class="select-opt">
@@ -107,13 +166,13 @@
                         </div>
                         <div class="form-item" style="width: 100%">
                             <div style="width: 20%; float: left">
-                                <label style="font-weight: normal"><span class="lang" key="">Dài</span></label>
+                                <label style="font-weight: normal"><span class="lang" key="">Dài:</span></label>
                             </div>
                             <div style="width: 30%; float: left">
                                 <input id="txtChieuDaiKhoGiay" class="form-control" readonly/>
                             </div>
                             <div style="width: 20%; float: left" class="text-right pr10">
-                                <label style="font-weight: normal"><span class="lang" key="">Rộng</span></label>
+                                <label style="font-weight: normal"><span class="lang" key="">Rộng:</span></label>
                             </div>
                             <div style="width: 30%; float: left">
                                 <input id="txtChieuRongKhoGiay" class="form-control" readonly/>
@@ -122,13 +181,13 @@
                         </div>
                         <div class="form-item" style="width: 100%">
                             <div style="width: 20%; float: left">
-                                <label style="font-weight: normal"><span class="lang" key="">Cỡ chữ</span></label>
+                                <label style="font-weight: normal"><span class="lang" key="">Cỡ chữ:</span></label>
                             </div>
                             <div style="width: 30%; float: left">
                                 <input id="txtCoChu" class="form-control" value="13"/>
                             </div>
                             <div style="width: 20%; float: left" class="text-right pr10">
-                                <label style="font-weight: normal"><span class="lang" key="">DPI</span></label>
+                                <label style="font-weight: normal"><span class="lang" key="">DPI:</span></label>
                             </div>
                             <div style="width: 30%; float: left">
                                 <input id="txtDPI" class="form-control" readonly="readonly"/>
@@ -137,13 +196,13 @@
                         </div>
                         <div class="form-item" style="width: 100%">
                             <div style="width: 20%; float: left">
-                                <label style="font-weight: normal"><span class="lang" key="">Top</span></label>
+                                <label style="font-weight: normal"><span class="lang" key="">Top:</span></label>
                             </div>
                             <div style="width: 30%; float: left">
                                 <input id="txtMarginTop" class="form-control"/>
                             </div>
                             <div style="width: 20%; float: left" class="text-right pr10">
-                                <label style="font-weight: normal"><span class="lang" key="">Left</span></label>
+                                <label style="font-weight: normal"><span class="lang" key="">Left:</span></label>
                             </div>
                             <div style="width: 30%; float: left">
                                 <input id="txtMarginLeft" class="form-control"/>
@@ -152,7 +211,7 @@
                         </div>
                         <div class="form-item" style="width: 100%">
                             <div style="width: 20%; float: left">
-                                <label style="font-weight: normal"><span class="lang" key="">Trang</span></label>
+                                <label style="font-weight: normal"><span class="lang" key="">Trang:</span></label>
                             </div>
                             <div style="width: 80%; float: left" id="zoneTrang">
                             </div>
@@ -168,7 +227,7 @@
                         </div>
                         <div class="form-item" style="width: 100%">
                             <div style="width: 70%; float: left">
-                                <label style="font-weight: normal"><span class="lang" key="">Khoảng cách bên trái</span></label>
+                                <label style="font-weight: normal"><span class="lang" key="">Khoảng cách bên trái:</span></label>
                             </div>
                             <div style="width: 30%; float: left">
                                 <input id="txtPaddingLeft" class="form-control"/>
@@ -179,7 +238,7 @@
                         <div class="form-item" style="width: 100%">
                             <div style="width: 70%; float: left">
                                 <label style="font-weight: normal"><span class="lang"
-                                                                         key="">Khoảng cách phía trên</span></label>
+                                                                         key="">Khoảng cách phía trên:</span></label>
                             </div>
                             <div style="width: 30%; float: left">
                                 <input id="txtPaddingTop" class="form-control"/>
@@ -188,7 +247,7 @@
                         </div>
                         <div class="form-item" style="width: 100%">
                             <div style="width: 70%; float: left">
-                                <label style="font-weight: normal"><span class="lang" key="">Font size</span></label>
+                                <label style="font-weight: normal"><span class="lang" key="">Font size:</span></label>
                             </div>
                             <div style="width: 30%; float: left">
                                 <input id="txtFontSize" class="form-control"/>
@@ -197,7 +256,7 @@
                         </div>
                         <div class="form-item" style="width: 100%">
                             <div class="form-item-l" style="width: 30%; float: left">
-                                <label style="font-weight: normal"><span class="lang" key="">Kiểu chữ</span></label>
+                                <label style="font-weight: normal"><span class="lang" key="">Kiểu chữ:</span></label>
                             </div>
                             <div class="form-item-r text-right" style="width: 70%; float: right">
                                 <a class="btn btn-default btnChuDam" name="font-weight: bold;" href="#"><i
@@ -211,7 +270,7 @@
                         </div>
                         <div class="form-item" style="width: 100%">
                             <div class="form-item-l" style="width: 30%; float: left">
-                                <label style="font-weight: normal"><span class="lang" key="">Căn lề</span></label>
+                                <label style="font-weight: normal"><span class="lang" key="">Căn lề:</span></label>
                             </div>
                             <div class="form-item-r text-right" style="width: 70%; float: right">
                                 <a class="btn btn-default btnCanLe" name="text-align: left;" href="#"><i
@@ -225,7 +284,7 @@
                         </div>
                         <div class="form-item" style="width: 100%">
                             <div class="form-item-l" style="width: 70%; float: left">
-                                <label style="font-weight: normal"><span class="lang" key="">Độ rộng</span></label>
+                                <label style="font-weight: normal"><span class="lang" key="">Độ rộng:</span></label>
                             </div>
                             <div class="form-item-l" style="width: 30%; float: left">
                                 <input id="txtDoRong" class="form-control"/>
