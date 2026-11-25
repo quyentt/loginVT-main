@@ -536,8 +536,8 @@ LopHocPhan.prototype = {
             addKeyValue("strKieuHoc_Id", edu.util.getValById("dropSearch_KieuHoc"));
             addKeyValue("strTuKhoa", edu.util.getValById("txtSearch"));
             addKeyValue("dChiLayCacLopChuaPhanCong", $('#dChuaPhanCong').is(":checked") ? 1 : 0);
-            addKeyValue("dSoDaDangTuSo", edu.util.getValById('txtSearch_TuSo') ? parseInt(edu.util.getValById('txtSearch_TuSo')) : -1);
-            addKeyValue("dSoDaDangDenSo", edu.util.getValById('txtSearch_DenSo') ? parseInt(edu.util.getValById('txtSearch_DenSo')) : -1);
+            addKeyValue("dSoDaDangTuSo", me.laySo_SoDaDang('txtSearch_TuSo'));
+            addKeyValue("dSoDaDangDenSo", me.laySo_SoDaDang('txtSearch_DenSo'));
             var arrChecked_Id = edu.util.getArrCheckedIds("tblLopHocPhan", "checkX");
             for (var i = 0; i < arrChecked_Id.length; i++) {
                 addKeyValue("strDangKy_LopHocPhan_Id", arrChecked_Id[i]);
@@ -1351,8 +1351,36 @@ LopHocPhan.prototype = {
     --Discription: [0] GEN HTML ==> Systemroot
     --ULR: Modules
     -------------------------------------------*/
+    // Ô "Số đã đăng ký (từ số / đến số)" chỉ nhận số nguyên ≥ 0 — nhập nhầm chữ thì báo, không gọi API (API báo "Could not convert string to double")
+    kiemTra_SoDaDang: function () {
+        var arr = [
+            { id: 'txtSearch_TuSo', ten: 'Số đã đăng ký (từ số)' },
+            { id: 'txtSearch_DenSo', ten: 'Số đã đăng ký (đến số)' }
+        ];
+        for (var i = 0; i < arr.length; i++) {
+            var strGiaTri = $.trim($("#" + arr[i].id).val() || "");
+            if (strGiaTri && !/^\d+$/.test(strGiaTri)) {
+                edu.system.alert('Ô <b>' + arr[i].ten + '</b> chỉ được nhập số. Bạn đang nhập: "' + $("<div>").text(strGiaTri).html() + '"');
+                $("#" + arr[i].id).focus().select();
+                return false;
+            }
+        }
+        var strTu = $.trim($("#txtSearch_TuSo").val() || ""), strDen = $.trim($("#txtSearch_DenSo").val() || "");
+        if (strTu && strDen && parseInt(strTu, 10) > parseInt(strDen, 10)) {
+            edu.system.alert('<b>Số đã đăng ký (từ số)</b> không được lớn hơn <b>(đến số)</b>');
+            $("#txtSearch_TuSo").focus().select();
+            return false;
+        }
+        return true;
+    },
+    // Giá trị gửi API: số hợp lệ → số; trống hoặc không phải số → -1 (không lọc)
+    laySo_SoDaDang: function (strId) {
+        var strGiaTri = $.trim($("#" + strId).val() || "");
+        return /^\d+$/.test(strGiaTri) ? parseInt(strGiaTri, 10) : -1;
+    },
     getList_LopHocPhan: function (findOverride) {
         var me = this;
+        if (!me.kiemTra_SoDaDang()) return;
         $(".tblHidden").hide();
         $("#tblLopHocPhan").parent().show().prev(".scroll-top-mirror").show();
         findOverride = findOverride || {};
@@ -1378,8 +1406,8 @@ LopHocPhan.prototype = {
             'strDaoTao_ChuongTrinh_Id': edu.util.getValById('dropSearch_ChuongTrinh'),
             'strDaoTao_HeDaoTao_Id': edu.util.getValById('dropSearch_HeDaoTao'),
             'strDaoTao_KhoaQuanLy_Id': edu.util.getValById('dropSearch_KhoaQuanLy'),
-            'dSoDaDangTuSo': edu.util.getValById('txtSearch_TuSo') ? parseInt(edu.util.getValById('txtSearch_TuSo')): -1,
-            'dSoDaDangDenSo': edu.util.getValById('txtSearch_DenSo') ? parseInt(edu.util.getValById('txtSearch_DenSo')) : -1,
+            'dSoDaDangTuSo': me.laySo_SoDaDang('txtSearch_TuSo'),
+            'dSoDaDangDenSo': me.laySo_SoDaDang('txtSearch_DenSo'),
         };
 
 
@@ -1563,6 +1591,7 @@ LopHocPhan.prototype = {
     -------------------------------------------*/
     getList_LopHocPhanChiTiet: function (findOverride) {
         var me = this;
+        if (!me.kiemTra_SoDaDang()) return;
         $(".tblHidden").hide();
         $("#tblLopHocPhanChiTiet").parent().show().prev(".scroll-top-mirror").show();
         findOverride = findOverride || {};
@@ -1590,8 +1619,8 @@ LopHocPhan.prototype = {
             'strDaoTao_ChuongTrinh_Id': edu.util.getValById('dropSearch_ChuongTrinh'),
             'strDaoTao_HeDaoTao_Id': edu.util.getValById('dropSearch_HeDaoTao'),
             'strDaoTao_KhoaQuanLy_Id': edu.util.getValById('dropSearch_KhoaQuanLy'),
-            'dSoDaDangTuSo': edu.util.getValById('txtSearch_TuSo') ? parseInt(edu.util.getValById('txtSearch_TuSo')) : -1,
-            'dSoDaDangDenSo': edu.util.getValById('txtSearch_DenSo') ? parseInt(edu.util.getValById('txtSearch_DenSo')) : -1,
+            'dSoDaDangTuSo': me.laySo_SoDaDang('txtSearch_TuSo'),
+            'dSoDaDangDenSo': me.laySo_SoDaDang('txtSearch_DenSo'),
             
             'strKieuHoc_Id': edu.util.getValById('dropSearch_KieuHoc'),
         };
@@ -1649,6 +1678,7 @@ LopHocPhan.prototype = {
 
     getList_CanBoChiTiet: function (findOverride) {
         var me = this;
+        if (!me.kiemTra_SoDaDang()) return;
         findOverride = findOverride || {};
         if (!findOverride.onlyFetch) me._chiTietMode = "canbo";
         $(".tblHidden").hide();
@@ -1674,8 +1704,8 @@ LopHocPhan.prototype = {
             'strDaoTao_ChuongTrinh_Id': edu.util.getValById('dropSearch_ChuongTrinh'),
             'strDaoTao_HeDaoTao_Id': edu.util.getValById('dropSearch_HeDaoTao'),
             'strDaoTao_KhoaQuanLy_Id': edu.util.getValById('dropSearch_KhoaQuanLy'),
-            'dSoDaDangTuSo': edu.util.getValById('txtSearch_TuSo') ? parseInt(edu.util.getValById('txtSearch_TuSo')) : -1,
-            'dSoDaDangDenSo': edu.util.getValById('txtSearch_DenSo') ? parseInt(edu.util.getValById('txtSearch_DenSo')) : -1,
+            'dSoDaDangTuSo': me.laySo_SoDaDang('txtSearch_TuSo'),
+            'dSoDaDangDenSo': me.laySo_SoDaDang('txtSearch_DenSo'),
 
             'strKieuHoc_Id': edu.util.getValById('dropSearch_KieuHoc'),
         };
@@ -1855,6 +1885,7 @@ LopHocPhan.prototype = {
     -------------------------------------------*/
     getList_LopHocPhanRut: function (findOverride) {
         var me = this;
+        if (!me.kiemTra_SoDaDang()) return;
         $(".tblHidden").hide();
         $("#tblLopHocPhanChiTiet2").parent().show().prev(".scroll-top-mirror").show();
         findOverride = findOverride || {};
@@ -1878,8 +1909,8 @@ LopHocPhan.prototype = {
             'strDaoTao_ChuongTrinh_Id': edu.util.getValById('dropSearch_ChuongTrinh'),
             'strDaoTao_HeDaoTao_Id': edu.util.getValById('dropSearch_HeDaoTao'),
             'strDaoTao_KhoaQuanLy_Id': edu.util.getValById('dropSearch_KhoaQuanLy'),
-            'dSoDaDangTuSo': edu.util.getValById('txtSearch_TuSo') ? parseInt(edu.util.getValById('txtSearch_TuSo')) : -1,
-            'dSoDaDangDenSo': edu.util.getValById('txtSearch_DenSo') ? parseInt(edu.util.getValById('txtSearch_DenSo')) : -1,
+            'dSoDaDangTuSo': me.laySo_SoDaDang('txtSearch_TuSo'),
+            'dSoDaDangDenSo': me.laySo_SoDaDang('txtSearch_DenSo'),
 
             'strKieuHoc_Id': edu.util.getValById('dropSearch_KieuHoc'),
         };
