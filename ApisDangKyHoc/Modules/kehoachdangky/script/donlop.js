@@ -86,6 +86,13 @@ DonLop.prototype = {
         $('#dropSearch_HocPhan').on('select2:select', function (e) {
             me.getList_LopHocPhan();
         });
+        // Ô từ khóa: Enter = Tìm kiếm (truyền vào strTuKhoa của LayDSLopHocPhan)
+        $("#txtSearch_TuKhoa, #txtSearch_TuSo, #txtSearch_DenSo").keypress(function (e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                me.getList_LopHocPhan();
+            }
+        });
         $("#btnSearch").click(function (e) {
             me.getList_LopHocPhan();
         });
@@ -766,7 +773,7 @@ DonLop.prototype = {
             'action': 'DKH_ThongTin_MH/DSA4BRINLjEJLiIRKSAv',
             'func': 'pkg_dangkyhoc_thongtin.LayDSLopHocPhan',
             'iM': edu.system.iM,
-            'strTuKhoa': edu.util.getValById('txtAAAA'),
+            'strTuKhoa': $.trim($("#txtSearch_TuKhoa").val() || ""),
             'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_ThoiGianDaoTao'),
             'strDaoTao_HocPhan_Id': edu.util.getValById('dropSearch_HocPhan'),
             'strNguoiThucHien_Id': edu.system.userId,
