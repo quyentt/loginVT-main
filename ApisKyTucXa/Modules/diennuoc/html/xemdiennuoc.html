@@ -1,0 +1,632 @@
+﻿<!-- Main content -->
+<style>
+    /* =========================================================
+       Trang "Xem điện nước" - giao diện thẻ hiện đại
+       Tiền tố #main-content-wrapper .dn-page để thắng các quy tắc !important của indexi.aspx
+       ========================================================= */
+    #main-content-wrapper .dn-page {
+        --dn-blue: var(--color-blue, #2563eb);
+        --dn-blue-soft: #eef4ff;
+        --dn-amber: #d97706;
+        --dn-amber-soft: #fff4e0;
+        --dn-water: #0284c7;
+        --dn-water-soft: #e6f5fc;
+        --dn-line: #e6eaf2;
+        --dn-text: #0f172a;
+        --dn-muted: #64748b;
+    }
+    #main-content-wrapper .dn-page > .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 -10px;
+    }
+    #main-content-wrapper .dn-page > .row > [class*="col-"] {
+        float: none;
+        padding: 0 10px !important;
+    }
+    @media (max-width: 1199px) {
+        #main-content-wrapper .dn-page > .row > [class*="col-"] {
+            width: 100%;
+        }
+    }
+
+    /* Thanh tiêu đề trang */
+    #main-content-wrapper .dn-page .dn-hero {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin: 0 0 18px;
+        padding: 18px 22px;
+        color: #fff;
+        background: linear-gradient(120deg, #1e3a8a 0%, #2563eb 55%, #0ea5e9 100%);
+        border-radius: 16px;
+        box-shadow: 0 10px 24px rgba(37, 99, 235, .18);
+    }
+    #main-content-wrapper .dn-page .dn-hero-ico {
+        flex: none;
+        width: 52px;
+        height: 52px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        background: rgba(255, 255, 255, .16);
+        border: 1px solid rgba(255, 255, 255, .25);
+        border-radius: 14px;
+    }
+    #main-content-wrapper .dn-page .dn-hero h2 {
+        margin: 0 0 2px;
+        font-size: 20px;
+        font-weight: 700;
+        color: #fff !important;
+    }
+    #main-content-wrapper .dn-page .dn-hero p {
+        margin: 0;
+        font-size: 13px;
+        color: rgba(255, 255, 255, .85);
+    }
+
+    /* Thẻ trắng */
+    #main-content-wrapper .dn-page .dn-card {
+        margin: 0 0 18px !important;
+        background: #fff !important;
+        border: 1px solid var(--dn-line) !important;
+        border-radius: 16px !important;
+        box-shadow: 0 4px 16px rgba(15, 23, 42, .05) !important;
+        overflow: hidden;
+    }
+    #main-content-wrapper .dn-page .dn-col-left .dn-card > .box-body:not(.dn-list-body) {
+        padding: 18px 18px 16px !important;
+    }
+    #main-content-wrapper .dn-page .dn-card-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0 0 14px;
+        padding: 0 0 12px;
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--dn-text);
+        border-bottom: 1px solid var(--dn-line);
+    }
+    #main-content-wrapper .dn-page .dn-ico {
+        flex: none;
+        width: 32px;
+        height: 32px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        color: var(--dn-blue) !important;
+        background: var(--dn-blue-soft);
+        border-radius: 10px;
+    }
+    #main-content-wrapper .dn-page .dn-label {
+        display: block;
+        margin: 14px 0 6px;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: #334155;
+    }
+
+    /* Ô nhập, select2 */
+    #main-content-wrapper .dn-page .dn-col-left .select2-container,
+    #main-content-wrapper .dn-page .dn-col-left .form-control {
+        width: 100% !important;
+    }
+    #main-content-wrapper .dn-page .dn-col-left .form-control,
+    #main-content-wrapper .dn-page .dn-col-left .select2-container .select2-selection--single {
+        height: 42px !important;
+        background: #f8fafc !important;
+        border: 1px solid #d7dde8 !important;
+        border-radius: 10px !important;
+        box-shadow: none !important;
+        transition: border-color .15s ease, background-color .15s ease, box-shadow .15s ease;
+    }
+    #main-content-wrapper .dn-page .dn-col-left .form-control:focus,
+    #main-content-wrapper .dn-page .dn-col-left .select2-container--focus .select2-selection--single,
+    #main-content-wrapper .dn-page .dn-col-left .select2-container--open .select2-selection--single {
+        background: #fff !important;
+        border-color: var(--dn-blue) !important;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, .12) !important;
+    }
+    #main-content-wrapper .dn-page .dn-col-left .select2-selection--single .select2-selection__rendered {
+        padding-left: 12px !important;
+        line-height: 40px !important;
+    }
+    #main-content-wrapper .dn-page .dn-col-left .select2-selection--single .select2-selection__arrow {
+        height: 40px !important;
+    }
+    #main-content-wrapper .dn-page .dn-col-left .input-group {
+        display: flex;
+        width: 100%;
+        margin: 0 !important;
+    }
+    #main-content-wrapper .dn-page .dn-col-left .input-group > .form-control {
+        flex: 1 1 auto;
+        border-radius: 10px 0 0 10px !important;
+    }
+    #main-content-wrapper .dn-page .dn-col-left .input-group-addon {
+        width: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: #fff;
+        background: var(--dn-blue) !important;
+        border: 1px solid var(--dn-blue) !important;
+        border-radius: 0 10px 10px 0 !important;
+    }
+    #main-content-wrapper .dn-page .dn-col-left .input-group-addon:hover {
+        filter: brightness(1.08);
+    }
+    #main-content-wrapper .dn-page .dn-col-left .input-group-addon i {
+        color: #fff !important;
+    }
+    /* bỏ nền vàng của khung điều kiện tìm kiếm cũ */
+    #main-content-wrapper .dn-page .box-sub-search,
+    #main-content-wrapper .dn-page .box-sub-search .bss-item {
+        display: block !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: transparent !important;
+        border: 0 !important;
+    }
+
+    /* Thẻ danh sách phòng */
+    #main-content-wrapper .dn-page .dn-list-head,
+    #main-content-wrapper .dn-page .dn-meter-head {
+        display: flex !important;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 14px 18px !important;
+        background: #fff !important;
+        border-bottom: 1px solid var(--dn-line) !important;
+    }
+    #main-content-wrapper .dn-page .dn-list-head::before,
+    #main-content-wrapper .dn-page .dn-list-head::after,
+    #main-content-wrapper .dn-page .dn-meter-head::before,
+    #main-content-wrapper .dn-page .dn-meter-head::after {
+        display: none !important;
+    }
+    #main-content-wrapper .dn-page .dn-list-head .box-title,
+    #main-content-wrapper .dn-page .dn-meter-head .box-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0;
+        font-size: 15px !important;
+        font-weight: 700 !important;
+        color: var(--dn-text) !important;
+    }
+    #main-content-wrapper .dn-page .dn-list-head .badge {
+        float: none !important;
+        min-width: 30px;
+        padding: 5px 10px !important;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--dn-blue) !important;
+        background: var(--dn-blue-soft) !important;
+        border-radius: 999px !important;
+    }
+    #main-content-wrapper .dn-page #lblDienNuoc_Tong:empty::before {
+        content: "0";
+    }
+    #main-content-wrapper .dn-page .dn-list-body {
+        padding: 6px 8px 10px !important;
+    }
+    #main-content-wrapper .dn-page #tblDienNuoc_Phong {
+        border-collapse: separate;
+        border-spacing: 0 4px;
+    }
+    #main-content-wrapper .dn-page #tblDienNuoc_Phong tbody tr {
+        cursor: pointer;
+    }
+    #main-content-wrapper .dn-page #tblDienNuoc_Phong tbody td {
+        padding: 9px 12px !important;
+        font-size: 13.5px;
+        vertical-align: middle;
+        color: var(--dn-text);
+        background: transparent;
+        border: 0 !important;
+    }
+    #main-content-wrapper .dn-page #tblDienNuoc_Phong tbody td:first-child {
+        width: 40px;
+        font-weight: 700;
+        color: #94a3b8;
+        border-radius: 12px 0 0 12px;
+    }
+    #main-content-wrapper .dn-page #tblDienNuoc_Phong tbody td:last-child {
+        border-radius: 0 12px 12px 0;
+    }
+    #main-content-wrapper .dn-page #tblDienNuoc_Phong tbody tr:hover td {
+        background: #f5f8ff !important;
+    }
+    #main-content-wrapper .dn-page #tblDienNuoc_Phong .btn-circle {
+        width: 32px;
+        height: 32px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 !important;
+        background: var(--dn-blue-soft) !important;
+        border: 0 !important;
+        border-radius: 10px !important;
+    }
+    #main-content-wrapper .dn-page #tblDienNuoc_Phong .btn-circle i {
+        color: var(--dn-blue) !important;
+    }
+    #main-content-wrapper .dn-page #tblDienNuoc_Phong tbody tr:hover .btn-circle {
+        background: var(--dn-blue) !important;
+    }
+    #main-content-wrapper .dn-page #tblDienNuoc_Phong tbody tr:hover .btn-circle i {
+        color: #fff !important;
+    }
+
+    /* Thẻ "Phòng đang xem" */
+    #main-content-wrapper .dn-page .dn-room {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 18px 22px !important;
+    }
+    #main-content-wrapper .dn-page .dn-room-ico {
+        flex: none;
+        width: 52px;
+        height: 52px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        color: var(--dn-blue);
+        background: var(--dn-blue-soft);
+        border-radius: 14px;
+    }
+    #main-content-wrapper .dn-page .dn-room small {
+        display: block;
+        margin-bottom: 2px;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+        color: var(--dn-muted);
+    }
+    #main-content-wrapper .dn-page #lblPhong {
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--dn-text) !important;
+    }
+    #main-content-wrapper .dn-page #lblPhong:empty::before {
+        content: "Chưa chọn phòng - bấm vào một phòng ở danh sách bên trái";
+        font-size: 15px;
+        font-weight: 500;
+        color: #94a3b8;
+    }
+
+    /* Hai thẻ chốt số: điện (cam) và nước (xanh) */
+    #main-content-wrapper .dn-page .dn-meters {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(480px, 100%), 1fr));
+        gap: 18px;
+        margin-bottom: 18px;
+    }
+    #main-content-wrapper .dn-page .dn-meter-col {
+        min-width: 0;
+    }
+    #main-content-wrapper .dn-page .dn-meter-col > .dn-card {
+        height: 100%;
+        margin: 0 !important;
+    }
+    #main-content-wrapper .dn-page .dn-elec {
+        border-top: 4px solid var(--dn-amber) !important;
+    }
+    #main-content-wrapper .dn-page .dn-elec .dn-ico {
+        color: var(--dn-amber) !important;
+        background: var(--dn-amber-soft);
+    }
+    #main-content-wrapper .dn-page .dn-water {
+        border-top: 4px solid var(--dn-water) !important;
+    }
+    #main-content-wrapper .dn-page .dn-water .dn-ico {
+        color: var(--dn-water) !important;
+        background: var(--dn-water-soft);
+    }
+    #main-content-wrapper .dn-page .dn-meters .box-body {
+        padding: 0 !important;
+    }
+    #main-content-wrapper .dn-page .dn-meters .table {
+        margin: 0;
+        border: 0 !important;
+    }
+    #main-content-wrapper .dn-page .dn-meters .table > thead > tr > th {
+        padding: 11px 12px !important;
+        font-size: 12px;
+        font-weight: 700;
+        white-space: nowrap;
+        color: #475569 !important;
+        background: #f8fafc !important;
+        border: 0 !important;
+        border-bottom: 1px solid var(--dn-line) !important;
+    }
+    #main-content-wrapper .dn-page .dn-meters .table > tbody > tr > td {
+        padding: 10px 12px !important;
+        font-size: 13px;
+        text-align: center;
+        border: 0 !important;
+        border-bottom: 1px solid #eef0f4 !important;
+    }
+    #main-content-wrapper .dn-page .dn-meters .table > tbody > tr:hover > td {
+        background: #f5f8ff !important;
+    }
+    #main-content-wrapper .dn-page .dn-meters tbody tr:only-child td:only-child {
+        padding: 36px 10px !important;
+        color: #94a3b8;
+        background: transparent !important;
+    }
+    @media (min-width: 1200px) {
+        #main-content-wrapper .dn-page .dn-col-left {
+            position: sticky;
+            top: 10px;
+            align-self: flex-start;
+        }
+    }
+</style>
+<section class="content aps-kyTucXa dn-page">
+    <div class="dn-hero">
+        <div class="dn-hero-ico"><i class="fa fa-bolt"></i></div>
+        <div>
+            <h2>Xem điện nước</h2>
+            <p>Tra cứu số chốt công tơ điện, nước theo từng phòng ký túc xá</p>
+        </div>
+    </div>
+    <div class="row">
+        <!-- /.left-content -->
+        <div class="col-lg-4 dn-col-left">
+            <div class="box box-solid dn-card">
+                <div class="box-body">
+                    <p class="dn-card-title"><i class="fa fa-search dn-ico"></i> Tìm kiếm</p>
+                    <div class="bs-item input-group">
+                        <input type="text" id="txtSearch_Phong_TuKhoa" class="form-control" placeholder="Nhập tên phòng hoặc từ khóa">
+                        <span class="input-group-addon poiter" id="btnSearch_DienNuoc_ToaNha" title="Tìm kiếm">
+                            <i class="fa fa-search"></i>
+                        </span>
+                    </div>
+
+                    <div class="box-sub-search">
+                        <div class="bss-item">
+                            <label class="dn-label">Tòa nhà</label>
+                        </div>
+                        <div class="bss-item">
+                            <select id="dropSearch_DienNuoc_ToaNha" class="select-opt">
+                                <option value="">--Chọn tòa nhà--</option>
+                                <!-- Load from js -->
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box box-solid dn-card">
+                <div class="box-header with-border dn-list-head">
+                    <h3 class="box-title" title="Tổng danh sách phòng">
+                        <i class="fa fa-th-large dn-ico"></i> Danh sách phòng
+                    </h3>
+                    <span class="pull-right badge bg-light-blue">
+                        <span id="lblDienNuoc_Tong"></span>
+                    </span>
+                </div>
+                <div class="box-body dn-list-body">
+                    <table id="tblDienNuoc_Phong" class="table table-hover">
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- /.right-content -->
+        <div class="col-lg-8" id="zoneEdit">
+            <div class="dn-right">
+                <div class="box box-solid dn-card">
+                    <div class="box-body dn-room">
+                        <div class="dn-room-ico"><i class="fa fa-bed"></i></div>
+                        <div>
+                            <small>Phòng đang xem</small>
+                            <span id="lblPhong"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="zonecontent" id="zone_main">
+                    <div class="dn-meters">
+                        <div class="dn-meter-col">
+                            <div class="box dn-card dn-elec">
+                                <div class="box-header with-border dn-meter-head">
+                                    <h3 class="box-title"><i class="fa fa-bolt dn-ico"></i> Chốt số điện</h3>
+                                </div>
+                                <div class="box-body">
+                                    <div class="scroll-table-x bg-none">
+                                        <table id="tblChotSoDien" class="table table-hover table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th class="td-fixed td-center">TT</th>
+                                                    <th class="td-center">Công tơ</th>
+                                                    <th class="td-center">Ngày chốt</th>
+                                                    <th class="td-center">Chỉ số đầu</th>
+                                                    <th class="td-center">Chỉ số cuối</th>
+                                                    <th class="td-center">Số sử dụng</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dn-meter-col">
+                            <div class="box dn-card dn-water">
+                                <div class="box-header with-border dn-meter-head">
+                                    <h3 class="box-title"><i class="fa fa-tint dn-ico"></i> Chốt số nước</h3>
+
+                                </div>
+                                <div class="box-body">
+                                    <div class="scroll-table-x bg-none">
+                                        <table id="tblTChotSoNuoc" class="table table-hover table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th class="td-fixed td-center">TT</th>
+                                                    <th class="td-center">Công tơ</th>
+                                                    <th class="td-center">Ngày chốt</th>
+                                                    <th class="td-center">Chỉ số đầu</th>
+                                                    <th class="td-center">Chỉ số cuối</th>
+                                                    <th class="td-center">Số sử dụng</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 2. Add/Edit CoCauToChuc -->
+                <div class="box box-solid form-container zonecontent" id="zone_input_ChotSoDien" style="display: none">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><span class="myModalLabel_ChotSoDien"> <i class="fa fa-pencil"></i></span> Chốt số điện </h3>
+                        <div class="pull-right title-note">
+                            <a class="btn btn-default btnCloseToggle" href="#" title="Close"><i class="fa fa-times"></i></a>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div class="col-sm-12 box-view">
+                            <!-- Row Thong tin co ban -->
+                            <div class="row zone-box">
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        <div class="group-title-name">
+                                            Công tơ: <span class="title-colon"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input id="txtCongToDien_Phong" class="form-control" />
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <div class="group-title-name">
+                                            Ngày chốt:<span class="title-colon"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input id="txtDien_NgayChot" class="form-control input-datepicker" placeholder="Nhập ngày chốt số điện" />
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        <div class="group-title-name">
+                                            Chỉ số đầu <span class="title-colon"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input id="txtDien_ChiSoDau" class="form-control" />
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <div class="group-title-name">
+                                            Chỉ số cuối:<span class="title-colon"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input id="txtDien_ChiSoChot" class="form-control " />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <div class="pull-right">
+                            <a class="btn btn-default btnCloseToggle" id=""><i class="fa fa-times"></i> <span class="lang" key="">Đóng</span></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="box box-solid form-container zonecontent" id="zone_input_ChoSoNuoc" style="display: none">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><span class="myModalLabel_ChotSoNuoc"> <i class="fa fa-pencil"></i></span> Chốt số nước  </h3>
+                        <div class="pull-right title-note">
+                            <a class="btn btn-default btnCloseToggle" href="#" title="Close"><i class="fa fa-times"></i></a>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div class="col-sm-12 box-view">
+                            <!-- Row Thong tin co ban -->
+                            <div class="row zone-box">
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        <div class="group-title-name">
+                                            Công tơ: <span class="title-colon"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input id="txtCongToNuoc_Phong" class="form-control" />
+                                    </div>
+
+                                    <div class="col-sm-2">
+                                        <div class="group-title-name">
+                                            Ngày chốt:<span class="title-colon"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input id="txtNuoc_NgayChot" class="form-control input-datepicker" placeholder="Nhập ngày chốt số điện" />
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        <div class="group-title-name">
+                                            Chỉ số đầu <span class="title-colon"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input id="txtNuoc_ChiSoDau" class="form-control" />
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <div class="group-title-name">
+                                            Chỉ số chốt:<span class="title-colon"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input id="txtNuoc_ChiSoChot" class="form-control " />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <div class="pull-right">
+                            <a class="btn btn-default btnCloseToggle" id=""><i class="fa fa-times"></i> <span class="lang" key="">Đóng</span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+    </div>
+</section>
+<!-- nạp giao diện chung KTX. Bộ nạp trang (loadPage) chỉ tự thêm thư mục ứng dụng cho thẻ nhúng file js, không thêm cho thẻ nhúng css,
+     nên đường dẫn được dựng bằng edu.system.appCode (cùng quy ước với file js của trang) -->
+<script type="text/javascript">
+    (function () {
+        if (document.getElementById('ktx-ui-css')) return;
+        var l = document.createElement('link');
+        l.id = 'ktx-ui-css';
+        l.rel = 'stylesheet';
+        l.href = ((window.edu && edu.system && edu.system.appCode) ? edu.system.appCode + '/' : '') + 'modules/common/ktx-ui.css?v=1.0.1.0';
+        document.head.appendChild(l);
+    })();
+</script>
+<!-- page script -->
+<script src="modules/diennuoc/script/xemdiennuoc.js?v=1.0.0.0"></script>
+<script type="text/javascript">
+    //init
+    var main_doc = {};
+    main_doc['XemDienNuoc'] = new XemDienNuoc();
+    $(document).ready(function () {
+        main_doc.XemDienNuoc.init();
+    });
+</script>
