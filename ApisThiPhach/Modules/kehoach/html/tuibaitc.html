@@ -555,4 +555,14 @@
         max-height: 220px !important;
         overflow-y: auto !important;
     }
+
+    /* FIX 2026-11-26: modal "Thêm mới - Túi" không cuộn được, phần đầu (tiêu đề, form) mất phía trên màn hình.
+       Gốc: styles-content.css có .myModal_Tui .modal-content { position:absolute } (rule cũ, chỉ modal này)
+       + rule chung .modal.fade .modal-dialog { display:flex; min-height:calc(100% - 1rem); align-items:center }.
+       Nội dung absolute không đẩy khung cao lên -> bị căn giữa trong khung cao bằng màn hình -> tràn LÊN trên
+       (vùng tràn phía trên không cuộn tới được). Trả nội dung về luồng thường; width 100% để flex item không co hẹp. */
+    #myModal_Tui .modal-content {
+        position: relative !important;
+        width: 100% !important;
+    }
 </style>

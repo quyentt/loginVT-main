@@ -1,18 +1,11 @@
-﻿
-<section class="content">
-
-    <div class="row">
-        <!-- /.left-content -->
-        <!-- /.right-content -->
-        <div class="col-lg-12">
-            <!-- box Notify_VBSC -->
-            <div class="box box-solid zone-bus">
-                <div class="box box-solid">
-                    <div class="box-header with-border">
-                        <h3 class="box-title"><i class="fa fa-window-restore"></i> Tìm kiếm</h3>
-                    </div>
-                    <div class="box-body">
-                        <div class="bss-item">
+﻿<section class="content aps-TKGG">
+    <div class="row aps-hesoquymo" id="hsqmWrap">
+        <div class="zone-bus box box-solid pd0" id="zonebatdau">
+            <!-- Tìm kiếm -->
+            <div class="box box-solid box-search pd20 pb10">
+                <div class="box-body pd0">
+                    <div class="area-search">
+                        <div id="search" class="inputSearch">
                             <div class="col-sm-3 item-search">
                                 <select id="dropSearch_PhanLoai" class="select-opt"></select>
                             </div>
@@ -23,146 +16,186 @@
                                 <input id="txtSearch_TuKhoa" class="form-control" placeholder="Nhập từ khóa tìm kiếm" />
                             </div>
                             <div class="col-sm-3 item-search">
-                                <a class="btn btn-default" id="btnSearch"><i class="fa fa-search"></i> <span class="lang" key="">Tìm kiếm</span></a>
+                                <a id="btnSearch" class="btn btn-default btn-search"><i class="fa fa-search"></i> <span class="lang" key="">Tìm kiếm</span></a>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="box box-solid">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">
-                            <i class="fa fa-list-alt"></i> Danh sách
-                            <span class="badge bg-light-blue">
-                                <span id="lblHeSoQuyMo_Tong"></span>
-                            </span>
-                        </h3>
+            </div>
+            <div class="clear"></div>
 
-                        <div class="pull-right">
-                            <a class="btn btn-primary btnAdd" id="btnAdd_HeSoQuyMo"  href="#"><i class="fa fa-plus"></i> Thêm mới</a>
-                            <a id="btnDelete_HeSoQuyMo" class="btn btn-default"><i class="fa fa-trash"></i> Xóa</a>
-                        </div>
+            <!-- Danh sách -->
+            <div class="box box-solid aps-list-plan pd20 pt10">
+                <div class="box-header pd0">
+                    <h3 class="box-title pt15">
+                        <i class="fa-solid fa-books-medical"></i> Danh sách hệ số quy mô
+                        <span class="pull-right badge bg-light-blue ml-10">
+                            <span id="lblHeSoQuyMo_Tong"></span>
+                        </span>
+                    </h3>
+                    <div class="box-tools pull-right hsqm-tools">
+                        <a id="btnDelete_HeSoQuyMo" class="btn btn-danger"><i class="fa fa-trash"></i> Xóa</a>
+                        <a id="btnKhaiNhieu_HeSoQuyMo" class="btn btn-primary" href="#"><i class="fa fa-th-list"></i> Khai nhiều loại</a>
+                        <a id="btnAdd_HeSoQuyMo" class="btn btn-primary btnAdd" href="#"><i class="fa fa-plus"></i> Thêm mới</a>
                     </div>
-                    <div class="box-body">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="col-sm-12 scroll-table-x">
-                                    <table id="tblHeSoQuyMo" class="table table-hover table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th class="td-fixed td-center">Stt</th>
-                                                <th class="td-center">Phân loại</th>
-                                                <th class="td-center">Phạm vi áp dụng</th>
-                                                <th class="td-center">Số bắt đầu</th>
-                                                <th class="td-center">Số kết thúc</th>
-                                                <th class="td-center">Hệ số</th>
-                                                <th class="td-center">Thời gian</th>
-                                                <th class="td-center">Ngày tạo</th>
-                                                <th class="td-center">Người tạo</th>
-                                                <th class="td-fixed td-center">Sửa</th>
-                                                <th class="td-center td-fixed"><input type="checkbox" class="chkSystemSelectAll"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody></tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
+                </div>
+                <div class="box-body pd0">
+                    <div class="aps-table-select mt-15 scroll-table-x">
+                        <table id="tblHeSoQuyMo" class="table table-hover table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="td-fixed td-center">Stt</th>
+                                    <th class="td-center">Phạm vi</th>
+                                    <th class="td-center">Loại</th>
+                                    <th class="td-center">Số bắt đầu</th>
+                                    <th class="td-center">Số kết thúc</th>
+                                    <th class="td-center">Hệ số</th>
+                                    <th class="td-center">Thời gian</th>
+                                    <th class="td-center">Ngày tạo</th>
+                                    <th class="td-center">Người tạo</th>
+                                    <th class="td-fixed td-center">Sửa</th>
+                                    <th class="td-center td-fixed"><input type="checkbox" class="chkSystemSelectAll"></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-<div class="modal fade" id="myModal_HeSoQuyMo" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+
+<!-- Thêm / sửa 1 bản ghi -->
+<div class="modal fade" id="myModal_HeSoQuyMo" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width: 640px; max-width: 96%;">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h3 class="box-title"><span class="myModalLabel"> <i class="fa fa-pencil"></i></span> Hệ số</h3>
+                <h3 class="box-title" id="lblTieuDe_HSQM"><i class="fa fa-plus"></i> Thêm mới hệ số quy mô</h3>
             </div>
-            <div class="modal-body" id="modal_body">
-                <div class="row zone-box">
+            <div class="modal-body">
+                <div class="hsqm-form">
+                    <label class="hsqm-lbl">Phạm vi <b class="hsqm-req">*</b></label>
+                    <div class="hsqm-ctl">
+                        <div class="zoneOpenNew"><select id="dropPhamViApDung" class="select-opt"></select></div>
+                        <div class="btnOpenDelete hsqm-static" style="display: none;"><span id="lblPhamVi"></span></div>
+                    </div>
 
-                    <!--row 1-->
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <label style="font-weight: normal"><span class="lang" key="">Phạm vi</span></label>
-                        </div>
-                        <div class="col-sm-9 zoneOpenNew">
-                            <select id="dropPhamViApDung" class="select-opt"></select>
-                        </div>
-                        <div class="col-sm-9 btnOpenDelete">
-            <span id="lblPhamVi"></span>
-        </div>
-                        <div class="clear"></div>
+                    <label class="hsqm-lbl">Loại <b class="hsqm-req">*</b></label>
+                    <div class="hsqm-ctl">
+                        <div class="zoneOpenNew"><select id="dropLoaiApDung" class="select-opt"></select></div>
+                        <div class="btnOpenDelete hsqm-static" style="display: none;"><span id="lblLoaiApDung"></span></div>
                     </div>
-                    <div class="row zoneOpenNew">
-                        <div class="col-sm-3">
-                            <label style="font-weight: normal"><span class="lang" key="">Loại</span></label>
-                        </div>
-                        <div class="col-sm-9">
-                            <select id="dropLoaiApDung" class="select-opt"></select>
-                        </div>
-                        <div class="col-sm-9 btnOpenDelete">
-                            <span id="lblLoaiApDung"></span>
-                        </div>
-                        <div class="clear"></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <label style="font-weight: normal"><span class="lang" key="">Thời gian</span></label>
-                        </div>
-                        <div class="col-sm-9">
-                            <select id="dropThoiGian" class="select-opt"></select>
-                        </div>
-                        <!--<div class="col-sm-9 btnOpenDelete">
-            <span id="lblThoiGian"></span>
-        </div>-->
-                        <div class="clear"></div>
-                    </div>
-                    <!--row 2-->
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <label style="font-weight: normal"><span class="lang" key="">Số bắt đầu</span></label>
-                        </div>
-                        <div class="col-sm-9">
-                            <input type="text" id="txtSoBatDau" class="form-control" />
-                        </div>
-                        <div class="clear"></div>
-                    </div>
-                    <!--row 2-->
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <label style="font-weight: normal"><span class="lang" key="">Số kết thúc</span></label>
-                        </div>
-                        <div class="col-sm-9">
-                            <input type="text" id="txtSoKetThuc" class="form-control" />
-                        </div>
-                        <div class="clear"></div>
-                    </div>
-                    <!--row 2-->
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <label style="font-weight: normal"><span class="lang" key="">Hệ số</span></label>
-                        </div>
-                        <div class="col-sm-9">
-                            <input type="text" id="txtHeSo" class="form-control" />
-                        </div>
-                        <div class="clear"></div>
-                    </div>
+
+                    <label class="hsqm-lbl">Thời gian</label>
+                    <div class="hsqm-ctl"><select id="dropThoiGian" class="select-opt"></select></div>
+
+                    <label class="hsqm-lbl">Số bắt đầu</label>
+                    <div class="hsqm-ctl"><input type="text" id="txtSoBatDau" class="form-control" inputmode="decimal" placeholder="VD: 0" /></div>
+
+                    <label class="hsqm-lbl">Số kết thúc</label>
+                    <div class="hsqm-ctl"><input type="text" id="txtSoKetThuc" class="form-control" inputmode="decimal" placeholder="VD: 40" /></div>
+
+                    <label class="hsqm-lbl">Hệ số</label>
+                    <div class="hsqm-ctl"><input type="text" id="txtHeSo" class="form-control" inputmode="decimal" placeholder="VD: 1,2" /></div>
                 </div>
             </div>
-            <div class="clear"></div>
-            <div id="notify"></div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>
-                <a class="submit btn btn-primary" id="btnSave_HeSoQuyMo"><i class="fa fa-check-circle"></i><span class="lang" key=""> Lưu</span></a>
+                <div class="hsqm-foot">
+                    <!-- Xoa tach trai, chi hien khi Sua (Corei: .btnEdit hien / .btnAdd an .btnOpenDelete) -->
+                    <div class="hsqm-foot-left">
+                        <a class="btn btn-danger btnOpenDelete" id="btnXoaMot_HeSoQuyMo" style="display: none;"><i class="fa fa-trash"></i> Xóa</a>
+                    </div>
+                    <div class="hsqm-foot-btns">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>
+                        <a class="submit btn btn-primary" id="btnSave_HeSoQuyMo"><i class="fa fa-check-circle"></i> <span class="lang" key="">Lưu</span></a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Khai nhiều loại 1 lần: mỗi loại × mỗi dải = 1 lần gọi hàm Thêm hiện tại -->
+<div class="modal fade" id="myModal_HeSoQuyMo_Nhieu" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width: 1100px; max-width: 96%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h3 class="box-title"><i class="fa fa-th-list"></i> Khai hệ số quy mô cho nhiều loại</h3>
+            </div>
+            <div class="modal-body">
+                <div class="hsqm-n">
+                    <div class="hsqm-sec">
+                        <div class="hsqm-sec-h"><span class="hsqm-no">1</span> Phạm vi và thời gian</div>
+                        <div class="hsqm-grid2">
+                            <div class="hsqm-field">
+                                <label>Phạm vi <b class="hsqm-req">*</b></label>
+                                <select id="dropPhamVi_N" class="select-opt"></select>
+                            </div>
+                            <div class="hsqm-field">
+                                <label>Thời gian</label>
+                                <select id="dropThoiGian_N" class="select-opt"></select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hsqm-layout">
+                        <div class="hsqm-sec">
+                            <div class="hsqm-sec-h">
+                                <span class="hsqm-no">2</span> Chọn loại áp dụng
+                                <span class="hsqm-count" id="lblDemLoai_N">Đã chọn 0/0</span>
+                            </div>
+                            <div class="hsqm-toolbar">
+                                <input type="text" id="txtLocLoai_N" class="form-control" placeholder="Lọc theo tên hoặc mã loại" />
+                                <a href="#" id="btnChonHetLoai_N" class="hsqm-link">Chọn tất cả</a>
+                                <a href="#" id="btnBoChonLoai_N" class="hsqm-link hsqm-link-muted">Bỏ chọn</a>
+                            </div>
+                            <div id="zoneLoai_N" class="hsqm-chkgrid">
+                                <div class="hsqm-empty">Chọn phạm vi để hiện danh sách loại.</div>
+                            </div>
+                        </div>
+
+                        <div class="hsqm-sec">
+                            <div class="hsqm-sec-h">
+                                <span class="hsqm-no">3</span> Các dải quy mô và hệ số
+                                <a href="#" id="btnThemDai_N" class="hsqm-link hsqm-right"><i class="fa fa-plus"></i> Thêm dải</a>
+                            </div>
+                            <table class="hsqm-dai" id="tblDai_N">
+                                <thead>
+                                    <tr>
+                                        <th class="hsqm-stt">#</th>
+                                        <th>Số bắt đầu</th>
+                                        <th>Số kết thúc</th>
+                                        <th>Hệ số</th>
+                                        <th class="hsqm-col-x"></th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                            <div class="hsqm-hint">Mỗi loại được chọn sẽ được lưu với tất cả các dải ở đây. Dòng để trống sẽ được bỏ qua.</div>
+                        </div>
+                    </div>
+
+                    <div id="zoneThongBao_N" class="hsqm-alert" style="display: none;"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="hsqm-foot">
+                    <span class="hsqm-sum" id="lblTongHop_N">Chọn loại và nhập dải quy mô để lưu.</span>
+                    <div class="hsqm-foot-btns">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> Đóng</button>
+                        <a class="btn btn-primary" id="btnSave_HeSoQuyMo_Nhieu"><i class="fa fa-check-circle"></i> <span id="lblSave_N">Lưu</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- page script -->
-<script src="modules/kehoach/script/HeSoQuyMo.js?v=1.0.0.3"></script>
+<script src="modules/kehoach/script/HeSoQuyMo.js?v=1.0.0.5"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['HeSoQuyMo'] = new HeSoQuyMo();
@@ -197,5 +230,99 @@
     .modal .select2-results__options {
         max-height: 220px !important;
         overflow-y: auto !important;
+    }
+
+    /* ===== Hệ số quy mô (scoped) ===== */
+    /* Xóa tách khỏi nhóm nút thêm để tránh bấm nhầm */
+    #hsqmWrap .hsqm-tools #btnDelete_HeSoQuyMo { margin-right: 14px !important; }
+
+    /* Form 1 bản ghi: lưới nhãn | ô nhập, các dòng luôn thẳng hàng */
+    #myModal_HeSoQuyMo .hsqm-form {
+        display: grid;
+        grid-template-columns: 120px minmax(0, 1fr);
+        gap: 14px 16px;
+        align-items: center;
+        padding: 18px 20px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+    }
+    #myModal_HeSoQuyMo .hsqm-lbl { margin: 0; font-weight: 600; color: #334155; line-height: 1.3; }
+    #myModal_HeSoQuyMo .hsqm-ctl { min-width: 0; }
+    #myModal_HeSoQuyMo .hsqm-static {
+        display: flex; align-items: center; min-height: 34px; padding: 6px 12px;
+        background: #eef2f7; border: 1px solid #e2e8f0; border-radius: 6px;
+        font-weight: 600; color: #0f172a;
+    }
+    .hsqm-req { color: #dc2626; font-weight: 700; }
+
+    /* Chân modal: tóm tắt bên trái, nút bên phải */
+    #myModal_HeSoQuyMo .hsqm-foot,
+    #myModal_HeSoQuyMo_Nhieu .hsqm-foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; width: 100%; }
+    #myModal_HeSoQuyMo .hsqm-foot-btns,
+    #myModal_HeSoQuyMo_Nhieu .hsqm-foot-btns { display: flex; gap: 10px; flex: 0 0 auto; }
+    #myModal_HeSoQuyMo .hsqm-foot-left .btn { margin: 0 !important; }
+    #myModal_HeSoQuyMo .hsqm-foot-btns .btn,
+    #myModal_HeSoQuyMo_Nhieu .hsqm-foot-btns .btn { margin: 0 !important; }
+    #myModal_HeSoQuyMo_Nhieu .hsqm-sum { color: #334155; font-weight: 500; text-align: left; }
+    #myModal_HeSoQuyMo_Nhieu .hsqm-sum b { color: #0f172a; }
+
+    /* Form khai nhiều loại */
+    #myModal_HeSoQuyMo_Nhieu .hsqm-n { display: flex; flex-direction: column; gap: 16px; }
+    #myModal_HeSoQuyMo_Nhieu .hsqm-sec { min-width: 0; padding: 14px 16px 16px; background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; }
+    #myModal_HeSoQuyMo_Nhieu .hsqm-sec-h { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 14px; font-weight: 700; color: #0f172a; }
+    #myModal_HeSoQuyMo_Nhieu .hsqm-no {
+        display: inline-flex; align-items: center; justify-content: center; flex: 0 0 24px;
+        width: 24px; height: 24px; border-radius: 50%; background: #223771; color: #fff; font-size: 12px;
+    }
+    #myModal_HeSoQuyMo_Nhieu .hsqm-count { margin-left: auto; padding: 2px 10px; border-radius: 999px; background: #eff6ff; color: #1d4ed8; font-size: 12px; font-weight: 600; }
+    #myModal_HeSoQuyMo_Nhieu .hsqm-right { margin-left: auto; }
+    #myModal_HeSoQuyMo_Nhieu .hsqm-layout { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+    #myModal_HeSoQuyMo_Nhieu .hsqm-grid2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px 16px; }
+    #myModal_HeSoQuyMo_Nhieu .hsqm-field { min-width: 0; }
+    #myModal_HeSoQuyMo_Nhieu .hsqm-field > label { display: block; margin-bottom: 6px; font-weight: 600; color: #334155; }
+    #myModal_HeSoQuyMo_Nhieu .hsqm-toolbar { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
+    #myModal_HeSoQuyMo_Nhieu .hsqm-toolbar .form-control { flex: 1 1 auto; min-width: 0; }
+    #myModal_HeSoQuyMo_Nhieu .hsqm-link { color: #2563eb; font-weight: 600; white-space: nowrap; cursor: pointer; text-decoration: none; }
+    #myModal_HeSoQuyMo_Nhieu .hsqm-link:hover { text-decoration: underline; }
+    #myModal_HeSoQuyMo_Nhieu .hsqm-link-muted { color: #64748b; }
+    #myModal_HeSoQuyMo_Nhieu .hsqm-chkgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; max-height: 320px; overflow-y: auto; padding: 2px; }
+    #myModal_HeSoQuyMo_Nhieu .hsqm-chk {
+        display: flex; align-items: center; gap: 8px; margin: 0; padding: 8px 10px; min-width: 0;
+        background: #fff; border: 1px solid #e2e8f0; border-radius: 8px;
+        font-weight: 500; color: #0f172a; cursor: pointer;
+    }
+    #myModal_HeSoQuyMo_Nhieu .hsqm-chk:hover { border-color: #93c5fd; background: #f8fbff; }
+    #myModal_HeSoQuyMo_Nhieu .hsqm-chk.on { border-color: #2563eb; background: #eff6ff; }
+    #myModal_HeSoQuyMo_Nhieu .hsqm-chk input { flex: 0 0 auto; width: 16px; height: 16px; margin: 0; }
+    /* ten loai dai (VD "Elearning - có điểm danh SV") xuong toi da 2 dong, khong cat mat phan phan biet */
+    #myModal_HeSoQuyMo_Nhieu .hsqm-chk-t {
+        flex: 1 1 auto; min-width: 0; line-height: 1.35; overflow: hidden; word-break: break-word;
+        display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    }
+    #myModal_HeSoQuyMo_Nhieu .hsqm-chk-m { flex: 0 0 auto; padding: 1px 7px; border-radius: 4px; background: #f1f5f9; color: #475569; font-size: 12px; font-weight: 600; }
+    #myModal_HeSoQuyMo_Nhieu .hsqm-empty { grid-column: 1 / -1; padding: 22px 12px; text-align: center; color: #64748b; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 8px; }
+    #myModal_HeSoQuyMo_Nhieu table.hsqm-dai { width: 100%; border-collapse: separate; border-spacing: 0; }
+    #myModal_HeSoQuyMo_Nhieu table.hsqm-dai th { padding: 0 6px 6px; font-size: 12px; font-weight: 600; color: #475569; text-align: left; border: 0; background: transparent; }
+    #myModal_HeSoQuyMo_Nhieu table.hsqm-dai td { padding: 4px 6px; vertical-align: middle; border: 0; }
+    #myModal_HeSoQuyMo_Nhieu .hsqm-stt { width: 28px; color: #64748b; text-align: center; }
+    #myModal_HeSoQuyMo_Nhieu .hsqm-col-x { width: 38px; }
+    #myModal_HeSoQuyMo_Nhieu .hsqm-x { width: 32px; height: 32px; padding: 0; border: 0; border-radius: 6px; background: transparent; color: #94a3b8; }
+    #myModal_HeSoQuyMo_Nhieu .hsqm-x:hover { background: #fef2f2; color: #dc2626; }
+    /* 2 id: thang rule "html body.skin-blue #main-content-wrapper .form-control { border ... !important }" cua vo indexi */
+    #myModal_HeSoQuyMo_Nhieu#myModal_HeSoQuyMo_Nhieu .form-control.hsqm-invalid { border: 1px solid #dc2626 !important; box-shadow: 0 0 0 2px rgba(220, 38, 38, .18) !important; background: #fff7f7 !important; }
+    #myModal_HeSoQuyMo_Nhieu .hsqm-hint { margin-top: 8px; font-size: 12px; color: #64748b; }
+    #myModal_HeSoQuyMo_Nhieu .hsqm-alert { padding: 10px 14px; border-radius: 8px; font-weight: 500; }
+    #myModal_HeSoQuyMo_Nhieu .hsqm-alert.w { background: #fff7ed; border: 1px solid #fdba74; color: #9a3412; }
+    #myModal_HeSoQuyMo_Nhieu .hsqm-alert.i { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e3a8a; }
+    #myModal_HeSoQuyMo_Nhieu .hsqm-alert.s { background: #f0fdf4; border: 1px solid #86efac; color: #166534; }
+    @media (max-width: 991px) {
+        #myModal_HeSoQuyMo_Nhieu .hsqm-layout,
+        #myModal_HeSoQuyMo_Nhieu .hsqm-grid2 { grid-template-columns: minmax(0, 1fr); }
+    }
+    @media (max-width: 600px) {
+        #myModal_HeSoQuyMo .hsqm-form { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+        #myModal_HeSoQuyMo_Nhieu .hsqm-chkgrid { grid-template-columns: minmax(0, 1fr); }
+        #myModal_HeSoQuyMo_Nhieu .hsqm-foot { flex-direction: column; align-items: stretch; }
     }
 </style>
