@@ -353,19 +353,34 @@ HeSoQuyMo.prototype = {
         }, false, false, false, null);
     },
     cbGenCombo_LoaiApDung: function (data) {
+        var me = this;
+        me.logMauCombo("dropLoaiApDung", data);
         var obj = {
             data: data,
             renderInfor: {
                 id: "ID",
                 parentId: "",
                 name: "TEN",
-                code: "",
-                avatar: ""
+                code: "MA",
+                avatar: "",
+                mRender: function (nRow, aData) {
+                    return me.tenMa(aData);
+                }
             },
             renderPlace: ["dropLoaiApDung"],
             type: "",
             title: "Chọn loại",
         }
         edu.system.loadToCombo_data(obj);
+    },
+    /* Combo hien "TEN - MA". Ma lay o MA, khong co thi HANHDONG_MA; khong co ma thi chi hien TEN */
+    tenMa: function (aData) {
+        var ten = edu.util.returnEmpty(aData.TEN);
+        var ma = edu.util.returnEmpty(aData.MA || aData.HANHDONG_MA);
+        return ma ? ten + " - " + ma : ten;
+    },
+    /* Ghi ban ghi dau cua combo ra console (F12) de doi chieu ten truong ma neu van khong thay ma */
+    logMauCombo: function (strDrop_Id, data) {
+        if (window.console && data && data.length) console.log("[hesoquymo] " + strDrop_Id + " - ban ghi dau:", data[0]);
     },
 }
