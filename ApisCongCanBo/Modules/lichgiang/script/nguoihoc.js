@@ -943,8 +943,10 @@ NguoiHoc.prototype = {
         var objLich = me.dtLichHoc.find(e => e.ID === me.strLichHoc_Id);
 
         var obj_list = {
-            'action': 'NS_ThongTinCanBo/LayDSDangKyHoc',
-            'type': 'GET',
+            'action': 'NS_ThongTinCanBo_MH/DSA4BRIFIC8mCjgJLiIP',
+            'func': 'PKG_CONGTHONGTINCANBO.LayDSDangKyHoc',
+            'iM': edu.system.iM,
+            'type': 'POST',
             'strTuKhoa': edu.util.getValById('txtAAAA'),
             'strNgayGhiNhan': objLich.NGAYHOC,
             'dGio': objLich.GIOBATDAU,
@@ -974,7 +976,7 @@ NguoiHoc.prototype = {
                 edu.system.alert(JSON.stringify(er), "w");
                 if (typeof callback === "function") callback();
             },
-            type: 'GET',
+            type: 'POST',
             action: obj_list.action,
 
             contentType: true,

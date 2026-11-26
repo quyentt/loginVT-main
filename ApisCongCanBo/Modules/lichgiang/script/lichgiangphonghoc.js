@@ -631,8 +631,10 @@ LichGiang.prototype = {
         var objLich = me.dtLichHoc.find(e => e.ID === me.strLichHoc_Id);
 
         var obj_list = {
-            'action': 'NS_ThongTinCanBo/LayDSDangKyHoc_2',
-            'type': 'GET',
+            'action': 'NS_ThongTinCanBo_MH/DSA4BRIFIC8mCjgJLiIecwPP',
+            'func': 'PKG_CONGTHONGTINCANBO.LayDSDangKyHoc_2',
+            'iM': edu.system.iM,
+            'type': 'POST',
             'strTuKhoa': edu.util.getValById('txtAAAA'),
             'strNgayGhiNhan': objLich.NGAYHOC,
             'dGio': objLich.GIOBATDAU,
@@ -661,7 +663,7 @@ LichGiang.prototype = {
 
                 edu.system.alert(JSON.stringify(er), "w");
             },
-            type: 'GET',
+            type: 'POST',
             action: obj_list.action,
 
             contentType: true,
