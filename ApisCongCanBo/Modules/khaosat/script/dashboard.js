@@ -1,16 +1,17 @@
-﻿/*----------------------------------------------
+﻿﻿/*----------------------------------------------
 --Author: Claude
 --Date of created: 26/11/2026
---Note: Dashboard vai trò Khảo sát — chỉ đọc
---  KS_ThongTin/LayDSPhieu_Mau_NguoiDung   : phiếu mẫu (TENPHIEU, LOAIPHIEU_TEN)
---  KS_ThongTin/LayDSKS_KeHoachKhaoSat     : kế hoạch (MA, TENKEHOACH, CHEDOKHAOSAT_TEN, NGAYBATDAU, NGAYKETTHUC)
---  KS_ThongTin/LayDSKS_PhieuKhaoSat       : phiếu của một kế hoạch (TENPHIEU, TYLE)
+--Note: Dashboard vai trò Khảo sát (chức năng CCB.KSDASH, #ksdashboard) — chỉ đọc
+--  KS_ThongTin/LayDSPhieu_Mau_NguoiDung : phiếu mẫu (TENPHIEU, LOAIPHIEU_TEN)
+--  KS_ThongTin/LayDSKS_KeHoachKhaoSat   : kế hoạch (TENKEHOACH, NAMHOC, HOCKY, CHEDOKHAOSAT 0/1/2,
+--                                         NGAYBATDAU, NGAYKETTHUC dd/mm/yyyy, KS_PHIEUKHAOSAT_MAU_TEN,
+--                                         TONGSOPHIEUGUI, TONGSOPHIEUDATHUCHIEN)
 ----------------------------------------------*/
 function KhaoSatDashboard() { };
 KhaoSatDashboard.prototype = {
     dtPhieuMau: [],
     dtKeHoach: [],
-    iSoKeHoachTheoDoi: 6,   // số kế hoạch đang diễn ra lấy tỷ lệ phiếu
+    iSoKeHoachTheoDoi: 6,
 
     init: function () {
         var me = this;
@@ -27,6 +28,7 @@ KhaoSatDashboard.prototype = {
     loadAll: function () {
         var me = this;
         $("#ksdb .ksdb-kpi-num").html('<span class="ksdb-skel"></span>');
+        $("#ksdb .ksdb-kpi-sub").text("");
         $("#zoneKsDb_DangDienRa, #zoneKsDb_CheDo, #zoneKsDb_LoaiPhieu, #zoneKsDb_SapToi").html(me.htmlLoading());
         $("#lblKsDb_CapNhat").text("Đang tải...");
         var iXong = 0;
@@ -66,12 +68,10 @@ KhaoSatDashboard.prototype = {
         };
         me.callGet(obj_list, function (dt) {
             me.dtPhieuMau = dt;
-            me.genKpi_PhieuMau(dt);
-            me.genBars("zoneKsDb_LoaiPhieu", me.groupBy(dt, "LOAIPHIEU_TEN"), "Chưa có phiếu mẫu");
+            $("#lblKsDb_SoPhieuMau").text(me.formatNum(dt.length));
             fnXong();
         }, function (msg) {
             $("#lblKsDb_SoPhieuMau").text("—");
-            $("#zoneKsDb_LoaiPhieu").html(me.htmlError(msg));
             fnXong();
         });
     },
@@ -90,54 +90,38 @@ KhaoSatDashboard.prototype = {
             me.genKeHoach(dt);
             fnXong();
         }, function (msg) {
-            $("#lblKsDb_SoKeHoach, #lblKsDb_DangDienRa, #lblKsDb_SapToi").text("—");
-            $("#zoneKsDb_DangDienRa, #zoneKsDb_CheDo, #zoneKsDb_SapToi").html(me.htmlError(msg));
+            $("#lblKsDb_SoKeHoach, #lblKsDb_DangDienRa, #lblKsDb_TyLe").text("—");
+            $("#zoneKsDb_DangDienRa, #zoneKsDb_CheDo, #zoneKsDb_LoaiPhieu, #zoneKsDb_SapToi").html(me.htmlError(msg));
             fnXong();
-        });
-    },
-    getList_PhieuCuaKeHoach: function (strKeHoach_Id) {
-        var me = this;
-        var obj_list = {
-            'action': 'KS_ThongTin/LayDSKS_PhieuKhaoSat',
-            'type': 'GET',
-            'strTuKhoa': '',
-            'strKS_PhieuKhaoSat_Mau_Id': '',
-            'strKS_KeHoachKhaoSat_Id': strKeHoach_Id,
-            'strNguoiThucHien_Id': edu.system.userId,
-            'pageIndex': 1,
-            'pageSize': 100000,
-        };
-        var $zone = $("#ksdb [data-kehoach='" + strKeHoach_Id + "'] .ksdb-plan-phieu");
-        me.callGet(obj_list, function (dt) {
-            $zone.html(me.htmlPhieuTyLe(dt));
-        }, function (msg) {
-            $zone.html('<div class="ksdb-mini-err"><i class="fa fa-exclamation-circle"></i> Không lấy được phiếu</div>');
         });
     },
     /*------------------------------------------
     --Discription: [2] GEN HTML
     -------------------------------------------*/
-    genKpi_PhieuMau: function (dt) {
-        $("#lblKsDb_SoPhieuMau").text(dt.length);
-    },
     genKeHoach: function (dt) {
         var me = this;
         var dHomNay = new Date(); dHomNay.setHours(0, 0, 0, 0);
-        var arrDang = [], arrSap = [], iKetThuc = 0;
+        var arrDang = [], arrSap = [], iKetThuc = 0, dGui = 0, dXong = 0;
         dt.forEach(function (e) {
-            var dBd = me.parseDate(e.NGAYBATDAU), dKt = me.parseDate(e.NGAYKETTHUC);
-            e._bd = dBd; e._kt = dKt;
-            if (dBd && dBd > dHomNay) arrSap.push(e);
-            else if (dKt && dKt < dHomNay) iKetThuc++;
+            e._bd = me.parseDate(e.NGAYBATDAU);
+            e._kt = me.parseDate(e.NGAYKETTHUC);
+            e._gui = me.toNum(e.TONGSOPHIEUGUI);
+            e._xong = me.toNum(e.TONGSOPHIEUDATHUCHIEN);
+            dGui += e._gui; dXong += e._xong;
+            if (e._bd && e._bd > dHomNay) arrSap.push(e);
+            else if (e._kt && e._kt < dHomNay) iKetThuc++;
             else arrDang.push(e);
         });
         arrDang.sort(function (a, b) { return (a._kt || 0) - (b._kt || 0); });
         arrSap.sort(function (a, b) { return a._bd - b._bd; });
 
-        $("#lblKsDb_SoKeHoach").text(dt.length);
-        $("#lblKsDb_DangDienRa").text(arrDang.length);
-        $("#lblKsDb_SapToi").text(arrSap.length);
+        // Thẻ số liệu
+        $("#lblKsDb_SoKeHoach").text(me.formatNum(dt.length));
         $("#lblKsDb_KetThuc").text(iKetThuc + " đã kết thúc");
+        $("#lblKsDb_DangDienRa").text(me.formatNum(arrDang.length));
+        $("#lblKsDb_SapToi").text(arrSap.length + " sắp diễn ra");
+        $("#lblKsDb_TyLe").text(dGui > 0 ? me.pct(dXong, dGui) + "%" : "—");
+        $("#lblKsDb_TyLeSub").text(me.formatNum(dXong) + " / " + me.formatNum(dGui) + " phiếu đã gửi");
 
         // Kế hoạch đang diễn ra
         if (arrDang.length == 0) {
@@ -147,32 +131,45 @@ KhaoSatDashboard.prototype = {
             arrDang.slice(0, me.iSoKeHoachTheoDoi).forEach(function (e) {
                 var iConLai = e._kt ? Math.round((e._kt - dHomNay) / 86400000) : null;
                 var dTong = (e._bd && e._kt) ? (e._kt - e._bd) : 0;
-                var iPct = dTong > 0 ? Math.min(100, Math.max(0, Math.round((dHomNay - e._bd) / dTong * 100))) : 0;
+                var iTg = dTong > 0 ? Math.min(100, Math.max(0, Math.round((dHomNay - e._bd) / dTong * 100))) : 100;
                 var strHan = iConLai === null ? "Không có ngày kết thúc"
                     : (iConLai == 0 ? "Kết thúc hôm nay" : "Còn " + iConLai + " ngày");
-                html += '<div class="ksdb-plan" data-kehoach="' + me.esc(e.ID) + '">'
+                var iTyLe = me.pct(e._xong, e._gui);
+                html += '<div class="ksdb-plan">'
                     + '<div class="ksdb-plan-head">'
                     + '<div class="ksdb-plan-name"><b>' + me.esc(e.TENKEHOACH) + '</b>'
-                    + '<span>' + me.esc(e.MA) + (e.CHEDOKHAOSAT_TEN ? ' · ' + me.esc(e.CHEDOKHAOSAT_TEN) : '') + '</span></div>'
+                    + '<span>' + me.esc(me.hocKy(e)) + ' · ' + me.esc(me.tenCheDo(e)) + '</span></div>'
                     + '<span class="ksdb-chip ' + (iConLai !== null && iConLai <= 3 ? 'is-warn' : '') + '"><i class="fa fa-clock-o"></i> ' + strHan + '</span>'
                     + '</div>'
                     + '<div class="ksdb-time"><span>' + me.esc(e.NGAYBATDAU) + '</span>'
-                    + '<div class="ksdb-track"><i style="width:' + iPct + '%"></i></div>'
+                    + '<div class="ksdb-track" title="Thời gian đã qua ' + iTg + '%"><i style="width:' + iTg + '%"></i></div>'
                     + '<span>' + me.esc(e.NGAYKETTHUC) + '</span></div>'
-                    + '<div class="ksdb-plan-phieu"><div class="ksdb-mini-load"><i class="fa fa-spinner fa-spin"></i> Đang tải tỷ lệ phiếu...</div></div>'
+                    + '<div class="ksdb-plan-phieu">'
+                    + (e.KS_PHIEUKHAOSAT_MAU_TEN ? '<div class="ksdb-mini-empty" title="' + me.esc(e.KS_PHIEUKHAOSAT_MAU_TEN) + '"><i class="fa fa-file-text-o"></i> ' + me.esc(me.cut(e.KS_PHIEUKHAOSAT_MAU_TEN, 90)) + '</div>' : '')
+                    + (e._gui > 0
+                        ? '<div class="ksdb-ph"><span class="ksdb-ph-name">Đã thực hiện ' + me.formatNum(e._xong) + ' / ' + me.formatNum(e._gui) + ' phiếu</span>'
+                          + '<div class="ksdb-ph-track"><i style="width:' + iTyLe + '%"></i></div><b class="ksdb-ph-val">' + iTyLe + '%</b></div>'
+                        : '<div class="ksdb-mini-empty">Chưa gửi phiếu</div>')
+                    + '</div>'
                     + '</div>';
             });
             if (arrDang.length > me.iSoKeHoachTheoDoi) {
                 html += '<a href="#" class="ksdb-more ksdb-goto" data-menu="Kế hoạch khảo sát">Xem thêm ' + (arrDang.length - me.iSoKeHoachTheoDoi) + ' kế hoạch <i class="fa fa-angle-right"></i></a>';
             }
             $("#zoneKsDb_DangDienRa").html(html);
-            arrDang.slice(0, me.iSoKeHoachTheoDoi).forEach(function (e) {
-                if (e.ID) me.getList_PhieuCuaKeHoach(e.ID);
-            });
         }
 
         // Kế hoạch theo chế độ
-        me.genBars("zoneKsDb_CheDo", me.groupBy(dt, "CHEDOKHAOSAT_TEN"), "Chưa có kế hoạch");
+        var arrCheDo = me.groupBy(dt, function (e) { return me.tenCheDo(e); });
+        me.genBars("zoneKsDb_CheDo", arrCheDo.map(function (g) { return { k: g.k, v: g.n, txt: g.n }; }), "Chưa có kế hoạch");
+
+        // Tỷ lệ hoàn thành của các kế hoạch gần đây (theo ngày bắt đầu, có gửi phiếu)
+        var arrGanDay = dt.filter(function (e) { return e._gui > 0; })
+            .sort(function (a, b) { return (b._bd || 0) - (a._bd || 0); }).slice(0, 6);
+        me.genBars("zoneKsDb_LoaiPhieu", arrGanDay.map(function (e) {
+            var p = me.pct(e._xong, e._gui);
+            return { k: me.hocKy(e) + ' — ' + e.TENKEHOACH, title: e.TENKEHOACH, v: p, max: 100, txt: p + '%' };
+        }), "Chưa có kế hoạch nào gửi phiếu");
 
         // Sắp diễn ra
         if (arrSap.length == 0) {
@@ -183,42 +180,27 @@ KhaoSatDashboard.prototype = {
                 var iCon = Math.round((e._bd - dHomNay) / 86400000);
                 htmlS += '<div class="ksdb-up">'
                     + '<div class="ksdb-up-date"><b>' + e._bd.getDate() + '</b><span>Th ' + (e._bd.getMonth() + 1) + '</span></div>'
-                    + '<div class="ksdb-up-text"><b>' + me.esc(e.TENKEHOACH) + '</b><span>Bắt đầu sau ' + iCon + ' ngày · đến ' + me.esc(e.NGAYKETTHUC) + '</span></div>'
+                    + '<div class="ksdb-up-text"><b title="' + me.esc(e.TENKEHOACH) + '">' + me.esc(e.TENKEHOACH) + '</b><span>Bắt đầu sau ' + iCon + ' ngày · đến ' + me.esc(e.NGAYKETTHUC) + '</span></div>'
                     + '</div>';
             });
             $("#zoneKsDb_SapToi").html(htmlS);
         }
     },
-    genBars: function (strZone, arrNhom, strRong) {
+    genBars: function (strZone, arr, strRong) {
         var me = this;
-        if (arrNhom.length == 0) {
+        if (arr.length == 0) {
             $("#" + strZone).html(me.htmlEmpty("fa-bar-chart", strRong));
             return;
         }
-        var iMax = arrNhom[0].n;
+        var dMax = arr[0].max || Math.max.apply(null, arr.map(function (g) { return g.v; })) || 1;
         var html = "";
-        arrNhom.slice(0, 8).forEach(function (g, i) {
+        arr.slice(0, 8).forEach(function (g, i) {
             html += '<div class="ksdb-bar">'
-                + '<div class="ksdb-bar-label"><span title="' + me.esc(g.k) + '">' + me.esc(g.k) + '</span><b>' + g.n + '</b></div>'
-                + '<div class="ksdb-bar-track"><i class="c' + (i % 5) + '" style="width:' + Math.max(4, Math.round(g.n / iMax * 100)) + '%"></i></div>'
+                + '<div class="ksdb-bar-label"><span title="' + me.esc(g.title || g.k) + '">' + me.esc(g.k) + '</span><b>' + me.esc(g.txt) + '</b></div>'
+                + '<div class="ksdb-bar-track"><i class="c' + (i % 5) + '" style="width:' + Math.max(2, Math.round(g.v / dMax * 100)) + '%"></i></div>'
                 + '</div>';
         });
         $("#" + strZone).html(html);
-    },
-    htmlPhieuTyLe: function (dt) {
-        var me = this;
-        if (!dt || dt.length == 0) return '<div class="ksdb-mini-empty">Kế hoạch chưa có phiếu</div>';
-        var html = "";
-        dt.slice(0, 4).forEach(function (e) {
-            var dPct = me.parsePercent(e.TYLE);
-            html += '<div class="ksdb-ph">'
-                + '<span class="ksdb-ph-name" title="' + me.esc(e.TENPHIEU) + '">' + me.esc(e.TENPHIEU) + '</span>'
-                + '<div class="ksdb-ph-track"><i style="width:' + (dPct === null ? 0 : dPct) + '%"></i></div>'
-                + '<b class="ksdb-ph-val">' + (e.TYLE === null || e.TYLE === undefined || e.TYLE === '' ? '—' : me.esc(e.TYLE)) + '</b>'
-                + '</div>';
-        });
-        if (dt.length > 4) html += '<div class="ksdb-mini-empty">+ ' + (dt.length - 4) + ' phiếu khác</div>';
-        return html;
     },
     htmlLoading: function () {
         return '<div class="ksdb-loading"><span class="ksdb-skel w80"></span><span class="ksdb-skel w60"></span><span class="ksdb-skel w70"></span></div>';
@@ -232,15 +214,30 @@ KhaoSatDashboard.prototype = {
     /*------------------------------------------
     --Discription: [3] TIỆN ÍCH
     -------------------------------------------*/
+    tenCheDo: function (e) {
+        var v = e.CHEDOKHAOSAT !== undefined && e.CHEDOKHAOSAT !== null ? e.CHEDOKHAOSAT : e.CHEDOKHAOSAT_TEN;
+        switch (parseInt(v, 10)) {
+            case 1: return "Đang khảo sát";
+            case 2: return "Khảo sát giả lập";
+            case 0: return "Chờ khảo sát";
+        }
+        return "Chưa xác định";
+    },
+    hocKy: function (e) {
+        var s = [];
+        if (e.HOCKY) s.push("HK " + e.HOCKY);
+        if (e.NAMHOC) s.push(String(e.NAMHOC).replace("_", "-"));
+        return s.join(" · ") || "—";
+    },
     gotoMenu: function (strTen) {
         var a = $("a").filter(function () { return $.trim($(this).text()) === strTen; }).first();
         if (a.length) a[0].click();
         else edu.system.alert("Không tìm thấy chức năng \"" + strTen + "\" trong menu của vai trò này.");
     },
-    groupBy: function (dt, strCot) {
+    groupBy: function (dt, fnKey) {
         var obj = {};
         dt.forEach(function (e) {
-            var k = $.trim(e[strCot] || "") || "Chưa phân loại";
+            var k = fnKey(e);
             obj[k] = (obj[k] || 0) + 1;
         });
         return Object.keys(obj).map(function (k) { return { k: k, n: obj[k] }; })
@@ -254,18 +251,19 @@ KhaoSatDashboard.prototype = {
         if (m) return new Date(+m[1], +m[2] - 1, +m[3]);
         return null;
     },
-    parsePercent: function (v) {
-        if (v === null || v === undefined || v === '') return null;
-        var s = String(v);
-        var m = s.match(/^\s*(\d+(?:[.,]\d+)?)\s*\/\s*(\d+(?:[.,]\d+)?)/);
-        if (m) {
-            var t = parseFloat(m[2].replace(',', '.'));
-            return t > 0 ? Math.min(100, Math.round(parseFloat(m[1].replace(',', '.')) / t * 100)) : 0;
-        }
-        var d = parseFloat(s.replace(',', '.'));
-        if (isNaN(d)) return null;
-        if (d > 0 && d <= 1 && s.indexOf('%') < 0) d = d * 100;
-        return Math.min(100, Math.max(0, Math.round(d)));
+    toNum: function (v) {
+        var d = parseFloat(v);
+        return isNaN(d) ? 0 : d;
+    },
+    pct: function (a, b) {
+        return b > 0 ? Math.min(100, Math.round(a / b * 100)) : 0;
+    },
+    formatNum: function (n) {
+        return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    },
+    cut: function (s, n) {
+        s = String(s || "");
+        return s.length > n ? s.substr(0, n - 1) + "…" : s;
     },
     formatTime: function (d) {
         var p = function (n) { return (n < 10 ? '0' : '') + n; };
