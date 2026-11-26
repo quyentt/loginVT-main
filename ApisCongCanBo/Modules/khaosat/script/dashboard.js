@@ -24,6 +24,37 @@ KhaoSatDashboard.prototype = {
             e.preventDefault();
             me.gotoMenu($(this).attr("data-menu"));
         });
+        me.initGuide();
+    },
+    /*------------------------------------------
+    --Discription: Hướng dẫn — chuyển tab, thu gọn (nhớ theo trình duyệt)
+    -------------------------------------------*/
+    initGuide: function () {
+        var me = this;
+        var KEY = "ksdb_guide_thugon";
+        $("#ksdb").delegate(".ksdb-flow-step", "click", function (e) {
+            e.preventDefault();
+            var t = $(this).attr("data-tab");
+            $("#ksdb .ksdb-flow-step").removeClass("is-active");
+            $(this).addClass("is-active");
+            $("#ksdb .ksdb-tab").removeClass("is-active").filter("[data-tab='" + t + "']").addClass("is-active");
+        });
+        var fnSet = function (bThuGon) {
+            $("#ksdbGuide").toggleClass("is-collapsed", bThuGon);
+            $("#btnKsDb_Guide").attr("aria-expanded", bThuGon ? "false" : "true")
+                .find("span").text(bThuGon ? "Xem hướng dẫn" : "Thu gọn");
+            $("#btnKsDb_Guide i").attr("class", bThuGon ? "fa fa-angle-down" : "fa fa-angle-up");
+        };
+        var bDaThuGon = false;
+        try { bDaThuGon = window.localStorage.getItem(KEY) === "1"; } catch (ex) { }
+        fnSet(bDaThuGon);
+        $("#btnKsDb_Guide").on("click keydown", function (e) {
+            if (e.type === "keydown" && e.which !== 13 && e.which !== 32) return;
+            e.preventDefault();
+            var b = !$("#ksdbGuide").hasClass("is-collapsed");
+            fnSet(b);
+            try { window.localStorage.setItem(KEY, b ? "1" : "0"); } catch (ex) { }
+        });
     },
     loadAll: function () {
         var me = this;

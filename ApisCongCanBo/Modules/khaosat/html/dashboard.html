@@ -166,6 +166,72 @@
         #main-content-wrapper #ksdb .ksdb-bar-track i { transition: none; }
     }
 
+    /* Hướng dẫn */
+    #main-content-wrapper #ksdb .ksdb-guide { margin-top: 18px; }
+    #main-content-wrapper #ksdb .ksdb-guide.is-collapsed #ksdbGuideBody { display: none; }
+    #main-content-wrapper #ksdb .ksdb-flow { display: flex; align-items: stretch; gap: 10px; margin-bottom: 16px; }
+    #main-content-wrapper #ksdb .ksdb-flow-step {
+        flex: 1 1 0; display: grid; grid-template-columns: 34px 1fr; grid-template-rows: auto auto; column-gap: 10px; align-items: center;
+        padding: 12px 14px; cursor: pointer; text-decoration: none !important;
+        background: #f8fafc; border: 1px solid var(--k-line); border-radius: 12px; transition: border-color .15s ease, background-color .15s ease;
+    }
+    #main-content-wrapper #ksdb .ksdb-flow-step:hover { border-color: #bfd3fb; }
+    #main-content-wrapper #ksdb .ksdb-flow-step span {
+        grid-row: 1 / 3; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center;
+        font-weight: 700; color: var(--k-blue); background: #fff; border: 2px solid #bfd3fb; border-radius: 50%;
+    }
+    #main-content-wrapper #ksdb .ksdb-flow-step b { font-size: 13.5px; color: var(--k-text); }
+    #main-content-wrapper #ksdb .ksdb-flow-step small { font-size: 12px; color: var(--k-muted); }
+    #main-content-wrapper #ksdb .ksdb-flow-step.is-active { background: var(--k-blue-soft); border-color: var(--k-blue); }
+    #main-content-wrapper #ksdb .ksdb-flow-step.is-active span { color: #fff; background: var(--k-blue); border-color: var(--k-blue); }
+    #main-content-wrapper #ksdb .ksdb-flow-arrow { align-self: center; color: #cbd5e1; font-size: 20px; }
+    #main-content-wrapper #ksdb .ksdb-tab { display: none; }
+    #main-content-wrapper #ksdb .ksdb-tab.is-active { display: block; }
+    #main-content-wrapper #ksdb .ksdb-tab-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+    #main-content-wrapper #ksdb .ksdb-tab-head p { flex: 1 1 320px; margin: 0; font-size: 13.5px; color: #334155; }
+    #main-content-wrapper #ksdb .ksdb-open {
+        display: inline-flex; align-items: center; gap: 7px; min-height: 36px; padding: 0 14px; cursor: pointer;
+        font-size: 13px; font-weight: 600; color: #fff !important; text-decoration: none !important;
+        background: var(--k-blue); border-radius: 10px;
+    }
+    #main-content-wrapper #ksdb .ksdb-open:hover { filter: brightness(1.08); }
+    #main-content-wrapper #ksdb .ksdb-steps { margin: 0; padding: 0; list-style: none; counter-reset: ksstep; }
+    #main-content-wrapper #ksdb .ksdb-steps > li {
+        position: relative; counter-increment: ksstep; padding: 10px 0 10px 44px; font-size: 13.5px; line-height: 1.65; color: #334155;
+        border-bottom: 1px dashed var(--k-line);
+    }
+    #main-content-wrapper #ksdb .ksdb-steps > li:last-child { border-bottom: 0; }
+    #main-content-wrapper #ksdb .ksdb-steps > li::before {
+        content: counter(ksstep); position: absolute; left: 0; top: 10px; width: 28px; height: 28px;
+        display: flex; align-items: center; justify-content: center; font-size: 12.5px; font-weight: 700;
+        color: var(--k-blue); background: var(--k-blue-soft); border-radius: 8px;
+    }
+    #main-content-wrapper #ksdb .ksdb-steps > li > b { color: var(--k-text); }
+    #main-content-wrapper #ksdb .ksdb-steps ul { margin: 6px 0 0; padding-left: 18px; }
+    #main-content-wrapper #ksdb .ksdb-steps ul li { margin-bottom: 4px; }
+    #main-content-wrapper #ksdb .ksdb-steps em { font-style: normal; font-weight: 600; color: #1e293b; }
+    #main-content-wrapper #ksdb kbd {
+        display: inline-block; padding: 1px 7px; font-family: inherit; font-size: 12px; font-weight: 600; line-height: 1.6;
+        color: var(--k-blue); background: #fff; border: 1px solid #bfd3fb; border-bottom-width: 2px; border-radius: 6px; box-shadow: none;
+    }
+    #main-content-wrapper #ksdb .ksdb-modes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-bottom: 8px; }
+    #main-content-wrapper #ksdb .ksdb-mode { display: flex; flex-direction: column; gap: 3px; padding: 10px 12px; border-radius: 10px; border-left: 4px solid; font-size: 12.5px; }
+    #main-content-wrapper #ksdb .ksdb-mode b { font-size: 13px; }
+    #main-content-wrapper #ksdb .ksdb-mode span { color: var(--k-muted); }
+    #main-content-wrapper #ksdb .ksdb-mode.m-wait { background: #f8fafc; border-color: #94a3b8; }
+    #main-content-wrapper #ksdb .ksdb-mode.m-test { background: #fffbeb; border-color: #f59e0b; }
+    #main-content-wrapper #ksdb .ksdb-mode.m-live { background: #ecfdf5; border-color: #10b981; }
+    #main-content-wrapper #ksdb .ksdb-tip {
+        display: flex; gap: 10px; align-items: flex-start; margin-top: 12px; padding: 10px 14px; font-size: 13px; color: #92400e;
+        background: #fffbeb; border: 1px solid #fde68a; border-radius: 10px;
+    }
+    #main-content-wrapper #ksdb .ksdb-tip i { margin-top: 2px; font-size: 16px; color: #d97706; }
+    @media (max-width: 767px) {
+        #main-content-wrapper #ksdb .ksdb-flow { flex-direction: column; }
+        #main-content-wrapper #ksdb .ksdb-flow-arrow { display: none; }
+        #main-content-wrapper #ksdb .ksdb-modes { grid-template-columns: minmax(0, 1fr); }
+    }
+
     @media (max-width: 1199px) {
         #main-content-wrapper #ksdb .ksdb-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         #main-content-wrapper #ksdb .ksdb-grid { grid-template-columns: minmax(0, 1fr); }
@@ -246,8 +312,84 @@
             </div>
         </div>
     </div>
+
+    <!-- Hướng dẫn khai báo & thiết lập -->
+    <div class="ksdb-card ksdb-guide" id="ksdbGuide">
+        <div class="ksdb-card-head">
+            <h3><i class="fa fa-book"></i> Hướng dẫn khai báo &amp; thiết lập khảo sát</h3>
+            <a class="ksdb-link" id="btnKsDb_Guide" tabindex="0" aria-expanded="true" aria-controls="ksdbGuideBody"><span>Thu gọn</span> <i class="fa fa-angle-up"></i></a>
+        </div>
+        <div class="ksdb-card-body" id="ksdbGuideBody">
+            <div class="ksdb-flow">
+                <a class="ksdb-flow-step is-active" data-tab="1"><span>1</span><b>Khai báo phiếu mẫu</b><small>Câu hỏi, đáp án</small></a>
+                <i class="fa fa-angle-right ksdb-flow-arrow"></i>
+                <a class="ksdb-flow-step" data-tab="2"><span>2</span><b>Thiết lập kế hoạch</b><small>Thời gian, đối tượng, sinh phiếu</small></a>
+                <i class="fa fa-angle-right ksdb-flow-arrow"></i>
+                <a class="ksdb-flow-step" data-tab="3"><span>3</span><b>Mở khảo sát &amp; theo dõi</b><small>Chế độ, tỷ lệ, kết quả</small></a>
+            </div>
+
+            <!-- Tab 1: Phiếu mẫu -->
+            <div class="ksdb-tab is-active" data-tab="1">
+                <div class="ksdb-tab-head">
+                    <p>Phiếu mẫu là bộ câu hỏi dùng lại được cho nhiều kế hoạch. Làm tại menu <b>Khảo sát → Phiếu mẫu</b>.</p>
+                    <a class="ksdb-open ksdb-goto" data-menu="Phiếu mẫu"><i class="fa fa-external-link"></i> Mở Phiếu mẫu</a>
+                </div>
+                <ol class="ksdb-steps">
+                    <li><b>Tạo phiếu:</b> bấm <kbd>Thêm mới</kbd>, nhập <em>Tên phiếu</em>, <em>Mã</em>, <em>Phân loại</em>, <em>Mô tả</em> rồi <kbd>Lưu</kbd>.</li>
+                    <li><b>Thêm nhóm câu hỏi:</b> bấm <kbd>Sửa</kbd> ở dòng phiếu → <kbd>Thêm nhóm</kbd>, nhập <em>Tên nhóm</em> và <em>Thứ tự trên phiếu</em> (vd: "I. Phương pháp giảng dạy").</li>
+                    <li><b>Thêm câu hỏi:</b> bấm <kbd>Thêm câu hỏi</kbd>, chọn <em>Thuộc nhóm</em>, <em>Thứ tự</em> và
+                        <em>Loại câu hỏi</em>: Chọn 1 đáp án / Chọn nhiều đáp án / Câu hỏi mở gõ trực tiếp; <em>Kiểu trả lời</em>: Bắt buộc hoặc Không bắt buộc; <em>Kiểu hiển thị</em>: Mặc định hoặc Hàng ngang.</li>
+                    <li><b>Khai báo đáp án:</b> chọn sẵn từ <em>Danh sách đáp án mẫu</em> (bấm <kbd>Thêm</kbd>) hoặc <kbd>Thêm dòng</kbd> để nhập <em>Tên</em>, <em>Mã</em>, <em>Thứ tự</em>, <em>Trọng số</em> (điểm dùng để tính kết quả) → <kbd>Lưu</kbd>.</li>
+                    <li><b>Nhóm ẩn (tùy chọn):</b> <kbd>Chỉnh sửa nhóm ẩn</kbd> để ẩn một nhóm khi người làm chọn một đáp án nào đó (vd: chọn "Không học môn này" thì ẩn nhóm đánh giá).</li>
+                    <li><b>Kiểm tra:</b> bấm <kbd>Xem phiếu</kbd> / <kbd>Xem tổng thể phiếu</kbd> để xem phiếu đúng như người làm sẽ thấy.</li>
+                </ol>
+            </div>
+
+            <!-- Tab 2: Kế hoạch -->
+            <div class="ksdb-tab" data-tab="2">
+                <div class="ksdb-tab-head">
+                    <p>Kế hoạch gắn phiếu mẫu với một đợt khảo sát cụ thể. Làm tại menu <b>Khảo sát → Kế hoạch khảo sát</b>.</p>
+                    <a class="ksdb-open ksdb-goto" data-menu="Kế hoạch khảo sát"><i class="fa fa-external-link"></i> Mở Kế hoạch khảo sát</a>
+                </div>
+                <ol class="ksdb-steps">
+                    <li><b>Tạo kế hoạch:</b> <kbd>Thêm mới</kbd>, nhập tên <em>Kế hoạch</em>, <em>Từ ngày – Đến ngày</em>, <em>Năm học</em>, <em>Học kỳ</em>, <em>Đợt</em>, chọn <em>Phiếu mẫu</em>; để <em>Chế độ</em> là <b>Chờ khảo sát</b> trong lúc chuẩn bị → <kbd>Lưu</kbd>.</li>
+                    <li><b>Đối tượng được khảo sát</b> (người/đơn vị được đánh giá): <kbd>Thêm Giảng viên</kbd> hoặc <kbd>Thêm người học</kbd>. Có thể bỏ qua nếu dùng phiếu tự động theo thời khóa biểu ở bước 4.</li>
+                    <li><b>Đối tượng tham gia khảo sát</b> (người làm phiếu): <kbd>Thêm người học</kbd> theo khóa / chương trình / lớp (<em>Thêm nhiều</em>, <em>Thêm từng khóa</em>, <em>Thêm từng lớp</em>...), <kbd>Thêm sinh viên từ đăng ký học</kbd> hoặc <kbd>Thêm giảng viên</kbd>.</li>
+                    <li><b>Sinh phiếu:</b> mở cột <em>Phiếu khảo sát</em> của kế hoạch →
+                        <ul>
+                            <li><kbd>Thêm phiếu tự động</kbd>: chọn kiểu <em>Khảo sát theo GV</em> (không phân biệt học phần), <em>theo học phần</em> (không quan tâm GV nào dạy) hoặc <em>1 học phần – 1 GV</em>; <em>Chọn thời gian</em> → <kbd>Xem DS ... theo TKB</kbd> → <kbd>Tạo phiếu tự động</kbd> / <kbd>Chạy tiến trình tạo phiếu</kbd>.</li>
+                            <li><kbd>Thêm phiếu</kbd> hoặc <kbd>Khởi tạo theo phiếu mẫu</kbd> để tạo phiếu thủ công.</li>
+                        </ul>
+                    </li>
+                    <li><b>Kiểm tra trước khi mở:</b> <kbd>Xem cấu trúc phiếu</kbd>, xem số phiếu đã sinh ở cột <em>Tổng số phiếu gửi</em>.</li>
+                </ol>
+            </div>
+
+            <!-- Tab 3: Mở và theo dõi -->
+            <div class="ksdb-tab" data-tab="3">
+                <div class="ksdb-tab-head">
+                    <p>Mở khảo sát bằng cách đổi <em>Chế độ</em> của kế hoạch, sau đó theo dõi ngay trên trang Tổng quan này.</p>
+                    <a class="ksdb-open ksdb-goto" data-menu="Kế hoạch khảo sát"><i class="fa fa-external-link"></i> Mở Kế hoạch khảo sát</a>
+                </div>
+                <div class="ksdb-modes">
+                    <div class="ksdb-mode m-wait"><b>Chờ khảo sát</b><span>Đang chuẩn bị, người làm chưa thấy phiếu.</span></div>
+                    <div class="ksdb-mode m-test"><b>Khảo sát giả lập</b><span>Chạy thử để kiểm tra phiếu và luồng làm bài trước khi mở thật.</span></div>
+                    <div class="ksdb-mode m-live"><b>Đang khảo sát</b><span>Mở cho người làm trong khoảng Từ ngày – Đến ngày.</span></div>
+                </div>
+                <ol class="ksdb-steps">
+                    <li><b>Mở khảo sát:</b> <kbd>Sửa</kbd> kế hoạch → <em>Chế độ</em> = <b>Đang khảo sát</b> → <kbd>Lưu</kbd>. Kiểm tra <em>Từ ngày – Đến ngày</em> có bao gồm hôm nay.</li>
+                    <li><b>Theo dõi tiến độ:</b> thẻ <em>Kế hoạch đang diễn ra</em> trên trang này hiện số phiếu đã thực hiện / đã gửi; trong màn Kế hoạch xem cột <em>Tỷ lệ hoàn thành</em> và <em>Tỷ lệ hoàn thành phiếu</em>.</li>
+                    <li><b>Nhắc người chưa làm:</b> mở <em>Đối tượng tham gia</em> → lọc <em>Chưa tham gia</em> để lấy danh sách.</li>
+                    <li><b>Xem và xuất kết quả:</b> cột <em>Kết quả khảo sát</em> → <em>Kết quả chi tiết</em> → <kbd>Xuất Excel</kbd> (xuất toàn bộ, không cần xem hết các trang).</li>
+                    <li><b>Kết thúc:</b> sau <em>Đến ngày</em>, kế hoạch được tính vào mục "đã kết thúc" trên trang này; muốn dừng sớm thì sửa <em>Đến ngày</em> hoặc đổi <em>Chế độ</em>.</li>
+                </ol>
+            </div>
+
+            <div class="ksdb-tip"><i class="fa fa-lightbulb-o"></i><span>Mẹo: nên chạy <b>Khảo sát giả lập</b> với vài tài khoản trước khi chuyển sang <b>Đang khảo sát</b>, và hoàn thiện phiếu mẫu trước khi sinh phiếu cho kế hoạch.</span></div>
+        </div>
+    </div>
 </section>
-<script src="modules/khaosat/script/dashboard.js?v=1.0.0.1"></script>
+<script src="modules/khaosat/script/dashboard.js?v=1.0.0.2"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['KhaoSatDashboard'] = new KhaoSatDashboard();
