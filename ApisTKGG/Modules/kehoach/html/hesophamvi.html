@@ -41,6 +41,8 @@
                         <a id="btnKhaiNhieu_HeSoPhamVi" class="btn hspv-btn-line" href="#"><i class="fa fa-th-list"></i> Thêm mới cho nhiều hình thức một lần khai</a>
                         <a id="btnAdd_HeSoPhamVi_HPCT" class="btn hspv-btn-line" href="#"><i class="fa fa-sitemap"></i> Thêm mới cho tổ hợp học phần - CTĐT</a>
                         <a id="btnAdd_HeSoPhamVi_LHP" class="btn hspv-btn-line" href="#"><i class="fa fa-list-ol"></i> Thêm mới theo từng lớp học phần</a>
+                        <a id="btnAdd_HeSoPhamVi_CDHV" class="btn hspv-btn-line" href="#"><i class="fa fa-graduation-cap"></i> Thêm mới theo chức danh/học vị cho từng hệ đào tạo</a>
+                        <a id="btnAdd_HeSoPhamVi_CDHV_HP" class="btn hspv-btn-line" href="#"><i class="fa fa-id-badge"></i> Thêm mới theo chức danh/học vị cho từng học phần theo CTĐT</a>
                         <a id="btnAdd_HeSoPhamVi" class="btn btn-primary btnAdd" href="#"><i class="fa fa-plus"></i> Thêm mới cho từng hình thức một lần khai</a>
                     </div>
                 </div>
@@ -170,12 +172,20 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h3 class="box-title"><i class="fa fa-sitemap"></i> Thêm mới cho tổ hợp học phần - CTĐT</h3>
+                <h3 class="box-title" id="lblTieuDe_HPCT"><i class="fa fa-sitemap"></i> Thêm mới cho tổ hợp học phần - CTĐT</h3>
             </div>
             <div class="modal-body">
+                <!-- Form dung chung 2 nut: to hop HP - CTDT / chuc danh-hoc vi cho tung hoc phan theo CTDT (hien them khoi #secHPCT_CDHV). So thu tu buoc dem tu dong (CSS counter). -->
                 <div class="hspv-n">
+                    <div class="hspv-sec" id="secHPCT_CDHV" style="display: none;">
+                        <div class="hspv-sec-h"><span class="hspv-no hspv-no-auto"></span> Chức danh / học vị</div>
+                        <div class="hspv-grid-cdhv">
+                            <div class="hspv-field"><label>Chọn loại <b class="hspv-req">*</b></label><div id="segHPCT_Loai" class="hspv-seg"></div></div>
+                            <div class="hspv-field"><label><span id="lblHPCT_PhamVi">Chức danh</span> <b class="hspv-req">*</b></label><select id="dropHPCT_PhamVi" class="select-opt"></select></div>
+                        </div>
+                    </div>
                     <div class="hspv-sec">
-                        <div class="hspv-sec-h"><span class="hspv-no">1</span> Chọn chương trình đào tạo, rồi tick học phần của chương trình</div>
+                        <div class="hspv-sec-h"><span class="hspv-no hspv-no-auto"></span> <span id="lblHPCT_B1">Chọn chương trình đào tạo, rồi tick học phần của chương trình</span></div>
                         <div class="hspv-filter">
                             <select id="dropHPCT_HeDaoTao" class="select-opt"></select>
                             <select id="dropHPCT_KhoaDaoTao" class="select-opt"></select>
@@ -206,7 +216,7 @@
                         <div class="hspv-picked"><i class="fa fa-check-square-o"></i> Đã chọn <b id="lblHPCT_SoChon">0</b> tổ hợp học phần - CTĐT · <a href="#" id="btnHPCT_BoChon">bỏ chọn tất cả</a></div>
                     </div>
                     <div class="hspv-sec">
-                        <div class="hspv-sec-h"><span class="hspv-no">2</span> Hệ số</div>
+                        <div class="hspv-sec-h"><span class="hspv-no hspv-no-auto"></span> Hệ số</div>
                         <div class="hspv-grid3">
                             <div class="hspv-field"><label>Loại hệ số</label><select id="dropHPCT_LoaiBang" class="select-opt"></select></div>
                             <div class="hspv-field"><label>Thời gian</label><select id="dropHPCT_ThoiGian" class="select-opt"></select></div>
@@ -290,8 +300,58 @@
     </div>
 </div>
 
+<!-- Thêm theo chức danh/học vị cho từng hệ đào tạo -->
+<div class="modal fade hspv-modal" id="myModal_HeSoPhamVi_CDHV" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width: 980px; max-width: 96%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h3 class="box-title"><i class="fa fa-graduation-cap"></i> Thêm mới theo chức danh/học vị cho từng hệ đào tạo</h3>
+            </div>
+            <div class="modal-body">
+                <div class="hspv-n">
+                    <div class="hspv-sec">
+                        <div class="hspv-sec-h"><span class="hspv-no">1</span> Chức danh / học vị</div>
+                        <div class="hspv-grid-cdhv">
+                            <div class="hspv-field"><label>Chọn loại <b class="hspv-req">*</b></label><div id="segCDHV_Loai" class="hspv-seg"></div></div>
+                            <div class="hspv-field"><label><span id="lblCDHV_PhamVi">Chức danh</span> <b class="hspv-req">*</b></label><select id="dropCDHV_PhamVi" class="select-opt"></select></div>
+                        </div>
+                    </div>
+                    <div class="hspv-sec">
+                        <div class="hspv-sec-h"><span class="hspv-no">2</span> Chọn hệ đào tạo <span class="hspv-count" id="lblDemHe_CDHV">Đã chọn 0/0</span></div>
+                        <div class="hspv-toolbar2">
+                            <input type="text" id="txtLocHe_CDHV" class="form-control" placeholder="Lọc theo tên hoặc mã hệ đào tạo" />
+                            <a href="#" id="btnChonHetHe_CDHV" class="hspv-link">Chọn tất cả</a>
+                            <a href="#" id="btnBoChonHe_CDHV" class="hspv-link hspv-link-muted">Bỏ chọn</a>
+                        </div>
+                        <div id="zoneHe_CDHV" class="hspv-chkgrid"><div class="hspv-empty"><i class="fa fa-spinner fa-spin"></i> Đang tải hệ đào tạo…</div></div>
+                    </div>
+                    <div class="hspv-sec">
+                        <div class="hspv-sec-h"><span class="hspv-no">3</span> Hệ số áp dụng cho các hệ đào tạo đã chọn</div>
+                        <div class="hspv-grid3">
+                            <div class="hspv-field"><label>Loại hệ số</label><select id="dropCDHV_LoaiBang" class="select-opt"></select></div>
+                            <div class="hspv-field"><label>Thời gian</label><select id="dropCDHV_ThoiGian" class="select-opt"></select></div>
+                            <div class="hspv-field"><label>Hệ số <b class="hspv-req">*</b></label><input type="text" id="txtCDHV_HeSo" class="form-control" inputmode="decimal" placeholder="VD: 1,2" /></div>
+                        </div>
+                    </div>
+                    <div id="zoneThongBao_CDHV" class="hspv-alert" style="display: none;"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="hspv-foot">
+                    <span class="hspv-sum" id="lblTongHop_CDHV">Chọn chức danh/học vị, tick hệ đào tạo và nhập hệ số để lưu.</span>
+                    <div class="hspv-foot-btns">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> Đóng</button>
+                        <a class="btn btn-primary" id="btnSave_CDHV"><i class="fa fa-check-circle"></i> <span id="lblSave_CDHV">Lưu</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- page script -->
-<script src="modules/kehoach/script/HeSoPhamVi.js?v=1.0.0.3"></script>
+<script src="modules/kehoach/script/HeSoPhamVi.js?v=1.0.0.4"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['HeSoPhamVi'] = new HeSoPhamVi();
@@ -392,7 +452,21 @@
     /* 2 id: thang "html body.skin-blue #main-content-wrapper .form-control { border ... !important }" */
     #myModal_HeSoPhamVi_Nhieu#myModal_HeSoPhamVi_Nhieu .form-control.hspv-invalid,
     #myModal_HeSoPhamVi_HPCT#myModal_HeSoPhamVi_HPCT .form-control.hspv-invalid,
-    #myModal_HeSoPhamVi_LHP#myModal_HeSoPhamVi_LHP .form-control.hspv-invalid { border: 1px solid #dc2626 !important; box-shadow: 0 0 0 2px rgba(220, 38, 38, .18) !important; background: #fff7f7 !important; }
+    #myModal_HeSoPhamVi_LHP#myModal_HeSoPhamVi_LHP .form-control.hspv-invalid,
+    #myModal_HeSoPhamVi_CDHV#myModal_HeSoPhamVi_CDHV .form-control.hspv-invalid { border: 1px solid #dc2626 !important; box-shadow: 0 0 0 2px rgba(220, 38, 38, .18) !important; background: #fff7f7 !important; }
+
+    /* Chuc danh / hoc vi: nut gat "Chon loai" + combo pham vi theo loai */
+    .hspv-modal .hspv-grid-cdhv { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 14px 16px; align-items: end; }
+    .hspv-modal .hspv-seg { display: flex; gap: 4px; padding: 3px; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 8px; }
+    .hspv-modal .hspv-seg-i { position: relative; flex: 1 1 0; display: flex; align-items: center; justify-content: center; min-height: 28px; margin: 0; padding: 4px 12px; border-radius: 6px; font-weight: 600; color: #475569; cursor: pointer; white-space: nowrap; user-select: none; }
+    .hspv-modal .hspv-seg-i:hover { color: #0f172a; background: #e2e8f0; }
+    .hspv-modal .hspv-seg-i input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; pointer-events: none; }
+    .hspv-modal .hspv-seg-i.on { background: #223771; color: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, .18); }
+    .hspv-modal .hspv-seg-i:focus-within { outline: 2px solid #93c5fd; outline-offset: 1px; }
+    /* Form HP - CTDT dung chung 2 nut: danh so buoc tu dong, khoi an (display:none) khong duoc dem */
+    #myModal_HeSoPhamVi_HPCT .hspv-n { counter-reset: hspvsec; }
+    #myModal_HeSoPhamVi_HPCT .hspv-sec { counter-increment: hspvsec; }
+    #myModal_HeSoPhamVi_HPCT .hspv-no-auto::before { content: counter(hspvsec); }
 
     /* Loc + chia 2 cot (CTDT | hoc phan) */
     .hspv-modal .hspv-filter { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.2fr) auto; gap: 10px; align-items: center; margin-bottom: 12px; }
@@ -427,7 +501,7 @@
     .hspv-modal .hspv-picked-inline { font-weight: 500; color: #166534; }
 
     @media (max-width: 991px) {
-        .hspv-modal .hspv-split, .hspv-modal .hspv-grid2, .hspv-modal .hspv-grid3, .hspv-modal .hspv-filter { grid-template-columns: minmax(0, 1fr); }
+        .hspv-modal .hspv-split, .hspv-modal .hspv-grid2, .hspv-modal .hspv-grid3, .hspv-modal .hspv-grid-cdhv, .hspv-modal .hspv-filter { grid-template-columns: minmax(0, 1fr); }
         .hspv-modal .hspv-chkgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
     @media (max-width: 600px) {

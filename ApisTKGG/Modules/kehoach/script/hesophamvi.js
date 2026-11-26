@@ -7,8 +7,13 @@
 --Note: 26/11/2026 theo MoTaChucNangChinh_KLGD_NEW.xlsx, sheet "Sua khai bao he so theo pham vi":
 --  - Loc them "Loai he so" -> ham LayDS truyen strLoaiBang_Id (DB/API them ParamLoaiBang_Id)
 --  - "Them moi" doi ten "Them moi cho tung hinh thuc mot lan khai", truyen strLoaiBang_Id
---  - 3 nut moi: nhieu hinh thuc / to hop hoc phan - CTDT / tung lop hoc phan
+--  - 5 nut moi: nhieu hinh thuc / to hop hoc phan - CTDT / tung lop hoc phan /
+--    chuc danh-hoc vi cho tung he dao tao / chuc danh-hoc vi cho tung hoc phan theo CTDT
 --  Moi pham vi = 1 lan goi PKG_KLGV_V2_THONGTIN.Them_KLGD_HeSo_PhamViApDung (qua form tien trinh chung edu.process)
+--  Ma pham vi (ParamPhamViApDung_Id) theo comment sheet, ghep lien khong ky tu ngan:
+--    to hop HP - CTDT          = DAOTAO_TOCHUCCHUONGTRINH_ID + DAOTAO_HOCPHAN_ID
+--    chuc danh/hoc vi + he     = Id chuc danh/hoc vi + Id he dao tao
+--    chuc danh/hoc vi + HP-CTDT = Id chuc danh/hoc vi + Id he dao tao + DAOTAO_TOCHUCCHUONGTRINH_ID + DAOTAO_HOCPHAN_ID
 ----------------------------------------------*/
 function HeSoPhamVi() { };
 HeSoPhamVi.prototype = {
@@ -20,8 +25,16 @@ HeSoPhamVi.prototype = {
     dtHP_HPCT: [],      // hoc phan cua CTDT dang xem
     objCT_HPCT: null,   // CTDT dang xem
     objChon_HPCT: {},   // to hop da chon: key = HP_Id|CT_Id -> { hp, ct }
+    modeHPCT: null,     // "" = to hop HP - CTDT; "CDHV" = chuc danh/hoc vi cho tung hoc phan theo CTDT (dung chung 1 form)
     objLHPChon: {},     // lop hoc phan da chon (qua nhieu trang)
     dtLHP: [],
+    dtHeDaoTao: [],     // he dao tao (form chuc danh/hoc vi cho tung he)
+    objDM_CDHV: {},     // cache danh muc chuc danh / hoc vi theo ma bang
+    /* "Chon loai" cua 2 form chuc danh/hoc vi: MA = ma bang danh muc (theo comment sheet) */
+    LOAI_CDHV: [
+        { MA: "PERSON_ACADEMIC_RANK.ACADEMIC_RANK_CODE", TEN: "Chức danh" },
+        { MA: "PERSON_EDUCATION.DEGREE_CODE", TEN: "Học vị" }
+    ],
 
     init: function () {
         var me = this;
@@ -62,8 +75,14 @@ HeSoPhamVi.prototype = {
         $("#txtHeSo_N").on("input", function () { $(this).removeClass("hspv-invalid"); me.updateTongHop_N(); });
         $("#btnSave_HeSoPhamVi_Nhieu").click(function () { me.save_Nhieu(); });
 
-        /*-- To hop hoc phan - CTDT --*/
-        $("#btnAdd_HeSoPhamVi_HPCT").click(function (e) { e.preventDefault(); me.openForm_HPCT(); });
+        /*-- To hop hoc phan - CTDT (va chuc danh/hoc vi cho tung hoc phan theo CTDT: cung form, khac che do) --*/
+        $("#btnAdd_HeSoPhamVi_HPCT").click(function (e) { e.preventDefault(); me.openForm_HPCT(""); });
+        $("#btnAdd_HeSoPhamVi_CDHV_HP").click(function (e) { e.preventDefault(); me.openForm_HPCT("CDHV"); });
+        me.genLoai_CDHV("segHPCT_Loai", "rdoHPCT_Loai");
+        $("#segHPCT_Loai").on("change", "input", function () {
+            me.danhDauLoai_CDHV("segHPCT_Loai");
+            me.getList_PhamVi_CDHV("rdoHPCT_Loai", "dropHPCT_PhamVi", "lblHPCT_PhamVi");
+        });
         $("#dropHPCT_HeDaoTao").on("select2:select", function () { me.getList_KhoaDaoTao_HPCT(); me.getList_CT_HPCT(); });
         $("#dropHPCT_KhoaDaoTao").on("select2:select", function () { me.getList_CT_HPCT(); });
         $("#btnHPCT_Search").click(function () { me.getList_CT_HPCT(); });
@@ -90,10 +109,7 @@ HeSoPhamVi.prototype = {
         $("#txtHPCT_LocHP").on("input", function () { me.locHP_HPCT(this.value); });
         $("#btnHPCT_BoChon").click(function (e) {
             e.preventDefault();
-            me.objChon_HPCT = {};
-            $("#tblHPCT_HocPhan input.chkHP, #chkHPCT_All").prop("checked", false);
-            $("#tblHPCT_HocPhan tr").removeClass("hspv-row-picked");
-            me.capNhat_HPCT();
+            me.boChon_HPCT();
         });
         $("#txtHPCT_HeSo").on("input", function () { $(this).removeClass("hspv-invalid"); me.capNhat_HPCT(); });
         $("#btnSave_HPCT").click(function () { me.save_HPCT(); });
@@ -134,6 +150,25 @@ HeSoPhamVi.prototype = {
         });
         $("#txtLHP_HeSo").on("input", function () { $(this).removeClass("hspv-invalid"); me.capNhat_LHP(); });
         $("#btnSave_LHP").click(function () { me.save_LHP(); });
+
+        /*-- Chuc danh/hoc vi cho tung he dao tao --*/
+        $("#btnAdd_HeSoPhamVi_CDHV").click(function (e) { e.preventDefault(); me.openForm_CDHV(); });
+        me.genLoai_CDHV("segCDHV_Loai", "rdoCDHV_Loai");
+        $("#segCDHV_Loai").on("change", "input", function () {
+            me.danhDauLoai_CDHV("segCDHV_Loai");
+            me.getList_PhamVi_CDHV("rdoCDHV_Loai", "dropCDHV_PhamVi", "lblCDHV_PhamVi");
+            me.capNhat_CDHV();
+        });
+        $("#dropCDHV_PhamVi").on("select2:select change", function () { me.capNhat_CDHV(); });
+        $("#zoneHe_CDHV").on("change", "input[type=checkbox]", function () {
+            $(this).closest(".hspv-chk").toggleClass("on", this.checked);
+            me.capNhat_CDHV();
+        });
+        $("#txtLocHe_CDHV").on("input", function () { me.locChk("zoneHe_CDHV", this.value); });
+        $("#btnChonHetHe_CDHV").click(function (e) { e.preventDefault(); me.chonChk("zoneHe_CDHV", true); me.capNhat_CDHV(); });
+        $("#btnBoChonHe_CDHV").click(function (e) { e.preventDefault(); me.chonChk("zoneHe_CDHV", false); me.capNhat_CDHV(); });
+        $("#txtCDHV_HeSo").on("input", function () { $(this).removeClass("hspv-invalid"); me.capNhat_CDHV(); });
+        $("#btnSave_CDHV").click(function () { me.save_CDHV(); });
     },
 
     /*------------------------------------------
@@ -183,10 +218,52 @@ HeSoPhamVi.prototype = {
         if (!strHtml) { $z.hide().html(""); return; }
         $z.attr("class", "hspv-alert " + (strKieu || "w")).html(strHtml).show();
     },
-    /* Pham vi cua to hop hoc phan - CTDT. CHUA XAC MINH voi DB: tam ghep Id hoc phan + Id CTDT
-       (cung kieu "HocPhan_Id || ..." ma PKG_KLGV_V2_CHUNG dung). Doi cach ghep chi sua o day. */
-    ghepPhamVi_HPCT: function (strHocPhan_Id, strChuongTrinh_Id) {
-        return edu.util.returnEmpty(strHocPhan_Id) + edu.util.returnEmpty(strChuongTrinh_Id);
+    /* Nguoi dung da sua lua chon -> an canh bao loi cu (giu thong bao ket qua luu) */
+    anCanhBao: function (strZone_Id) {
+        if ($("#" + strZone_Id).hasClass("w")) this.thongBao(strZone_Id, "");
+    },
+    /* Ma pham vi ghep: noi lien cac Id theo dung thu tu sheet quy dinh (xem dau file). Doi cach ghep chi sua o day. */
+    ghepPhamVi: function (arrId) {
+        return arrId.map(function (s) { return edu.util.returnEmpty(s); }).join("");
+    },
+    /* Id CTDT + Id hoc phan lay tu dong cua ham lay ds hoc phan theo CTDT (DAOTAO_TOCHUCCHUONGTRINH_ID, DAOTAO_HOCPHAN_ID) */
+    idCT_HPCT: function (x) { return x.hp.DAOTAO_TOCHUCCHUONGTRINH_ID || x.ct.ID; },
+    idHP_HPCT: function (x) { return x.hp.DAOTAO_HOCPHAN_ID; },
+    /* Danh sach checkbox dang the (dung cho he dao tao) */
+    genChk: function (strZone_Id, data, fnTen, fnMa, strRong) {
+        var me = this;
+        var h = "";
+        data.forEach(function (e) {
+            var ten = edu.util.returnEmpty(fnTen(e)), ma = edu.util.returnEmpty(fnMa(e));
+            h += '<label class="hspv-chk" title="' + me.esc(ma ? ten + " - " + ma : ten) + '" data-loc="' + me.esc(me.boDau(ten + " " + ma)) + '">'
+                + '<input type="checkbox" value="' + me.esc(e.ID) + '" />'
+                + '<span class="hspv-chk-t">' + me.esc(ten) + '</span>'
+                + (ma ? '<span class="hspv-chk-m">' + me.esc(ma) + '</span>' : '')
+                + '</label>';
+        });
+        $("#" + strZone_Id).html(h || '<div class="hspv-empty">' + strRong + '</div>');
+    },
+    locChk: function (strZone_Id, strText) {
+        var me = this;
+        var s = me.boDau(strText).trim();
+        $("#" + strZone_Id + " .hspv-chk").each(function () {
+            $(this).toggle(!s || ($(this).attr("data-loc") || "").indexOf(s) !== -1);
+        });
+    },
+    chonChk: function (strZone_Id, bChon) {
+        $("#" + strZone_Id + " .hspv-chk").each(function () {
+            if (this.style.display === "none") return;
+            $(this).toggleClass("on", bChon).find("input")[0].checked = bChon;
+        });
+    },
+    daChonChk: function (strZone_Id, data) {
+        var arr = [];
+        $("#" + strZone_Id + " input[type=checkbox]:checked").each(function () {
+            var strId = this.value;
+            var e = data.find(function (x) { return String(x.ID) === strId; });
+            if (e) arr.push(e);
+        });
+        return arr;
     },
 
     /*------------------------------------------
@@ -195,7 +272,7 @@ HeSoPhamVi.prototype = {
     getList_LoaiBang: function () {
         // Loai he so = danh muc KLGD.PHANLOAIXACNHAN (cung danh muc "Loai he so" cua form them -> strLoaiBang_Id)
         var me = this;
-        var arrDrop = ["dropSearch_LoaiBang", "dropPhamViApDung", "dropPhamVi_N", "dropHPCT_LoaiBang", "dropLHP_LoaiBang"];
+        var arrDrop = ["dropSearch_LoaiBang", "dropPhamViApDung", "dropPhamVi_N", "dropHPCT_LoaiBang", "dropLHP_LoaiBang", "dropCDHV_LoaiBang"];
         edu.system.loadToCombo_DanhMucDuLieu("KLGD.PHANLOAIXACNHAN", arrDrop.join(","), "", function (data) {
             if (!data || !data.length) return;
             edu.system.loadToCombo_data({
@@ -230,7 +307,7 @@ HeSoPhamVi.prototype = {
                 code: "",
                 avatar: ""
             },
-            renderPlace: ["dropThoiGian", "dropSearch_ThoiGian", "dropThoiGian_N", "dropHPCT_ThoiGian", "dropLHP_ThoiGian"],
+            renderPlace: ["dropThoiGian", "dropSearch_ThoiGian", "dropThoiGian_N", "dropHPCT_ThoiGian", "dropLHP_ThoiGian", "dropCDHV_ThoiGian"],
             type: "",
             title: "Chọn thời gian",
         }
@@ -247,6 +324,57 @@ HeSoPhamVi.prototype = {
         };
         edu.system.getList_HeDaoTao(objList, "", "", function (data) {
             me.genCombo(data, ["dropHPCT_HeDaoTao", "dropLHP_HeDaoTao"], "TENHEDAOTAO", "Tất cả hệ đào tạo");
+            me.dtHeDaoTao = data || [];
+            me.genChk("zoneHe_CDHV", me.dtHeDaoTao,
+                function (e) { return e.TENHEDAOTAO; }, function (e) { return e.MAHEDAOTAO; }, "Chưa có hệ đào tạo.");
+            me.capNhat_CDHV();
+        });
+    },
+    /* "Chon loai" (Chuc danh | Hoc vi) dang nut gat */
+    genLoai_CDHV: function (strZone_Id, strName) {
+        var me = this;
+        var h = "";
+        me.LOAI_CDHV.forEach(function (e, i) {
+            h += '<label class="hspv-seg-i' + (i === 0 ? ' on' : '') + '">'
+                + '<input type="radio" name="' + strName + '" value="' + me.esc(e.MA) + '"' + (i === 0 ? ' checked' : '') + ' />'
+                + me.esc(e.TEN) + '</label>';
+        });
+        $("#" + strZone_Id).html(h);
+    },
+    danhDauLoai_CDHV: function (strZone_Id) {
+        $("#" + strZone_Id + " .hspv-seg-i").each(function () {
+            $(this).toggleClass("on", $(this).find("input")[0].checked);
+        });
+    },
+    loaiChon_CDHV: function (strName) {
+        var v = $("input[name='" + strName + "']:checked").val() || "";
+        return this.LOAI_CDHV.find(function (e) { return e.MA === v; }) || null;
+    },
+    /* Danh muc theo ma bang cua loai dang chon (Id danh muc = Id chuc danh / hoc vi) -> combo; cache theo ma */
+    getList_PhamVi_CDHV: function (strName, strDrop_Id, strLbl_Id) {
+        var me = this;
+        var loai = me.loaiChon_CDHV(strName);
+        var strTen = loai ? loai.TEN : "Chức danh / học vị";
+        if (strLbl_Id) $("#" + strLbl_Id).text(strTen);
+        var render = function (data) {
+            edu.system.loadToCombo_data({
+                data: data || [],
+                renderInfor: {
+                    id: "ID", parentId: "", name: "TEN", code: "MA",
+                    mRender: function (nRow, aData) { return me.tenMa(aData); }
+                },
+                renderPlace: [strDrop_Id],
+                title: "Chọn " + strTen.toLowerCase()
+            });
+        };
+        if (!loai) { render([]); return; }
+        if (me.objDM_CDHV[loai.MA]) { render(me.objDM_CDHV[loai.MA]); return; }
+        render([]);
+        edu.system.getList_DanhMucDulieu({ strMaBangDanhMuc: loai.MA, strTenCotSapXep: "", iTrangThai: 1 }, "", "", function (data) {
+            me.logMauCombo(strDrop_Id, data);
+            me.objDM_CDHV[loai.MA] = data || [];
+            var cur = me.loaiChon_CDHV(strName);
+            if (cur && cur.MA === loai.MA) render(me.objDM_CDHV[loai.MA]); // da doi loai trong luc cho -> bo ket qua cu
         });
     },
     genCombo: function (data, arrPlace, strName, strTitle) {
@@ -634,6 +762,7 @@ HeSoPhamVi.prototype = {
         return arr;
     },
     updateTongHop_N: function () {
+        this.anCanhBao("zoneThongBao_N");
         var nTong = $("#zoneLoai_N input[type=checkbox]").length;
         var n = $("#zoneLoai_N input[type=checkbox]:checked").length;
         $("#lblDemLoai_N").text("Đã chọn " + n + "/" + nTong);
@@ -680,14 +809,47 @@ HeSoPhamVi.prototype = {
     --  CTDT: KHCT_ToChucChuongTrinh/LayDanhSach; hoc phan cua CTDT: KHCT_HocPhan_ChuongTrinh/LayDanhSach
     --  (cung bo ham man Chuong trinh - hoc phan / Xem CTDT cua ApisKeHoachChuongTrinh)
     -------------------------------------------*/
-    openForm_HPCT: function () {
+    /* strMode: "" = to hop hoc phan - CTDT; "CDHV" = chuc danh/hoc vi cho tung hoc phan theo CTDT
+       (them khoi chon chuc danh/hoc vi, bat buoc loc he dao tao vi ma pham vi ghep ca Id he) */
+    openForm_HPCT: function (strMode) {
         var me = this;
+        strMode = strMode || "";
+        var bCDHV = strMode === "CDHV";
+        if (me.modeHPCT !== strMode) {
+            // doi muc dich: bo chon cu de khong luu nham sang kieu pham vi khac
+            var bDaTim = me.modeHPCT !== null && me.dtCT_HPCT.length > 0;
+            me.modeHPCT = strMode;
+            me.boChon_HPCT();
+            me.objCT_HPCT = null;
+            me.dtHP_HPCT = [];
+            $("#lblHPCT_TenCT").text("(chưa chọn CTĐT)");
+            $("#tblHPCT_HocPhan tbody").html('<tr><td colspan="4" class="hspv-empty">Bấm "Xem học phần" ở một chương trình bên trái.</td></tr>');
+            if (bDaTim) me.getList_CT_HPCT();
+            else $("#zoneHPCT_ChuongTrinh").html(bCDHV && !edu.util.getValById("dropHPCT_HeDaoTao")
+                ? '<div class="hspv-empty">Chọn hệ đào tạo trước (mã phạm vi ghép cả Id hệ đào tạo), rồi bấm Tìm CTĐT.</div>'
+                : '<div class="hspv-empty">Chọn hệ / khóa rồi bấm Tìm CTĐT.</div>');
+        }
+        $("#lblTieuDe_HPCT").html(bCDHV
+            ? '<i class="fa fa-id-badge"></i> Thêm mới theo chức danh/học vị cho từng học phần theo CTĐT'
+            : '<i class="fa fa-sitemap"></i> Thêm mới cho tổ hợp học phần - CTĐT');
+        $("#secHPCT_CDHV").toggle(bCDHV);
+        $("#lblHPCT_B1").text(bCDHV
+            ? "Chọn hệ đào tạo, chương trình đào tạo, rồi tick học phần của chương trình"
+            : "Chọn chương trình đào tạo, rồi tick học phần của chương trình");
+        if (bCDHV && $("#dropHPCT_PhamVi option").length <= 1) me.getList_PhamVi_CDHV("rdoHPCT_Loai", "dropHPCT_PhamVi", "lblHPCT_PhamVi");
         me.thongBao("zoneThongBao_HPCT", "");
         me.macDinh("dropHPCT_LoaiBang", "dropSearch_LoaiBang");
         me.macDinh("dropHPCT_ThoiGian", "dropSearch_ThoiGian");
         if ($("#dropHPCT_KhoaDaoTao option").length === 0) me.getList_KhoaDaoTao_HPCT();
         me.capNhat_HPCT();
         $("#myModal_HeSoPhamVi_HPCT").modal("show");
+    },
+    boChon_HPCT: function () {
+        this.objChon_HPCT = {};
+        $("#tblHPCT_HocPhan input.chkHP, #chkHPCT_All").prop("checked", false);
+        $("#tblHPCT_HocPhan tr").removeClass("hspv-row-picked");
+        $("#zoneHPCT_ChuongTrinh .hspv-ct-n").remove();
+        this.capNhat_HPCT();
     },
     getList_KhoaDaoTao_HPCT: function () {
         var me = this;
@@ -703,6 +865,14 @@ HeSoPhamVi.prototype = {
     },
     getList_CT_HPCT: function () {
         var me = this;
+        var strHe = edu.util.getValById("dropHPCT_HeDaoTao");
+        var strHeTen = me.textChon("dropHPCT_HeDaoTao");
+        if (me.modeHPCT === "CDHV" && !strHe) {
+            me.dtCT_HPCT = [];
+            $("#lblHPCT_TongCT").text(0);
+            $("#zoneHPCT_ChuongTrinh").html('<div class="hspv-empty">Chọn hệ đào tạo trước (mã phạm vi ghép cả Id hệ đào tạo), rồi bấm Tìm CTĐT.</div>');
+            return;
+        }
         $("#zoneHPCT_ChuongTrinh").html('<div class="hspv-empty"><i class="fa fa-spinner fa-spin"></i> Đang tải chương trình…</div>');
         me.callGet({
             'action': 'KHCT_ToChucChuongTrinh/LayDanhSach',
@@ -717,6 +887,8 @@ HeSoPhamVi.prototype = {
             'pageIndex': 1,
             'pageSize': 240000
         }, function (data) {
+            // ham lay CTDT khong tra he dao tao -> gan he cua bo loc luc tim (CTDT loc theo he nao thi thuoc he do)
+            data.forEach(function (ct) { ct.HSPV_HEDAOTAO_ID = strHe; ct.HSPV_HEDAOTAO_TEN = strHeTen; });
             me.dtCT_HPCT = data;
             me.genList_CT_HPCT();
         });
@@ -809,10 +981,13 @@ HeSoPhamVi.prototype = {
         me.capNhat_HPCT();
     },
     capNhat_HPCT: function () {
+        this.anCanhBao("zoneThongBao_HPCT");
         var n = Object.keys(this.objChon_HPCT).length;
         $("#lblHPCT_SoChon").text(n);
         if (n) {
-            $("#lblTongHop_HPCT").html("Sẽ lưu <b>" + n + "</b> tổ hợp học phần - CTĐT");
+            $("#lblTongHop_HPCT").html(this.modeHPCT === "CDHV"
+                ? "Sẽ lưu <b>" + n + "</b> học phần theo CTĐT cho chức danh/học vị đã chọn"
+                : "Sẽ lưu <b>" + n + "</b> tổ hợp học phần - CTĐT");
             $("#lblSave_HPCT").text("Lưu " + n + " khai báo");
         }
         else {
@@ -822,34 +997,48 @@ HeSoPhamVi.prototype = {
     },
     save_HPCT: function () {
         var me = this;
+        var bCDHV = me.modeHPCT === "CDHV";
         var arr = Object.keys(me.objChon_HPCT).map(function (k) { return me.objChon_HPCT[k]; });
         var strHeSo = $.trim($("#txtHPCT_HeSo").val());
         var strLoaiBang = edu.util.getValById("dropHPCT_LoaiBang");
         var strThoiGian = edu.util.getValById("dropHPCT_ThoiGian");
+        var loai = bCDHV ? me.loaiChon_CDHV("rdoHPCT_Loai") : null;
+        var strPhamVi = bCDHV ? edu.util.getValById("dropHPCT_PhamVi") : "";
         var arrLoi = [];
+        if (bCDHV && !strPhamVi) arrLoi.push("Chưa chọn " + (loai ? loai.TEN.toLowerCase() : "chức danh / học vị") + ".");
         if (!arr.length) arrLoi.push("Chưa chọn học phần nào.");
+        if (bCDHV) {
+            var nThieuHe = arr.filter(function (x) { return !x.ct.HSPV_HEDAOTAO_ID; }).length;
+            if (nThieuHe) arrLoi.push(nThieuHe + " học phần được chọn khi chưa lọc hệ đào tạo. Bỏ chọn, chọn hệ đào tạo rồi tìm lại CTĐT.");
+        }
         if (!strHeSo) { arrLoi.push("Chưa nhập hệ số."); $("#txtHPCT_HeSo").addClass("hspv-invalid"); }
         else if (!me.laSoHopLe(strHeSo)) { arrLoi.push("Hệ số phải là số (VD: 1 hoặc 1,2)."); $("#txtHPCT_HeSo").addClass("hspv-invalid"); }
         if (arrLoi.length) { me.thongBao("zoneThongBao_HPCT", arrLoi.join("<br/>"), "w"); return; }
         me.thongBao("zoneThongBao_HPCT", "");
+        var arrCot = [
+            { header: "Học phần", render: function (x) { return edu.util.returnEmpty(x.hp.DAOTAO_HOCPHAN_TEN) + " (" + edu.util.returnEmpty(x.hp.DAOTAO_HOCPHAN_MA) + ")"; } },
+            { header: "Chương trình đào tạo", render: function (x) { return edu.util.returnEmpty(x.ct.TENCHUONGTRINH) + " (" + edu.util.returnEmpty(x.ct.MACHUONGTRINH) + ")"; } }
+        ];
+        if (bCDHV) arrCot.push({ header: "Hệ đào tạo", render: function (x) { return x.ct.HSPV_HEDAOTAO_TEN; } });
+        var arrTieuDe = ["Loại hệ số: " + (me.textChon("dropHPCT_LoaiBang") || "(không chọn)"), "Thời gian: " + (me.textChon("dropHPCT_ThoiGian") || "(không chọn)"), "Hệ số: " + strHeSo];
+        if (bCDHV) arrTieuDe.unshift((loai ? loai.TEN : "Chức danh / học vị") + ": " + me.textChon("dropHPCT_PhamVi"));
         me.runThem({
-            title: "Thêm mới hệ số cho tổ hợp học phần - CTĐT",
-            subTitles: ["Loại hệ số: " + (me.textChon("dropHPCT_LoaiBang") || "(không chọn)"), "Thời gian: " + (me.textChon("dropHPCT_ThoiGian") || "(không chọn)"), "Hệ số: " + strHeSo],
-            columns: [
-                { header: "Học phần", render: function (x) { return edu.util.returnEmpty(x.hp.DAOTAO_HOCPHAN_TEN) + " (" + edu.util.returnEmpty(x.hp.DAOTAO_HOCPHAN_MA) + ")"; } },
-                { header: "Chương trình đào tạo", render: function (x) { return edu.util.returnEmpty(x.ct.TENCHUONGTRINH) + " (" + edu.util.returnEmpty(x.ct.MACHUONGTRINH) + ")"; } }
-            ],
+            title: bCDHV ? "Thêm mới hệ số theo chức danh/học vị cho từng học phần theo CTĐT" : "Thêm mới hệ số cho tổ hợp học phần - CTĐT",
+            subTitles: arrTieuDe,
+            columns: arrCot,
             items: arr.map(function (x, i) { x.ID = x.hp.DAOTAO_HOCPHAN_ID + "_" + x.ct.ID; return x; }),
             request: function (x) {
+                var arrId = [me.idCT_HPCT(x), me.idHP_HPCT(x)];
+                if (bCDHV) arrId = [strPhamVi, x.ct.HSPV_HEDAOTAO_ID].concat(arrId);
                 return me.req_HeSoPhamVi({
                     strLoaiBang_Id: strLoaiBang,
-                    strPhamViApDung_Id: me.ghepPhamVi_HPCT(x.hp.DAOTAO_HOCPHAN_ID, x.ct.ID),
+                    strPhamViApDung_Id: me.ghepPhamVi(arrId),
                     strDaoTao_ThoiGianDaoTao_Id: strThoiGian,
                     dHeSo: strHeSo
                 });
             },
             notes: strThoiGian ? [] : ["Chưa chọn thời gian."],
-            fileName: "KhaiHeSoPhamVi_ToHopHocPhanCTDT",
+            fileName: bCDHV ? "KhaiHeSoPhamVi_ChucDanhHocVi_HocPhanCTDT" : "KhaiHeSoPhamVi_ToHopHocPhanCTDT",
             modal: "#myModal_HeSoPhamVi_HPCT",
             zone: "zoneThongBao_HPCT",
             onDone: function () { $("#btnHPCT_BoChon").trigger("click"); me.genList_CT_HPCT(); }
@@ -958,6 +1147,7 @@ HeSoPhamVi.prototype = {
         $("#tblHeSoLHP .chkLHP:checked").closest("tr").addClass("hspv-row-picked");
     },
     capNhat_LHP: function () {
+        this.anCanhBao("zoneThongBao_LHP");
         var n = Object.keys(this.objLHPChon).length;
         $("#lblLHP_SoChon").html(n);
         if (n) {
@@ -994,6 +1184,73 @@ HeSoPhamVi.prototype = {
             modal: "#myModal_HeSoPhamVi_LHP",
             zone: "zoneThongBao_LHP",
             onDone: function () { $("#btnLHP_BoChon").trigger("click"); }
+        });
+    },
+
+    /*------------------------------------------
+    --Discription: [8] Them theo chuc danh/hoc vi cho tung he dao tao
+    --  Chon loai (Chuc danh | Hoc vi) -> danh muc theo ma bang cua loai -> tick nhieu he dao tao
+    --  Moi he = 1 lan goi; pham vi = Id chuc danh/hoc vi + Id he dao tao
+    -------------------------------------------*/
+    openForm_CDHV: function () {
+        var me = this;
+        me.thongBao("zoneThongBao_CDHV", "");
+        me.macDinh("dropCDHV_LoaiBang", "dropSearch_LoaiBang");
+        me.macDinh("dropCDHV_ThoiGian", "dropSearch_ThoiGian");
+        if ($("#dropCDHV_PhamVi option").length <= 1) me.getList_PhamVi_CDHV("rdoCDHV_Loai", "dropCDHV_PhamVi", "lblCDHV_PhamVi");
+        me.capNhat_CDHV();
+        $("#myModal_HeSoPhamVi_CDHV").modal("show");
+    },
+    capNhat_CDHV: function () {
+        this.anCanhBao("zoneThongBao_CDHV");
+        var nTong = $("#zoneHe_CDHV input[type=checkbox]").length;
+        var n = $("#zoneHe_CDHV input[type=checkbox]:checked").length;
+        $("#lblDemHe_CDHV").text("Đã chọn " + n + "/" + nTong);
+        if (n) {
+            var strPV = this.textChon("dropCDHV_PhamVi");
+            $("#lblTongHop_CDHV").html("Sẽ lưu <b>" + n + "</b> hệ đào tạo" + (strPV ? " cho <b>" + this.esc(strPV) + "</b>" : "") + ", mỗi hệ 1 khai báo");
+            $("#lblSave_CDHV").text("Lưu " + n + " khai báo");
+        }
+        else {
+            $("#lblTongHop_CDHV").text("Chọn chức danh/học vị, tick hệ đào tạo và nhập hệ số để lưu.");
+            $("#lblSave_CDHV").text("Lưu");
+        }
+    },
+    save_CDHV: function () {
+        var me = this;
+        var loai = me.loaiChon_CDHV("rdoCDHV_Loai");
+        var strTenLoai = loai ? loai.TEN : "Chức danh / học vị";
+        var strPhamVi = edu.util.getValById("dropCDHV_PhamVi");
+        var strLoaiBang = edu.util.getValById("dropCDHV_LoaiBang");
+        var strThoiGian = edu.util.getValById("dropCDHV_ThoiGian");
+        var strHeSo = $.trim($("#txtCDHV_HeSo").val());
+        var arrHe = me.daChonChk("zoneHe_CDHV", me.dtHeDaoTao);
+        var arrLoi = [];
+        if (!strPhamVi) arrLoi.push("Chưa chọn " + strTenLoai.toLowerCase() + ".");
+        if (!arrHe.length) arrLoi.push("Chưa chọn hệ đào tạo nào.");
+        if (!strHeSo) { arrLoi.push("Chưa nhập hệ số."); $("#txtCDHV_HeSo").addClass("hspv-invalid"); }
+        else if (!me.laSoHopLe(strHeSo)) { arrLoi.push("Hệ số phải là số (VD: 1 hoặc 1,2)."); $("#txtCDHV_HeSo").addClass("hspv-invalid"); }
+        if (arrLoi.length) { me.thongBao("zoneThongBao_CDHV", arrLoi.join("<br/>"), "w"); return; }
+        me.thongBao("zoneThongBao_CDHV", "");
+        me.runThem({
+            title: "Thêm mới hệ số theo chức danh/học vị cho từng hệ đào tạo",
+            subTitles: [strTenLoai + ": " + me.textChon("dropCDHV_PhamVi"), "Loại hệ số: " + (me.textChon("dropCDHV_LoaiBang") || "(không chọn)"), "Thời gian: " + (me.textChon("dropCDHV_ThoiGian") || "(không chọn)"), "Hệ số: " + strHeSo],
+            columns: [{ header: "Hệ đào tạo", render: function (he) { var ma = edu.util.returnEmpty(he.MAHEDAOTAO); return edu.util.returnEmpty(he.TENHEDAOTAO) + (ma ? " (" + ma + ")" : ""); } }],
+            items: arrHe,
+            request: function (he) {
+                return me.req_HeSoPhamVi({
+                    strLoaiBang_Id: strLoaiBang,
+                    strPhamViApDung_Id: me.ghepPhamVi([strPhamVi, he.ID]),
+                    strDaoTao_ThoiGianDaoTao_Id: strThoiGian,
+                    dHeSo: strHeSo
+                });
+            },
+            notes: strThoiGian ? [] : ["Chưa chọn thời gian."],
+            fileName: "KhaiHeSoPhamVi_ChucDanhHocVi_HeDaoTao",
+            modal: "#myModal_HeSoPhamVi_CDHV",
+            zone: "zoneThongBao_CDHV",
+            // giu cac he da tick de khai tiep chuc danh/hoc vi khac; chi bo chon chuc danh/hoc vi vua luu
+            onDone: function () { edu.util.viewValById("dropCDHV_PhamVi", ""); $("#dropCDHV_PhamVi").trigger("change"); }
         });
     },
 }
