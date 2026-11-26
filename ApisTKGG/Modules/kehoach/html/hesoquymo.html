@@ -38,6 +38,8 @@
                         </h3>
 
                         <div class="pull-right">
+                            <a class="btn btn-default" id="btnAdd_HeSoQuyMo_CTDT" href="#"><i class="fa fa-sitemap"></i> Thêm khai báo theo từng CTĐT</a>
+                            <a class="btn btn-default" id="btnAdd_HeSoQuyMo_LHP" href="#"><i class="fa fa-th-list"></i> Thêm khai báo theo từng lớp học phần</a>
                             <a class="btn btn-primary btnAdd" id="btnAdd_HeSoQuyMo"  href="#"><i class="fa fa-plus"></i> Thêm mới</a>
                             <a id="btnDelete_HeSoQuyMo" class="btn btn-default"><i class="fa fa-trash"></i> Xóa</a>
                         </div>
@@ -161,8 +163,128 @@
         </div>
     </div>
 </div>
+<!-- 2026-11-26: Them khai bao he so theo tung CTDT / tung lop hoc phan (MoTaChucNangChinh_KLGD_NEW.xlsx, tab "Sua them khai bao he so theo SS") -->
+<div class="modal fade hsqm-modal" id="myModal_HeSoCTDT" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h3 class="box-title"><i class="fa fa-sitemap"></i> Thêm khai báo theo từng chương trình đào tạo</h3>
+            </div>
+            <div class="modal-body">
+                <p class="hsqm-hint"><i class="fa fa-info-circle"></i> Mỗi chương trình đào tạo được chọn ghép với hình thức (Loại) thành một phạm vi áp dụng mới, mỗi phạm vi thêm một dòng hệ số.</p>
+                <div class="hsqm-section">1. Chọn chương trình đào tạo</div>
+                <div class="hsqm-grid">
+                    <label for="dropCTDT_ThoiGian">Thời gian <span class="hsqm-req">*</span></label>
+                    <div><select id="dropCTDT_ThoiGian" class="select-opt"></select></div>
+                    <label for="dropCTDT_HeDaoTao">Hệ đào tạo</label>
+                    <div><select id="dropCTDT_HeDaoTao" class="select-opt"></select></div>
+                    <label for="dropCTDT_KhoaDaoTao">Khóa đào tạo</label>
+                    <div><select id="dropCTDT_KhoaDaoTao" class="select-opt"></select></div>
+                    <label for="dropCTDT_ChuongTrinh">Chương trình đào tạo <span class="hsqm-req">*</span></label>
+                    <div>
+                        <select id="dropCTDT_ChuongTrinh" class="select-opt" multiple="multiple"></select>
+                        <div class="hsqm-sub">Chọn được nhiều chương trình — <a href="#" id="btnCTDT_ChonTatCa">chọn tất cả</a> · <a href="#" id="btnCTDT_BoChon">bỏ chọn</a> · <b id="lblCTDT_SoChon">0</b> đã chọn</div>
+                    </div>
+                </div>
+                <div class="hsqm-section">2. Hình thức và hệ số</div>
+                <div class="hsqm-grid">
+                    <label for="dropCTDT_PhamVi">Phạm vi <span class="hsqm-req">*</span></label>
+                    <div><select id="dropCTDT_PhamVi" class="select-opt"></select></div>
+                    <label for="dropCTDT_LoaiApDung">Loại (hình thức) <span class="hsqm-req">*</span></label>
+                    <div><select id="dropCTDT_LoaiApDung" class="select-opt"></select></div>
+                    <label for="txtCTDT_SoBatDau">Số bắt đầu</label>
+                    <div><input type="text" id="txtCTDT_SoBatDau" class="form-control" inputmode="decimal" /></div>
+                    <label for="txtCTDT_SoKetThuc">Số kết thúc</label>
+                    <div><input type="text" id="txtCTDT_SoKetThuc" class="form-control" inputmode="decimal" /></div>
+                    <label for="txtCTDT_HeSo">Hệ số <span class="hsqm-req">*</span></label>
+                    <div><input type="text" id="txtCTDT_HeSo" class="form-control" inputmode="decimal" /></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> Đóng</button>
+                <a class="btn btn-primary" id="btnSave_HeSoCTDT"><i class="fa fa-check-circle"></i> Lưu</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade hsqm-modal" id="myModal_HeSoLHP" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h3 class="box-title"><i class="fa fa-th-list"></i> Thêm khai báo theo từng lớp học phần</h3>
+            </div>
+            <div class="modal-body">
+                <p class="hsqm-hint"><i class="fa fa-info-circle"></i> Mỗi lớp học phần được chọn là một phạm vi áp dụng, mỗi lớp thêm một dòng hệ số.</p>
+                <div class="hsqm-section">1. Chọn lớp học phần</div>
+                <div class="hsqm-filter">
+                    <div><select id="dropLHP_ThoiGian" class="select-opt"></select></div>
+                    <div><select id="dropLHP_HeDaoTao" class="select-opt"></select></div>
+                    <div><select id="dropLHP_KhoaDaoTao" class="select-opt"></select></div>
+                    <div><select id="dropLHP_ChuongTrinh" class="select-opt"></select></div>
+                    <div><input id="txtLHP_TuKhoa" class="form-control" placeholder="Nhập mã / tên lớp" /></div>
+                    <div><a class="btn btn-default" id="btnLHP_Search"><i class="fa fa-search"></i> Tìm kiếm</a></div>
+                </div>
+                <div class="hsqm-table-head">
+                    <span>Danh sách lớp học phần <span class="badge bg-light-blue" id="lblLHP_Tong">0</span></span>
+                    <span class="hsqm-picked"><i class="fa fa-check-square-o"></i> Đã chọn <b id="lblLHP_SoChon">0</b> lớp · <a href="#" id="btnLHP_BoChon">bỏ chọn</a></span>
+                </div>
+                <div class="scroll-table-x hsqm-table-wrap">
+                    <table id="tblHeSoLHP" class="table table-hover table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="td-center td-fixed">Stt</th>
+                                <th class="td-center">Mã lớp</th>
+                                <th class="td-center">Tên lớp</th>
+                                <th class="td-center td-fixed"><input type="checkbox" id="chkLHP_All" title="Chọn cả trang"></th>
+                            </tr>
+                        </thead>
+                        <tbody><tr><td colspan="4" class="td-center hsqm-empty">Chọn thời gian rồi bấm Tìm kiếm</td></tr></tbody>
+                    </table>
+                </div>
+                <div class="hsqm-section">2. Hệ số</div>
+                <div class="hsqm-grid">
+                    <label for="txtLHP_SoBatDau">Số bắt đầu</label>
+                    <div><input type="text" id="txtLHP_SoBatDau" class="form-control" inputmode="decimal" /></div>
+                    <label for="txtLHP_SoKetThuc">Số kết thúc</label>
+                    <div><input type="text" id="txtLHP_SoKetThuc" class="form-control" inputmode="decimal" /></div>
+                    <label for="txtLHP_HeSo">Hệ số <span class="hsqm-req">*</span></label>
+                    <div><input type="text" id="txtLHP_HeSo" class="form-control" inputmode="decimal" /></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> Đóng</button>
+                <a class="btn btn-primary" id="btnSave_HeSoLHP"><i class="fa fa-check-circle"></i> Lưu</a>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .hsqm-modal .modal-body { padding: 16px 20px; }
+    .hsqm-modal .hsqm-hint { margin: 0 0 12px; padding: 8px 12px; border-radius: 6px; background: #eef4fb; color: #2c4a6b; font-size: 13px; }
+    .hsqm-modal .hsqm-section { margin: 16px 0 8px; padding-bottom: 4px; border-bottom: 1px solid #e5e9f0; font-weight: 600; color: #1f3b63; }
+    .hsqm-modal .hsqm-grid { display: grid; grid-template-columns: 180px 1fr; gap: 8px 16px; align-items: center; }
+    .hsqm-modal .hsqm-grid > label { margin: 0; font-weight: normal; color: #444; }
+    .hsqm-modal .hsqm-req { color: #d9534f; }
+    .hsqm-modal .hsqm-sub { margin-top: 4px; font-size: 12px; color: #6b7280; }
+    .hsqm-modal .form-control { height: 38px; }
+    .hsqm-modal .hsqm-filter { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    .hsqm-modal .hsqm-filter .btn { height: 38px; width: 100%; }
+    .hsqm-modal .hsqm-table-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; margin: 12px 0 6px; font-weight: 600; }
+    .hsqm-modal .hsqm-picked { font-weight: normal; color: #1f6f43; }
+    .hsqm-modal .hsqm-table-wrap { max-height: 320px; overflow-y: auto; }
+    .hsqm-modal .hsqm-table-wrap thead th { position: sticky; top: 0; background: #f4f6f9; z-index: 1; }
+    .hsqm-modal .hsqm-empty { color: #8a94a6; padding: 16px !important; }
+    .hsqm-modal tr.hsqm-row-picked > td { background: #eaf6ee; }
+    @media (max-width: 768px) {
+        .hsqm-modal .hsqm-grid { grid-template-columns: 1fr; gap: 4px; }
+        .hsqm-modal .hsqm-grid > div { margin-bottom: 6px; }
+        .hsqm-modal .hsqm-filter { grid-template-columns: 1fr; }
+    }
+</style>
 <!-- page script -->
-<script src="modules/kehoach/script/HeSoQuyMo.js?v=1.0.0.3"></script>
+<script src="modules/kehoach/script/HeSoQuyMo.js?v=1.0.0.4"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['HeSoQuyMo'] = new HeSoQuyMo();
