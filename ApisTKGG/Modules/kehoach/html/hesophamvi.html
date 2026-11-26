@@ -1,21 +1,14 @@
-﻿
-<section class="content">
-
-    <div class="row">
-        <!-- /.left-content -->
-        <!-- /.right-content -->
-        <div class="col-lg-12">
-            <!-- box Notify_VBSC -->
-            <div class="box box-solid zone-bus">
-                <div class="box box-solid">
-                    <div class="box-header with-border">
-                        <h3 class="box-title"><i class="fa fa-window-restore"></i> Tìm kiếm</h3>
-                    </div>
-                    <div class="box-body">
-                        <div class="bss-item">
-                            <!--<div class="col-sm-3 item-search">
-                                <select id="dropSearch_PhanLoai" class="select-opt"></select>
-                            </div>-->
+﻿<section class="content aps-TKGG">
+    <div class="row aps-hesophamvi" id="hspvWrap">
+        <div class="zone-bus box box-solid pd0" id="zonebatdau">
+            <!-- Tìm kiếm -->
+            <div class="box box-solid box-search pd20 pb10">
+                <div class="box-body pd0">
+                    <div class="area-search">
+                        <div id="search" class="inputSearch">
+                            <div class="col-sm-3 item-search">
+                                <select id="dropSearch_LoaiBang" class="select-opt"></select>
+                            </div>
                             <div class="col-sm-3 item-search">
                                 <select id="dropSearch_ThoiGian" class="select-opt"></select>
                             </div>
@@ -23,125 +16,282 @@
                                 <input id="txtSearch_TuKhoa" class="form-control" placeholder="Nhập từ khóa tìm kiếm" />
                             </div>
                             <div class="col-sm-3 item-search">
-                                <a class="btn btn-default" id="btnSearch"><i class="fa fa-search"></i> <span class="lang" key="">Tìm kiếm</span></a>
+                                <a id="btnSearch" class="btn btn-default btn-search"><i class="fa fa-search"></i> <span class="lang" key="">Tìm kiếm</span></a>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="box box-solid">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">
-                            <i class="fa fa-list-alt"></i> Danh sách
-                            <span class="badge bg-light-blue">
-                                <span id="lblHeSoPhamVi_Tong"></span>
-                            </span>
-                        </h3>
+            </div>
+            <div class="clear"></div>
 
-                        <div class="pull-right">
-                            <a class="btn btn-primary btnAdd" id="btnAdd_HeSoPhamVi"  href="#"><i class="fa fa-plus"></i> Thêm mới</a>
-                            <a id="btnDelete_HeSoPhamVi" class="btn btn-default"><i class="fa fa-trash"></i> Xóa</a>
-                        </div>
+            <!-- Danh sách -->
+            <div class="box box-solid aps-list-plan pd20 pt10">
+                <div class="box-header pd0">
+                    <h3 class="box-title pt15">
+                        <i class="fa-solid fa-books-medical"></i> Danh sách hệ số theo phạm vi
+                        <span class="pull-right badge bg-light-blue ml-10">
+                            <span id="lblHeSoPhamVi_Tong"></span>
+                        </span>
+                    </h3>
+                </div>
+                <!-- Thanh nút: Xóa tách trái; nhóm thêm mới bên phải (nút chính cuối) -->
+                <div class="hspv-toolbar">
+                    <a id="btnDelete_HeSoPhamVi" class="btn btn-danger"><i class="fa fa-trash"></i> Xóa</a>
+                    <div class="hspv-toolbar-r">
+                        <a id="btnKhaiNhieu_HeSoPhamVi" class="btn hspv-btn-line" href="#"><i class="fa fa-th-list"></i> Thêm mới cho nhiều hình thức một lần khai</a>
+                        <a id="btnAdd_HeSoPhamVi_HPCT" class="btn hspv-btn-line" href="#"><i class="fa fa-sitemap"></i> Thêm mới cho tổ hợp học phần - CTĐT</a>
+                        <a id="btnAdd_HeSoPhamVi_LHP" class="btn hspv-btn-line" href="#"><i class="fa fa-list-ol"></i> Thêm mới theo từng lớp học phần</a>
+                        <a id="btnAdd_HeSoPhamVi" class="btn btn-primary btnAdd" href="#"><i class="fa fa-plus"></i> Thêm mới cho từng hình thức một lần khai</a>
                     </div>
-                    <div class="box-body">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="col-sm-12 scroll-table-x">
-                                    <table id="tblHeSoPhamVi" class="table table-hover table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th class="td-fixed td-center">Stt</th>
-                                                <!--<th class="td-center">Phân loại</th>-->
-                                                <th class="td-center">Phạm vi áp dụng</th>
-                                                <!--<th class="td-center">Số bắt đầu</th>
-                                                <th class="td-center">Số kết thúc</th>-->
-                                                <th class="td-center">Hệ số</th>
-                                                <th class="td-center">Thời gian</th>
-                                                <th class="td-center">Ngày tạo</th>
-                                                <th class="td-center">Người tạo</th>
-                                                <th class="td-fixed td-center">Sửa</th>
-                                                <th class="td-center td-fixed"><input type="checkbox" class="chkSystemSelectAll"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody></tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
+                </div>
+                <div class="box-body pd0">
+                    <div class="aps-table-select mt-15 scroll-table-x">
+                        <table id="tblHeSoPhamVi" class="table table-hover table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="td-fixed td-center">Stt</th>
+                                    <th class="td-center">Phạm vi áp dụng</th>
+                                    <th class="td-center">Hệ số</th>
+                                    <th class="td-center">Thời gian</th>
+                                    <th class="td-center">Ngày tạo</th>
+                                    <th class="td-center">Người tạo</th>
+                                    <th class="td-fixed td-center">Sửa</th>
+                                    <th class="td-center td-fixed"><input type="checkbox" class="chkSystemSelectAll"></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-<div class="modal fade" id="myModal_HeSoPhamVi" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+
+<!-- Thêm cho từng hình thức / Sửa 1 bản ghi -->
+<div class="modal fade" id="myModal_HeSoPhamVi" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width: 640px; max-width: 96%;">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h3 class="box-title"><span class="myModalLabel"> <i class="fa fa-pencil"></i></span> Hệ số</h3>
+                <h3 class="box-title" id="lblTieuDe_HSPV"><i class="fa fa-plus"></i> Thêm mới cho từng hình thức</h3>
             </div>
-            <div class="modal-body" id="modal_body">
-                <div class="row zone-box">
-
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <label style="font-weight: normal"><span class="lang" key="">Phạm vi</span></label>
-                        </div>
-                        <div class="col-sm-9 zoneOpenNew">
-                            <select id="dropPhamViApDung" class="select-opt"></select>
-                        </div>
-                        <div class="col-sm-9 btnOpenDelete">
-            <span id="lblPhamVi"></span>
-        </div>
-                        <div class="clear"></div>
-                    </div>
-                    <div class="row zoneOpenNew">
-                        <div class="col-sm-3">
-                            <label style="font-weight: normal"><span class="lang" key="">Loại</span></label>
-                        </div>
-                        <div class="col-sm-9">
-                            <select id="dropLoaiApDung" class="select-opt"></select>
-                        </div>
-                        <div class="col-sm-9 btnOpenDelete">
-                            <span id="lblLoaiApDung"></span>
-                        </div>
-                        <div class="clear"></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <label style="font-weight: normal"><span class="lang" key="">Thời gian</span></label>
-                        </div>
-                        <div class="col-sm-9">
-                            <select id="dropThoiGian" class="select-opt"></select>
-                        </div>
-                        <!--<div class="col-sm-9 btnOpenDelete">
-            <span id="lblThoiGian"></span>
-        </div>-->
-                        <div class="clear"></div>
+            <div class="modal-body">
+                <div class="hspv-form">
+                    <label class="hspv-lbl">Loại hệ số <b class="hspv-req">*</b></label>
+                    <div class="hspv-ctl">
+                        <div class="zoneOpenNew"><select id="dropPhamViApDung" class="select-opt"></select></div>
+                        <div class="btnOpenDelete hspv-static" style="display: none;"><span id="lblPhamVi"></span></div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <label style="font-weight: normal"><span class="lang" key="">Hệ số</span></label>
-                        </div>
-                        <div class="col-sm-9">
-                            <input type="text" id="txtHeSo" class="form-control" />
-                        </div>
-                        <div class="clear"></div>
+                    <label class="hspv-lbl">Hình thức <b class="hspv-req">*</b></label>
+                    <div class="hspv-ctl">
+                        <div class="zoneOpenNew"><select id="dropLoaiApDung" class="select-opt"></select></div>
+                        <div class="btnOpenDelete hspv-static" style="display: none;"><span id="lblLoaiApDung"></span></div>
+                    </div>
+
+                    <label class="hspv-lbl">Thời gian</label>
+                    <div class="hspv-ctl">
+                        <div class="zoneOpenNew"><select id="dropThoiGian" class="select-opt"></select></div>
+                        <div class="btnOpenDelete hspv-static" style="display: none;"><span id="lblThoiGian"></span></div>
+                    </div>
+
+                    <label class="hspv-lbl">Hệ số <b class="hspv-req">*</b></label>
+                    <div class="hspv-ctl"><input type="text" id="txtHeSo" class="form-control" inputmode="decimal" placeholder="VD: 1,2" /></div>
+                </div>
+                <div class="hspv-note btnOpenDelete" style="display: none;">Khi sửa chỉ đổi được hệ số (hàm Sửa chỉ nhận hệ số).</div>
+            </div>
+            <div class="modal-footer">
+                <div class="hspv-foot">
+                    <div class="hspv-foot-left">
+                        <a class="btn btn-danger btnOpenDelete" id="btnXoaMot_HeSoPhamVi" style="display: none;"><i class="fa fa-trash"></i> Xóa</a>
+                    </div>
+                    <div class="hspv-foot-btns">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> Đóng</button>
+                        <a class="submit btn btn-primary" id="btnSave_HeSoPhamVi"><i class="fa fa-check-circle"></i> Lưu</a>
                     </div>
                 </div>
-            </div>
-            <div class="clear"></div>
-            <div id="notify"></div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>
-                <a class="submit btn btn-primary" id="btnSave_HeSoPhamVi"><i class="fa fa-check-circle"></i><span class="lang" key=""> Lưu</span></a>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Thêm cho nhiều hình thức một lần khai -->
+<div class="modal fade hspv-modal" id="myModal_HeSoPhamVi_Nhieu" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width: 980px; max-width: 96%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h3 class="box-title"><i class="fa fa-th-list"></i> Thêm mới cho nhiều hình thức một lần khai</h3>
+            </div>
+            <div class="modal-body">
+                <div class="hspv-n">
+                    <div class="hspv-sec">
+                        <div class="hspv-sec-h"><span class="hspv-no">1</span> Loại hệ số và thời gian</div>
+                        <div class="hspv-grid2">
+                            <div class="hspv-field"><label>Loại hệ số <b class="hspv-req">*</b></label><select id="dropPhamVi_N" class="select-opt"></select></div>
+                            <div class="hspv-field"><label>Thời gian</label><select id="dropThoiGian_N" class="select-opt"></select></div>
+                        </div>
+                    </div>
+                    <div class="hspv-sec">
+                        <div class="hspv-sec-h"><span class="hspv-no">2</span> Chọn hình thức <span class="hspv-count" id="lblDemLoai_N">Đã chọn 0/0</span></div>
+                        <div class="hspv-toolbar2">
+                            <input type="text" id="txtLocLoai_N" class="form-control" placeholder="Lọc theo tên hoặc mã hình thức" />
+                            <a href="#" id="btnChonHetLoai_N" class="hspv-link">Chọn tất cả</a>
+                            <a href="#" id="btnBoChonLoai_N" class="hspv-link hspv-link-muted">Bỏ chọn</a>
+                        </div>
+                        <div id="zoneLoai_N" class="hspv-chkgrid"><div class="hspv-empty">Chọn loại hệ số để hiện danh sách hình thức.</div></div>
+                    </div>
+                    <div class="hspv-sec">
+                        <div class="hspv-sec-h"><span class="hspv-no">3</span> Hệ số áp dụng cho các hình thức đã chọn</div>
+                        <div class="hspv-grid2">
+                            <div class="hspv-field"><label>Hệ số <b class="hspv-req">*</b></label><input type="text" id="txtHeSo_N" class="form-control" inputmode="decimal" placeholder="VD: 1,2" /></div>
+                        </div>
+                    </div>
+                    <div id="zoneThongBao_N" class="hspv-alert" style="display: none;"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="hspv-foot">
+                    <span class="hspv-sum" id="lblTongHop_N">Chọn hình thức và nhập hệ số để lưu.</span>
+                    <div class="hspv-foot-btns">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> Đóng</button>
+                        <a class="btn btn-primary" id="btnSave_HeSoPhamVi_Nhieu"><i class="fa fa-check-circle"></i> <span id="lblSave_N">Lưu</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Thêm cho tổ hợp học phần - CTĐT -->
+<div class="modal fade hspv-modal" id="myModal_HeSoPhamVi_HPCT" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width: 1180px; max-width: 97%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h3 class="box-title"><i class="fa fa-sitemap"></i> Thêm mới cho tổ hợp học phần - CTĐT</h3>
+            </div>
+            <div class="modal-body">
+                <div class="hspv-n">
+                    <div class="hspv-sec">
+                        <div class="hspv-sec-h"><span class="hspv-no">1</span> Chọn chương trình đào tạo, rồi tick học phần của chương trình</div>
+                        <div class="hspv-filter">
+                            <select id="dropHPCT_HeDaoTao" class="select-opt"></select>
+                            <select id="dropHPCT_KhoaDaoTao" class="select-opt"></select>
+                            <input type="text" id="txtHPCT_TuKhoa" class="form-control" placeholder="Tên / mã chương trình" />
+                            <a class="btn btn-default btn-search" id="btnHPCT_Search"><i class="fa fa-search"></i> Tìm CTĐT</a>
+                        </div>
+                        <div class="hspv-split">
+                            <div class="hspv-pane">
+                                <div class="hspv-pane-h">Chương trình đào tạo <span class="badge bg-light-blue" id="lblHPCT_TongCT">0</span></div>
+                                <div id="zoneHPCT_ChuongTrinh" class="hspv-ctlist"><div class="hspv-empty">Chọn hệ / khóa rồi bấm Tìm CTĐT.</div></div>
+                            </div>
+                            <div class="hspv-pane">
+                                <div class="hspv-pane-h">
+                                    <span>Học phần của: <b id="lblHPCT_TenCT">(chưa chọn CTĐT)</b></span>
+                                </div>
+                                <div class="hspv-toolbar2">
+                                    <input type="text" id="txtHPCT_LocHP" class="form-control" placeholder="Lọc theo mã / tên học phần" />
+                                    <label class="hspv-chkall"><input type="checkbox" id="chkHPCT_All" /> Chọn tất cả</label>
+                                </div>
+                                <div class="hspv-tblwrap">
+                                    <table id="tblHPCT_HocPhan" class="hspv-tbl">
+                                        <thead><tr><th class="hspv-c-chk"></th><th style="width: 120px">Mã HP</th><th>Tên học phần</th><th style="width: 70px">Số TC</th></tr></thead>
+                                        <tbody><tr><td colspan="4" class="hspv-empty">Bấm "Xem học phần" ở một chương trình bên trái.</td></tr></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hspv-picked"><i class="fa fa-check-square-o"></i> Đã chọn <b id="lblHPCT_SoChon">0</b> tổ hợp học phần - CTĐT · <a href="#" id="btnHPCT_BoChon">bỏ chọn tất cả</a></div>
+                    </div>
+                    <div class="hspv-sec">
+                        <div class="hspv-sec-h"><span class="hspv-no">2</span> Hệ số</div>
+                        <div class="hspv-grid3">
+                            <div class="hspv-field"><label>Loại hệ số</label><select id="dropHPCT_LoaiBang" class="select-opt"></select></div>
+                            <div class="hspv-field"><label>Thời gian</label><select id="dropHPCT_ThoiGian" class="select-opt"></select></div>
+                            <div class="hspv-field"><label>Hệ số <b class="hspv-req">*</b></label><input type="text" id="txtHPCT_HeSo" class="form-control" inputmode="decimal" placeholder="VD: 1,2" /></div>
+                        </div>
+                    </div>
+                    <div id="zoneThongBao_HPCT" class="hspv-alert" style="display: none;"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="hspv-foot">
+                    <span class="hspv-sum" id="lblTongHop_HPCT">Tick học phần và nhập hệ số để lưu.</span>
+                    <div class="hspv-foot-btns">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> Đóng</button>
+                        <a class="btn btn-primary" id="btnSave_HPCT"><i class="fa fa-check-circle"></i> <span id="lblSave_HPCT">Lưu</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Thêm theo từng lớp học phần -->
+<div class="modal fade hspv-modal" id="myModal_HeSoPhamVi_LHP" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width: 1100px; max-width: 97%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h3 class="box-title"><i class="fa fa-list-ol"></i> Thêm mới theo từng lớp học phần</h3>
+            </div>
+            <div class="modal-body">
+                <div class="hspv-n">
+                    <div class="hspv-sec">
+                        <div class="hspv-sec-h"><span class="hspv-no">1</span> Chọn lớp học phần (mỗi lớp là một phạm vi áp dụng)</div>
+                        <div class="hspv-filter hspv-filter-6">
+                            <select id="dropLHP_ThoiGian" class="select-opt"></select>
+                            <select id="dropLHP_HeDaoTao" class="select-opt"></select>
+                            <select id="dropLHP_KhoaDaoTao" class="select-opt"></select>
+                            <select id="dropLHP_ChuongTrinh" class="select-opt"></select>
+                            <input type="text" id="txtLHP_TuKhoa" class="form-control" placeholder="Mã / tên lớp" />
+                            <a class="btn btn-default btn-search" id="btnLHP_Search"><i class="fa fa-search"></i> Tìm lớp</a>
+                        </div>
+                        <div class="hspv-pane-h hspv-mt">
+                            <span>Danh sách lớp học phần <span class="badge bg-light-blue" id="lblLHP_Tong">0</span></span>
+                            <span class="hspv-picked-inline"><i class="fa fa-check-square-o"></i> Đã chọn <b id="lblLHP_SoChon">0</b> lớp · <a href="#" id="btnLHP_BoChon">bỏ chọn</a></span>
+                        </div>
+                        <div class="hspv-tblwrap hspv-tblwrap-lg">
+                            <table id="tblHeSoLHP" class="table table-hover table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th class="td-center td-fixed">Stt</th>
+                                        <th class="td-center">Mã lớp</th>
+                                        <th class="td-center">Tên lớp</th>
+                                        <th class="td-center td-fixed"><input type="checkbox" id="chkLHP_All" title="Chọn cả trang"></th>
+                                    </tr>
+                                </thead>
+                                <tbody><tr><td colspan="4" class="td-center hspv-empty">Chọn thời gian rồi bấm Tìm lớp.</td></tr></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="hspv-sec">
+                        <div class="hspv-sec-h"><span class="hspv-no">2</span> Hệ số (thời gian lấy theo ô lọc ở trên)</div>
+                        <div class="hspv-grid2">
+                            <div class="hspv-field"><label>Loại hệ số</label><select id="dropLHP_LoaiBang" class="select-opt"></select></div>
+                            <div class="hspv-field"><label>Hệ số <b class="hspv-req">*</b></label><input type="text" id="txtLHP_HeSo" class="form-control" inputmode="decimal" placeholder="VD: 1,2" /></div>
+                        </div>
+                    </div>
+                    <div id="zoneThongBao_LHP" class="hspv-alert" style="display: none;"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="hspv-foot">
+                    <span class="hspv-sum" id="lblTongHop_LHP">Tick lớp học phần và nhập hệ số để lưu.</span>
+                    <div class="hspv-foot-btns">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> Đóng</button>
+                        <a class="btn btn-primary" id="btnSave_LHP"><i class="fa fa-check-circle"></i> <span id="lblSave_LHP">Lưu</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- page script -->
-<script src="modules/kehoach/script/HeSoPhamVi.js?v=1.0.0.2"></script>
+<script src="modules/kehoach/script/HeSoPhamVi.js?v=1.0.0.3"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['HeSoPhamVi'] = new HeSoPhamVi();
@@ -176,5 +326,113 @@
     .modal .select2-results__options {
         max-height: 220px !important;
         overflow-y: auto !important;
+    }
+
+    /* ===== Hệ số theo phạm vi (scoped) ===== */
+    /* Xoa luon o dong dau ben trai; nhom nut them tu xuong dong ben phai khi man hep */
+    #hspvWrap .hspv-toolbar { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px 16px; margin-top: 12px; }
+    #hspvWrap .hspv-toolbar > .btn-danger { flex: 0 0 auto; }
+    #hspvWrap .hspv-toolbar-r { display: flex; flex: 1 1 auto; min-width: 0; flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
+    #hspvWrap .hspv-toolbar .btn { margin: 0 !important; }
+    /* Nhom nut them (vien navy): KHONG dung btn-default (vo indexi ep trong suot + chu trang -> tang hinh); 2 id de thang rule vo */
+    html body.skin-blue #main-content-wrapper #hspvWrap .hspv-toolbar .btn.hspv-btn-line {
+        background: #ffffff !important; border: 1px solid #223771 !important; color: #223771 !important; opacity: 1 !important;
+    }
+    html body.skin-blue #main-content-wrapper #hspvWrap .hspv-toolbar .btn.hspv-btn-line i { color: #223771 !important; }
+    html body.skin-blue #main-content-wrapper #hspvWrap .hspv-toolbar .btn.hspv-btn-line:hover { background: #eef2ff !important; }
+
+    /* Form 1 ban ghi */
+    #myModal_HeSoPhamVi .hspv-form {
+        display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 14px 16px; align-items: center;
+        padding: 18px 20px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px;
+    }
+    #myModal_HeSoPhamVi .hspv-lbl { margin: 0; font-weight: 600; color: #334155; line-height: 1.3; }
+    #myModal_HeSoPhamVi .hspv-ctl { min-width: 0; }
+    #myModal_HeSoPhamVi .hspv-static {
+        display: flex; align-items: center; min-height: 34px; padding: 6px 12px;
+        background: #eef2f7; border: 1px solid #e2e8f0; border-radius: 6px; font-weight: 600; color: #0f172a;
+    }
+    #myModal_HeSoPhamVi .hspv-note { margin-top: 10px; font-size: 12px; color: #64748b; }
+    .hspv-req { color: #dc2626; font-weight: 700; }
+
+    /* Chan modal: tom tat trai, nut phai */
+    .modal .hspv-foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; width: 100%; }
+    .modal .hspv-foot-btns { display: flex; gap: 10px; flex: 0 0 auto; }
+    .modal .hspv-foot .btn { margin: 0 !important; }
+    .modal .hspv-sum { color: #334155; font-weight: 500; text-align: left; }
+    .modal .hspv-sum b { color: #0f172a; }
+
+    /* Cac form khai nhieu */
+    .hspv-modal .hspv-n { display: flex; flex-direction: column; gap: 14px; }
+    .hspv-modal .hspv-sec { min-width: 0; padding: 14px 16px 16px; background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; }
+    .hspv-modal .hspv-sec-h { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 14px; font-weight: 700; color: #0f172a; }
+    .hspv-modal .hspv-no { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 24px; width: 24px; height: 24px; border-radius: 50%; background: #223771; color: #fff; font-size: 12px; }
+    .hspv-modal .hspv-count { margin-left: auto; padding: 2px 10px; border-radius: 999px; background: #eff6ff; color: #1d4ed8; font-size: 12px; font-weight: 600; }
+    .hspv-modal .hspv-grid2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px 16px; }
+    .hspv-modal .hspv-grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px 16px; }
+    .hspv-modal .hspv-field { min-width: 0; }
+    .hspv-modal .hspv-field > label { display: block; margin-bottom: 6px; font-weight: 600; color: #334155; }
+    .hspv-modal .hspv-toolbar2 { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
+    .hspv-modal .hspv-toolbar2 .form-control { flex: 1 1 auto; min-width: 0; }
+    .hspv-modal .hspv-link { color: #2563eb; font-weight: 600; white-space: nowrap; cursor: pointer; text-decoration: none; }
+    .hspv-modal .hspv-link:hover { text-decoration: underline; }
+    .hspv-modal .hspv-link-muted { color: #64748b; }
+    .hspv-modal .hspv-chkgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; max-height: 300px; overflow-y: auto; padding: 2px; }
+    .hspv-modal .hspv-chk { display: flex; align-items: center; gap: 8px; margin: 0; padding: 8px 10px; min-width: 0; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; font-weight: 500; color: #0f172a; cursor: pointer; }
+    .hspv-modal .hspv-chk:hover { border-color: #93c5fd; background: #f8fbff; }
+    .hspv-modal .hspv-chk.on { border-color: #2563eb; background: #eff6ff; }
+    .hspv-modal .hspv-chk input { flex: 0 0 auto; width: 16px; height: 16px; margin: 0; }
+    .hspv-modal .hspv-chk-t { flex: 1 1 auto; min-width: 0; line-height: 1.35; overflow: hidden; word-break: break-word; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+    .hspv-modal .hspv-chk-m { flex: 0 0 auto; padding: 1px 7px; border-radius: 4px; background: #f1f5f9; color: #475569; font-size: 12px; font-weight: 600; }
+    .hspv-modal .hspv-empty { grid-column: 1 / -1; padding: 22px 12px !important; text-align: center; color: #64748b; background: #f8fafc; }
+    .hspv-modal .hspv-alert { padding: 10px 14px; border-radius: 8px; font-weight: 500; }
+    .hspv-modal .hspv-alert.w { background: #fff7ed; border: 1px solid #fdba74; color: #9a3412; }
+    .hspv-modal .hspv-alert.i { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e3a8a; }
+    .hspv-modal .hspv-alert.s { background: #f0fdf4; border: 1px solid #86efac; color: #166534; }
+    /* 2 id: thang "html body.skin-blue #main-content-wrapper .form-control { border ... !important }" */
+    #myModal_HeSoPhamVi_Nhieu#myModal_HeSoPhamVi_Nhieu .form-control.hspv-invalid,
+    #myModal_HeSoPhamVi_HPCT#myModal_HeSoPhamVi_HPCT .form-control.hspv-invalid,
+    #myModal_HeSoPhamVi_LHP#myModal_HeSoPhamVi_LHP .form-control.hspv-invalid { border: 1px solid #dc2626 !important; box-shadow: 0 0 0 2px rgba(220, 38, 38, .18) !important; background: #fff7f7 !important; }
+
+    /* Loc + chia 2 cot (CTDT | hoc phan) */
+    .hspv-modal .hspv-filter { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.2fr) auto; gap: 10px; align-items: center; margin-bottom: 12px; }
+    .hspv-modal .hspv-filter-6 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .hspv-modal .hspv-filter .btn { margin: 0 !important; white-space: nowrap; }
+    .hspv-modal .hspv-split { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 14px; }
+    .hspv-modal .hspv-pane { min-width: 0; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; background: #fcfdff; }
+    .hspv-modal .hspv-pane-h { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; font-weight: 600; color: #0f172a; }
+    .hspv-modal .hspv-mt { margin-top: 4px; }
+    .hspv-modal .hspv-ctlist { max-height: 340px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
+    .hspv-modal .hspv-ct { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border: 1px solid #e2e8f0; border-radius: 8px; background: #fff; }
+    .hspv-modal .hspv-ct.on { border-color: #2563eb; background: #eff6ff; }
+    .hspv-modal .hspv-ct-b { flex: 1 1 auto; min-width: 0; }
+    .hspv-modal .hspv-ct-t { font-weight: 600; color: #0f172a; line-height: 1.35; }
+    .hspv-modal .hspv-ct-s { font-size: 12px; color: #64748b; margin-top: 2px; }
+    .hspv-modal .hspv-ct-n { flex: 0 0 auto; padding: 1px 8px; border-radius: 999px; background: #dcfce7; color: #166534; font-size: 12px; font-weight: 700; }
+    .hspv-modal .hspv-ct-btn { flex: 0 0 auto; padding: 5px 10px; border: 1px solid #2563eb; border-radius: 6px; background: #fff; color: #2563eb; font-weight: 600; font-size: 12px; cursor: pointer; white-space: nowrap; }
+    .hspv-modal .hspv-ct-btn:hover { background: #eff6ff; }
+    .hspv-modal .hspv-chkall { display: flex; align-items: center; gap: 6px; margin: 0; font-weight: 600; color: #334155; white-space: nowrap; cursor: pointer; }
+    .hspv-modal .hspv-tblwrap { max-height: 300px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 6px; background: #fff; }
+    .hspv-modal .hspv-tblwrap-lg { max-height: 340px; }
+    .hspv-modal .hspv-tblwrap .table { margin: 0; }
+    .hspv-modal .hspv-tblwrap thead th { position: sticky; top: 0; z-index: 1; background: #f4f6f9; }
+    .hspv-modal table.hspv-tbl { width: 100%; border-collapse: collapse; }
+    .hspv-modal table.hspv-tbl th { padding: 8px; font-size: 12px; font-weight: 700; color: #475569; text-align: left; border-bottom: 1px solid #e2e8f0; }
+    .hspv-modal table.hspv-tbl td { padding: 7px 8px; border-bottom: 1px solid #f1f5f9; color: #0f172a; vertical-align: middle; }
+    .hspv-modal table.hspv-tbl tr.hspv-row { cursor: pointer; }
+    .hspv-modal table.hspv-tbl tr.hspv-row:hover td { background: #f8fbff; }
+    .hspv-modal .hspv-c-chk { width: 36px; text-align: center; }
+    .hspv-modal tr.hspv-row-picked > td { background: #eaf6ee !important; }
+    .hspv-modal .hspv-picked { margin-top: 10px; color: #166534; font-weight: 500; }
+    .hspv-modal .hspv-picked-inline { font-weight: 500; color: #166534; }
+
+    @media (max-width: 991px) {
+        .hspv-modal .hspv-split, .hspv-modal .hspv-grid2, .hspv-modal .hspv-grid3, .hspv-modal .hspv-filter { grid-template-columns: minmax(0, 1fr); }
+        .hspv-modal .hspv-chkgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 600px) {
+        #myModal_HeSoPhamVi .hspv-form { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+        .hspv-modal .hspv-chkgrid { grid-template-columns: minmax(0, 1fr); }
+        .modal .hspv-foot { flex-direction: column; align-items: stretch; }
     }
 </style>
