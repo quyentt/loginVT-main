@@ -1708,6 +1708,7 @@ systemroot.prototype = {
         var result = "";
         var x = $.ajax({
             url: me.rootPathUpload + '/Handler/copyfile.ashx?sourceFile=' + sourceFile + '&strId=' + strId + "&userId=" + edu.system.userId,
+            headers: { 'Authorization': 'Bearer ' + edu.system.tokenJWT }, // ATTT 2026-11: handler upload xac thuc bang JWT
             method: 'post',
             async: false,
             success: function (data) {
