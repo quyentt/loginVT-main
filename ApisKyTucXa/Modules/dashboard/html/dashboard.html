@@ -1,25 +1,143 @@
-﻿<style>
-    .box-room {
-        padding: 5px;
+﻿<!-- Trang mở đầu Ký túc xá: luồng sử dụng các chức năng -->
+<style>
+    #main-content-wrapper .ktxdb {
+        --db-primary: var(--color-blue, #2563eb);
+        --db-primary-soft: #eef4ff;
+        --db-line: #e6eaf2;
+        --db-text: #0f172a;
+        --db-muted: #64748b;
+        --db-card: #ffffff;
+        color: var(--db-text);
+        padding: 4px 0 24px;
     }
-    .floor{
-        border-radius:50%;
+    #main-content-wrapper .ktxdb * { box-sizing: border-box; }
+
+    /* Tiêu đề */
+    #main-content-wrapper .ktxdb .db-hero {
+        display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+        padding: 20px 24px; margin-bottom: 16px; border-radius: 12px;
+        color: #fff; background: linear-gradient(120deg, #1e3a8a 0%, #2563eb 60%, #3b82f6 100%);
+        box-shadow: 0 6px 20px rgba(37, 99, 235, .18);
     }
-    .room {
-        padding: 3px;
-        width: 40px;
-        height: 40px;
+    #main-content-wrapper .ktxdb .db-hero-icon {
+        width: 52px; height: 52px; border-radius: 12px; flex: 0 0 52px;
+        display: flex; align-items: center; justify-content: center;
+        background: rgba(255, 255, 255, .16); font-size: 24px;
+    }
+    #main-content-wrapper .ktxdb .db-hero h2 { margin: 0 0 4px; font-size: 20px; font-weight: 700; color: #fff; }
+    #main-content-wrapper .ktxdb .db-hero p { margin: 0; font-size: 13.5px; opacity: .9; }
+    #main-content-wrapper .ktxdb .db-hero-text { flex: 1 1 280px; min-width: 0; }
+    #main-content-wrapper .ktxdb .db-legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 12.5px; }
+    #main-content-wrapper .ktxdb .db-legend span { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,.14); padding: 4px 10px; border-radius: 999px; }
+
+    /* Thanh tổng quan 5 giai đoạn */
+    #main-content-wrapper .ktxdb .db-overview {
+        display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; margin-bottom: 16px;
+    }
+    #main-content-wrapper .ktxdb .db-ov-item {
+        position: relative; display: flex; align-items: center; gap: 10px; min-height: 56px;
+        padding: 10px 12px; background: var(--db-card); border: 1px solid var(--db-line); border-radius: 10px;
+        cursor: pointer; text-decoration: none; color: var(--db-text); transition: box-shadow .15s, border-color .15s;
+    }
+    #main-content-wrapper .ktxdb .db-ov-item:hover,
+    #main-content-wrapper .ktxdb .db-ov-item:focus-visible { border-color: var(--c); box-shadow: 0 4px 14px rgba(15, 23, 42, .08); outline: none; }
+    #main-content-wrapper .ktxdb .db-ov-num {
+        width: 30px; height: 30px; flex: 0 0 30px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: 700; font-size: 13px; color: #fff; background: var(--c);
+    }
+    #main-content-wrapper .ktxdb .db-ov-name { font-size: 13px; font-weight: 600; line-height: 1.3; }
+
+    /* Thẻ giai đoạn */
+    #main-content-wrapper .ktxdb .db-phase {
+        background: var(--db-card); border: 1px solid var(--db-line); border-left: 4px solid var(--c);
+        border-radius: 12px; padding: 16px 20px 18px; margin-bottom: 16px;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, .04);
+    }
+    #main-content-wrapper .ktxdb .db-phase-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+    #main-content-wrapper .ktxdb .db-phase-icon {
+        width: 40px; height: 40px; flex: 0 0 40px; border-radius: 10px;
+        display: flex; align-items: center; justify-content: center; font-size: 18px;
+        color: var(--c); background: var(--s);
+    }
+    #main-content-wrapper .ktxdb .db-phase-title { margin: 0; font-size: 16px; font-weight: 700; color: var(--db-text); }
+    #main-content-wrapper .ktxdb .db-phase-title small { color: var(--c); font-weight: 700; margin-right: 6px; font-size: 13px; }
+    #main-content-wrapper .ktxdb .db-phase-desc { margin: 2px 0 0; font-size: 13px; color: var(--db-muted); }
+    #main-content-wrapper .ktxdb .db-when {
+        margin-left: auto; white-space: nowrap; font-size: 12px; font-weight: 600;
+        color: var(--c); background: var(--s); padding: 4px 10px; border-radius: 999px;
+    }
+
+    /* Nhánh + chuỗi bước */
+    #main-content-wrapper .ktxdb .db-lane { margin-top: 10px; }
+    #main-content-wrapper .ktxdb .db-lane + .db-lane { padding-top: 12px; border-top: 1px dashed var(--db-line); }
+    #main-content-wrapper .ktxdb .db-lane-name { font-size: 12.5px; font-weight: 700; color: var(--db-muted); text-transform: uppercase; letter-spacing: .3px; margin-bottom: 8px; }
+    #main-content-wrapper .ktxdb .db-flow { display: flex; align-items: stretch; flex-wrap: wrap; gap: 8px 0; }
+    #main-content-wrapper .ktxdb .db-step {
+        display: flex; flex-direction: column; justify-content: center; gap: 2px;
+        width: 190px; min-height: 64px; padding: 10px 12px;
+        background: #fff; border: 1px solid var(--db-line); border-radius: 10px;
+        text-align: left; cursor: pointer; color: var(--db-text); font: inherit;
+        transition: border-color .15s, box-shadow .15s, transform .15s;
+    }
+    #main-content-wrapper .ktxdb .db-step:hover,
+    #main-content-wrapper .ktxdb .db-step:focus-visible {
+        border-color: var(--c); box-shadow: 0 4px 14px rgba(15, 23, 42, .08); transform: translateY(-1px); outline: none;
+    }
+    #main-content-wrapper .ktxdb .db-step-top { display: flex; align-items: center; gap: 8px; }
+    #main-content-wrapper .ktxdb .db-step-no {
+        width: 22px; height: 22px; flex: 0 0 22px; border-radius: 6px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 11.5px; font-weight: 700; color: var(--c); background: var(--s);
+    }
+    #main-content-wrapper .ktxdb .db-step-name { font-size: 13.5px; font-weight: 600; line-height: 1.3; }
+    #main-content-wrapper .ktxdb .db-step-desc { font-size: 12px; color: var(--db-muted); line-height: 1.35; padding-left: 30px; }
+    #main-content-wrapper .ktxdb .db-step.is-ngoai { cursor: default; background: #f8fafc; border-style: dashed; }
+    #main-content-wrapper .ktxdb .db-step.is-ngoai:hover { transform: none; box-shadow: none; border-color: var(--db-line); }
+    #main-content-wrapper .ktxdb .db-step.is-khoa { cursor: not-allowed; opacity: .55; }
+    #main-content-wrapper .ktxdb .db-step.is-khoa:hover { transform: none; box-shadow: none; border-color: var(--db-line); }
+    #main-content-wrapper .ktxdb .db-step-tag { font-size: 11px; color: var(--db-muted); padding-left: 30px; }
+    #main-content-wrapper .ktxdb .db-arrow {
+        display: flex; align-items: center; justify-content: center; width: 28px; color: #94a3b8; font-size: 14px;
+    }
+    #main-content-wrapper .ktxdb .db-note {
+        margin-top: 12px; padding: 8px 12px; font-size: 12.5px; color: var(--db-muted);
+        background: #f8fafc; border-radius: 8px;
+    }
+    #main-content-wrapper .ktxdb .db-note i { color: var(--c); margin-right: 6px; }
+
+    @media (max-width: 991px) {
+        #main-content-wrapper .ktxdb .db-overview { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 768px) {
+        #main-content-wrapper .ktxdb .db-hero { padding: 16px; }
+        #main-content-wrapper .ktxdb .db-phase { padding: 14px; }
+        #main-content-wrapper .ktxdb .db-when { display: none; }
+        #main-content-wrapper .ktxdb .db-flow { flex-direction: column; }
+        #main-content-wrapper .ktxdb .db-step { width: 100%; }
+        #main-content-wrapper .ktxdb .db-arrow { width: 100%; height: 22px; }
+        #main-content-wrapper .ktxdb .db-arrow i { transform: rotate(90deg); }
     }
 </style>
 <section class="content">
-    <div class="row">
-    </div>
-
-    <div class="row">
+    <div class="ktxdb" id="zoneKtxDashboard">
+        <div class="db-hero">
+            <div class="db-hero-icon"><i class="fa fa-building"></i></div>
+            <div class="db-hero-text">
+                <h2>Quản lý Ký túc xá — luồng sử dụng</h2>
+                <p>Đi theo thứ tự các giai đoạn bên dưới. Bấm vào một bước để mở đúng chức năng.</p>
+            </div>
+            <div class="db-legend">
+                <span><i class="fa fa-hand-pointer-o"></i> Bấm để mở</span>
+                <span><i class="fa fa-lock"></i> Chưa được phân quyền</span>
+            </div>
+        </div>
+        <div class="db-overview" id="zoneKtxDb_TongQuan"></div>
+        <div id="zoneKtxDb_GiaiDoan"></div>
     </div>
 </section>
 <!-- page script -->
-<script src="modules/dashboard/script/dashboard.js?v=1.0.0.0"></script>
+<script src="modules/dashboard/script/dashboard.js?v=2.0.0.0"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['Dashboard'] = new Dashboard();
