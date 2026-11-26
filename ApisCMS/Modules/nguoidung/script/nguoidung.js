@@ -1017,11 +1017,12 @@ NguoiDung.prototype = {
         var me = this;
         //--Edit
         var obj_list = {
-            'action': 'CMS_Custom/ResetPassword',
-            
+            // ATTT 2026-11: CMS_Custom/ResetPassword da khoa; nguoi thuc hien lay tu token o server
+            'action': 'CMS_QuanLyNguoiDung_MH/EyQyJDURIDIyNi4zJQPP',
+            'func': 'pkg_chung_quanlynguoidung.ResetPassword',
+            'iM': edu.system.iM,
             'strId': strUser_Id,
             'strLoaiThongTin': edu.util.getValById("dropLoaiThongTin"),
-            'strNguoiThucHienId': edu.system.userId,
             'strMatKhau': edu.util.getValById("strPassResetA").replace(/ /g, '')
         };
         //
