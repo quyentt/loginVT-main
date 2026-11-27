@@ -467,6 +467,24 @@ systemroot.prototype = {
     -- [2026-11-27] API tra 401 (token het han / bi thu hoi): tai lai trang de lay token moi tu phien dang nhap.
     -- Chong lap: neu vua tai lai trong 2 phut ma van 401 thi phien that su het han -> bao va dang xuat.
     ----------------------------------------------*/
+    /*----------------------------------------------
+    -- [2026-11-27] Ten ham de hien trong thong bao loi.
+    -- Action _MH dang "Controller_MH/<ma>", ma = AE(tenHam, "A") roi doi "=" cuoi thanh "P" (RoseTool sinh)
+    -- -> giai nguoc ra "Controller_MH/TenHam" de nguoi doc biet loi o ham nao. Action thuong tra nguyen.
+    ----------------------------------------------*/
+    tenHam: function (strAction) {
+        var a = String(strAction || ""), i = a.indexOf("/");
+        if (i < 0 || !/_MH$/i.test(a.substring(0, i)) || typeof AD !== "function") return a;
+        var ma = a.substring(i + 1);
+        var arrThu = [ma.replace(/PP$/, "==").replace(/([^P=])P$/, "$1="), ma];
+        for (var k = 0; k < arrThu.length; k++) {
+            try {
+                var t = AD(arrThu[k], "A");
+                if (/^[A-Za-z_]\w*$/.test(t)) return a.substring(0, i) + "/" + t;
+            } catch (e) { }
+        }
+        return a;
+    },
     xuLy401: function () {
         var me = this;
         if (me["dangXuLy401"]) return;
@@ -3660,11 +3678,11 @@ systemroot.prototype = {
 
                     }
                     else {
-                        me.alert('CMS_HangDoiTuTao/LayDanhSachXuLyNhiemVu: ' + data.Message, "w");
+                        me.alert('CMS_HangDoiTuTao/LayDSXuLyNhiemVu_HangDoi: ' + data.Message, "w");
                     }
                 },
                 error: function (er) {
-                    me.alert('CMS_HangDoiTuTao/LayDanhSachXuLyNhiemVu: ' + JSON.stringify(er), "w");
+                    me.alert('CMS_HangDoiTuTao/LayDSXuLyNhiemVu_HangDoi: ' + JSON.stringify(er), "w");
                 },
                 type: 'GET',
                 action: 'CMS_HangDoiTuTao/LayDSXuLyNhiemVu_HangDoi',
@@ -5226,11 +5244,11 @@ systemroot.prototype = {
                     }
                 }
                 else {
-                    me.alert("CM_ChucNang/LayDanhSach: " + data.Message, "w");
+                    me.alert(me.tenHam(obj_save.action) + ": " + data.Message, "w");
                 }
             },
             error: function (er) {
-                me.alert("CM_ChucNang/LayDanhSach: " + JSON.stringify(er), "w");
+                me.alert(me.tenHam(obj_save.action) + ": " + JSON.stringify(er), "w");
             },
             type: 'POST',
             action: obj_save.action,
