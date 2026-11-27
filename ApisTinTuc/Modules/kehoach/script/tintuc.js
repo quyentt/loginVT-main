@@ -28,7 +28,7 @@ TinTuc.prototype = {
         -------------------------------------------*/
 
         var edCk = CKEDITOR.replace('editor_NoiDung', {
-            filebrowserImageUploadUrl: (edu.system.rootPathUpload || '') + '/Handler/up_files_v2.ashx?outFolderPath=TinTuc/Editor/&userId=' + edu.system.userId
+            filebrowserImageUploadUrl: (edu.system.rootPathUpload || '') + '/Handler/up_files_v2.ashx?outFolderPath=TinTuc/Editor/&userId=' + edu.system.userId + '&token=' + encodeURIComponent(edu.system.tokenJWT || '')
         });
         edCk.on('fileUploadResponse', function (evt) {
             evt.stop();

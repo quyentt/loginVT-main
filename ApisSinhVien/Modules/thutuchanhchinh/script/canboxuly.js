@@ -388,10 +388,10 @@ CanBoXuLy.prototype = {
                     }
                 },
                 {
-                    "mDataProp": "NHANXET" 
+                    "mRender": function (nRow, aData) { var v = aData.NHANXET; return String(v == null ? "" : v).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;"); } /* ATTT 2026-11: escape noi dung nguoi hoc nhap */
                 },
                 {
-                    "mDataProp": "TRALOI"
+                    "mRender": function (nRow, aData) { var v = aData.TRALOI; return String(v == null ? "" : v).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;"); } /* ATTT 2026-11: escape noi dung nguoi hoc nhap */
                 }
                 , {
                     "mRender": function (nRow, aData) {

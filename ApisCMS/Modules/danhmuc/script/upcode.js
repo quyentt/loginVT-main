@@ -213,6 +213,7 @@ Upcode.prototype = {
             $.ajax
                 ({
                     url: me.rootPathUpload + "/Handler/deploycode.ashx",
+                    headers: { 'Authorization': 'Bearer ' + edu.system.tokenJWT }, // ATTT 2026-11: handler upload xac thuc bang JWT
                     method: 'POST',
                     contentType: false,
                     processData: false,

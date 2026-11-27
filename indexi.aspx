@@ -1980,8 +1980,11 @@
 
     <script type="text/javascript">
 
-      if (typeof Init_API != "function") {
-        function Init_API() {
+      if (typeof window.Init_API != "function") {
+        // [2026-11-27] Gan bang bieu thuc ham thay vi khai bao "function Init_API()" trong khoi if:
+        // Safari iOS cu xu ly khai bao ham trong khoi khac Chrome -> ban du phong (gia tri rong) de len
+        // Init_API cua Config.js -> goi API thanh https://host/CMS_... (thieu /cmsapi/api) -> IIS 404.
+        window.Init_API = function () {
           var oApi = {
             CM: '<%= Apis.CommonV1.Base.AppSetting.GetString("CM") %>',
             SYS: '<%= Apis.CommonV1.Base.AppSetting.GetString("CM") %>',
@@ -2015,7 +2018,7 @@
           };
 
           return oApi;
-        }
+        };
       } else {
         console.log("Load config form config.js");
       }

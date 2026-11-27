@@ -237,25 +237,34 @@ systemroot.prototype = {
             edu.system.showImportChungV2($(this).attr("title"), $(this).attr("name"));
         });
         
+        // [2026-11-27] Tu lam moi khi co ban moi:
+        //  - Config.js doi (deploy ban moi) -> tai lai ca trang; man html dang mo doi -> nap lai noi dung man.
+        //  - Kiem tra moi 5 phut va moi khi quay lai tab. So sanh NOI DUNG (truoc day chi so do dai, va
+        //    vong lap 5 phut bi comment nen chi chay 1 lan).
+        //  - Khong tai lai khi nguoi dung dang thao tac tren tab: danh dau, cho ho chuyen tab roi quay lai.
         setTimeout(function () {
-            if (me.strhost.indexOf("https") == 0) {
-                me["isActive"] = true;
-                window.onblur = function () {
-                    me["isActive"] = false;
-                };
-                window.onfocus = function () {
-                    me["isActive"] = true;
-                    me.versionMainJS();
-                    // me.versionPageJS();
-                };
-                checkChangeversionJS();
-                function checkChangeversionJS() {
-                    setTimeout(function () {
-                        me.versionMainJS();
-                        // checkChangeversionJS();
-                    }, 300000)
+            if (me.strhost.indexOf("https") != 0) return;
+            me["isActive"] = !document.hidden;
+            me.versionMainJS();
+            document.addEventListener("visibilitychange", function () {
+                me["isActive"] = !document.hidden;
+                if (document.hidden) return;
+                me.kiemTraTaiLaiHangNgay(); // [2026-11-27] mo qua 24 gio -> tai lai lay token moi
+                if (me["canTaiLaiTrang"]) { location.reload(); return; }
+                if (me["canTaiLaiHtml"] && me.urlPage) {
+                    me["canTaiLaiHtml"] = false;
+                    me.loadPage($(me.ctPlacehoder), me.urlPage, null, null, me.appCode);
                 }
-            }
+                me.versionMainJS();
+            });
+            me["iMoTrangLuc"] = Date.now();
+            (function kiemTraDinhKy() {
+                setTimeout(function () {
+                    me.kiemTraTaiLaiHangNgay();
+                    me.versionMainJS();
+                    kiemTraDinhKy();
+                }, 300000);
+            })();
         }, 1000);
         $(document).delegate(".btnEdit_MauBaoCao", "click", function (e) {
             e.preventDefault();
@@ -425,39 +434,86 @@ systemroot.prototype = {
     },
     versionPageJS: function () {
         var me = this;
-        //return;
-        if (!me.isActive || !me.urlPage) return;
+        if (!me.urlPage) return;
+        var strUrlDangKiem = me.urlPage;
         jQuery.ajax({
-            url: me.rootPath + "/" + me.appCode + me.urlPage + "?v=" + me.randomInt(4),
-
-            // If "type" variable is undefined, then "GET" method will be used.
-            // Make value of this field explicit since
-            // user can override it through ajaxSetup method
+            url: me.rootPath + "/" + me.appCode + me.urlPage + "?v=" + edu.util.uuid(),
             type: "GET",
             dataType: "html",
-            //data: params
+            cache: false
         }).done(function (responseText) {
-            if (responseText.length != me.urlPageLength) {
-                console.log("versionPageJS: " + responseText.length + ":" + me.urlPageLength)
+            if (strUrlDangKiem !== me.urlPage) return; // nguoi dung da chuyen man khac
+            var bKhac = (me["urlPageText"] !== undefined) ? (responseText !== me["urlPageText"]) : (responseText.length != me.urlPageLength);
+            if (!bKhac) return;
+            if (document.hidden) {
                 me.loadPage($(me.ctPlacehoder), me.urlPage, null, null, me.appCode);
+            } else {
+                me["canTaiLaiHtml"] = true; // nap lai khi nguoi dung quay lai tab, tranh mat du lieu dang nhap
             }
-        })
+        });
     },
     versionMainJS: function () {
         var me = this;
-        if (!me.isActive) return;
         jQuery.ajax({
-            url: "Config.js?v=" + me.randomInt(4),
+            url: "Config.js?v=" + edu.util.uuid(),
             type: "GET",
             dataType: "html",
+            cache: false
         }).done(function (responseText) {
-            if (me["versionJS"] && responseText.length != me.versionJS) {
-                console.log("versionJS: " + responseText.length + ":" + me.versionJS)
-                location.reload();
-            } else {
-                me["versionJS"] = responseText.length;
-            }
-        })
+            if (me["versionJSText"] === undefined) { me["versionJSText"] = responseText; return; }
+            if (responseText === me["versionJSText"]) return;
+            if (document.hidden) location.reload();
+            else me["canTaiLaiTrang"] = true; // tai lai khi nguoi dung quay lai tab
+        });
+    },
+    /*----------------------------------------------
+    -- [2026-11-27] Moi ngay tu tai lai trang 1 lan de lay token moi (token han 2 ngay, index.aspx sinh token moi moi lan tai).
+    -- Trang mo qua 24 gio: tab dang an thi tai lai ngay; dang xem thi chi danh dau, tai lai khi nguoi dung quay lai tab
+    -- (khong mat du lieu dang nhap).
+    ----------------------------------------------*/
+    kiemTraTaiLaiHangNgay: function () {
+        var me = this;
+        if (!me["iMoTrangLuc"]) me["iMoTrangLuc"] = Date.now();
+        if (Date.now() - me["iMoTrangLuc"] < 86400000) return;
+        if (document.hidden) location.reload();
+        else me["canTaiLaiTrang"] = true;
+    },
+    /*----------------------------------------------
+    -- [2026-11-27] Ten ham de hien trong thong bao loi.
+    -- Action _MH dang "Controller_MH/<ma>", ma = AE(tenHam, "A") roi doi "=" cuoi thanh "P" (RoseTool sinh)
+    -- -> giai nguoc ra "Controller_MH/TenHam" de nguoi doc biet loi o ham nao. Action thuong tra nguyen.
+    ----------------------------------------------*/
+    tenHam: function (strAction) {
+        var a = String(strAction || ""), i = a.indexOf("/");
+        if (i < 0 || !/_MH$/i.test(a.substring(0, i)) || typeof AD !== "function") return a;
+        var ma = a.substring(i + 1);
+        var arrThu = [ma.replace(/PP$/, "==").replace(/([^P=])P$/, "$1="), ma];
+        for (var k = 0; k < arrThu.length; k++) {
+            try {
+                var t = AD(arrThu[k], "A");
+                if (/^[A-Za-z_]\w*$/.test(t)) return a.substring(0, i) + "/" + t;
+            } catch (e) { }
+        }
+        return a;
+    },
+    /*----------------------------------------------
+    -- [2026-11-27] API tra 401 (token het han / bi thu hoi): tai lai trang de lay token moi tu phien dang nhap.
+    -- Chong lap: neu vua tai lai trong 2 phut ma van 401 thi phien that su het han -> bao va dang xuat.
+    ----------------------------------------------*/
+    xuLy401: function () {
+        var me = this;
+        if (me["dangXuLy401"]) return;
+        me["dangXuLy401"] = true;
+        var strKey = "edu401TaiLaiLuc", iNow = Date.now(), iLast = 0;
+        try { iLast = parseInt(sessionStorage.getItem(strKey) || "0", 10) || 0; } catch (e) { }
+        if (iNow - iLast > 120000) {
+            try { sessionStorage.setItem(strKey, String(iNow)); } catch (e) { }
+            location.reload();
+            return;
+        }
+        try { sessionStorage.removeItem(strKey); } catch (e) { }
+        alert("Tài khoản đã đăng nhập ở nơi khác hoặc phiên đăng nhập đã hết hạn. Hãy đăng nhập lại!");
+        location.href = "Logout.aspx";
     },
     randomInt: function (len, charSet) {
         charSet = charSet || '0123456789';
@@ -596,8 +652,7 @@ systemroot.prototype = {
                     //document.getElementById('overlay').style.display = "none";
                     $("#overlay").hide();
                     if (me["CheckDangNhap"]) {
-                        alert("Tài khoản đã đăng nhập ở nơi khác hoặc phiên đăng nhập đã hết hạn. Hãy đăng nhập lại!");
-                        location.href = "Logout.aspx";
+                        me.xuLy401();
                     }
                 }
                 var result = d;
@@ -628,14 +683,11 @@ systemroot.prototype = {
                 me.iSoLuong--;
                 if (x.status === 401) {
                     me["CheckDangNhap"] = true;
+                    me.xuLy401(); // [2026-11-27] tai lai trang lay token moi
                 }
                 if (me.iSoLuong == 0) {
                     //document.getElementById('overlay').style.display = "none";
                     $("#overlay").hide();
-                    if (me["CheckDangNhap"]) {
-                        alert("Tài khoản đã đăng nhập ở nơi khác hoặc phiên đăng nhập đã hết hạn. Hãy đăng nhập lại!");
-                        location.href = "Logout.aspx";
-                    }
                 }
 
                 onError(x);
@@ -953,6 +1005,8 @@ systemroot.prototype = {
                 data: params
             }).done(function (responseText) {
                 me["urlPageLength"] = responseText.length;
+                me["urlPageText"] = responseText;
+                me["canTaiLaiHtml"] = false;
                 responseText = EditUrlJS(responseText);
                 // Save response for use in complete callback
                 response = arguments;
@@ -1618,6 +1672,7 @@ systemroot.prototype = {
         var result = "";
         var x = $.ajax({
             url: me.rootPathUpload + '/Handler/copyfile.ashx?sourceFile=' + sourceFile + '&strId=' + strId + "&userId=" + edu.system.userId,
+            headers: { 'Authorization': 'Bearer ' + edu.system.tokenJWT }, // ATTT 2026-11: handler upload xac thuc bang JWT
             method: 'post',
             async: false,
             success: function (data) {
@@ -3638,11 +3693,11 @@ systemroot.prototype = {
 
                     }
                     else {
-                        me.alert('CMS_HangDoiTuTao/LayDanhSachXuLyNhiemVu: ' + data.Message, "w");
+                        me.alert('CMS_HangDoiTuTao/LayDSXuLyNhiemVu_HangDoi: ' + data.Message, "w");
                     }
                 },
                 error: function (er) {
-                    me.alert('CMS_HangDoiTuTao/LayDanhSachXuLyNhiemVu: ' + JSON.stringify(er), "w");
+                    me.alert('CMS_HangDoiTuTao/LayDSXuLyNhiemVu_HangDoi: ' + JSON.stringify(er), "w");
                 },
                 type: 'GET',
                 action: 'CMS_HangDoiTuTao/LayDSXuLyNhiemVu_HangDoi',
@@ -5204,11 +5259,11 @@ systemroot.prototype = {
                     }
                 }
                 else {
-                    me.alert("CM_ChucNang/LayDanhSach: " + data.Message, "w");
+                    me.alert(me.tenHam(obj_save.action) + ": " + data.Message, "w");
                 }
             },
             error: function (er) {
-                me.alert("CM_ChucNang/LayDanhSach: " + JSON.stringify(er), "w");
+                me.alert(me.tenHam(obj_save.action) + ": " + JSON.stringify(er), "w");
             },
             type: 'POST',
             action: obj_save.action,
@@ -5263,12 +5318,12 @@ systemroot.prototype = {
                     }
                 }
                 else {
-                    me.alert("CM_DanhMucDuLieu/LayDanhSach (er)-" + strCode + ": " + data.Message, "w");
+                    me.alert("CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM - " + strCode + ": " + data.Message, "w");
                     me.endLoading();
                 }
             },
             error: function (er) {
-                me.alert("CM_DanhMucDuLieu/LayDanhSach (er)-" + strCode + ": " + JSON.stringify(er), "w");
+                me.alert("CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM - " + strCode + ": " + JSON.stringify(er), "w");
                 me.endLoading();
             },
             type: 'GET',
@@ -5324,12 +5379,12 @@ systemroot.prototype = {
                     me.endLoading();
                 }
                 else {
-                    me.alert("CM_DanhMucDuLieu/LayDanhSach (er)-" + strCode + ": " + data.Message, "w");
+                    me.alert("CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM - " + strCode + ": " + data.Message, "w");
                     me.endLoading();
                 }
             },
             error: function (er) {
-                me.alert("CM_DanhMucDuLieu/LayDanhSach (er)-" + strCode + ": " + JSON.stringify(er), "w");
+                me.alert("CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM - " + strCode + ": " + JSON.stringify(er), "w");
                 me.endLoading();
             },
             type: 'GET',
@@ -5385,12 +5440,12 @@ systemroot.prototype = {
                     me.endLoading();
                 }
                 else {
-                    me.alert("CM_DanhMucDuLieu/LayDanhSach (er)-" + strCode + ": " + data.Message, "w");
+                    me.alert("CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM - " + strCode + ": " + data.Message, "w");
                     me.endLoading();
                 }
             },
             error: function (er) {
-                me.alert("CM_DanhMucDuLieu/LayDanhSach (er)-" + strCode + ": " + JSON.stringify(er), "w");
+                me.alert("CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM - " + strCode + ": " + JSON.stringify(er), "w");
                 me.endLoading();
             },
             type: 'GET',
@@ -5446,12 +5501,12 @@ systemroot.prototype = {
                     me.endLoading();
                 }
                 else {
-                    me.alert("CM_DanhMucDuLieu/LayDanhSach (er)-" + strCode + ": " + data.Message, "w");
+                    me.alert("CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM - " + strCode + ": " + data.Message, "w");
                     me.endLoading();
                 }
             },
             error: function (er) {
-                me.alert("CM_DanhMucDuLieu/LayDanhSach (er)-" + strCode + ": " + JSON.stringify(er), "w");
+                me.alert("CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM - " + strCode + ": " + JSON.stringify(er), "w");
                 me.endLoading();
             },
             type: 'GET',
@@ -5493,12 +5548,12 @@ systemroot.prototype = {
                     }
                 }
                 else {
-                    me.alert("CM_DanhMucDuLieu/LayDanhSach (er)-" + strCode + ": " + data.Message, "w");
+                    me.alert("CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM - " + strCode + ": " + data.Message, "w");
                     me.endLoading();
                 }
             },
             error: function (er) {
-                me.alert("CM_DanhMucDuLieu/LayDanhSach (er)-" + strCode + ": " + JSON.stringify(er), "w");
+                me.alert("CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM - " + strCode + ": " + JSON.stringify(er), "w");
                 me.endLoading();
             },
             type: 'GET',
@@ -5539,12 +5594,12 @@ systemroot.prototype = {
                     }
                 }
                 else {
-                    me.alert("CM_DanhMucDuLieu/LayDanhSach (er)-" + strCode + ": " + data.Message, "w");
+                    me.alert("CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM - " + strCode + ": " + data.Message, "w");
                     me.endLoading();
                 }
             },
             error: function (er) {
-                me.alert("CM_DanhMucDuLieu/LayDanhSach (er)-" + strCode + ": " + JSON.stringify(er), "w");
+                me.alert("CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM - " + strCode + ": " + JSON.stringify(er), "w");
                 me.endLoading();
             },
             type: 'GET',
@@ -5642,12 +5697,12 @@ systemroot.prototype = {
                     }
                 }
                 else {
-                    me.alert("CM_DanhMucDuLieu/LayDanhSach (er)-" + obj.code + ": " + data.Message, "w");
+                    me.alert("CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM - " + obj.code + ": " + data.Message, "w");
                     me.endLoading();
                 }
             },
             error: function (er) {
-                me.alert("CM_DanhMucDuLieu/LayDanhSach (er)-" + obj.code + ": " + JSON.stringify(er), "w");
+                me.alert("CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM - " + obj.code + ": " + JSON.stringify(er), "w");
                 me.endLoading();
             },
             type: 'GET',
