@@ -8,6 +8,9 @@
 --Note: 26/11/2026 Xoa (dong tick / nut Xoa trong form Sua) qua edu.process: Buoc 1 = xac nhan, 1 Id / 1 lan goi
 --Note: 26/11/2026 them "Khai nhieu loai": chon nhieu loai x nhieu dai, Luu = duyet tung loai, tung dai
 --      va goi dung ham Them_KLGD_HeSo_QuyMoSoLuong hien tai (qua form tien trinh chung edu.process)
+--Note: 26/11/2026 theo sheet "Khai he so quy mo theo dai": "Loai he so" (o loc + moi form them) = LIST theo ma bang
+--      danh muc KLGD.LOAIBANG -> strLoaiBang_Id (ParamLoaiBang_Id). "Pham vi" = KLGD.PHANLOAIXACNHAN chi de nap
+--      danh sach loai/hinh thuc (strPhamViApDung_Id = Id loai). Ban truoc ghi nham Id pham vi vao strLoaiBang_Id.
 ----------------------------------------------*/
 function HeSoQuyMo() { };
 HeSoQuyMo.prototype = {
@@ -122,7 +125,8 @@ HeSoQuyMo.prototype = {
     tenMa: function (aData) {
         var ten = edu.util.returnEmpty(aData.TEN);
         var ma = edu.util.returnEmpty(aData.MA || aData.HANHDONG_MA);
-        return ma ? ten + " - " + ma : ten;
+        // ma trung ten (VD danh muc KLGD.LOAIBANG "kC") thi chi hien 1 lan, tranh "kC - kC"
+        return (ma && $.trim(ma) !== $.trim(ten)) ? ten + " - " + ma : ten;
     },
     maCua: function (aData) {
         return edu.util.returnEmpty(aData.MA || aData.HANHDONG_MA);
@@ -155,13 +159,18 @@ HeSoQuyMo.prototype = {
 	--Discription: [2] Combo pham vi / thoi gian / loai
 	-------------------------------------------*/
     getList_PhamVi: function () {
-        // Pham vi = danh muc KLGD.PHANLOAIXACNHAN: dung cho ca loc (strLoaiBang_Id cua danh sach) va 2 form them
+        // Loai he so = LIST theo ma bang danh muc KLGD.LOAIBANG -> strLoaiBang_Id (o loc + moi form them)
+        this.napDanhMuc("KLGD.LOAIBANG", ["dropSearch_PhanLoai", "dropLoaiBang", "dropLoaiBang_N", "dropCTDT_LoaiBang", "dropLHP_LoaiBang"], "Chọn loại hệ số");
+        // Pham vi = KLGD.PHANLOAIXACNHAN -> nap danh sach loai (hinh thuc)
+        this.napDanhMuc("KLGD.PHANLOAIXACNHAN", ["dropPhamViApDung", "dropPhamVi_N", "dropCTDT_PhamVi"], "Chọn phạm vi");
+    },
+    /* Nap danh muc theo ma bang vao cac combo, hien "TEN - MA"; danh muc rong van hien dong tieu de */
+    napDanhMuc: function (strMaBang, arrDrop, strTitle) {
         var me = this;
-        var arrDrop = ["dropSearch_PhanLoai", "dropPhamViApDung", "dropPhamVi_N", "dropCTDT_PhamVi"];
-        edu.system.loadToCombo_DanhMucDuLieu("KLGD.PHANLOAIXACNHAN", arrDrop.join(","), "", function (data) {
-            if (!data || !data.length) return;
+        edu.system.loadToCombo_DanhMucDuLieu(strMaBang, arrDrop.join(","), "", function (data) {
+            me.logMauCombo(strMaBang, data);
             edu.system.loadToCombo_data({
-                data: data,
+                data: data || [],
                 renderInfor: {
                     id: "ID",
                     parentId: "",
@@ -172,9 +181,14 @@ HeSoQuyMo.prototype = {
                     }
                 },
                 renderPlace: arrDrop,
-                title: "Chọn phạm vi"
+                title: strTitle
             });
-        }, "Chọn phạm vi");
+        }, strTitle);
+    },
+    /* Combo form chua chon -> lay theo o loc tren man hinh */
+    macDinh: function (strDrop_Id, strFrom_Id) {
+        var v = edu.util.getValById(strFrom_Id);
+        if (!edu.util.getValById(strDrop_Id) && v) edu.util.viewValById(strDrop_Id, v);
     },
     getList_ThoiGianDaoTao: function () {
         var me = this;
@@ -304,12 +318,13 @@ HeSoQuyMo.prototype = {
         me.strHeSoQuyMo_Id = data.ID || "";
         var $m = $("#myModal_HeSoQuyMo");
         $("#lblTieuDe_HSQM").html(bSua ? '<i class="fa fa-pencil"></i> Sửa hệ số quy mô' : '<i class="fa fa-plus"></i> Thêm mới hệ số quy mô');
-        // Sua: pham vi + loai chi hien chu (khong doi), luu theo dung gia tri cua ban ghi
+        // Sua: loai he so + loai chi hien chu (khong doi), an dong Pham vi; luu theo dung gia tri cua ban ghi
         $m.find(".zoneOpenNew").toggle(!bSua);
         $m.find(".btnOpenDelete").toggle(bSua);
-        $("#lblPhamVi").html(me.esc(data.LOAIBANG_TEN));
+        $("#lblLoaiBang").html(me.esc(data.LOAIBANG_TEN || "(chưa có)"));
         $("#lblLoaiApDung").html(me.esc(data.PHAMVIAPDUNG_TEN));
         if (bSua) edu.util.viewValById("dropThoiGian", data.THOIGIAN_ID || data.DAOTAO_THOIGIANDAOTAO_ID || "");
+        else me.macDinh("dropLoaiBang", "dropSearch_PhanLoai");
         edu.util.viewValById("txtSoBatDau", data.SOBATDAU);
         edu.util.viewValById("txtSoKetThuc", data.SOKETTHUC);
         edu.util.viewValById("txtHeSo", data.HESO);
@@ -320,7 +335,7 @@ HeSoQuyMo.prototype = {
         var r = me.rowEdit;
         var o = {
             strId: me.strHeSoQuyMo_Id,
-            strLoaiBang_Id: (r && r.LOAIBANG_ID !== undefined) ? r.LOAIBANG_ID : edu.system.getValById('dropPhamViApDung'),
+            strLoaiBang_Id: (r && r.LOAIBANG_ID !== undefined) ? r.LOAIBANG_ID : edu.system.getValById('dropLoaiBang'),
             strPhamViApDung_Id: (r && r.PHAMVIAPDUNG_ID !== undefined) ? r.PHAMVIAPDUNG_ID : edu.system.getValById('dropLoaiApDung'),
             strDaoTao_ThoiGianDaoTao_Id: edu.system.getValById('dropThoiGian'),
             dSoBatDau: edu.system.getValById('txtSoBatDau'),
@@ -436,7 +451,7 @@ HeSoQuyMo.prototype = {
             title: "Xóa hệ số quy mô",
             unit: "bản ghi",
             columns: [
-                { header: "Phạm vi / Loại", render: function (r) { return edu.util.returnEmpty(r.LOAIBANG_TEN) + " / " + edu.util.returnEmpty(r.PHAMVIAPDUNG_TEN); } },
+                { header: "Loại hệ số / Phạm vi áp dụng", render: function (r) { return edu.util.returnEmpty(r.LOAIBANG_TEN) + " / " + edu.util.returnEmpty(r.PHAMVIAPDUNG_TEN); } },
                 { header: "Dải quy mô - Hệ số", render: function (r) { return "Từ " + edu.util.returnEmpty(r.SOBATDAU) + " đến " + edu.util.returnEmpty(r.SOKETTHUC) + " - hệ số " + edu.util.returnEmpty(r.HESO); } },
                 { header: "Thời gian", render: function (r) { return r.THOIGIAN; } }
             ],
@@ -562,6 +577,7 @@ HeSoQuyMo.prototype = {
         $("#btnAdd_HeSoQuyMo_CTDT").click(function (e) {
             e.preventDefault();
             $("#dropCTDT_ThoiGian").val(edu.util.getValById("dropSearch_ThoiGian")).trigger("change");
+            me.macDinh("dropCTDT_LoaiBang", "dropSearch_PhanLoai");
             $("#txtCTDT_SoBatDau, #txtCTDT_SoKetThuc, #txtCTDT_HeSo").val("");
             me.getList_KB_KhoaDaoTao("CTDT");
             me.getList_KB_ChuongTrinh("CTDT");
@@ -570,6 +586,7 @@ HeSoQuyMo.prototype = {
         $("#btnAdd_HeSoQuyMo_LHP").click(function (e) {
             e.preventDefault();
             $("#dropLHP_ThoiGian").val(edu.util.getValById("dropSearch_ThoiGian")).trigger("change");
+            me.macDinh("dropLHP_LoaiBang", "dropSearch_PhanLoai");
             $("#txtLHP_SoBatDau, #txtLHP_SoKetThuc, #txtLHP_HeSo, #txtLHP_TuKhoa").val("");
             me.objLHPChon = {};
             me.capNhatSoChon_LHP();
@@ -842,7 +859,7 @@ HeSoQuyMo.prototype = {
             return {
                 strPhamViApDung_Id: strCTDT + strLoai,
                 strTen: $("#dropCTDT_ChuongTrinh option[value='" + strCTDT + "']").text(),
-                strLoaiBang_Id: strPhamVi,
+                strLoaiBang_Id: edu.util.getValById("dropCTDT_LoaiBang"),
                 strDaoTao_ThoiGianDaoTao_Id: strThoiGian,
                 dSoBatDau: me.laySo("txtCTDT_SoBatDau"),
                 dSoKetThuc: me.laySo("txtCTDT_SoKetThuc"),
@@ -868,7 +885,7 @@ HeSoQuyMo.prototype = {
             return {
                 strPhamViApDung_Id: strLHP,
                 strTen: edu.util.returnEmpty(aData.TENLOP) + " (" + edu.util.returnEmpty(aData.MALOP) + ")",
-                strLoaiBang_Id: "",
+                strLoaiBang_Id: edu.util.getValById("dropLHP_LoaiBang"),
                 strDaoTao_ThoiGianDaoTao_Id: strThoiGian,
                 dSoBatDau: me.laySo("txtLHP_SoBatDau"),
                 dSoKetThuc: me.laySo("txtLHP_SoKetThuc"),
@@ -949,11 +966,7 @@ HeSoQuyMo.prototype = {
         var me = this;
         me.thongBao_N("");
         // Form chua chon gi thi lay theo bo loc dang chon tren man hinh
-        var strPhamVi = edu.util.getValById("dropSearch_PhanLoai");
-        if (!edu.util.getValById("dropPhamVi_N") && strPhamVi) {
-            edu.util.viewValById("dropPhamVi_N", strPhamVi);
-            me.getList_Loai_N();
-        }
+        me.macDinh("dropLoaiBang_N", "dropSearch_PhanLoai");
         var strThoiGian = edu.util.getValById("dropSearch_ThoiGian");
         if (!edu.util.getValById("dropThoiGian_N") && strThoiGian) {
             edu.util.viewValById("dropThoiGian_N", strThoiGian);
@@ -1089,12 +1102,13 @@ HeSoQuyMo.prototype = {
     },
     save_HeSoQuyMo_Nhieu: function () {
         var me = this;
-        var strLoaiBang_Id = edu.util.getValById("dropPhamVi_N");
+        var strLoaiBang_Id = edu.util.getValById("dropLoaiBang_N");
         var strThoiGian_Id = edu.util.getValById("dropThoiGian_N");
         var arrLoai = me.getLoaiDaChon_N();
         var dai = me.readDai_N(true);
         var arrLoi = [];
-        if (!strLoaiBang_Id) arrLoi.push("Chưa chọn phạm vi.");
+        if (!strLoaiBang_Id) arrLoi.push("Chưa chọn loại hệ số.");
+        if (!edu.util.getValById("dropPhamVi_N")) arrLoi.push("Chưa chọn phạm vi.");
         if (!arrLoai.length) arrLoi.push("Chưa chọn loại nào.");
         if (dai.invalid) arrLoi.push("Ô tô đỏ không phải là số (VD đúng: 40 hoặc 1,2).");
         else if (!dai.rows.length) arrLoi.push("Chưa nhập dải quy mô nào.");
@@ -1122,7 +1136,8 @@ HeSoQuyMo.prototype = {
                 dHeSo: it.dai.hs
             });
         };
-        var strTenPhamVi = $("#dropPhamVi_N option:selected").text();
+        var strTenLoaiBang = $.trim($("#dropLoaiBang_N option:selected").text());
+        var strTenPhamVi = $.trim($("#dropPhamVi_N option:selected").text());
         var strTenThoiGian = strThoiGian_Id ? $("#dropThoiGian_N option:selected").text() : "(không chọn)";
 
         if (!edu.process || typeof edu.process.run !== "function") {
@@ -1131,7 +1146,7 @@ HeSoQuyMo.prototype = {
         }
         edu.process.run({
             title: "Khai hệ số quy mô theo dải",
-            subTitles: ["Phạm vi: " + strTenPhamVi, "Thời gian: " + strTenThoiGian],
+            subTitles: ["Loại hệ số: " + strTenLoaiBang, "Phạm vi: " + strTenPhamVi, "Thời gian: " + strTenThoiGian],
             unit: "bản ghi",
             columns: [
                 { header: "Loại", render: function (it) { return me.tenMa(it.loai); } },

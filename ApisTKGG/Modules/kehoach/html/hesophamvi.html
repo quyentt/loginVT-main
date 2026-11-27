@@ -80,11 +80,15 @@
             </div>
             <div class="modal-body">
                 <div class="hspv-form">
+                    <!-- Loai he so = danh muc KLGD.LOAIBANG (strLoaiBang_Id); Pham vi = KLGD.PHANLOAIXACNHAN -> nap hinh thuc (strPhamViApDung_Id = Id hinh thuc) -->
                     <label class="hspv-lbl">Loại hệ số <b class="hspv-req">*</b></label>
                     <div class="hspv-ctl">
-                        <div class="zoneOpenNew"><select id="dropPhamViApDung" class="select-opt"></select></div>
-                        <div class="btnOpenDelete hspv-static" style="display: none;"><span id="lblPhamVi"></span></div>
+                        <div class="zoneOpenNew"><select id="dropLoaiBang" class="select-opt"></select></div>
+                        <div class="btnOpenDelete hspv-static" style="display: none;"><span id="lblLoaiBang"></span></div>
                     </div>
+
+                    <label class="hspv-lbl zoneOpenNew">Phạm vi <b class="hspv-req">*</b></label>
+                    <div class="hspv-ctl zoneOpenNew"><select id="dropPhamViApDung" class="select-opt"></select></div>
 
                     <label class="hspv-lbl">Hình thức <b class="hspv-req">*</b></label>
                     <div class="hspv-ctl">
@@ -129,9 +133,10 @@
             <div class="modal-body">
                 <div class="hspv-n">
                     <div class="hspv-sec">
-                        <div class="hspv-sec-h"><span class="hspv-no">1</span> Loại hệ số và thời gian</div>
-                        <div class="hspv-grid2">
-                            <div class="hspv-field"><label>Loại hệ số <b class="hspv-req">*</b></label><select id="dropPhamVi_N" class="select-opt"></select></div>
+                        <div class="hspv-sec-h"><span class="hspv-no">1</span> Loại hệ số, phạm vi và thời gian</div>
+                        <div class="hspv-grid3">
+                            <div class="hspv-field"><label>Loại hệ số <b class="hspv-req">*</b></label><select id="dropLoaiBang_N" class="select-opt"></select></div>
+                            <div class="hspv-field"><label>Phạm vi <b class="hspv-req">*</b></label><select id="dropPhamVi_N" class="select-opt"></select></div>
                             <div class="hspv-field"><label>Thời gian</label><select id="dropThoiGian_N" class="select-opt"></select></div>
                         </div>
                     </div>
@@ -142,7 +147,7 @@
                             <a href="#" id="btnChonHetLoai_N" class="hspv-link">Chọn tất cả</a>
                             <a href="#" id="btnBoChonLoai_N" class="hspv-link hspv-link-muted">Bỏ chọn</a>
                         </div>
-                        <div id="zoneLoai_N" class="hspv-chkgrid"><div class="hspv-empty">Chọn loại hệ số để hiện danh sách hình thức.</div></div>
+                        <div id="zoneLoai_N" class="hspv-chkgrid"><div class="hspv-empty">Chọn phạm vi để hiện danh sách hình thức.</div></div>
                     </div>
                     <div class="hspv-sec">
                         <div class="hspv-sec-h"><span class="hspv-no">3</span> Hệ số áp dụng cho các hình thức đã chọn</div>
@@ -351,7 +356,7 @@
 </div>
 
 <!-- page script -->
-<script src="modules/kehoach/script/HeSoPhamVi.js?v=1.0.0.4"></script>
+<script src="modules/kehoach/script/HeSoPhamVi.js?v=1.0.0.6"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['HeSoPhamVi'] = new HeSoPhamVi();

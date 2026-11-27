@@ -6,6 +6,8 @@
 --Output:
 --Note: 26/11/2026 theo MoTaChucNangChinh_KLGD_NEW.xlsx, sheet "Sua khai bao he so theo pham vi":
 --  - Loc them "Loai he so" -> ham LayDS truyen strLoaiBang_Id (DB/API them ParamLoaiBang_Id)
+--  - "Loai he so" = LIST theo ma bang danh muc KLGD.LOAIBANG (moi form them deu gui strLoaiBang_Id = Id nay);
+--    "Pham vi" = danh muc KLGD.PHANLOAIXACNHAN, chi dung de nap danh sach hinh thuc (strPhamViApDung_Id = Id hinh thuc)
 --  - "Them moi" doi ten "Them moi cho tung hinh thuc mot lan khai", truyen strLoaiBang_Id
 --  - 5 nut moi: nhieu hinh thuc / to hop hoc phan - CTDT / tung lop hoc phan /
 --    chuc danh-hoc vi cho tung he dao tao / chuc danh-hoc vi cho tung hoc phan theo CTDT
@@ -178,7 +180,8 @@ HeSoPhamVi.prototype = {
     tenMa: function (aData) {
         var ten = edu.util.returnEmpty(aData.TEN);
         var ma = edu.util.returnEmpty(aData.MA || aData.HANHDONG_MA);
-        return ma ? ten + " - " + ma : ten;
+        // ma trung ten (VD danh muc KLGD.LOAIBANG "kC") thi chi hien 1 lan, tranh "kC - kC"
+        return (ma && $.trim(ma) !== $.trim(ten)) ? ten + " - " + ma : ten;
     },
     maCua: function (aData) {
         return edu.util.returnEmpty(aData.MA || aData.HANHDONG_MA);
@@ -270,21 +273,26 @@ HeSoPhamVi.prototype = {
     --Discription: [2] Combo dung chung
     -------------------------------------------*/
     getList_LoaiBang: function () {
-        // Loai he so = danh muc KLGD.PHANLOAIXACNHAN (cung danh muc "Loai he so" cua form them -> strLoaiBang_Id)
+        // Loai he so = LIST theo ma bang danh muc KLGD.LOAIBANG -> strLoaiBang_Id (bo loc + moi form them)
+        this.napDanhMuc("KLGD.LOAIBANG", ["dropSearch_LoaiBang", "dropLoaiBang", "dropLoaiBang_N", "dropHPCT_LoaiBang", "dropLHP_LoaiBang", "dropCDHV_LoaiBang"], "Chọn loại hệ số");
+        // Pham vi = KLGD.PHANLOAIXACNHAN -> nap danh sach hinh thuc (form tung hinh thuc / nhieu hinh thuc)
+        this.napDanhMuc("KLGD.PHANLOAIXACNHAN", ["dropPhamViApDung", "dropPhamVi_N"], "Chọn phạm vi");
+    },
+    /* Nap danh muc theo ma bang vao cac combo, hien "TEN - MA"; danh muc rong van hien dong tieu de */
+    napDanhMuc: function (strMaBang, arrDrop, strTitle) {
         var me = this;
-        var arrDrop = ["dropSearch_LoaiBang", "dropPhamViApDung", "dropPhamVi_N", "dropHPCT_LoaiBang", "dropLHP_LoaiBang", "dropCDHV_LoaiBang"];
-        edu.system.loadToCombo_DanhMucDuLieu("KLGD.PHANLOAIXACNHAN", arrDrop.join(","), "", function (data) {
-            if (!data || !data.length) return;
+        edu.system.loadToCombo_DanhMucDuLieu(strMaBang, arrDrop.join(","), "", function (data) {
+            me.logMauCombo(strMaBang, data);
             edu.system.loadToCombo_data({
-                data: data,
+                data: data || [],
                 renderInfor: {
                     id: "ID", parentId: "", name: "TEN", code: "MA",
                     mRender: function (nRow, aData) { return me.tenMa(aData); }
                 },
                 renderPlace: arrDrop,
-                title: "Chọn loại hệ số"
+                title: strTitle
             });
-        }, "Chọn loại hệ số");
+        }, strTitle);
     },
     getList_ThoiGianDaoTao: function () {
         var me = this;
@@ -604,13 +612,12 @@ HeSoPhamVi.prototype = {
         $("#lblTieuDe_HSPV").html(bSua ? '<i class="fa fa-pencil"></i> Sửa hệ số theo phạm vi' : '<i class="fa fa-plus"></i> Thêm mới cho từng hình thức');
         $m.find(".zoneOpenNew").toggle(!bSua);
         $m.find(".btnOpenDelete").toggle(bSua);
-        $("#lblPhamVi").html(me.esc(data.LOAIBANG_TEN || "(chưa có)"));
+        $("#lblLoaiBang").html(me.esc(data.LOAIBANG_TEN || "(chưa có)"));
         $("#lblLoaiApDung").html(me.esc(data.PHAMVIAPDUNG_TEN));
         $("#lblThoiGian").html(me.esc(data.THOIGIAN));
         if (!bSua) {
-            me.macDinh("dropPhamViApDung", "dropSearch_LoaiBang");
+            me.macDinh("dropLoaiBang", "dropSearch_LoaiBang");
             me.macDinh("dropThoiGian", "dropSearch_ThoiGian");
-            if (edu.util.getValById("dropPhamViApDung") && $("#dropLoaiApDung option").length <= 1) me.getList_LoaiApDung("dropPhamViApDung", "dropLoaiApDung");
         }
         edu.util.viewValById("txtHeSo", data.HESO);
         $m.modal("show");
@@ -620,7 +627,7 @@ HeSoPhamVi.prototype = {
         var r = me.rowEdit;
         var o = {
             strId: me.strHeSoPhamVi_Id,
-            strLoaiBang_Id: edu.system.getValById('dropPhamViApDung'),
+            strLoaiBang_Id: edu.system.getValById('dropLoaiBang'),
             strPhamViApDung_Id: edu.system.getValById('dropLoaiApDung'),
             strDaoTao_ThoiGianDaoTao_Id: edu.system.getValById('dropThoiGian'),
             dHeSo: edu.system.getValById('txtHeSo')
@@ -699,10 +706,7 @@ HeSoPhamVi.prototype = {
     openForm_Nhieu: function () {
         var me = this;
         me.thongBao("zoneThongBao_N", "");
-        if (!edu.util.getValById("dropPhamVi_N") && edu.util.getValById("dropSearch_LoaiBang")) {
-            me.macDinh("dropPhamVi_N", "dropSearch_LoaiBang");
-            me.getList_Loai_N();
-        }
+        me.macDinh("dropLoaiBang_N", "dropSearch_LoaiBang");
         me.macDinh("dropThoiGian_N", "dropSearch_ThoiGian");
         me.updateTongHop_N();
         $("#myModal_HeSoPhamVi_Nhieu").modal("show");
@@ -712,14 +716,14 @@ HeSoPhamVi.prototype = {
         var strPhamVi = edu.util.getValById("dropPhamVi_N");
         me.dtLoai_N = [];
         $("#txtLocLoai_N").val("");
-        if (!strPhamVi) { me.genLoai_N("Chọn loại hệ số để hiện danh sách hình thức."); return; }
+        if (!strPhamVi) { me.genLoai_N("Chọn phạm vi để hiện danh sách hình thức."); return; }
         me.genLoai_N('<i class="fa fa-spinner fa-spin"></i> Đang tải danh sách hình thức…');
         me.fetchLoai(strPhamVi, function (data) {
             if (edu.util.getValById("dropPhamVi_N") !== strPhamVi) return;
-            if (data === null) { me.genLoai_N("Không tải được danh sách hình thức. Chọn lại loại hệ số để thử lại."); return; }
+            if (data === null) { me.genLoai_N("Không tải được danh sách hình thức. Chọn lại phạm vi để thử lại."); return; }
             me.logMauCombo("zoneLoai_N", data);
             me.dtLoai_N = data;
-            me.genLoai_N("Loại hệ số này chưa có hình thức nào.");
+            me.genLoai_N("Phạm vi này chưa có hình thức nào.");
         });
     },
     genLoai_N: function (strRong) {
@@ -777,12 +781,13 @@ HeSoPhamVi.prototype = {
     },
     save_Nhieu: function () {
         var me = this;
-        var strLoaiBang = edu.util.getValById("dropPhamVi_N");
+        var strLoaiBang = edu.util.getValById("dropLoaiBang_N");
         var strThoiGian = edu.util.getValById("dropThoiGian_N");
         var strHeSo = $.trim($("#txtHeSo_N").val());
         var arrLoai = me.getLoaiDaChon_N();
         var arrLoi = [];
         if (!strLoaiBang) arrLoi.push("Chưa chọn loại hệ số.");
+        if (!edu.util.getValById("dropPhamVi_N")) arrLoi.push("Chưa chọn phạm vi.");
         if (!arrLoai.length) arrLoi.push("Chưa chọn hình thức nào.");
         if (!strHeSo) { arrLoi.push("Chưa nhập hệ số."); $("#txtHeSo_N").addClass("hspv-invalid"); }
         else if (!me.laSoHopLe(strHeSo)) { arrLoi.push("Hệ số phải là số (VD: 1 hoặc 1,2)."); $("#txtHeSo_N").addClass("hspv-invalid"); }
@@ -790,7 +795,7 @@ HeSoPhamVi.prototype = {
         me.thongBao("zoneThongBao_N", "");
         me.runThem({
             title: "Thêm mới hệ số cho nhiều hình thức",
-            subTitles: ["Loại hệ số: " + me.textChon("dropPhamVi_N"), "Thời gian: " + (me.textChon("dropThoiGian_N") || "(không chọn)"), "Hệ số: " + strHeSo],
+            subTitles: ["Loại hệ số: " + me.textChon("dropLoaiBang_N"), "Phạm vi: " + me.textChon("dropPhamVi_N"), "Thời gian: " + (me.textChon("dropThoiGian_N") || "(không chọn)"), "Hệ số: " + strHeSo],
             columns: [{ header: "Hình thức", render: function (it) { return me.tenMa(it); } }],
             items: arrLoai,
             request: function (it) {

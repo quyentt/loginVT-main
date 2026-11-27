@@ -66,6 +66,7 @@ LichGiangNhieuPhong.prototype = {
     iTokenSiSoDoi: 0,           // Bỏ kết quả sĩ số của lượt mở modal cũ
     objSiSoLop: {},             // key: IdLopHocPhan → sĩ số (chỉ cache khi lấy được)
     bFormDoiSan: false,         // Form đổi lịch đã dựng xong (sĩ số về trước form thì chưa được vẽ lại ô chọn phòng)
+    bXetPhongLuoi: false,       // Lặp lưới có truyền phòng không: false (mặc định) = chỉ xét thời gian; true = kiểm theo phòng đang chọn (ô "Kiểm cả theo phòng đang chọn")
     strToaNhaDoi: '',           // Tòa nhà đang lọc ở ô chọn phòng ('' = tất cả)
     objPhongToaNhaDoi: null,    // { ID phòng: 1 } của tòa đang lọc; null = không lọc / chưa lọc được
 
@@ -720,11 +721,17 @@ LichGiangNhieuPhong.prototype = {
         $("#txtDL_Ngay, #txtDL_TietBatDau, #txtDL_TietKetThuc, #dropDL_PhongHoc").on("change input", function () {
             me.capNhatTomTatDoi();
         });
-        // Ô xanh tính theo phòng đang chọn → đổi phòng thì vẽ lại lưới từ dữ liệu đã có rồi lặp kiểm tra lại (kết quả từng ô đã cache theo phòng)
+        // Chỉ khi tick "Kiểm cả theo phòng đang chọn" thì ô xanh mới phụ thuộc phòng → đổi phòng thì vẽ lại lưới rồi lặp kiểm tra lại
+        // (kết quả từng ô đã cache theo phòng). Mặc định (chỉ xét thời gian) đổi phòng KHÔNG làm lưới đổi.
         $("#dropDL_PhongHoc").on("change", function () {
-            if (!me.bFormDoiSan || !$(this).val()) return;
+            if (!me.bFormDoiSan || !me.bXetPhongLuoi || !$(this).val()) return;
             clearTimeout(me.tHenLuoiPhong);
             me.tHenLuoiPhong = setTimeout(function () { me.genHtml_LuoiDoi(); }, 300);
+        });
+        // Bật/tắt xét phòng khi tìm giờ đổi được (anh Tú 26/11: không truyền phòng = chỉ thời gian; truyền phòng = theo phòng đang chọn)
+        $("#chkDL_XetPhongLuoi").on("change", function () {
+            me.bXetPhongLuoi = $(this).prop("checked");
+            if (me.bFormDoiSan) me.genHtml_LuoiDoi();
         });
         // Đổi giảng viên dạy thay → lịch bận của lưới phải theo người mới (vẽ lại, tự kiểm tra lại các ô)
         $("#zoneDL_GiangVien").on("change", "select", function () {
@@ -2242,6 +2249,8 @@ LichGiangNhieuPhong.prototype = {
         me.arrNgayDoi = [];
         me.iTokenLuoiDoi++;
         me.bFormDoiSan = false;
+        me.bXetPhongLuoi = false; // mỗi lần mở: mặc định chỉ xét thời gian
+        $("#chkDL_XetPhongLuoi").prop("checked", false);
         me.iTokenKiemLuoi++; // dừng lượt kiểm tra ô của buổi trước (nếu còn)
         $("#zoneDL_LuoiTienDo").empty();
         me.iSiSoDoi = null;
@@ -2808,9 +2817,13 @@ LichGiangNhieuPhong.prototype = {
     // Chỉ gọi cho ô giảng viên rảnh và đủ tiết liên tiếp (ô đã qua / giảng viên bận / không đủ tiết thì khỏi hỏi máy chủ).
     // Tối đa iMaxConcurrent request cùng lúc, cache từng ô; lỗi liên tiếp thì dừng — ô còn lại giữ xanh nhạt (mới chỉ xét giảng viên).
 
-    // Phòng dùng để kiểm: phòng đang chọn trong form, chưa chọn thì phòng của buổi hiện tại (như phần mềm TKB giữ phòng cũ)
+    // Phòng đưa vào hàm kiểm tra khi lặp lưới. Anh Tú 26/11/2026: "muốn không check phòng trước thì ĐỪNG truyền phòng vào — hàm đổi lịch không phòng
+    // để check thời gian thôi; để phòng thì là với phòng đang chọn; bỏ chọn phòng đi thì là thời gian, mình linh hoạt sử dụng".
+    // → MẶC ĐỊNH không truyền phòng (chỉ xét thời gian: giảng viên + sinh viên, giống TKB "[Không có phòng học]"); tick "Kiểm cả theo phòng đang chọn" mới truyền.
+    // Giảng viên bấm 1 ô giờ rồi mới chọn phòng (danh sách phòng trống) và kiểm tra lại với phòng đó.
     getPhongKiemLuoi: function () {
         var me = this;
+        if (!me.bXetPhongLuoi) return '';
         return $("#dropDL_PhongHoc").val() || (me.objLopDoi ? String(me.objLopDoi.IDPHONGHOC || '') : '');
     },
 
@@ -2900,7 +2913,7 @@ LichGiangNhieuPhong.prototype = {
 
     capNhatTienDoKiemLuoi: function (strTrangThai, iXong, iTong, strTenPhong, iDoiDuoc, iLoi, strLoiDau, iVatCa) {
         var $z = $("#zoneDL_LuoiTienDo").attr("class", "lgnp-dl-luoi-tiendo " + (strTrangThai === 'dang' ? '' : strTrangThai));
-        var strPhongTxt = strTenPhong ? ' với phòng ' + strTenPhong : '';
+        var strPhongTxt = strTenPhong ? ' với phòng ' + strTenPhong : (this.bXetPhongLuoi ? '' : ' (chỉ xét thời gian, chưa xét phòng)');
         var strIcon = strTrangThai === 'dang' ? 'fas fa-spinner fa-spin' : (strTrangThai === 'xong' ? 'fa-solid fa-circle-check' : 'fa-solid fa-triangle-exclamation');
         var strNoiDung;
         if (strTrangThai === 'dang') strNoiDung = 'Đang kiểm tra ' + iXong + '/' + iTong + ' ô' + strPhongTxt + '...';
@@ -2929,6 +2942,7 @@ LichGiangNhieuPhong.prototype = {
         });
         if (arrCan.length > me.iMaxKiemO) arrCan = arrCan.slice(0, me.iMaxKiemO);
         var iTong = arrCan.length, iTiep = 0, iXong = 0, iDangChay = 0, iDoiDuoc = 0, iVatCa = 0, iLoi = 0, iLoiLienTiep = 0, bDung = false, bKetThuc = false, strLoiDau = '';
+        var iVuong = 0, strLyVuong = '', bLyKhacNhau = false, bDaGhiLog = false; // theo dõi "mọi ô bị từ chối cùng 1 lý do" (nghi BE chưa cho kiểm giờ khi không có phòng)
         if (iTong === 0) { me.capNhatTienDoKiemLuoi('xong', 0, 0, strTenPhong, 0, 0); return; }
         arrCan.forEach(function (o) { o.$c.addClass('kiem'); });
         me.capNhatTienDoKiemLuoi('dang', 0, iTong, strTenPhong);
@@ -2938,6 +2952,11 @@ LichGiangNhieuPhong.prototype = {
             bKetThuc = true;
             arrCan.slice(iTiep).forEach(function (o) { o.$c.removeClass('kiem'); }); // ô chưa kịp kiểm (do dừng) về xanh nhạt
             me.capNhatTienDoKiemLuoi(bDung ? 'dung' : 'xong', iXong, iTong, strTenPhong, iDoiDuoc, iLoi, strLoiDau, iVatCa);
+            // Kiểm giờ KHÔNG truyền phòng mà MỌI ô (không kể ô vắt ca) đều bị từ chối cùng 1 lý do → nhiều khả năng BE đòi phòng: nói rõ + chỉ cách (tick "Kiểm cả theo phòng đang chọn")
+            if (!bDung && !me.bXetPhongLuoi && iDoiDuoc === 0 && iVuong >= 6 && !bLyKhacNhau) {
+                $("#zoneDL_LuoiTienDo").append($('<div class="canh-bao">').text('Tất cả ' + iVuong + ' ô đều bị BE từ chối cùng một lý do: "' + strLyVuong
+                    + '". Nếu BE chưa cho kiểm giờ khi chưa có phòng, hãy tick "Kiểm cả theo phòng đang chọn" ở trên.'));
+            }
             me.dongBoOChonLuoi(); // ô đang chọn có thể vừa chuyển sang "vướng" → cập nhật ghi chú
         };
         var fnChayTiep = function () {
@@ -2959,12 +2978,19 @@ LichGiangNhieuPhong.prototype = {
                     var strMoTa = me.getThu(o.ngay) + ' ' + o.ngay + ' · tiết ' + o.tu + '-' + o.den;
                     if (kq.ok) {
                         iDoiDuoc++;
-                        o.$c.removeClass('trong').addClass('doi-duoc').attr('title', strMoTa + ' — đổi được' + (strTenPhong ? ' (phòng ' + strTenPhong + ')' : '') + ', bấm để chọn');
+                        o.$c.removeClass('trong').addClass('doi-duoc').attr('title', strMoTa + ' — đổi được'
+                            + (strTenPhong ? ' (phòng ' + strTenPhong + ')' : (me.bXetPhongLuoi ? '' : ' về thời gian (chưa xét phòng — bấm ô này rồi chọn phòng)')) + ', bấm để chọn');
                     } else if (kq.ca) {
                         // Buổi dài vắt qua ca sáng/chiều: do độ dài buổi + tiết bắt đầu, đổi phòng cũng không cứu được → ô xám như "không đủ tiết liên tiếp"
                         iVatCa++;
                         o.$c.removeClass('trong').addClass('ngan').attr('data-ly', kq.ly).attr('title', strMoTa + ' — ' + kq.ly);
                     } else {
+                        iVuong++;
+                        if (!strLyVuong) strLyVuong = kq.ly || ''; else if (strLyVuong !== (kq.ly || '')) bLyKhacNhau = true;
+                        if (!me.bXetPhongLuoi && !bDaGhiLog) { // chẩn đoán: ô đầu tiên bị từ chối khi KHÔNG truyền phòng (để biết BE trả gì)
+                            bDaGhiLog = true;
+                            console.warn("Kiểm giờ KHÔNG truyền phòng — ô đầu tiên bị BE từ chối:", o.ngay, 'tiết ' + o.tu + '-' + o.den, '→', kq.ly);
+                        }
                         o.$c.removeClass('trong').addClass('vuong').attr('data-ly', kq.ly || 'Không đổi được')
                             .attr('title', strMoTa + ' — không đổi được: ' + (kq.ly || 'vướng lịch') + '\n(bấm để chọn, rồi đổi sang phòng khác nếu vướng do phòng)');
                     }
