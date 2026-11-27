@@ -5303,12 +5303,12 @@ systemroot.prototype = {
                     }
                 }
                 else {
-                    me.alert("CM_DanhMucDuLieu/LayDanhSach (er)-" + strCode + ": " + data.Message, "w");
+                    me.alert("CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM - " + strCode + ": " + data.Message, "w");
                     me.endLoading();
                 }
             },
             error: function (er) {
-                me.alert("CM_DanhMucDuLieu/LayDanhSach (er)-" + strCode + ": " + JSON.stringify(er), "w");
+                me.alert("CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM - " + strCode + ": " + JSON.stringify(er), "w");
                 me.endLoading();
             },
             type: 'GET',
@@ -5364,12 +5364,12 @@ systemroot.prototype = {
                     me.endLoading();
                 }
                 else {
-                    me.alert("CM_DanhMucDuLieu/LayDanhSach (er)-" + strCode + ": " + data.Message, "w");
+                    me.alert("CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM - " + strCode + ": " + data.Message, "w");
                     me.endLoading();
                 }
             },
             error: function (er) {
-                me.alert("CM_DanhMucDuLieu/LayDanhSach (er)-" + strCode + ": " + JSON.stringify(er), "w");
+                me.alert("CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM - " + strCode + ": " + JSON.stringify(er), "w");
                 me.endLoading();
             },
             type: 'GET',
@@ -5425,12 +5425,12 @@ systemroot.prototype = {
                     me.endLoading();
                 }
                 else {
-                    me.alert("CM_DanhMucDuLieu/LayDanhSach (er)-" + strCode + ": " + data.Message, "w");
+                    me.alert("CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM - " + strCode + ": " + data.Message, "w");
                     me.endLoading();
                 }
             },
             error: function (er) {
-                me.alert("CM_DanhMucDuLieu/LayDanhSach (er)-" + strCode + ": " + JSON.stringify(er), "w");
+                me.alert("CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM - " + strCode + ": " + JSON.stringify(er), "w");
                 me.endLoading();
             },
             type: 'GET',
@@ -5486,12 +5486,12 @@ systemroot.prototype = {
                     me.endLoading();
                 }
                 else {
-                    me.alert("CM_DanhMucDuLieu/LayDanhSach (er)-" + strCode + ": " + data.Message, "w");
+                    me.alert("CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM - " + strCode + ": " + data.Message, "w");
                     me.endLoading();
                 }
             },
             error: function (er) {
-                me.alert("CM_DanhMucDuLieu/LayDanhSach (er)-" + strCode + ": " + JSON.stringify(er), "w");
+                me.alert("CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM - " + strCode + ": " + JSON.stringify(er), "w");
                 me.endLoading();
             },
             type: 'GET',
@@ -5533,12 +5533,12 @@ systemroot.prototype = {
                     }
                 }
                 else {
-                    me.alert("CM_DanhMucDuLieu/LayDanhSach (er)-" + strCode + ": " + data.Message, "w");
+                    me.alert("CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM - " + strCode + ": " + data.Message, "w");
                     me.endLoading();
                 }
             },
             error: function (er) {
-                me.alert("CM_DanhMucDuLieu/LayDanhSach (er)-" + strCode + ": " + JSON.stringify(er), "w");
+                me.alert("CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM - " + strCode + ": " + JSON.stringify(er), "w");
                 me.endLoading();
             },
             type: 'GET',
@@ -5579,12 +5579,12 @@ systemroot.prototype = {
                     }
                 }
                 else {
-                    me.alert("CM_DanhMucDuLieu/LayDanhSach (er)-" + strCode + ": " + data.Message, "w");
+                    me.alert("CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM - " + strCode + ": " + data.Message, "w");
                     me.endLoading();
                 }
             },
             error: function (er) {
-                me.alert("CM_DanhMucDuLieu/LayDanhSach (er)-" + strCode + ": " + JSON.stringify(er), "w");
+                me.alert("CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM - " + strCode + ": " + JSON.stringify(er), "w");
                 me.endLoading();
             },
             type: 'GET',
@@ -5682,12 +5682,12 @@ systemroot.prototype = {
                     }
                 }
                 else {
-                    me.alert("CM_DanhMucDuLieu/LayDanhSach (er)-" + obj.code + ": " + data.Message, "w");
+                    me.alert("CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM - " + obj.code + ": " + data.Message, "w");
                     me.endLoading();
                 }
             },
             error: function (er) {
-                me.alert("CM_DanhMucDuLieu/LayDanhSach (er)-" + obj.code + ": " + JSON.stringify(er), "w");
+                me.alert("CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM - " + obj.code + ": " + JSON.stringify(er), "w");
                 me.endLoading();
             },
             type: 'GET',
