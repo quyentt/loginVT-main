@@ -513,6 +513,7 @@ systemroot.prototype = {
             document.addEventListener("visibilitychange", function () {
                 me["isActive"] = !document.hidden;
                 if (document.hidden) return;
+                me.kiemTraTaiLaiHangNgay(); // [2026-11-27] mo qua 24 gio -> tai lai lay token moi
                 if (me["canTaiLaiTrang"]) { location.reload(); return; }
                 if (me["canTaiLaiHtml"] && me.urlPage) {
                     me["canTaiLaiHtml"] = false;
@@ -520,8 +521,10 @@ systemroot.prototype = {
                 }
                 me.versionMainJS();
             });
+            me["iMoTrangLuc"] = Date.now();
             (function kiemTraDinhKy() {
                 setTimeout(function () {
+                    me.kiemTraTaiLaiHangNgay();
                     me.versionMainJS();
                     kiemTraDinhKy();
                 }, 300000);
@@ -9583,9 +9586,17 @@ systemroot.prototype = {
         });
     },
     /*----------------------------------------------
-    -- [2026-11-27] API tra 401 (token het han / bi thu hoi): tai lai trang de lay token moi tu phien dang nhap.
-    -- Chong lap: neu vua tai lai trong 2 phut ma van 401 thi phien that su het han -> bao va dang xuat.
+    -- [2026-11-27] Moi ngay tu tai lai trang 1 lan de lay token moi (token han 2 ngay, index.aspx sinh token moi moi lan tai).
+    -- Trang mo qua 24 gio: tab dang an thi tai lai ngay; dang xem thi chi danh dau, tai lai khi nguoi dung quay lai tab
+    -- (khong mat du lieu dang nhap).
     ----------------------------------------------*/
+    kiemTraTaiLaiHangNgay: function () {
+        var me = this;
+        if (!me["iMoTrangLuc"]) me["iMoTrangLuc"] = Date.now();
+        if (Date.now() - me["iMoTrangLuc"] < 86400000) return;
+        if (document.hidden) location.reload();
+        else me["canTaiLaiTrang"] = true;
+    },
     /*----------------------------------------------
     -- [2026-11-27] Ten ham de hien trong thong bao loi.
     -- Action _MH dang "Controller_MH/<ma>", ma = AE(tenHam, "A") roi doi "=" cuoi thanh "P" (RoseTool sinh)
@@ -9604,6 +9615,10 @@ systemroot.prototype = {
         }
         return a;
     },
+    /*----------------------------------------------
+    -- [2026-11-27] API tra 401 (token het han / bi thu hoi): tai lai trang de lay token moi tu phien dang nhap.
+    -- Chong lap: neu vua tai lai trong 2 phut ma van 401 thi phien that su het han -> bao va dang xuat.
+    ----------------------------------------------*/
     xuLy401: function () {
         var me = this;
         if (me["dangXuLy401"]) return;
